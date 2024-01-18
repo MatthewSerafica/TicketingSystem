@@ -18,7 +18,7 @@
                         <a class="nav-link active text-white" aria-current="page" href="#">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Tickets</a>
+                        <a class="nav-link text-white" href="/admin/tickets">Tickets</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="#">Reports</a>
@@ -56,6 +56,6 @@
 }
 
 .header-color {
-    background-color: #1e81b0;
+    background-color: #063970;
 }
 </style>
