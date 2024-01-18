@@ -36,6 +36,7 @@ nav {
   padding: 10px;
   display: flex;
   justify-content: space-between;
+  
 }
 
 .left, .right {

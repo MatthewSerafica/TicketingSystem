@@ -2,19 +2,9 @@
     <Header></Header>
     <br>
 
-    <div class="search">
-        <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Search Tickets..."
-        @input="handleSearch"
-      />
-    </div>
-
+    
     <div class="container text-center w-100 h-100 justify-center">
-        <H1>View All Tickets</H1>
-        <p> Manage and Track all TMDD tickets</p>
-        <Link :href="`/employee/create`" class="create-ticket-link">Create New Ticket</Link>
+        <H1>Create New Tickets</H1>
         <br><br>
         <button class="ticket-button">All</button>
         <button class="ticket-button">New</button>
@@ -27,9 +17,6 @@
 </template>
 <script setup>
 import Header from "@/Pages/Layouts/Header.vue"
-import {Link, router} from "@inertiajs/vue3"
-
-
 </script>
 
 
@@ -69,7 +56,7 @@ p {
   margin-bottom: 20px;
 }
 
-Link.create-ticket-link {
+a.create-ticket-link {
   display: inline-block;
   padding: 10px 20px;
   background-color: #000000; /* Green */
@@ -79,7 +66,7 @@ Link.create-ticket-link {
   transition: background-color 0.3s;
 }
 
-Link.create-ticket-link:hover {
+a.create-ticket-link:hover {
   background-color: #898989;
 }
 

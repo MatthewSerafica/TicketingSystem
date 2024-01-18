@@ -18,4 +18,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/admin', [AdminDashboardController::class, 'index']);
 Route::get('/employee', [EmployeeTicketController::class, 'index']);
+Route::get('/employee/create', [EmployeeTicketController::class, 'create'])->name('employee.create');
 Route::get('/technician', [TechnicianDashboardController::class, 'index']);
+
