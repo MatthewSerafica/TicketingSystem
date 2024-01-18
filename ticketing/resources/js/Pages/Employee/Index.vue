@@ -3,12 +3,7 @@
     <br>
 
     <div class="search">
-        <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Search Tickets..."
-        @input="handleSearch"
-      />
+        <input type="text" v-model="searchQuery" placeholder="Search Tickets..." @input="handleSearch"/>
     </div>
 
     <div class="container text-center w-100 h-100 justify-center">
@@ -69,7 +64,7 @@ p {
   margin-bottom: 20px;
 }
 
-Link.create-ticket-link {
+.create-ticket-link {
   display: inline-block;
   padding: 10px 20px;
   background-color: #000000; /* Green */
@@ -79,7 +74,7 @@ Link.create-ticket-link {
   transition: background-color 0.3s;
 }
 
-Link.create-ticket-link:hover {
+.create-ticket-link:hover {
   background-color: #898989;
 }
 
