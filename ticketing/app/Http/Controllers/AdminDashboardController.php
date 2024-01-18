@@ -9,7 +9,7 @@ class AdminDashboardController extends Controller
     public function index() {
         $props = 'hello world';
         return inertia('Admin/Dashboard/Index', [
-            'props' => $props,
+            'test' => $props,
         ]);
     }
 }
