@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 class AdminDashboardController extends Controller
 {
     public function index() {
-        return inertia('Admin/Dashboard/Index');
+        $props = 'hello world';
+        return inertia('Admin/Dashboard/Index', [
+            'props' => $props,
+        ]);
     }
 }

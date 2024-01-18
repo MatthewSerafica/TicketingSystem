@@ -11,6 +11,14 @@
             Dashboard
         </button>
     </div>
+    props
 </template>
 
-<script></script>
+<script>
+const props = defineProps({
+    props: Object,
+})
+</script>
+
+<style>
+</style>
