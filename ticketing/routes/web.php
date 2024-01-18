@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\EmployeeTicketController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,4 +15,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [AdminDashboardController::class, 'index']);
+Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
+Route::get('/employee', [EmployeeTicketController::class, 'index']);
