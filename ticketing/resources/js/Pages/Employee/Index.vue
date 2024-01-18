@@ -1,4 +1,9 @@
 <template>
+    <Header></Header>
+    <div class="search">
+
+    </div>
+
     <div class="container text-center w-100 h-100 justify-center bg-warning">
         <button type="button" class="btn btn-success">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-speedometer"
@@ -13,7 +18,6 @@
     </div>
 </template>
 <script>
+import Header from "@/Pages/Layouts/Header.vue"
 </script>
 
-<style>
-</style>
