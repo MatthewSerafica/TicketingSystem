@@ -3,16 +3,16 @@
     <div class="recent">
         <div class="d-flex">
             <div class="recent-tickets">
-                <h2>Recent Tickets</h2>
+                <h2 class="fw-semibold">Recent Tickets</h2>
                 <div class="d-flex gap-2">
                     <Button class="rounded" value="Create Ticket"></Button>
                     <Button class="rounded bg-secondary text-white" value="View All"></Button>
                 </div>
             </div>
             <div class="cards">
-                <Card></Card>
-                <Card></Card>
-                <Card></Card>
+                <Card :no="one.no" :issue="one.issue" :employee="one.employee" :department="one.department" :status="one.status" :technician="one.technician" :date="one.date"></Card>
+                <Card :no="two.no" :issue="two.issue" :employee="two.employee" :department="two.department" :status="two.status" :technician="two.technician" :date="two.date"></Card>
+                <Card :no="three.no" :issue="three.issue" :employee="three.employee" :department="three.department" :status="three.status" :technician="three.technician" :date="three.date"></Card>
             </div>
         </div>
     </div>
@@ -22,10 +22,33 @@ import Header from '@/Pages/Layouts/AdminHeader.vue'
 import Card from '@/Components/Cards.vue'
 import Button from '@/Components/Button.vue'
 
-const props = defineProps({
-    test: String,
-})
-
+const one = {
+    no: 1901,
+    issue: "Network Issue",
+    employee: "John Doe",
+    department: "Finance",
+    status: "Ongoing",
+    technician: "John Smith",
+    date: "16/01/2024"
+}
+const two = {
+    no: 1902,
+    issue: "Software Installation",
+    employee: "Jane Doe",
+    department: "Help Desk",
+    status: "Pending",
+    technician: "Unassigned",
+    date: "16/01/2024"
+}
+const three = {
+    no: 1903,
+    issue: "Printer Problem",
+    employee: "Jane Smith",
+    department: "Registrar",
+    status: "New",
+    technician: "Unassigned",
+    date: "16/01/2024"
+}
 
 </script>
 
