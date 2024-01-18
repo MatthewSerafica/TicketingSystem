@@ -15,7 +15,7 @@
             <div class="" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active text-white" aria-current="page" href="#">Dashboard</a>
+                        <a class="nav-link active text-white" aria-current="page" href="/admin">Dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/admin/tickets">Tickets</a>
