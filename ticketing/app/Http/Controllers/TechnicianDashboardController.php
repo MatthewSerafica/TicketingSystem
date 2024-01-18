@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class EmployeeTicketController extends Controller
+class TechnicianDashboardController extends Controller
 {
     public function index() {
-        return inertia('Employee/Index');
+        return inertia('Technician/Dashboard/Index');
     }
 }
