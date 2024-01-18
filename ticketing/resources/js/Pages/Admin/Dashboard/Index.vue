@@ -13,7 +13,6 @@
     </div>
     props
 </template>
-
 <script>
 const props = defineProps({
     props: Object,
