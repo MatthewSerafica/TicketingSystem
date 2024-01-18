@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
+    <nav class="navbar navbar-expand-lg shadow-sm header-color">
         <div class="container-fluid gap-3">
             <div class="d-flex gap-2 col-6">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
@@ -7,7 +7,7 @@
                     <path
                         d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16M1 8a7 7 0 0 0 7 7 3.5 3.5 0 1 0 0-7 3.5 3.5 0 1 1 0-7 7 7 0 0 0-7 7" />
                 </svg>
-                <a class="navbar-brand" href="#">TMDD Ticketing System</a>
+                <a class="navbar-brand text-white" href="#">TMDD Ticketing System</a>
             </div>
             <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -15,19 +15,19 @@
             <div class="" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
+                        <a class="nav-link active text-white" aria-current="page" href="#">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Tickets</a>
+                        <a class="nav-link text-white" href="#">Tickets</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Reports</a>
+                        <a class="nav-link text-white" href="#">Reports</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Employees</a>
+                        <a class="nav-link text-white" href="#">Employees</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Technicians</a>
+                        <a class="nav-link text-white" href="#">Technicians</a>
                     </li>
                 </ul>
             </div>
@@ -53,5 +53,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+.header-color {
+    background-color: #1e81b0;
 }
 </style>
