@@ -1,15 +1,17 @@
 <template>
-    <div class="card" style="width: 30rem;">
+    <div class="card shadow-sm" style="width: 30rem;">
         <div class="card-body container-fluid text-center row justify-content-center align-items-center">
-            <div class="col">
+            <div class="col me-5">
                 <div class="fw-semibold ticket row ps-4 pb-2">Ticket #{{ no }}</div>
                 <div class="card-subtitle issue row ps-4 pb-2">{{ issue }}</div>
                 <div class="card-subtitle employee row ps-4 pb-2">{{ employee }} / {{ department }}</div>
-                <div class="card-subtitle row ps-4 pb-2">{{ date }}</div>
+                <div class="card-subtitle row ps-4 pb-2 date">{{ date }}</div>
             </div>
             <div class="col">
-                <div class="card-subtitle text-secondary">Status</div>
-                <div class="card-subtitle pb-2">{{ status }}</div>
+                <div class="card-subtitle ps-2 text-secondary row date">Status</div>
+                <div class="card-subtitle ps-2 pb-3 row other">{{ status }}</div>
+                <div class="card-subtitle ps-2 text-secondary row date">Assigned to</div>
+                <div class="card-subtitle ps-2 pb-3 row other">{{ technician }}</div>
             </div>
             <!-- <p class="card-subtitle text-secondary">Status</p> -->
         </div>
@@ -36,8 +38,6 @@ const props = defineProps({
     box-sizing: border-box;
 }
 
-
-
 .ticket {
     font-size: 20px;
 }
@@ -51,4 +51,14 @@ const props = defineProps({
     font-size: 14px;
     font-weight: 600;
 }
+
+.date {
+    font-size: 14px;
+}
+
+.other {
+    font-size: 16px;
+    font-weight:400;
+}
+
 </style>

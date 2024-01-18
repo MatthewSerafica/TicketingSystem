@@ -5,8 +5,8 @@
             <div class="recent-tickets">
                 <h2 class="fw-semibold">Recent Tickets</h2>
                 <div class="d-flex gap-2">
-                    <Button class="rounded" value="Create Ticket"></Button>
-                    <Button class="rounded bg-secondary text-white" value="View All"></Button>
+                    <Button class="rounded btnn secondary" value="Create Ticket"></Button>
+                    <Button class="rounded primary btnm" value="View All"></Button>
                 </div>
             </div>
             <div class="cards">
@@ -89,4 +89,31 @@ const three = {
     gap: 20px;
     flex-shrink: 0;
 }
+
+.primary  {
+    background-color: #063970;
+    color: #ffffff;
+}
+.secondary  {
+    background-color: #efefef;
+}
+
+.btnn {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btnn:hover {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.btnm {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btnm:hover {
+  background-color: #0958ac;
+  color: #ffffff;
+}
+
 </style>

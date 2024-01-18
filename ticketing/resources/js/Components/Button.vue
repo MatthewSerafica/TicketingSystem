@@ -1,5 +1,5 @@
 <template>
-    <input class="button" type="button">
+    <input class="button shadow-sm" type="button">
 </template>
 
 <script setup>
