@@ -12,13 +12,10 @@
     </div>
   
     <div class="container text-center w-100 h-100 justify-center">
-      <h1>View All Tickets</h1>
-      <p>Manage and Track all TMDD tickets</p>
-      <Link :href="`/technician/ticket/create`" class="create-ticket-link">Create New Ticket</Link>
-      <br /><br />
-      <button class="ticket-button">All</button>
-      <button class="ticket-button">New</button>
-      <button class="ticket-button">Pending</button>
+      <h1>View All Service Reports</h1>
+      <p>Manage and Track all TMDD Service Reports</p>
+      <button class="ticket-button">Open</button>
+      <button class="ticket-button">In Progress</button>
       <button class="ticket-button">Resolved</button>
     </div>
     <div class="table-container"></div>
@@ -58,20 +55,6 @@ h1 {
 p {
   font-size: 16px;
   margin-bottom: 20px;
-}
-
-.create-ticket-link {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #000066; 
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-.create-ticket-link:hover {
-  background-color: #898989;
 }
 
 .ticket-button {

@@ -73,11 +73,11 @@
         </div>
 
         <!-- Submit Button -->
-        <div class="input-container">
+        <div class="button-container">
+          <button type="button" @click="submitForm" class="submit-button">Submit</button>
           <Link href="/technician/service-report">
             <button type="button" class="cancel-button">Cancel</button>
           </Link>
-            <button type="button" @click="submitForm" class="submit-button">Submit</button>
         </div>
       </div>
     </form>
@@ -168,17 +168,18 @@ input, select {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-right: 10px; /* Add margin to create space */
   transition: background-color 0.3s;
 }
 
 .submit-button {
+  width: 200%;
   background-color: #000066;
   color: white;
-  padding: 10px 15px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  margin-right: 10px; /* Add margin to create space */
   transition: background-color 0.3s;
 }
 
