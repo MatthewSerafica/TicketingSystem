@@ -12,7 +12,7 @@ class AdminDashboardController extends Controller
     public function index() {
         $tickets = Ticket::with('employee.user', 'technician.user')->whereDate('created_at',today())->take(3)->get();
         return inertia('Admin/Dashboard/Index', [
-            'ticket' => $tickets,
+            'tickets' => $tickets,
         ]);
     }
 }

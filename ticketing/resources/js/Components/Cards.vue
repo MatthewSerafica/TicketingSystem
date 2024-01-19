@@ -13,7 +13,6 @@
                 <div class="card-subtitle ps-2 text-secondary row date">Assigned to</div>
                 <div class="card-subtitle ps-2 pb-3 row other">{{ technician }}</div>
             </div>
-            <!-- <p class="card-subtitle text-secondary">Status</p> -->
         </div>
     </div>
 </template>
@@ -36,6 +35,11 @@ const props = defineProps({
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
 }
 
 .ticket {

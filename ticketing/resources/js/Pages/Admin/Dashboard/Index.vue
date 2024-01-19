@@ -14,16 +14,16 @@
                         </Link>
                     </div>
                 </div>
-                <div class="cards">
-                    <Card :no="ticket.ticket_number" :issue="ticket.issue" :employee="ticket.employee" :department="one.department"
-                        :status="one.status" :technician="one.technician" :date="one.date"></Card>
-                    <Card :no="two.no" :issue="two.issue" :employee="two.employee" :department="two.department"
-                        :status="two.status" :technician="two.technician" :date="two.date"></Card>
-                    <Card :no="three.no" :issue="three.issue" :employee="three.employee" :department="three.department"
-                        :status="three.status" :technician="three.technician" :date="three.date"></Card>
+                <div class="cards bg-warning" v-for="ticket in tickets" :key="tickets.ticket_number">
+                    <Link class="text-decoration-none" :href="`/admin/tickets/${ticket.ticket_number}`">
+                        <Card class="" :no="ticket.ticket_number" :issue="ticket.issue" :employee="ticket.employee.user.name"
+                            :department="ticket.employee.department" :date="formatDate(ticket.created_at)"
+                            :status="ticket.status"
+                            :technician="ticket.technician ? ticket.technician.user.name : 'Unassigned'">
+                        </Card>
+                    </Link>
                 </div>
             </div>
-            {{ ticket }}
         </div>
     </div>
 </template>
@@ -33,39 +33,15 @@ import Button from '@/Components/Button.vue';
 import Card from '@/Components/Cards.vue';
 import Header from '@/Pages/Layouts/AdminHeader.vue';
 import { Link } from '@inertiajs/vue3';
+import moment from "moment";
 
 const props = defineProps({
-    ticket: Object,
+    tickets: Object,
 })
 
-const one = {
-    no: 1901,
-    issue: "Network Issue",
-    employee: "John Doe",
-    department: "Finance",
-    status: "Ongoing",
-    technician: "John Smith",
-    date: "16/01/2024"
-}
-const two = {
-    no: 1902,
-    issue: "Software Installation",
-    employee: "Jane Doe",
-    department: "Help Desk",
-    status: "Pending",
-    technician: "Unassigned",
-    date: "16/01/2024"
-}
-const three = {
-    no: 1903,
-    issue: "Printer Problem",
-    employee: "Jane Smith",
-    department: "Registrar",
-    status: "New",
-    technician: "Unassigned",
-    date: "16/01/2024"
-}
-
+const formatDate = (date) => {
+    return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
+};
 </script>
 
 <style>
@@ -75,6 +51,7 @@ const three = {
     padding: 0;
     box-sizing: border-box;
 }
+
 
 .recent {
     width: auto;
