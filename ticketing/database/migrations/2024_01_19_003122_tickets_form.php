@@ -12,16 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tickets_form', function (Blueprint $table) {
-            $table->bigIncrements('ticket_number')->unsigned()->primary(); 
-            $table->foreignName('employee_name')->constrained();
-            $table->foreigndepartment('employee_department')->constrained();
+            $table->id('ticket_number'); 
+            $table->string('employee_name');
+            $table->string('employee_department');
             $table->string('issue');
             $table->string('description');
-            $table->string('assigned_to');
+            $table->unsignedBigInteger('technician_id');
+            $table->foreign('technician_id')->default('Unassigned')->references('technician_number')->on('technician');
             $table->string('status');
             $table->date('date_created'); 
             $table->date('date_updated');
-            $table->timestamps();
         });
     }
 

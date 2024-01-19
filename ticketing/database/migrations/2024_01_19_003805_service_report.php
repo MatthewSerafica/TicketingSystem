@@ -12,18 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('service_report', function (Blueprint $table) {
-            $table->bigIncrements('service_number')->unsigned()->primary(); 
+            $table->id('service_number'); 
             $table->date('date_started');
             $table->time('time_started');
             $table->string('technician_name');
-            $table->string('requesting_department');
+            $table->unsignedBigInteger('employee_id');
+            $table->foreign('employee_id')->references('employee_id')->on('employee');
             $table->string('issue');
             $table->string('action');
             $table->string('recommendation');
             $table->string('status_update');
             $table->date('date_done');
             $table->time('time_done');
-            $table->timestamps();
         });
     }
 
