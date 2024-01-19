@@ -3,12 +3,7 @@
     <br>
 
     <div class="search">
-        <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Search Tickets..."
-        @input="handleSearch"
-      />
+        <input type="text" v-model="searchQuery" placeholder="Search Tickets..." @input="handleSearch"/>
     </div>
 
     <div class="container text-center w-100 h-100 justify-center">
@@ -26,7 +21,7 @@
     </div>
 </template>
 <script setup>
-import Header from "@/Pages/Layouts/Header.vue"
+import Header from "@/Pages/Layouts/EmployeeHeader.vue"
 import {Link, router} from "@inertiajs/vue3"
 
 
@@ -69,17 +64,17 @@ p {
   margin-bottom: 20px;
 }
 
-Link.create-ticket-link {
+.create-ticket-link {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #000000; /* Green */
+  background-color: #000066; 
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
   transition: background-color 0.3s;
 }
 
-Link.create-ticket-link:hover {
+.create-ticket-link:hover {
   background-color: #898989;
 }
 
@@ -89,7 +84,7 @@ Link.create-ticket-link:hover {
   padding: 10px 20px;
   font-size: 16px;
   border: none;
-  background-color: #cecece;
+  background-color: #CC9900;
   color: #1e1e1e;
   border-radius: 8px; /* Adjust border-radius for rounded edges */
   cursor: pointer;
@@ -97,7 +92,7 @@ Link.create-ticket-link:hover {
 }
 
 .ticket-button:hover {
-  background-color: #898989;
+  background-color: #6e5300;
   color: #e7e7e7;
 }
 </style>

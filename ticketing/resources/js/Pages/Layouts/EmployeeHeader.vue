@@ -1,8 +1,8 @@
 <template>
     <nav>
         <div class="left">
-            <a href="#" class="logo"></a>
-            <a href="#" class="brand">TMDD Ticketing System</a>
+            <a href="/employee" class="logo"></a>
+            <a href="/employee" class="brand">TMDD Ticketing System</a>
             </div>
             <div class="right">
             <a href="#" class="profile-picture"></a>
@@ -19,8 +19,8 @@
 <style>
 :root {
   /* COLORS */
-  --primary-color: #e8e8e8;
-  --text-color: #282828;
+  --primary-color: #000066;
+  --text-color: #CC9900;
 }
 
 * {
