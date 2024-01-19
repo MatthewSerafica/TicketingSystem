@@ -10,11 +10,9 @@ use Illuminate\Http\Request;
 class AdminDashboardController extends Controller
 {
     public function index() {
-        $employee = Employee::with('user')->first();
-        $ticket = Ticket::with('employee', 'technician')->first();
+        $tickets = Ticket::with('employee.user', 'technician.user')->whereDate('created_at',today())->take(3)->get();
         return inertia('Admin/Dashboard/Index', [
-            'ticket' => $ticket,
-            'employee' => $employee,
+            'ticket' => $tickets,
         ]);
     }
 }

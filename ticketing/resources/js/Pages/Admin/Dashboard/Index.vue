@@ -1,31 +1,30 @@
 <template>
-    <Header></Header>
-    <div class="recent">
-        <div class="d-flex">
-            <div class="recent-tickets">
-                <h2 class="fw-semibold">Recent Tickets</h2>
-                <div class="d-flex gap-2">
-                    <Link class="text-decoration-none" href="/admin/tickets/create">
-                    <Button class="rounded btnn secondary" value="Create Ticket"></Button>
-                    </Link>
-                    <Link class="text-decoration-none" href="/admin/tickets">
-                    <Button class="rounded primary btnm text-warning" value="View All"></Button>
-                    </Link>
+    <div>
+        <Header></Header>
+        <div class="recent">
+            <div class="d-flex">
+                <div class="recent-tickets">
+                    <h2 class="fw-semibold">Recent Tickets</h2>
+                    <div class="d-flex gap-2">
+                        <Link class="text-decoration-none" href="/admin/tickets/create">
+                        <Button class="rounded btnn secondary" value="Create Ticket"></Button>
+                        </Link>
+                        <Link class="text-decoration-none" href="/admin/tickets">
+                        <Button class="rounded primary btnm text-warning" value="View All"></Button>
+                        </Link>
+                    </div>
+                </div>
+                <div class="cards">
+                    <Card :no="ticket.ticket_number" :issue="ticket.issue" :employee="ticket.employee" :department="one.department"
+                        :status="one.status" :technician="one.technician" :date="one.date"></Card>
+                    <Card :no="two.no" :issue="two.issue" :employee="two.employee" :department="two.department"
+                        :status="two.status" :technician="two.technician" :date="two.date"></Card>
+                    <Card :no="three.no" :issue="three.issue" :employee="three.employee" :department="three.department"
+                        :status="three.status" :technician="three.technician" :date="three.date"></Card>
                 </div>
             </div>
-            <div class="cards">
-                <Card :no="one.no" :issue="one.issue" :employee="one.employee" :department="one.department"
-                    :status="one.status" :technician="one.technician" :date="one.date"></Card>
-                <Card :no="two.no" :issue="two.issue" :employee="two.employee" :department="two.department"
-                    :status="two.status" :technician="two.technician" :date="two.date"></Card>
-                <Card :no="three.no" :issue="three.issue" :employee="three.employee" :department="three.department"
-                    :status="three.status" :technician="three.technician" :date="three.date"></Card>
-            </div>
+            {{ ticket }}
         </div>
-        {{ ticket }}
-        <br>
-        <br>
-        {{ employee }}
     </div>
 </template>
 
@@ -37,7 +36,6 @@ import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     ticket: Object,
-    employee: Object,
 })
 
 const one = {
