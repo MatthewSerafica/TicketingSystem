@@ -4,7 +4,7 @@
     <br />
 
     <div class="title-container">
-      <h1>View All Tickets</h1>
+      <h1>Create Tickets</h1>
     </div>
 
     <div class="create-ticket">
