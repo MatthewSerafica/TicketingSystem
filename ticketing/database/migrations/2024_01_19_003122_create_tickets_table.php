@@ -11,17 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tickets_form', function (Blueprint $table) {
-            $table->id('ticket_number'); 
-            $table->string('employee_name');
-            $table->string('employee_department');
+        Schema::create('tickets', function (Blueprint $table) {
+            $table->id('ticket_number');
+            $table->unsignedBigInteger('employee');
+            $table->unsignedBigInteger('technician')->nullable();
+            $table->foreign('employee')->references('employee_id')->on('employees')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('technician')->references('technician_id')->on('technicians')->onUpdate('cascade')->onDelete('cascade');
             $table->string('issue');
             $table->string('description');
-            $table->unsignedBigInteger('technician_id');
-            $table->foreign('technician_id')->default('Unassigned')->references('technician_number')->on('technician');
             $table->string('status');
-            $table->date('date_created'); 
-            $table->date('date_updated');
+            $table->timestamps();
         });
     }
 

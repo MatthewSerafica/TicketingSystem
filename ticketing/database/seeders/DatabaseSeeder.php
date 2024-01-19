@@ -14,9 +14,35 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $users = [
+                [
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+                'password' => 'test'
+                ],
+                [
+                'name' => 'Test Technician',
+                'email' => 'technician@example.com',
+                'password' => 'test'
+                ],
+            ];
+
+        foreach ($users as $user) {
+            \App\Models\User::factory()->create($user);
+        }
+
+        \App\Models\Employee::factory()->create([
+            'user_id' => '1',
+            'department' => 'test department',
+            'made_ticket' => '0', 
+        ]);
+
+        \App\Models\Technician::factory()->create([
+            'user_id' => '2',
+        ]);
+
+        \App\Models\Ticket::factory()->create([
+            'employee_id' => '1',
+        ]);
     }
 }

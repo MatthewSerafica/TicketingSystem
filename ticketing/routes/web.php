@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminTicketController;
 use App\Http\Controllers\EmployeeTicketController;
 use App\Http\Controllers\TechnicianDashboardController;
 use App\Http\Controllers\TechnicianServiceController;
+use App\Http\Controllers\TechnicianTicketController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +27,8 @@ Route::get('/employee', [EmployeeTicketController::class, 'index']);
 Route::get('/employee/create', [EmployeeTicketController::class, 'create'])->name('employee.create');
 
 Route::get('/technician', [TechnicianDashboardController::class, 'index']);
+Route::get('/technician/tickets', [TechnicianTicketController::class, 'index']);
+Route::get('/technician/tickets/create', [TechnicianTicketController::class, 'create']);
 Route::get('/technician/service-report', [TechnicianServiceController::class, 'index']);
 Route::get('/technician/service-report/create', [TechnicianServiceController::class, 'create']);
 Route::get('/technician/ticket/create', [TechnicianServiceController::class, 'create']);

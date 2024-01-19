@@ -16,14 +16,12 @@ return new class extends Migration
             $table->date('date_started');
             $table->time('time_started');
             $table->string('technician_name');
-            $table->unsignedBigInteger('employee_id');
-            $table->foreign('employee_id')->references('employee_id')->on('employee');
+            $table->foreignId('employee_id')->references('employee_id')->on('employees');
             $table->string('issue');
             $table->string('action');
             $table->string('recommendation');
             $table->string('status_update');
-            $table->date('date_done');
-            $table->time('time_done');
+            $table->timestamps();
         });
     }
 
