@@ -1,20 +1,22 @@
 <template>
-    <div>
+    <div class="justify-content-center">
         <Header></Header>
-        <div class="recent">
-            <div class="d-flex">
-                <div class="recent-tickets">
-                    <h2 class="fw-semibold">Recent Tickets</h2>
-                    <div class="d-flex gap-2">
-                        <Link class="text-decoration-none" href="/admin/tickets/create">
+        <div class="d-flex align-items-center justify-content-center" style="padding-left: 200px;">
+            <!-- Left Side -->
+            <div class="recent-tickets">
+                <h2 class="fw-semibold">Recent Tickets</h2>
+                <div class="d-flex flex-row gap-2"> <!-- Changed to flex-row -->
+                    <Link class="text-decoration-none" href="/admin/tickets/create">
                         <Button class="rounded btnn secondary" value="Create Ticket"></Button>
-                        </Link>
-                        <Link class="text-decoration-none" href="/admin/tickets">
+                    </Link>
+                    <Link class="text-decoration-none" href="/admin/tickets">
                         <Button class="rounded primary btnm text-warning" value="View All"></Button>
-                        </Link>
-                    </div>
+                    </Link>
                 </div>
-                <div class="cards bg-warning" v-for="ticket in tickets" :key="tickets.ticket_number">
+            </div>
+            <!-- Right Side -->
+            <div class="d-flex flex-column gap-2 align-items-center justify-content-center">
+                <div v-for="ticket in tickets" :key="ticket.ticket_number" class="rounded bg-warning">
                     <Link class="text-decoration-none" :href="`/admin/tickets/${ticket.ticket_number}`">
                         <Card class="" :no="ticket.ticket_number" :issue="ticket.issue" :employee="ticket.employee.user.name"
                             :department="ticket.employee.department" :date="formatDate(ticket.created_at)"
@@ -27,6 +29,7 @@
         </div>
     </div>
 </template>
+
 
 <script setup>
 import Button from '@/Components/Button.vue';
