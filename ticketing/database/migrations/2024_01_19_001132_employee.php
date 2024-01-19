@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->bigIncrements('employee_number')->unsigned()->primary(); 
-            $table->foreignId('employee_id')->constrained();
+            $table->id('employee_id'); 
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->string('department');
             $table->integer('made_ticket')->default(0);
         });
