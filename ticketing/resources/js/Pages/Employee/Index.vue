@@ -2,10 +2,6 @@
     <Header></Header>
     <br>
 
-    <div class="search">
-        <input type="text" v-model="searchQuery" placeholder="Search Tickets..." @input="handleSearch"/>
-    </div>
-
     <div class="container text-center w-100 h-100 justify-center">
         <H1>View All Tickets</H1>
         <p> Manage and Track all TMDD tickets</p>
@@ -16,12 +12,18 @@
         <button class="ticket-button">Pending</button>
         <button class="ticket-button">Resolved</button>
     </div>
+    <div class="search">
+        <input type="text" v-model="searchQuery" placeholder="Search Tickets... 
+                       
+                                                                                                              Q" @input="handleSearch"/>
+    </div>
+
     <div class="table-container">
       <table>
         <thead>
           <tr>
             <th>Ticket No</th>
-            <th>Employee</th>
+            <th>Employee Name</th>
             <th>Department</th>
             <th>Issue</th>
             <th>Technician</th>
