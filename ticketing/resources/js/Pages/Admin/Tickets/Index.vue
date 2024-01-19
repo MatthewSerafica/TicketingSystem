@@ -14,7 +14,7 @@
     <div class="container text-center w-100 h-100 justify-center">
         <H1>View All Tickets</H1>
         <p> Manage and Track all TMDD tickets</p>
-        <Link :href="`/employee/create`" class="create-ticket-link">Create New Ticket</Link>
+        <Link :href="`/admin/tickets/create`" class="create-ticket-link">Create New Ticket</Link>
         <br><br>
         <button class="ticket-button">All</button>
         <button class="ticket-button">New</button>
