@@ -12,7 +12,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::factory(10)->create();
 
         $users = [
                 [
@@ -52,7 +51,6 @@ class DatabaseSeeder extends Seeder
             \App\Models\User::factory()->create($user);
         }
 
-        \App\Models\Employee::factory()->create();
         $employees = [
             [
             'user_id' => '1',
@@ -77,7 +75,6 @@ class DatabaseSeeder extends Seeder
             \App\Models\Employee::factory()->create($employee);
         }
 
-        \App\Models\Technician::factory()->create();
             $technicians = [
                 [
                 'user_id' => '1',
@@ -98,7 +95,6 @@ class DatabaseSeeder extends Seeder
             \App\Models\Technician::factory()->create($technician);
         }
 
-        \App\Models\Ticket::factory()->create();
             
             $tickets = [
                 [
