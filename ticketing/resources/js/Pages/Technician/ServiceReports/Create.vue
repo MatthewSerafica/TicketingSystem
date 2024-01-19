@@ -45,7 +45,8 @@
           <select id="problemEncountered" v-model="form.problemEncountered" class="long-input1 custom-select">
             <option value="">Select an option</option>
             <option value="No Internet">No Internet</option>
-            <option value="Computer Not Working">Computer Not Working</option>
+            <option value="Software Installation">Software Installation</option>
+            <option value="Printer Problem">Printer Problem</option>
           </select>
 
           <!-- Action Taken -->
