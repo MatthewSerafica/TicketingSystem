@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('department');
             $table->integer('made_ticket')->default(0);
+            $table->timestamps();
         });
     }
 

@@ -5,10 +5,12 @@
             <div class="recent-tickets">
                 <h2 class="fw-semibold">Recent Tickets</h2>
                 <div class="d-flex gap-2">
-                    <Link href="/admin/ticket/create">
+                    <Link class="text-decoration-none" href="/admin/tickets/create">
                     <Button class="rounded btnn secondary" value="Create Ticket"></Button>
                     </Link>
+                    <Link class="text-decoration-none" href="/admin/tickets">
                     <Button class="rounded primary btnm text-warning" value="View All"></Button>
+                    </Link>
                 </div>
             </div>
             <div class="cards">
@@ -20,6 +22,7 @@
                     :status="three.status" :technician="three.technician" :date="three.date"></Card>
             </div>
         </div>
+        {{ users }}
     </div>
 </template>
 
@@ -28,6 +31,10 @@ import Button from '@/Components/Button.vue';
 import Card from '@/Components/Cards.vue';
 import Header from '@/Pages/Layouts/AdminHeader.vue';
 import { Link } from '@inertiajs/vue3';
+
+const props = defineProps({
+    users: Object,
+})
 
 const one = {
     no: 1901,
