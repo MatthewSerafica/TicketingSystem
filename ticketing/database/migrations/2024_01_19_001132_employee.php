@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('technician', function (Blueprint $table) {
-            $table->id('technician_id'); 
+        Schema::create('employees', function (Blueprint $table) {
+            $table->id('employee_id'); 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->boolean('is_working')->default(true);
-            $table->integer('tickets_assigned')->default(0);
-            $table->integer('tickets_resolved')->default(0);
+            $table->string('department');
+            $table->integer('made_ticket')->default(0);
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('technicians');
+        Schema::dropIfExists('employee');
     }
 };

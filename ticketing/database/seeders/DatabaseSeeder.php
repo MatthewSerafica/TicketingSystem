@@ -12,41 +12,122 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        \App\Models\User::factory(10)->create();
 
-        /* $users = [
+        $users = [
                 [
-                'name' => 'Test User',
-                'email' => 'test@example.com',
-                'password' => 'test'
+                'name' => 'Adrian Salinas',
+                'email' => 'adriansalinas@slu.edu.ph',
+                'password' => '123456',
+                'department' => 'SAMCIS',
                 ],
                 [
-                'name' => 'Test Technician',
-                'email' => 'technician@example.com',
-                'password' => 'test'
+                'name' => 'Matthew Serafica',
+                'email' => 'Matthewserafica.slu.edu.ph',
+                'password' => '123456',
+                'department' => 'SEA',
                 ],
+                [
+                'name' => 'Lovely Osngal',
+                'email' => 'lovelyosngal@slu.edu.com',
+                'password' => '123456',
+                'department' => 'SEA',
+                ],
+                [
+                'name' => 'Prince Taguiling',
+                'email' => 'Princetaguiling@slu.edu.ph',
+                'password' => '123456',
+                'department' => 'SAMCIS',
+                ],
+                    
             ];
 
         foreach ($users as $user) {
             \App\Models\User::factory()->create($user);
         }
 
-        \App\Models\Employee::factory()->create([
+        \App\Models\Employee::factory()->create();
+        $employees = [
+            [
             'user_id' => '1',
-            'department' => 'test department',
-            'made_ticket' => '0', 
-        ]);
-
-        \App\Models\Technician::factory()->create([
+            'department' => 'SAMCIS',
+            ],
+            [
             'user_id' => '2',
-        ]); */
+            'department' => 'SEA',
+            ],
+            [
+            'user_id' => '3',
+            'department' => 'SEA',
+            ],
+            [
+            'user_id' => '4',
+            'department' => 'SAMCIS',
+            ],
+                
+        ];
 
-        \App\Models\Ticket::factory()->create([
-            'employee' => '1',
-            'technician' => '1',
-            'issue' => 'Network Issue',
-            'description' => 'test',
-            'status' => 'New',
-        ]);
+        foreach ($employees as $employee) {
+            \App\Models\Employee::factory()->create($employee);
+        }
+
+        \App\Models\Technician::factory()->create();
+            $technicians = [
+                [
+                'user_id' => '1',
+                ],
+                [
+                'user_id' => '2',
+                ],
+                [
+                'user_id' => '3'
+                ],
+                [
+                'user_id' => '4',
+                ],
+                    
+            ];
+
+        foreach ($technicians as $technician) {
+            \App\Models\Technician::factory()->create($technician);
+        }
+
+        \App\Models\Ticket::factory()->create();
+            
+            $tickets = [
+                [
+                'employee' => '1',
+                'technician' => '',
+                'issue' => 'Network Issue',
+                'description' => 'test',
+                'status' => 'New',
+                ],
+                [
+                'employee' => '2',
+                'technician' => '',
+                'issue' => 'Hardware Issue',
+                'description' => 'broken monitor',
+                'status' => 'New',
+                ],
+                [
+                'employee' => '3',
+                'technician' => '',
+                'issue' => 'Hardware Issue',
+                'description' => 'broken keyboard',
+                'status' => 'New',
+                ],
+                [
+                'employee' => '4',
+                'technician' => '',
+                'issue' => 'Network Issue',
+                'description' => 'No internet connection',
+                'status' => 'New',
+                ],
+                    
+            ];
+        foreach ($tickets as $ticket) {
+            \App\Models\Ticket::factory()->create($ticket);
+        }
+        
     }
 }
