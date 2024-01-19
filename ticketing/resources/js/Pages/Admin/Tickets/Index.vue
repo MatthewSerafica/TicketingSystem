@@ -22,7 +22,7 @@
         <button class="ticket-button">Resolved</button>
     </div>
     <div class="table-container">
-      <table>
+      <table class=" table table-hover">
         <thead>
           <tr>
             <th>Ticket No</th>
@@ -36,7 +36,16 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Table rows with data will go here -->
+          <tr v-for="ticket in tickets" :key="tickets.ticket_number">
+            <td>{{ticket.ticket_number}}</td>
+            <td>{{ticket.employee.user.name}}</td>
+            <td>{{ticket.employee.department}}</td>
+            <td>{{ ticket.issue }}</td>
+            <td>{{ticket.technician ? ticket.technician.user.name : 'Unassigned'}}</td>
+            <td>{{ticket.status}}</td>
+            <td>{{formatDate(ticket.created_at)}}</td>
+            <td>Date Resolved</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -44,8 +53,16 @@
 <script setup>
 import Header from "@/Pages/Layouts/AdminHeader.vue"
 import {Link, router} from "@inertiajs/vue3"
+import moment from "moment";
+
+const props = defineProps({
+  tickets: Object,
+})
 
 
+const formatDate = (date) => {
+    return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
+};
 </script>
 
 
@@ -109,4 +126,6 @@ Link.create-ticket-link:hover {
   background-color: #898989;
   color: #e7e7e7;
 }
+
+
 </style>
