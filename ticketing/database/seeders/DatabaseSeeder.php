@@ -16,28 +16,34 @@ class DatabaseSeeder extends Seeder
 
         $users = [
                 [
+                'name' => 'Jon Doe',
+                'email' => 'JonDoe@slu.edu.ph',
+                'password' => '123456',
+                'user_type' => 'admin',
+                ],
+                [
                 'name' => 'Adrian Salinas',
                 'email' => 'adriansalinas@slu.edu.ph',
                 'password' => '123456',
-                'department' => 'SAMCIS',
+                'user_type' => 'employee',
                 ],
                 [
                 'name' => 'Matthew Serafica',
                 'email' => 'Matthewserafica.slu.edu.ph',
                 'password' => '123456',
-                'department' => 'SEA',
+                'user_type' => 'technician',
                 ],
                 [
                 'name' => 'Lovely Osngal',
                 'email' => 'lovelyosngal@slu.edu.com',
                 'password' => '123456',
-                'department' => 'SEA',
+                'user_type' => 'technician',
                 ],
                 [
                 'name' => 'Prince Taguiling',
                 'email' => 'Princetaguiling@slu.edu.ph',
                 'password' => '123456',
-                'department' => 'SAMCIS',
+                'user_type' => 'employee',
                 ],
                     
             ];
