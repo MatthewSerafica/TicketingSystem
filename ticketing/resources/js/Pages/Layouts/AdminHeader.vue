@@ -48,7 +48,6 @@
 </script>
 
 <style>
-
 .h-color {
     background-color: #000066;
 }

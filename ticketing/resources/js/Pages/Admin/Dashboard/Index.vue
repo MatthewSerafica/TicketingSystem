@@ -45,14 +45,6 @@ const formatDate = (date) => {
 </script>
 
 <style>
-* {
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-
 .recent {
     width: auto;
     padding: 3rem;

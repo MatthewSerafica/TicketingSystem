@@ -48,13 +48,6 @@ import {Link, router} from "@inertiajs/vue3"
 
 
 <style>
-* {
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 
 .search {
   margin: 10px 0;
