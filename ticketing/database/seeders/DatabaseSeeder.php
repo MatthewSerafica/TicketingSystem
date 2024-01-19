@@ -98,28 +98,24 @@ class DatabaseSeeder extends Seeder
             $tickets = [
                 [
                 'employee' => '1',
-                'technician' => '',
                 'issue' => 'Network Issue',
                 'description' => 'test',
                 'status' => 'New',
                 ],
                 [
                 'employee' => '2',
-                'technician' => '',
                 'issue' => 'Hardware Issue',
                 'description' => 'broken monitor',
                 'status' => 'New',
                 ],
                 [
                 'employee' => '3',
-                'technician' => '',
                 'issue' => 'Hardware Issue',
                 'description' => 'broken keyboard',
                 'status' => 'New',
                 ],
                 [
                 'employee' => '4',
-                'technician' => '',
                 'issue' => 'Network Issue',
                 'description' => 'No internet connection',
                 'status' => 'New',
