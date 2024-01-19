@@ -6,21 +6,75 @@
         <h2>SERVICE REPORT FORM</h2>
 
         <!-- Group for Date Started, Time Started, Ticket Number -->
-        <div class="row-input-container1">
-          <!-- ... -->
-        </div>
+        <div class="row-input-container">
+          <!-- Date Started -->
+          <div class="input-container">
+            <label for="dateStarted">Date Started:</label>
+            <input type="date" id="dateStarted" v-model="form.dateStarted">
+          </div>
 
-        <!-- Common container for both row-input-container1 and row-input-container2 -->
-        <div class="row-container">
-          <!-- Group for Technician Name, Requesting Office, Equipment, Property Tag/Serial No. -->
-          <div class="row-input-container2">
-            <!-- ... -->
+          <!-- Time Started -->
+          <div class="input-container">
+            <label for="timeStarted">Time Started:</label>
+            <input type="time" id="timeStarted" v-model="form.timeStarted">
+          </div>
+
+          <!-- Ticket Number -->
+          <div class="input-container">
+            <label for="ticketNumber">Ticket Number:</label>
+            <input type="text" id="ticketNumber" v-model="form.ticketNumber">
           </div>
         </div>
 
-        <!-- Group for Problem Encountered, Action Taken, Recommendation -->
+        <!-- Group for Technician Name, Requesting Office, Equipment, Property Tag/Serial No., Action Taken, Recommendation -->
+        <div class="input-container">
+          <!-- Technician Name -->
+          <label for="technicianName">Technician Name:</label>
+          <input type="text" id="technicianName" v-model="form.technicianName" class="long-input1">
+
+          <!-- Requesting Office -->
+          <label for="requestingOffice">Requesting Office:</label>
+          <input type="text" id="requestingOffice" v-model="form.requestingOffice" class="long-input1">
+
+          <!-- Equipment, Property Tag/Serial No. -->
+          <label for="equipmentNumber">Equipment, Property Tag/Serial No.:</label>
+          <input type="text" id="equipmentNumber" v-model="form.equipmentNumber" class="long-input1">
+
+          <!-- Problem Encountered -->
+          <label for="problemEncountered">Problem Encountered:</label>
+          <select id="problemEncountered" v-model="form.problemEncountered" class="long-input1 custom-select">
+            <option value="">Select an option</option>
+            <option value="No Internet">No Internet</option>
+            <option value="Computer Not Working">Computer Not Working</option>
+          </select>
+
+          <!-- Action Taken -->
+          <label for="actionTaken">Action Taken:</label>
+          <input type="text" id="actionTaken" v-model="form.actionTaken" class="long-input1">
+
+          <!-- Recommendation -->
+          <label for="recommendation">Recommendation:</label>
+          <input type="text" id="recommendation" v-model="form.recommendation" class="long-input1">
+        </div>
+
+        <!-- Group for Date Done, Time Done -->
         <div class="row-input-container">
-          <!-- ... -->
+          <!-- Date Done -->
+          <div class="input-container">
+            <label for="dateDone">Date Done:</label>
+            <input type="date" id="dateDone" v-model="form.dateDone" class="long-input2" :min="minDate">
+          </div>
+
+          <!-- Time Done -->
+          <div class="input-container">
+            <label for="timeDone">Time Done:</label>
+            <input type="time" id="timeDone" v-model="form.timeDone" class="long-input2">
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="input-container">
+            <button type="button" @click="submitForm">Submit</button>
         </div>
       </div>
     </form>
@@ -31,6 +85,9 @@
 import Header from '@/Pages/Layouts/TechnicianHeader.vue'
 import { useForm } from '@inertiajs/vue3';
 
+const today = new Date();
+const minDate = today.toISOString().split('T')[0]; 
+
 const form = useForm({
   dateStarted: '',
   timeStarted: '',
@@ -40,8 +97,14 @@ const form = useForm({
   equipmentNumber: '',
   problemEncountered: '',
   actionTaken: '',
-  recommendation: ''
+  recommendation: '',
+  dateDone: '',
+  timeDone: ''
 });
+
+const submitForm = () => {
+  console.log('Form submitted:', form);
+};
 </script>
 
 <style scoped>
@@ -49,44 +112,57 @@ const form = useForm({
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px; /* Adjust as needed */
-  border-radius: 10px; /* Add border-radius for rounded corners */
-  background-color: white; /* Add a background color for better visibility */
-  padding: 20px; /* Add padding for spacing inside the container */
+  margin-top: 50px; 
+  border-radius: 10px; 
+  background-color: white; 
+  padding: 20px; 
 }
 
 .form-container1 h2 {
-  margin-bottom: 15px; /* Adjust as needed for spacing between header and labels */
+  margin-bottom: 15px; 
 }
 
-.row-container {
+.row-input-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-}
-
-.row-input-container1,
-.row-input-container2 {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-bottom: 15px; /* Add margin-bottom for space between rows */
+  margin-bottom: 15px; 
 }
 
 .input-container {
-  margin-top: 15px; /* Adjust as needed for spacing between inputs */
-  margin-right: 10px; /* Add margin-right for space between individual input containers */
+  margin-top: 15px;
+  margin-right: 10px;
+}
+
+.custom-select {
+  height: 43px; 
 }
 
 .input-container label {
-  display: block; /* Make labels block-level for better styling */
+  display: block;
 }
 
-/* Add border-radius to the input elements */
-input {
-  border: 1px solid #ccc; /* Add a border for better visibility */
-  border-radius: 5px; /* Add border-radius for rounded corners */
-  padding: 8px; /* Add padding for spacing inside the input */
-  width: 200px; /* Adjust width as needed */
+.long-input1 {
+  width: 620px; 
+}
+
+.long-input2 {
+  width: 305px; 
+}
+
+input, select {
+  border: 1px solid #ccc; 
+  border-radius: 5px;
+  padding: 8px;
+  width: 200px; 
+}
+
+button {
+  background-color: #000066;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>

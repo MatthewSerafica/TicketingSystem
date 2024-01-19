@@ -1,5 +1,6 @@
 <template>
-    technician dashboard
+    <div> technician dashboard</div>
+    
 </template>
 
 <script setup></script>
