@@ -56,6 +56,6 @@
 }
 
 .header-color {
-    background-color: #063970;
+    background-color: #000066;
 }
 </style>

@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import Header from "@/Pages/Layouts/Header.vue";
+import Header from "@/Pages/Layouts/EmployeeHeader.vue";
 import {Link, router} from "@inertiajs/vue3"
 </script>
 
