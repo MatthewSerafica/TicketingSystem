@@ -5,22 +5,29 @@
             <div class="recent-tickets">
                 <h2 class="fw-semibold">Recent Tickets</h2>
                 <div class="d-flex gap-2">
+                    <Link href="/admin/ticket/create">
                     <Button class="rounded btnn secondary" value="Create Ticket"></Button>
-                    <Button class="rounded primary btnm" value="View All"></Button>
+                    </Link>
+                    <Button class="rounded primary btnm text-warning" value="View All"></Button>
                 </div>
             </div>
             <div class="cards">
-                <Card :no="one.no" :issue="one.issue" :employee="one.employee" :department="one.department" :status="one.status" :technician="one.technician" :date="one.date"></Card>
-                <Card :no="two.no" :issue="two.issue" :employee="two.employee" :department="two.department" :status="two.status" :technician="two.technician" :date="two.date"></Card>
-                <Card :no="three.no" :issue="three.issue" :employee="three.employee" :department="three.department" :status="three.status" :technician="three.technician" :date="three.date"></Card>
+                <Card :no="one.no" :issue="one.issue" :employee="one.employee" :department="one.department"
+                    :status="one.status" :technician="one.technician" :date="one.date"></Card>
+                <Card :no="two.no" :issue="two.issue" :employee="two.employee" :department="two.department"
+                    :status="two.status" :technician="two.technician" :date="two.date"></Card>
+                <Card :no="three.no" :issue="three.issue" :employee="three.employee" :department="three.department"
+                    :status="three.status" :technician="three.technician" :date="three.date"></Card>
             </div>
         </div>
     </div>
 </template>
+
 <script setup>
-import Header from '@/Pages/Layouts/AdminHeader.vue'
-import Card from '@/Components/Cards.vue'
-import Button from '@/Components/Button.vue'
+import Button from '@/Components/Button.vue';
+import Card from '@/Components/Cards.vue';
+import Header from '@/Pages/Layouts/AdminHeader.vue';
+import { Link } from '@inertiajs/vue3';
 
 const one = {
     no: 1901,
@@ -59,6 +66,7 @@ const three = {
     padding: 0;
     box-sizing: border-box;
 }
+
 .recent {
     width: auto;
     padding: 3rem;
@@ -90,30 +98,28 @@ const three = {
     flex-shrink: 0;
 }
 
-.primary  {
-    background-color: #063970;
-    color: #ffffff;
+.primary {
+    background-color: #000066;
 }
-.secondary  {
+
+.btnm {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btnm:hover {
+    background-color: #00009c;
+    color: #CC9900;
+}
+
+.secondary {
     background-color: #efefef;
 }
 
 .btnn {
-  transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .btnn:hover {
-  background-color: #ffffff;
-  color: #000000;
-}
-
-.btnm {
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.btnm:hover {
-  background-color: #0958ac;
-  color: #ffffff;
-}
-
-</style>
+    background-color: #ffffff;
+    color: #000000;
+}</style>
