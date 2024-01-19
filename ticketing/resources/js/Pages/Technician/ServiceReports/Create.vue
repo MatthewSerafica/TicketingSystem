@@ -74,7 +74,10 @@
 
         <!-- Submit Button -->
         <div class="input-container">
-            <button type="button" @click="submitForm">Submit</button>
+          <Link href="/technician/service-report">
+            <button type="button" class="cancel-button">Cancel</button>
+          </Link>
+            <button type="button" @click="submitForm" class="submit-button">Submit</button>
         </div>
       </div>
     </form>
@@ -83,7 +86,7 @@
 
 <script setup>
 import Header from '@/Pages/Layouts/TechnicianHeader.vue'
-import { useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 
 const today = new Date();
 const minDate = today.toISOString().split('T')[0]; 
@@ -101,6 +104,7 @@ const form = useForm({
   dateDone: '',
   timeDone: ''
 });
+
 
 const submitForm = () => {
   console.log('Form submitted:', form);
@@ -157,12 +161,29 @@ input, select {
   width: 200px; 
 }
 
-button {
+.cancel-button {
   background-color: #000066;
   color: white;
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-right: 10px; /* Add margin to create space */
+  transition: background-color 0.3s;
+}
+
+.submit-button {
+  background-color: #000066;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cancel-button:hover,
+.submit-button:hover {
+  background-color: #0c0c36; 
 }
 </style>
