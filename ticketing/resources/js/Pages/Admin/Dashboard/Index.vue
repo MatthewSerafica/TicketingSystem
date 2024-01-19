@@ -22,7 +22,10 @@
                     :status="three.status" :technician="three.technician" :date="three.date"></Card>
             </div>
         </div>
-        {{ users }}
+        {{ ticket }}
+        <br>
+        <br>
+        {{ employee }}
     </div>
 </template>
 
@@ -33,7 +36,8 @@ import Header from '@/Pages/Layouts/AdminHeader.vue';
 import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
-    users: Object,
+    ticket: Object,
+    employee: Object,
 })
 
 const one = {

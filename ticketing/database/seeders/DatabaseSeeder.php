@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        $users = [
+        /* $users = [
                 [
                 'name' => 'Test User',
                 'email' => 'test@example.com',
@@ -39,10 +39,14 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Technician::factory()->create([
             'user_id' => '2',
-        ]);
+        ]); */
 
         \App\Models\Ticket::factory()->create([
-            'employee_id' => '1',
+            'employee' => '1',
+            'technician' => '1',
+            'issue' => 'Network Issue',
+            'description' => 'test',
+            'status' => 'New',
         ]);
     }
 }

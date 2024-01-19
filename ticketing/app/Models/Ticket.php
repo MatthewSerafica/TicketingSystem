@@ -12,14 +12,19 @@ class Ticket extends Model
 
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(Employee::class, 'employee_id');
+        return $this->belongsTo(Employee::class, 'employee', 'employee_id');
+    }
+    
+    public function technician(): BelongsTo
+    {
+        return $this->belongsTo(Technician::class, 'technician', 'technician_id');
     }
 
     protected $fillable = [
-        'employee_id',
+        'employee',
         'issue',
         'description',
-        'technician_id',
+        'technician',
         'status'
     ];
 }

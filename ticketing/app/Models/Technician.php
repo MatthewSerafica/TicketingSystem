@@ -15,6 +15,10 @@ class Technician extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function tickets() {
+        return $this->hasMany(Employee::class, 'technician_id', 'technician');
+    }
+
     protected $fillable = [
         'technician_id',
         'user_id',

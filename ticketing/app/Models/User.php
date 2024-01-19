@@ -15,6 +15,11 @@ class User extends Authenticatable
         return $this->hasOne(Employee::class, 'user_id', 'employee_id');
     }
 
+    public function technician() {
+        return $this->hasOne(Technician::class, 'user_id', 'technician_id');
+    }
+
+
     /**
      * The attributes that are mass assignable.
      *
