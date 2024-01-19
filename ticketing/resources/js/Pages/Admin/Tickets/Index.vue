@@ -22,7 +22,23 @@
         <button class="ticket-button">Resolved</button>
     </div>
     <div class="table-container">
-
+      <table>
+        <thead>
+          <tr>
+            <th>Ticket No</th>
+            <th>Employee</th>
+            <th>Department</th>
+            <th>Issue</th>
+            <th>Technician</th>
+            <th>Status</th>
+            <th>Date Issued</th>
+            <th>Date Resolved</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Table rows with data will go here -->
+        </tbody>
+      </table>
     </div>
 </template>
 <script setup>

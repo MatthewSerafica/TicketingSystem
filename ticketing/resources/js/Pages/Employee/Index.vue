@@ -17,7 +17,23 @@
         <button class="ticket-button">Resolved</button>
     </div>
     <div class="table-container">
-
+      <table>
+        <thead>
+          <tr>
+            <th>Ticket No</th>
+            <th>Employee</th>
+            <th>Department</th>
+            <th>Issue</th>
+            <th>Technician</th>
+            <th>Status</th>
+            <th>Date Issued</th>
+            <th>Date Resolved</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Table rows with data will go here -->
+        </tbody>
+      </table>
     </div>
 </template>
 <script setup>
@@ -95,4 +111,28 @@ p {
   background-color: #6e5300;
   color: #e7e7e7;
 }
+.table-container{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+}
+
+table {   
+      width: 80%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      margin: auto;
+    }
+
+    th, td {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
 </style>
