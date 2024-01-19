@@ -19,8 +19,8 @@
 <style>
 :root {
   /* COLORS */
-  --primary-color: #e8e8e8;
-  --text-color: #282828;
+  --primary-color: #000066;
+  --text-color: #CC9900;
 }
 
 * {

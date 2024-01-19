@@ -21,7 +21,7 @@
     </div>
 </template>
 <script setup>
-import Header from "@/Pages/Layouts/Header.vue"
+import Header from "@/Pages/Layouts/EmployeeHeader.vue"
 import {Link, router} from "@inertiajs/vue3"
 
 
@@ -67,7 +67,7 @@ p {
 .create-ticket-link {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #000000; /* Green */
+  background-color: #000066; 
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
@@ -84,7 +84,7 @@ p {
   padding: 10px 20px;
   font-size: 16px;
   border: none;
-  background-color: #cecece;
+  background-color: #CC9900;
   color: #1e1e1e;
   border-radius: 8px; /* Adjust border-radius for rounded edges */
   cursor: pointer;
@@ -92,7 +92,7 @@ p {
 }
 
 .ticket-button:hover {
-  background-color: #898989;
+  background-color: #6e5300;
   color: #e7e7e7;
 }
 </style>
