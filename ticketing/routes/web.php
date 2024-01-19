@@ -28,4 +28,5 @@ Route::get('/employee/create', [EmployeeTicketController::class, 'create'])->nam
 Route::get('/technician', [TechnicianDashboardController::class, 'index']);
 Route::get('/technician/service-report', [TechnicianServiceController::class, 'index']);
 Route::get('/technician/service-report/create', [TechnicianServiceController::class, 'create']);
+Route::get('/technician/ticket/create', [TechnicianServiceController::class, 'create']);
 

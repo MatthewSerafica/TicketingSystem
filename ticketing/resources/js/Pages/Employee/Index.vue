@@ -20,6 +20,7 @@
 
     </div>
 </template>
+
 <script setup>
 import Header from "@/Pages/Layouts/EmployeeHeader.vue"
 import {Link, router} from "@inertiajs/vue3"
