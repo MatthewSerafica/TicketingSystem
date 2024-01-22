@@ -29,6 +29,7 @@
             <th>Employee</th>
             <th>Department</th>
             <th>Issue</th>
+            <th>Service</th>
             <th>Technician</th>
             <th>Status</th>
             <th>Date Issued</th>
@@ -41,6 +42,7 @@
             <td>{{ticket.employee.user.name}}</td>
             <td>{{ticket.employee.department}}</td>
             <td>{{ ticket.issue }}</td>
+            <td>{{ ticket.service }}</td>
             <td>{{ticket.technician ? ticket.technician.user.name : 'Unassigned'}}</td>
             <td>{{ticket.status}}</td>
             <td>{{formatDate(ticket.created_at)}}</td>
