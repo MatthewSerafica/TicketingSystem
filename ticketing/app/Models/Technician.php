@@ -27,4 +27,6 @@ class Technician extends Model
         'tickets_resolved',
         'status'
     ];
+
+    protected $primaryKey = 'technician_id';
 }

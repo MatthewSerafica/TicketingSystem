@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/admin', [AdminDashboardController::class, 'index']);
 Route::get('/admin/tickets', [AdminTicketController::class, 'index']);
 Route::get('/admin/tickets/create', [AdminTicketController::class, 'create']);
-Route::get('/admin/tickets/create/store', [AdminTicketController::class, 'store'])->name('tickets.store');
+Route::post('/admin/tickets/create/store', [AdminTicketController::class, 'store'])->name('admin.tickets.store');
 
 Route::get('/employee', [EmployeeTicketController::class, 'index']);
 Route::get('/employee/create', [EmployeeTicketController::class, 'create'])->name('employee.create');

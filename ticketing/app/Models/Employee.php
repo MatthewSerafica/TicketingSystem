@@ -24,4 +24,6 @@ class Employee extends Model
         'department',
         'made_ticket'
     ];
+
+    protected $primaryKey = 'employee_id';
 }

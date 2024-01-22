@@ -24,8 +24,10 @@ class AdminTicketController extends Controller
     public function create()
     {
         $technicians = Technician::with('user')->get();
+        $employees = Employee::with('user')->get();
         return inertia('Admin/Tickets/Create', [
             'technicians' => $technicians,
+            'employees' => $employees,
         ]);
     }
 
@@ -53,9 +55,9 @@ class AdminTicketController extends Controller
             'status' => 'Pending',
         ];
 
-        $ticket = Ticket::create($ticketData);
-        $ticket->employee->update(['made_ticket'=> $employee->made_ticket + 1]);
+        Ticket::create($ticketData);
+        $employee->update(['made_ticket'=> $employee->made_ticket + 1]);
 
-        return redirect()->back()->with('success', 'Ticket Created');
+        return redirect()->to('/admin/tickets')->with('success', 'Ticket Created');
     }
 }
