@@ -32,3 +32,4 @@ Route::get('/technician/tickets/create', [TechnicianTicketController::class, 'cr
 Route::get('/technician/service-report', [TechnicianServiceController::class, 'index']);
 Route::get('/technician/service-report/create', [TechnicianServiceController::class, 'create']);
 
+Route::get('/')
