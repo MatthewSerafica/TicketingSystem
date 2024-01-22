@@ -5,7 +5,6 @@
       <div class="login-section">
         <h2 class="fw-semibold">Login</h2>
         <form @submit.prevent="login">
-
           <label for="username">Email:</label>
           <input v-model="username" type="text" id="username" required />
 
@@ -13,8 +12,8 @@
           <input v-model="password" type="password" id="password" required />
 
           <router-link @click="forgotPassword" class="forgot-password-link">Forgot Password</router-link>
+
           <button type="submit" class="rounded primary btnm">Login</button>
-          
         </form>
       </div>
     </div>
@@ -57,25 +56,37 @@ const form = useForm({
 
 .login-section label {
   margin-top: 10px;
+  font-size: 16px; /* Adjust font size */
 }
 
 .login-section input {
   margin-bottom: 10px;
-  padding: 8px;
+  padding: 10px;
   border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px; /* Adjust font size */
 }
 
 .login-section button {
-  margin-top: 10px;
-  padding: 10px;
+  margin-top: 15px;
+  padding: 12px 20px; /* Adjust padding for a cleaner look */
   cursor: pointer;
-  color: white; 
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease; /* Add a smooth transition effect */
+}
+
+.login-section button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
 }
 
 .forgot-password-link {
-  margin-top: 10px;
+  margin-top: 15px;
   text-decoration: underline;
   cursor: pointer;
-  color: #000066; 
-} 
+  color: #000066;
+  font-size: 14px; /* Adjust font size */
+}
 </style>
