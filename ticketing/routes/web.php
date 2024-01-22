@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminTicketController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeTicketController;
 use App\Http\Controllers\TechnicianDashboardController;
 use App\Http\Controllers\TechnicianServiceController;
@@ -31,5 +32,7 @@ Route::get('/technician/tickets', [TechnicianTicketController::class, 'index']);
 Route::get('/technician/tickets/create', [TechnicianTicketController::class, 'create']);
 Route::get('/technician/service-report', [TechnicianServiceController::class, 'index']);
 Route::get('/technician/service-report/create', [TechnicianServiceController::class, 'create']);
+
+Route::get('/login', [AuthController::class, 'login']);
 
 //Route::get('/')

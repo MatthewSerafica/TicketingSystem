@@ -1,6 +1,5 @@
 <template>
     <div class="justify-content-center">
-      <Header></Header>
       <div class="d-flex align-items-center justify-content-center" style="padding-left: 200px;">
         <!-- Login Section -->
         <div class="login-section">
