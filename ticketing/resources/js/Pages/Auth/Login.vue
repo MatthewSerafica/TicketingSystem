@@ -45,6 +45,7 @@ const form = useForm({
   flex-direction: column;
   width: 300px;
   padding: 20px;
+  border: 1px solid #ccc;
   border-radius: 10px;
   margin-bottom: 20px;
 }
