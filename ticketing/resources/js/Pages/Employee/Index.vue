@@ -1,54 +1,59 @@
 <template>
-    <Header></Header>
-    <br>
+  <div class="d-flex justify-content-end align-items-center p-4">
+    <Link :href="route('logout')" method="delete" as="button" v-if="page.props.user" class="btn btn-outline-secondary">
+    <i class="bi bi-box-arrow-right"></i>
+    </Link>
+  </div>
+  <br>
 
-    <div class="container text-center w-100 h-100 justify-center">
-        <H1>View All Tickets</H1>
-        <p> Manage and Track all TMDD tickets</p>
-        <Link :href="`/employee/create`" class="create-ticket-link">Create New Ticket</Link>
-        <br><br>
-        <button class="ticket-button">All</button>
-        <button class="ticket-button">New</button>
-        <button class="ticket-button">Pending</button>
-        <button class="ticket-button">Resolved</button>
-    </div>
-    <div class="search">
-        <input type="text" v-model="searchQuery" placeholder="Search Tickets... 
+  <div class="container text-center w-100 h-100 justify-center">
+    <H1>View All Tickets</H1>
+    <p> Manage and Track all TMDD tickets</p>
+    <Link :href="`/employee/create`" class="create-ticket-link">Create New Ticket</Link>
+    <br><br>
+    <button class="ticket-button">All</button>
+    <button class="ticket-button">New</button>
+    <button class="ticket-button">Pending</button>
+    <button class="ticket-button">Resolved</button>
+  </div>
+  <div class="search">
+    <input type="text" v-model="searchQuery" placeholder="Search Tickets... 
                        
-                                                                                                              Q" @input="handleSearch"/>
-    </div>
+                                                                                                              Q"
+      @input="handleSearch" />
+  </div>
 
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Ticket No</th>
-            <th>Employee Name</th>
-            <th>Department</th>
-            <th>Issue</th>
-            <th>Technician</th>
-            <th>Status</th>
-            <th>Date Issued</th>
-            <th>Date Resolved</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Table rows with data will go here -->
-        </tbody>
-      </table>
-    </div>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Ticket No</th>
+          <th>Employee Name</th>
+          <th>Department</th>
+          <th>Issue</th>
+          <th>Technician</th>
+          <th>Status</th>
+          <th>Date Issued</th>
+          <th>Date Resolved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Table rows with data will go here -->
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup>
-import Header from "@/Pages/Layouts/EmployeeHeader.vue"
-import {Link, router} from "@inertiajs/vue3"
+import Header from "@/Pages/Layouts/EmployeeHeader.vue";
+import { Link, usePage } from "@inertiajs/vue3";
 
+const page = usePage();
 
 </script>
 
 
 <style>
-
 .search {
   margin: 10px 0;
   display: flex;
@@ -79,7 +84,7 @@ p {
 .create-ticket-link {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #000066; 
+  background-color: #000066;
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
@@ -98,7 +103,8 @@ p {
   border: none;
   background-color: #CC9900;
   color: #1e1e1e;
-  border-radius: 8px; /* Adjust border-radius for rounded edges */
+  border-radius: 8px;
+  /* Adjust border-radius for rounded edges */
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -107,21 +113,23 @@ p {
   background-color: #6e5300;
   color: #e7e7e7;
 }
-.table-container{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0;
+
+.table-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
 }
 
-table {   
-      width: 80%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      margin: auto;
-    }
+table {
+  width: 80%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin: auto;
+}
 
-    th, td {
+th,
+td {
   border: 1px solid #dddddd;
   text-align: center;
   padding: 8px;
@@ -130,5 +138,4 @@ table {
 th {
   background-color: #f2f2f2;
 }
-
 </style>

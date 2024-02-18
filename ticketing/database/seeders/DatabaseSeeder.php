@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
         $users = [
                 [
                 'name' => 'Jon Doe',
-                'email' => 'JonDoe@slu.edu.ph',
+                'email' => 'jondoe@slu.edu.ph',
                 'password' => '123456',
                 'user_type' => 'admin',
                 ],
