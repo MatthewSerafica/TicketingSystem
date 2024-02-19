@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="justify-content-center">
         <Header></Header>
         <div class="recent justify-content-center align-items-center d-flex flex-column">
             <div class="d-flex flex-row">
@@ -37,6 +37,7 @@
         </div>
     </div>
 </template>
+
 
 <script setup>
 import Button from '@/Components/Button.vue';
