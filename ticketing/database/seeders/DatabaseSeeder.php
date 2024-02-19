@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
         $users = [
                 [
                 'name' => 'Jon Doe',
-                'email' => 'JonDoe@slu.edu.ph',
+                'email' => 'jondoe@slu.edu.ph',
                 'password' => '123456',
                 'user_type' => 'admin',
                 ],
@@ -52,19 +52,11 @@ class DatabaseSeeder extends Seeder
 
         $employees = [
             [
-            'user_id' => '1',
-            'department' => 'SAMCIS',
-            ],
-            [
             'user_id' => '2',
             'department' => 'SEA',
             ],
             [
-            'user_id' => '3',
-            'department' => 'SEA',
-            ],
-            [
-            'user_id' => '4',
+            'user_id' => '5',
             'department' => 'SAMCIS',
             ],
                 
@@ -75,12 +67,6 @@ class DatabaseSeeder extends Seeder
         }
 
             $technicians = [
-                [
-                'user_id' => '1',
-                ],
-                [
-                'user_id' => '2',
-                ],
                 [
                 'user_id' => '3'
                 ],
@@ -98,24 +84,13 @@ class DatabaseSeeder extends Seeder
             $tickets = [
                 [
                 'employee' => '1',
-                'issue' => 'Network Issue',
-                'description' => 'test',
-                'status' => 'New',
+                'issue' => 'Hardware Issue',
+                'service' => 'Hardware Repair',
+                'description' => 'broken monitor',
+                'status' => 'Pending',
                 ],
                 [
                 'employee' => '2',
-                'issue' => 'Hardware Issue',
-                'description' => 'broken monitor',
-                'status' => 'New',
-                ],
-                [
-                'employee' => '3',
-                'issue' => 'Hardware Issue',
-                'description' => 'broken keyboard',
-                'status' => 'New',
-                ],
-                [
-                'employee' => '4',
                 'issue' => 'Network Issue',
                 'description' => 'No internet connection',
                 'status' => 'New',

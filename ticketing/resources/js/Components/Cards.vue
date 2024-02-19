@@ -31,10 +31,6 @@ const props = defineProps({
 
 <style>
 
-.card {
-    display: flex;
-    flex-direction: column;
-}
 
 .ticket {
     font-size: 20px;

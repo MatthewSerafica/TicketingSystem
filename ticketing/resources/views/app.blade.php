@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>TMDD Ticketing System</title>
+    <?php echo app('Tightenco\Ziggy\BladeRouteGenerator')->generate(); ?>
     @vite('resources/js/app.js')
     @inertiaHead
 </head>
