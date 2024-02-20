@@ -30,6 +30,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/tickets', [AdminTicketController::class, 'index'])->name('admin.tickets');
         Route::get('/admin/tickets/create', [AdminTicketController::class, 'create'])->name('admin.tickets.create');
         Route::post('/admin/tickets/create/store', [AdminTicketController::class, 'store'])->name('admin.tickets.store');
+        
     });
     Route::middleware(['auth', 'employee'])->group(function () {
         Route::get('/employee', [EmployeeTicketController::class, 'index']);

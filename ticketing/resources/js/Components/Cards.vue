@@ -29,7 +29,7 @@ const props = defineProps({
 })
 </script>
 
-<style>
+<style scoped>
 
 
 .ticket {
