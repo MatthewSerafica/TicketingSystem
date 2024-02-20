@@ -16,8 +16,8 @@
     <button class="ticket-button">Pending</button>
     <button class="ticket-button">Resolved</button>
   </div>
-  <div class="table-container">
-    <table class="table table-hover">
+  <div >
+    <table id="ticketTable">
       <thead>
         <tr>
           <th>Ticket No</th>
@@ -51,6 +51,9 @@
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link } from "@inertiajs/vue3";
 import moment from "moment";
+import DataTable from 'datatables.net-dt';
+
+let table = new DataTable('#ticketTable');
 
 const props = defineProps({
   tickets: Object,

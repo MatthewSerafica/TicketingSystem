@@ -76,8 +76,8 @@
 </template>
   
 <script setup>
-import Header from "@/Pages/Layouts/AdminHeader.vue"
-import { Link, router, useForm } from "@inertiajs/vue3"
+import Header from "@/Pages/Layouts/AdminHeader.vue";
+import { Link, useForm } from "@inertiajs/vue3";
 
 const props = defineProps({
   technicians: Object,
