@@ -46,10 +46,10 @@
               <select id="service" class="h-100 rounded border-secondary-subtle" placeholder="Select Service..."
                 v-model="form.service">
                 <option disabled>Select Service</option>
-                <option>Network Troubleshoot</option>
-                <option>Hardware Repair</option>
-                <option>Software Troubleshoot</option>
-                <option>Network Troubleshoot</option>
+                <option value="Network Troubleshoot">Network Troubleshoot</option>
+                <option value="Hardware Repair">Hardware Repair</option>
+                <option value="Software Troubleshoot">Software Troubleshoot</option>
+                <option value="Network Troubleshoot">Network Troubleshoot</option>
               </select>
             </div>
             <div class="d-flex flex-column flex-shrink-0 w-25">

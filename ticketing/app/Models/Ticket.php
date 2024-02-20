@@ -25,6 +25,7 @@ class Ticket extends Model
         'issue',
         'description',
         'technician',
+        'service',
         'status'
     ];
 }

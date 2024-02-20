@@ -35,10 +35,10 @@ class AdminTicketController extends Controller
     {
 
         $request->validate([
-            'issue' => 'required',
-            'service' => 'required',
             'description' => 'required',
             'employee' => 'required',
+            'issue' => 'required',
+            'service' => 'required',
             'technician' => 'required',
         ]);
         $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
