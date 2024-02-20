@@ -2,10 +2,6 @@
   <Header></Header>
   <br>
 
-  <div class="search">
-    <input type="text" v-model="searchQuery" placeholder="Search Tickets..." @input="handleSearch" />
-  </div>
-
   <div class="container text-center w-100 h-100 justify-center">
     <H1>View All Tickets</H1>
     <p> Manage and Track all TMDD tickets</p>
@@ -15,9 +11,12 @@
     <button class="ticket-button">New</button>
     <button class="ticket-button">Pending</button>
     <button class="ticket-button">Resolved</button>
+    <div class="search">
+      <input type="text" v-model="searchQuery" placeholder="Search Tickets..." @input="handleSearch" />
+    </div>
   </div>
-  <div >
-    <table id="ticketTable">
+  <div>
+    <table>
       <thead>
         <tr>
           <th>Ticket No</th>
@@ -51,9 +50,6 @@
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link } from "@inertiajs/vue3";
 import moment from "moment";
-import DataTable from 'datatables.net-dt';
-
-let table = new DataTable('#ticketTable');
 
 const props = defineProps({
   tickets: Object,
