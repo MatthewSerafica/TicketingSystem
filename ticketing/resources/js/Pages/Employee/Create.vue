@@ -57,40 +57,6 @@ const create = () => form.post(route('employee.tickets.store'), {
   text-align: center;
 }
 
-.create-ticket {
-  margin: 10px 0;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
-
-.create-ticket div {
-  margin-bottom: 20px;
-  width: 80%;
-}
-
-.create-ticket input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.container {
-  padding: 20px;
-}
-
-h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
-}
-
-p {
-  justify-content: start;
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
 .button-container {
   display: flex;
   justify-content: center;
