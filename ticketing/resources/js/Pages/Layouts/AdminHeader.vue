@@ -1,4 +1,5 @@
 <template>
+    <div>
     <nav class="navbar navbar-expand-lg shadow-sm h-color text-white">
         <div class="container-fluid gap-3">
             <div class="d-flex gap-2 col-6">
@@ -10,7 +11,7 @@
                 <a class="navbar-brand text-white" href="/admin">TMDD Ticketing System</a>
             </div>
             <div class="" id="navbarNav">
-                <ul class="navbar-nav gap-4">
+                <ul class="navbar-nav ">
                     <li class="nav-item">
                         <a class="nav-link text-white" aria-current="page" href="/admin">Dashboard</a>
                     </li>
@@ -26,7 +27,12 @@
                 </ul>
             </div>
             <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
-                <i class="bi bi-bell text-white me-3"  style="font-size: 20px;"></i> 
+                <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationBar"
+                    aria-controls="notificationBar">
+                    <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
+                    <span class="text-light bg-danger position-absolute top-0 rounded-pill badge" id="count"
+                        style="font-size: small; padding: 2px 5px 2px 5px;"></span>
+                </button>
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                     class="bi bi-person-circle" viewBox="0 0 16 16">
                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
@@ -49,11 +55,37 @@
             </div>
         </div>
     </nav>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationBar" aria-labelledby="notificationBarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="notificationBarLabel">Notifications</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="container mt-4">
+                <nav class="nav nav-pills nav-fill navbar-light" style="background-color: #fafafa;">
+                    <a class="nav-link" :class="{ 'active': activeTab === 'technician' }" aria-current="page" href="#technician-content" @click.prevent="showTab('technician')">Technician</a>
+                    <a class="nav-link" :class="{ 'active': activeTab === 'employee' }" href="#employee-content" @click.prevent="showTab('employee')">Employee</a>
+                </nav>
+                <div id="tab-content">
+                    <div v-if="activeTab === 'technician'">Technician Content...</div>
+                    <div v-if="activeTab === 'employee'">Employee Content...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </template>
 
 <script setup>
-import { Link, usePage } from "@inertiajs/vue3";
+import { ref } from 'vue';
+const activeTab = ref('technician'); // Default active tab
 
+function showTab(tab) {
+    activeTab.value = tab;
+}
+
+import { Link, usePage } from "@inertiajs/vue3";
 const page = usePage();
 </script>
 
