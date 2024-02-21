@@ -10,7 +10,12 @@
                 <Link class="navbar-brand text-white" :href="`/employee`">TMDD Ticketing System</Link>
             </div>
             <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
-                <i class="bi bi-bell text-white me-3"  style="font-size: 20px;"></i> 
+                <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationBar"
+                    aria-controls="notificationBar">
+                    <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
+                    <span class="text-light bg-danger position-absolute top-0 rounded-pill badge" id="count"
+                        style="font-size: small; padding: 2px 5px 2px 5px;"></span>
+                </button>
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                     class="bi bi-person-circle" viewBox="0 0 16 16">
                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
@@ -33,9 +38,11 @@
             </div>
         </div>
     </nav>
+    <OffCanvas></OffCanvas>
 </template>
 
 <script setup>
+import OffCanvas from '@/Components/OffCanvas.vue';
 import { Link, usePage } from "@inertiajs/vue3";
 
 const page = usePage();
