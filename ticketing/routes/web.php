@@ -35,8 +35,9 @@ Route::middleware(['web'])->group(function () {
         
     });
     Route::middleware(['auth', 'employee'])->group(function () {
-        Route::get('/employee', [EmployeeTicketController::class, 'index']);
+        Route::get('/employee', [EmployeeTicketController::class, 'index'])->name('employee');
         Route::get('/employee/create', [EmployeeTicketController::class, 'create'])->name('employee.create');
+        Route::post('/employee/create/store', [EmployeeTicketController::class, 'store'])->name('employee.tickets.store');
     });
     Route::middleware(['auth', 'technician'])->group(function () {
         Route::get('/technician', [TechnicianDashboardController::class, 'index']);
