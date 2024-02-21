@@ -10,7 +10,7 @@
                 <a class="navbar-brand text-white" href="/admin">TMDD Ticketing System</a>
             </div>
             <div class="" id="navbarNav">
-                <ul class="navbar-nav ">
+                <ul class="navbar-nav gap-4">
                     <li class="nav-item">
                         <a class="nav-link text-white" aria-current="page" href="/admin">Dashboard</a>
                     </li>

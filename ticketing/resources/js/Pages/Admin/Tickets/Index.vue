@@ -43,7 +43,19 @@
               <td class="text-center py-3">{{ ticket.employee.department }}</td>
               <td class="text-center py-3">{{ ticket.issue }}</td>
               <td class="text-center py-3">{{ ticket.service ? ticket.service : 'Unassigned' }}</td>
-              <td class="text-center py-3">{{ ticket.technician ? ticket.technician.user.name : 'Unassigned' }}</td>
+              <!-- <td class="text-center py-3">{{ ticket.technician ? ticket.technician.user.name : 'Unassigned' }}</td> -->
+              <td class="text-center py-3">
+                <div class="btn-group">
+                  <button type="button" class="btn">{{ ticket.technician ? ticket.technician.user.name : 'Unassigned' }}</button>
+                  <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu" >
+                    <li class="dropdown-item disabled">Select a technician</li>
+                    <li v-for="technician in technicians" class="btn dropdown-item">{{technician.user.name}}</li>
+                  </ul>
+                </div>
+              </td>
               <td class="text-center py-3">
                 <div class="btn-group">
                   <button type="button" :class="getButtonClass(ticket.status)">{{ ticket.status }}</button>
@@ -74,6 +86,7 @@ import moment from "moment";
 
 const props = defineProps({
   tickets: Object,
+  technicians: Object,
 })
 
 

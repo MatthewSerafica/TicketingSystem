@@ -17,8 +17,10 @@ class AdminTicketController extends Controller
             ->whereYear('created_at', Carbon::now()->year)
             ->whereMonth('created_at', Carbon::now()->month)
             ->get();
+        $technicians = Technician::with('user')->get();
         return inertia('Admin/Tickets/Index', [
             'tickets' => $tickets,
+            'technicians' => $technicians,
         ]);
     }
     public function create()

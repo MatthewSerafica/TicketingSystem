@@ -1,9 +1,9 @@
 <template>
     <div class="justify-content-center">
         <Header></Header>
-        <div class="recent justify-content-center align-items-center d-flex flex-column">
-            <div class="d-flex flex-row">
-                <div class="recent-tickets">
+        <div class="justify-content-center align-items-center d-flex flex-column mt-5 pt-5 gap-5">
+            <div class="d-flex flex-row gap-5">
+                <div class="mt-5 pt-5">
                     <h2 class="fw-semibold">Recent Tickets</h2>
                     <div class="d-flex gap-2">
                         <Link class="text-decoration-none" :href="route('admin.tickets.create')">
