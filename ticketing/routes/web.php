@@ -32,13 +32,14 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/tickets/create', [AdminTicketController::class, 'create'])->name('admin.tickets.create');
         Route::post('/admin/tickets/create/store', [AdminTicketController::class, 'store'])->name('admin.tickets.store');
         Route::get('/admin/users', [AdminUsersController::class, 'index'])->name('admin.users');
-        
     });
+
     Route::middleware(['auth', 'employee'])->group(function () {
         Route::get('/employee', [EmployeeTicketController::class, 'index'])->name('employee');
         Route::get('/employee/create', [EmployeeTicketController::class, 'create'])->name('employee.create');
-        Route::post('/employee/create/store', [EmployeeTicketController::class, 'store'])->name('employee.tickets.store');
+        Route::post('/employee/create/store', [EmployeeTicketController::class, 'store'])->name('employee.store');
     });
+
     Route::middleware(['auth', 'technician'])->group(function () {
         Route::get('/technician', [TechnicianDashboardController::class, 'index']);
         Route::get('/technician/tickets', [TechnicianTicketController::class, 'index']);
