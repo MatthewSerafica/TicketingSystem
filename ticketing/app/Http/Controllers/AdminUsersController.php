@@ -12,7 +12,7 @@ class AdminUsersController extends Controller
     public function index()
     {
         $employees = Employee::with('user')->get();
-        $users = User::with('employee', 'technician')->get();
+        $users = User::with('technician', 'employee')->get();
         return inertia('Admin/Users/Index', [
             'users' => $users,
             'employees'=> $employees

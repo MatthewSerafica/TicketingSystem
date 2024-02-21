@@ -50,15 +50,12 @@ const props = defineProps({
   employees: Object,
 });
 
-console.log(props.users)
-
-const searchQuery = ref(""); 
+/* const searchQuery = ref(""); 
 let users = ref([]); 
 
 const filteredUsers = ref([]);
 
 
-// Fetch users who are either employees or technicians
 onMounted(async () => {
   try {
     const response = await User.getAllUsers(); 
@@ -69,17 +66,14 @@ onMounted(async () => {
 });
 
 const handleSearch = () => {
-  // Implement your search logic here
-  // For simplicity, you can filter users based on name or email
   filteredUsers.value = users.value.filter(user =>
     (user.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
     user.email.toLowerCase().includes(searchQuery.value.toLowerCase())) &&
     user.user_type !== 'admin' // Filter out admin users
   );
-};
+}; */
 
 
-// Format date function
 const formatDate = (date) => {
   return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
 };
