@@ -94,6 +94,7 @@ class DatabaseSeeder extends Seeder
                 'issue' => 'Network Issue',
                 'description' => 'No internet connection',
                 'status' => 'New',
+                'service' => 'Software Troubleshoot',
                 ],
                     
             ];

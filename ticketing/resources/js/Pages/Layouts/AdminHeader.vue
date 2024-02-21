@@ -24,10 +24,7 @@
                         <a class="nav-link text-light" href="#">Reports</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="#">Employees</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="#">Technicians</a>
+                        <a class="nav-link text-light" href="/admin/users">Users</a>
                     </li>
                 </ul>
             </div>

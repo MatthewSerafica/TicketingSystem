@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminTicketController;
+use App\Http\Controllers\AdminUsersController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeTicketController;
 use App\Http\Controllers\TechnicianDashboardController;
@@ -30,6 +31,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/tickets', [AdminTicketController::class, 'index'])->name('admin.tickets');
         Route::get('/admin/tickets/create', [AdminTicketController::class, 'create'])->name('admin.tickets.create');
         Route::post('/admin/tickets/create/store', [AdminTicketController::class, 'store'])->name('admin.tickets.store');
+        Route::get('/admin/users', [AdminUsersController::class, 'index'])->name('admin.users');
         
     });
     Route::middleware(['auth', 'employee'])->group(function () {
