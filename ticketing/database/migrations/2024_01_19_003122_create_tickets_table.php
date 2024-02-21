@@ -18,10 +18,11 @@ return new class extends Migration
             $table->foreign('employee')->references('employee_id')->on('employees')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('technician')->references('technician_id')->on('technicians')->onUpdate('cascade')->onDelete('cascade');
             $table->string('issue');
-            $table->string('service');
+            $table->string('service')->nullable();
             $table->string('description');
             $table->string('status');
             $table->timestamps();
+            $table->timestamp('resolved_at')->nullable();
         });
     }
 
