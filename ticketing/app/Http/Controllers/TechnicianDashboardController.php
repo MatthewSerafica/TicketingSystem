@@ -11,8 +11,8 @@ class TechnicianDashboardController extends Controller
 {
     public function index() {
         $user = Auth::user();
-        $techinician = Technician::where('user_id', $user->id)->firstOrFail();
-        $tickets = Ticket::where('employee')->with('employee.user', 'technician.user')->whereDate('created_at',today())->orderByDesc('created_at')->take(3)->get();
+        $technician = Technician::where('user_id', $user->id)->firstOrFail();
+        $tickets = Ticket::where('technician', $technician->technician_id)->with('employee.user', 'technician.user')->whereDate('created_at',today())->orderByDesc('created_at')->take(3)->get();
         return inertia('Technician/Dashboard/Index', [
             'tickets' => $tickets,
         ]);
