@@ -8,7 +8,7 @@ const props = defineProps({
 })
 </script>
 
-<style>
+<style scoped>
 .button {
     display: flex;
     width: 160px;
