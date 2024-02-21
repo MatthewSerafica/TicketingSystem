@@ -17,23 +17,6 @@
                 v-model="form.issue" />
             </div>
             <div class="d-flex flex-column flex-shrink-0 w-25">
-              <label for="department" class="fw-semibold">Department/Office</label>
-              <select id="department" class="h-100 rounded border-secondary-subtle" placeholder="Select Department..."
-                v-model="form.department">
-                <option disabled>Select Department</option>
-                <option>Finance Department</option>
-                <option>Registrar</option>
-                <option>Help Desk</option>
-              </select>
-            </div>
-          </div>
-          <div class="d-flex flex-row gap-5 justify-content-center">
-            <div class="flex-shirnk-0">
-              <label for="description" class="fw-semibold">Description</label>
-              <input for="description" class="border-secondary-subtle" type="text"
-                placeholder="Enter Ticket Description..." v-model="form.description" />
-            </div>
-            <div class="d-flex flex-column flex-shrink-0 w-25">
               <label for="service" class="fw-semibold">Service</label>
               <select id="service" class="h-100 rounded border-secondary-subtle" placeholder="Select Service..."
                 v-model="form.service">
@@ -43,6 +26,13 @@
                 <option value="Software Troubleshoot">Software Troubleshoot</option>
                 <option value="Network Troubleshoot">Network Troubleshoot</option>
               </select>
+            </div>
+          </div>
+          <div class="d-flex flex-row gap-5 justify-content-center">
+            <div class="flex-shirnk-0">
+              <label for="description" class="fw-semibold">Description</label>
+              <input for="description" class="border-secondary-subtle" type="text"
+                placeholder="Enter Ticket Description..." v-model="form.description" />
             </div>
           </div>
         </div>
@@ -71,8 +61,12 @@ const form = useForm({
   description: null,
   employee: page.props.user.id,
 })
+const create = () => {
+    const url = route('employee.store');
+    console.log('Generated URL:', url);
+    form.post(url, { preserveScroll: false, preserveState: false });
+};
 
-const create = () => form.post(route('employee.tickets.store'), { preserveScroll: false, preserveState: false })
 </script>
   
 <style>

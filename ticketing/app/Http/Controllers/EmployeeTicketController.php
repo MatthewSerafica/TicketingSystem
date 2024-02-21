@@ -9,10 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 class EmployeeTicketController extends Controller
 {
-    public function index() {
-        return inertia('Employee/Index');
+    public function index()
+    {
+        $user = Auth::user();
+        $employee = Employee::where('user_id', $user->id)->firstOrFail();
+        $ticket = Ticket::where('employee', $employee->employee_id)->with('employee.user', 'technician.user')->get();
+        return inertia('Employee/Index', [
+            'tickets' => $ticket,
+        ]);
     }
-    public function create() {
+    public function create()
+    {
         return inertia('Employee/Create');
     }
 
@@ -24,14 +31,14 @@ class EmployeeTicketController extends Controller
             'issue' => 'required',
             'service' => 'required',
         ]);
-        $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
+
+        $employee = Employee::where('user_id', $request->employee)->firstOrFail();
         if ($employee->made_ticket >= 5) {
             return redirect()->back()->with('error', 'You have already made the max number of tickets.');
         }
 
         $ticketData = [
-            'employee' => $request->employee,
-            'technician' => $request->technician,
+            'employee' => $employee->employee_id,
             'issue' => $request->issue,
             'description' => $request->description,
             'service' => $request->service,
@@ -39,8 +46,7 @@ class EmployeeTicketController extends Controller
         ];
 
         Ticket::create($ticketData);
-
-        $employee->update(['made_ticket'=> $employee->made_ticket + 1]);
+        $employee->update(['made_ticket' => $employee->made_ticket + 1]);
 
         return redirect()->to('/employee')->with('success', 'Ticket Created');
     }
