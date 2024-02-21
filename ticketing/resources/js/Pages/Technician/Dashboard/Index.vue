@@ -1,159 +1,87 @@
 <template>
-    <div>
-      <Header></Header>
-      <div class="recent">
-        <div class="d-flex">
-          <div class="recent-tickets">
-            <h2 class="fw-semibold">Recent Tickets</h2>
-            <div class="d-flex gap-2">
-              <Link class="text-decoration-none" href="/technician/tickets/create">
-                <Button class="rounded btnn secondary" value="Create Ticket"></Button>
-              </Link>
-              <Link class="text-decoration-none" href="/technician/tickets">
-                <Button class="rounded primary btnm text-white" value="View All"></Button>
-              </Link>
-            </div>
-          </div>
-          <div class="cards">
-            <Card
-              :no="one.no"
-              :issue="one.issue"
-              :employee="one.employee"
-              :department="one.department"
-              :status="one.status"
-              :technician="one.technician"
-              :date="one.date"
-            ></Card>
-            <Card
-              :no="two.no"
-              :issue="two.issue"
-              :employee="two.employee"
-              :department="two.department"
-              :status="two.status"
-              :technician="two.technician"
-              :date="two.date"
-            ></Card>
-            <Card
-              :no="three.no"
-              :issue="three.issue"
-              :employee="three.employee"
-              :department="three.department"
-              :status="three.status"
-              :technician="three.technician"
-              :date="three.date"
-            ></Card>
+  <div class="justify-content-center">
+    <Header></Header>
+    <div class="recents justify-content-center align-items-center d-flex flex-column">
+      <div class="d-flex flex-row">
+        <div class="recents-tickets">
+          <h2 class="fw-semibold">Recent Tickets</h2>
+          <div class="d-flex gap-2">
+            <Link class="text-decoration-none" href="/technician/tickets/create">
+              <Button class="rounded btnn secondary" value="Create Ticket"></Button>
+            </Link>
+            <Link class="text-decoration-none" href="/technician/tickets">
+              <Button class="rounded primary btnm text-white" value="View All"></Button>
+            </Link>
           </div>
         </div>
-        {{ props.ticket }}
-        <br>
-        <br>
-        {{ props.technician }}
-      </div>
+
+        <div class="d-flex flex-column gap-4 justify-content-center align-items-center">
+          <div v-if="tickets && tickets.length > 0" class="d-flex flex-column gap-4 justify-content-center align-items-center">
+            <div class="" v-for="ticket in tickets" :key="tickets.ticket_number">
+                  <Link class="text-decoration-none" :href="`/technician/tickets/${ticket.ticket_number}`">
+                  <Card class="" :no="ticket.ticket_number" :issue="ticket.issue"
+                    :employee="ticket.employee.user.name" :department="ticket.employee.department"
+                    :date="formatDate(ticket.created_at)" :status="ticket.status"
+                    :technician="ticket.technician.user.name">
+                  </Card>
+                  </Link>
+            </div>
+          </div>
+          <div v-else>
+            <EmptyCard></EmptyCard>
+          </div>
+        </div>
+        </div>
     </div>
-  </template>
+  </div>
+</template>
 
 <script setup>
 import Button from '@/Components/Button.vue';
 import Card from '@/Components/Cards.vue';
-import Header from '@/Pages/Layouts/TechnicianHeader.vue';
+import EmptyCard from '@/Components/EmptyState/Cards.vue';
+import Header from '@/Pages/Layouts/AdminHeader.vue';
 import { Link } from '@inertiajs/vue3';
+import moment from "moment";
 
 const props = defineProps({
-    ticket: Object,
-    technician: Object,
+  tickets: Object,
 })
 
-const one = {
-    no: 1901,
-    issue: "Network Issue",
-    employee: "John Doe",
-    department: "Finance",
-    status: "Ongoing",
-    technician: "John Smith",
-    date: "16/01/2024"
-}
-const two = {
-    no: 1902,
-    issue: "Software Installation",
-    employee: "Jane Doe",
-    department: "Help Desk",
-    status: "Pending",
-    technician: "John Smith",
-    date: "16/01/2024"
-}
-const three = {
-    no: 1903,
-    issue: "Printer Problem",
-    employee: "Jane Smith",
-    department: "Registrar",
-    status: "New",
-    technician: "John Smith",
-    date: "16/01/2024"
-}
-
+const formatDate = (date) => {
+  return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
+};
 </script>
 
 <style>
-* {
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
-.recent {
-    width: auto;
-    padding: 3rem;
-    padding-left: 15rem;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-}
-
-.recent-tickets {
-    display: flex;
-    width: 520px;
-    height: 604px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: left;
-    gap: 1rem;
-    flex-shrink: 0;
-}
-
-.cards {
-    display: flex;
-    width: 520px;
-    height: 604px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    flex-shrink: 0;
+.recents {
+  margin-top: 150px;
 }
 
 .primary {
-    background-color: #000066;
+  background-color: #063970;
 }
 
 .btnm {
-    transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .btnm:hover {
-    background-color: #00009c;
-    color: #CC9900;
+  background-color: #00009c;
+  color: #CC9900;
 }
 
 .secondary {
-    background-color: #efefef;
+  background-color: #efefef;
 }
 
 .btnn {
-    transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .btnn:hover {
-    background-color: #ffffff;
-    color: #000000;
-}</style>
+  background-color: #ffffff;
+  color: #000000;
+}
+</style>
