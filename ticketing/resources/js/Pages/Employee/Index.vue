@@ -1,11 +1,11 @@
 <template>
   <div>
   <Header></Header>
-  <div class="d-flex justify-content-end align-items-center p-4">
+  <!-- <div class="d-flex justify-content-end align-items-center p-4">
     <Link :href="route('logout')" method="delete" as="button" v-if="page.props.user" class="btn btn-outline-secondary">
     <i class="bi bi-box-arrow-right"></i>
     </Link>
-  </div>
+  </div> -->
   <br>
 
   <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
