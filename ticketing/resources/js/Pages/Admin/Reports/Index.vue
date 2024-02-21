@@ -1,4 +1,5 @@
 <template>
+  <div>
     <Header></Header>
     <br>
   
@@ -46,6 +47,7 @@
         </tbody>
       </table>
     </div>
+  </div>
   </template>
   <script setup>
   import Header from "@/Pages/Layouts/AdminHeader.vue";

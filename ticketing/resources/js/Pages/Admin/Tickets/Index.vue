@@ -1,4 +1,5 @@
 <template>
+  <div>
   <Header></Header>
   <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
     <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
@@ -49,6 +50,7 @@
         </tbody>
       </table>
     </div>
+  </div>
   </div>
 </template>
 <script setup>

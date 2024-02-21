@@ -44,11 +44,11 @@
       <tbody>
         <tr v-for="ticket in tickets" :key="tickets.ticket_number">
           <td class="text-center py-3">{{ ticket.ticket_number }}</td>
+          <td class="text-center py-3">{{ ticket.employee.user.name }}</td>
           <td class="text-center py-3">{{ ticket.employee.department }}</td>
           <td class="text-center py-3">{{ ticket.issue }}</td>
           <td class="text-center py-3">{{ ticket.technician ? ticket.technician.user.name : 'Unassigned' }}</td>
-          <td class="text-center py-3">{{ ticket.employee.user.name }}</td>
-          <td class="text-center py-3">{{ ticket.status }}</td>
+          <td class="text-center py-3"><p class="fs-5"><span :class="getBadgeClass(ticket.status)">{{ ticket.status }}</span></p></td>
           <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
           <td class="text-center py-3">{{ ticket.resolved_at ? ticket.resolved_at : 'Not yet resolved' }}</td>
         </tr>
