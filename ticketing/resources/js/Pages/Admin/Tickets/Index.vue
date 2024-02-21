@@ -1,24 +1,27 @@
 <template>
   <Header></Header>
-  <br>
-
-  <div class="container text-center w-100 h-100 justify-center">
-    <H1>View All Tickets</H1>
-    <p> Manage and Track all TMDD tickets</p>
-    <Link :href="route('admin.tickets.create')" class="create-ticket-link">Create New Ticket</Link>
-    <br><br>
-    <button class="ticket-button">All</button>
-    <button class="ticket-button">New</button>
-    <button class="ticket-button">Pending</button>
-    <button class="ticket-button">Resolved</button>
-    <div class="search">
-      <input type="text" v-model="searchQuery" placeholder="Search Tickets..." @input="handleSearch" />
+  <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
+    <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+      <H1 class="fw-bold">View All Tickets</H1>
+      <p class="fs-5"> Manage and Track all TMDD tickets</p>
+      <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket</Link>
+      <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
+        <button class="btn btn-secondary px-5 py-2">All</button>
+        <button class="btn btn-secondary px-5 py-2">New</button>
+        <button class="btn btn-secondary px-4 py-2">Resolved</button>
+        <button class="btn btn-secondary px-4 py-2">Pending</button>
+      </div>
+    </div>
+    <div class="input-group mt-3 mb-4 w-50">
+      <span class="input-group-text" id="search"><i class="bi bi-search"></i></span>
+      <input type="text" class="form-control py-2" v-model="searchQuery" placeholder="Search Tickets..."
+        @input="handleSearch" aria-label="search" aria-describedby="search" />
     </div>
   </div>
-  <div>
-    <table>
-      <thead>
-        <tr>
+  <div class="">
+    <table class="table table-striped">
+      <thead class="">
+        <tr class="text-center">
           <th>Ticket No</th>
           <th>Employee</th>
           <th>Department</th>
@@ -32,15 +35,15 @@
       </thead>
       <tbody>
         <tr v-for="ticket in tickets" :key="tickets.ticket_number">
-          <td>{{ ticket.ticket_number }}</td>
-          <td>{{ ticket.employee.user.name }}</td>
-          <td>{{ ticket.employee.department }}</td>
-          <td>{{ ticket.issue }}</td>
-          <td>{{ ticket.service }}</td>
-          <td>{{ ticket.technician ? ticket.technician.user.name : 'Unassigned' }}</td>
-          <td>{{ ticket.status }}</td>
-          <td>{{ formatDate(ticket.created_at) }}</td>
-          <td>Date Resolved</td>
+          <td class="text-center py-3">{{ ticket.ticket_number }}</td>
+          <td class="text-center py-3">{{ ticket.employee.department }}</td>
+          <td class="text-center py-3">{{ ticket.issue }}</td>
+          <td class="text-center py-3">{{ ticket.service ? ticket.service : 'Unassigned' }}</td>
+          <td class="text-center py-3">{{ ticket.technician ? ticket.technician.user.name : 'Unassigned' }}</td>
+          <td class="text-center py-3">{{ ticket.employee.user.name }}</td>
+          <td class="text-center py-3">{{ ticket.status }}</td>
+          <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
+          <td class="text-center py-3">{{ ticket.resolved_at ? ticket.resolved_at : 'Not yet resolved' }}</td>
         </tr>
       </tbody>
     </table>
@@ -61,66 +64,11 @@ const formatDate = (date) => {
 };
 </script>
 
-
-<style>
-.search {
-  margin: 10px 0;
-  display: flex;
-  justify-content: center;
+<style scoped>
+.btn-tickets {
+  background-color: #063970;
+  color: white;
+  border-color: #063970;
 }
 
-.search input {
-  width: 50%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.container {
-  padding: 20px;
-}
-
-h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
-}
-
-p {
-  font-size: 16px;
-  margin-bottom: 20px;
-}
-
-Link.create-ticket-link {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #000000;
-  /* Green */
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-Link.create-ticket-link:hover {
-  background-color: #898989;
-}
-
-.ticket-button {
-  width: 10%;
-  margin-right: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  background-color: #cecece;
-  color: #1e1e1e;
-  border-radius: 8px;
-  /* Adjust border-radius for rounded edges */
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.ticket-button:hover {
-  background-color: #898989;
-  color: #e7e7e7;
-}
 </style>
