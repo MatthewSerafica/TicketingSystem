@@ -1,4 +1,5 @@
 <template>
+  <div>
   <Header></Header>
   <div class="mt-5 pt-5">
     <form @submit.prevent="create">
@@ -72,6 +73,7 @@
 
       </div>
     </form>
+  </div>
   </div>
 </template>
   

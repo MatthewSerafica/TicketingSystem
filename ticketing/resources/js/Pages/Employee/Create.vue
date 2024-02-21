@@ -1,19 +1,32 @@
 <template>
   <div>
     <Header></Header>
-    <br />
-
-    <div class="title-container">
-      <h1>Create Tickets</h1>
-    </div>
+    <div class="mt-5 pt-5">
+      <form @submit.prevent="create">
+        <br />
+        <div class="title-container">
+        <h1>Create Ticket</h1>
+        </div>
 
     <div class="create-ticket">
-      <div>
-        <p>Title</p>
-        <input type="text" placeholder="Enter Ticket Title..." />
+      <div class="d-flex flex-row gap-5 justify-content-center">
+        <div class="flex-shrink-1">
+          <label for="issue" class="fw-semibold">Title</label>
+          <input type="text" placeholder="Enter Ticket Title..." />
+        </div>
+        <div class="d-flex flex-column flex-shrink-0 w-25">
+              <label for="service" class="fw-semibold">Service</label>
+              <select id="service" class="h-100 rounded border-secondary-subtle" placeholder="Select Service...">
+                <option disabled>Select Service</option>
+                <option value="Network Troubleshoot">Network Troubleshoot</option>
+                <option value="Hardware Repair">Hardware Repair</option>
+                <option value="Software Troubleshoot">Software Troubleshoot</option>
+                <option value="Network Troubleshoot">Network Troubleshoot</option>
+              </select>
+        </div>
       </div>
       <div>
-        <p>Description</p>
+        <label for="description" class="fw-semibold">Description</label>
         <input type="text" placeholder="Enter Ticket Description..." />
       </div>
     </div>
@@ -23,12 +36,19 @@
     </div>
 
     <div class="table-container"></div>
-  </div>
+  
+</form>
+</div>
+</div>
 </template>
 
 <script setup>
 import Header from "@/Pages/Layouts/EmployeeHeader.vue";
-import {Link, router} from "@inertiajs/vue3"
+import { Link, useForm } from "@inertiajs/vue3";
+
+const create = () => form.post(route('employee.tickets.store'), {
+  preserveScroll: false, preserveScroll: false })
+
 </script>
 
 <style>
