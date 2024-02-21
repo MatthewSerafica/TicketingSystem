@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 [
                 'name' => 'Matthew Serafica',
-                'email' => 'matthewserafica.slu.edu.ph',
+                'email' => 'matthewserafica@slu.edu.ph',
                 'password' => '123456',
                 'user_type' => 'technician',
                 ],
