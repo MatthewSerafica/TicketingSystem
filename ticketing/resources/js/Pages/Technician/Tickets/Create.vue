@@ -28,12 +28,42 @@
                 </select>
               </div>
             </div>
-            <div class="d-flex flex-row gap-5 justify-content-center">
-              <div class="flex-shirnk-0 d-flex flex-column">
-                <label for="description" class="fw-semibold">Description</label>
-                <textarea for="description" class="rounded border-secondary-subtle p-3" type="text"
-                  placeholder="Enter Ticket Description..." v-model="form.description"> </textarea>
-              </div>
+            <div class="d-flex flex-column flex-shrink-0 w-25">
+              <label for="department" class="fw-semibold">Department/Office</label>
+              <select id="department" class="h-100 rounded border-secondary-subtle" placeholder="Select Department..."
+                v-model="form.department">
+                <option disabled>Select Department</option>
+                <option>Finance Department</option>
+                <option>Registrar</option>
+                <option>Help Desk</option>
+              </select>
+            </div>
+            <div class="d-flex flex-column flex-shrink-0 w-25">
+              <label for="service" class="fw-semibold">Employee</label>
+              <select id="service" class="h-100 rounded border-secondary-subtle" placeholder="Assign Technician..."
+                v-model.number="form.employee">
+                <option disabled>Assign Employee</option>
+                <option v-for="employee in employees" :value="employee.employee_id">{{ employee.user.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="d-flex flex-row gap-5 justify-content-center">
+            <div class="flex-shirnk-0">
+              <label for="description" class="fw-semibold">Description</label>
+              <input for="description" class="border-secondary-subtle" type="text"
+                placeholder="Enter Ticket Description..." v-model="form.description" />
+            </div>
+            <div class="d-flex flex-column flex-shrink-0 w-25">
+              <label for="service" class="fw-semibold">Service</label>
+              <select id="service" class="h-100 rounded border-secondary-subtle" placeholder="Select Service..."
+                v-model="form.service">
+                <option disabled>Select Service</option>
+                <option value="Network Troubleshoot">Network Troubleshoot</option>
+                <option value="Hardware Repair">Hardware Repair</option>
+                <option value="Software Troubleshoot">Software Troubleshoot</option>
+                <option value="Network Troubleshoot">Network Troubleshoot</option>
+              </select>
             </div>
           </div>
           <div class="button-container">
@@ -49,15 +79,79 @@
 
 <script setup>
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
-import { Link, useForm, usePage } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 
-const page = usePage();
+const props = defineProps({
+  technicians: Object,
+  employees: Object,
+})
 
 const form = useForm({
   issue: null,
   service: null,
   description: null,
-  employee: page.props.user.id,
+  employee: null,
+  technician: null,
 })
 
+const create = () => form.post(route('technician.tickets.store'), { preserveScroll: false, preserveState: false })
 </script>
+
+<style scoped>
+.title-container {
+  text-align: center;
+}
+
+.create-ticket {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.create-ticket div {
+  margin-bottom: 20px;
+  width: 80%;
+}
+
+.create-ticket input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.container {
+  padding: 20px;
+}
+
+h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+p {
+  justify-content: start;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.submit-ticket-button {
+  width: 10%;
+  margin-right: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #000066;
+  color: #fff;
+  border-radius: 8px;
+  /* Adjust border-radius for rounded edges */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+</style>
