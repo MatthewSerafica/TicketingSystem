@@ -3,80 +3,63 @@
   <div>
     <Header></Header>
     <br>
-    {{ ticket }}
     <div class="search">
       <input type="text" v-model="searchQuery" placeholder="Search Tickets..." @input="handleSearch" />
     </div>
-    {{ tickets }}
+
     <div class="container text-center w-100 h-100 justify-center">
       <h1>View All Tickets</h1>
       <p>Manage and Track all TMDD tickets</p>
-      <Link :href="`/technician/tickets/create`" class="create-ticket-link">Create New Ticket</Link>
+      <Link :href="`/technician/tickets/create`" class="rounded primary btnm text-light">Create New Ticket</Link>
       <br><br>
-      <button class="ticket-button" @click="filterTickets('All')">All</button>
-      <button class="ticket-button" @click="filterTickets('New')">New</button>
-      <button class="ticket-button" @click="filterTickets('Pending')">Pending</button>
-      <button class="ticket-button" @click="filterTickets('Resolved')">Resolved</button>
+      <button class="ticket-button" @click="handleAllButtonClick">All</button>
+      <button class="ticket-button" @click="handleNewButtonClick">New</button>
+      <button class="ticket-button" @click="handleResolvedButtonClick">Resolved</button>
+      <button class="ticket-button" @click="handlePendingButtonClick">Pending</button>
     </div>
 
     <div class="table-container">
       <table class="table table-striped">
-        <thead class="">
-          <tr class="text-center">
-            <th>Ticket No</th>
-            <th>Employee</th>
-            <th>Department</th>
-            <th>Issue</th>
-            <th>Service</th>
-            <th>Status</th>
-            <th>Date Issued</th>
-            <th>Date Resolved</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number">
-            <td class="text-center py-3">
-              <Link class="text-decoration-none text-dark p-3"
-                :href="route('technician.tickets.show', ticket.ticket_number)">{{ ticket.ticket_number }}</Link>
-            </td>
-            <td class="text-center py-3">
-              <Link class="text-decoration-none text-dark p-3"
-                :href="route('technician.tickets.show', ticket.ticket_number)">
-              {{ ticket.employee.user.name }}</Link>
-            </td>
-            <td class="text-center py-3">
-              <Link class="text-decoration-none text-dark p-3"
-                :href="route('technician.tickets.show', ticket.ticket_number)">{{ ticket.employee.department }}</Link>
-            </td>
-            <td class="text-center py-3">
-              <Link class="text-decoration-none text-dark p-3"
-                :href="route('technician.tickets.show', ticket.ticket_number)">{{ ticket.issue }}</Link>
-            </td>
-            <td class="text-center py-3">
-              <Link class="text-decoration-none text-dark p-3"
-                :href="route('technician.tickets.show', ticket.ticket_number)">{{ ticket.service ? ticket.service :
-                  'Unassigned' }}</Link>
-            </td>
-            <td class="text-center py-3">
-              <div class="btn-group">
-                <button type="button" :class="getButtonClass(ticket.status)">{{ ticket.status }}</button>
-                <button type="button" :class="getButtonClass(ticket.status)" class="dropdown-toggle dropdown-toggle-split"
-                  data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                  <span class="visually-hidden">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu">
-                  <li @click="updateStatus(ticket.ticket_number, 'New')" class="btn dropdown-item">New</li>
-                  <li @click="updateStatus(ticket.ticket_number, 'Pending')" class="btn dropdown-item">Pending</li>
-                  <li @click="updateStatus(ticket.ticket_number, 'Ongoing')" class="btn dropdown-item">Ongoing</li>
-                  <li @click="updateStatus(ticket.ticket_number, 'Resolved')" class="btn dropdown-item">Resolved</li>
-                </ul>
-              </div>
-            </td>
-            <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
-            <td class="text-center py-3">{{ ticket.resolved_at ? ticket.resolved_at : 'Not yet resolved' }}</td>
-          </tr>
-        </tbody>
-      </table>
+          <thead class="">
+            <tr class="text-center">
+              <th>Ticket No</th>
+              <th>Employee</th>
+              <th>Department</th>
+              <th>Issue</th>
+              <th>Service</th>
+              <th>Status</th> 
+              <th>Date Issued</th>
+              <th>Date Resolved</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number">
+              <td class="text-center py-3">{{ ticket.ticket_number }}</td>
+              <td class="text-center py-3">{{ ticket.employee.user.name }}</td>
+              <td class="text-center py-3">{{ ticket.employee.department }}</td>
+              <td class="text-center py-3">{{ ticket.issue }}</td>
+              <td class="text-center py-3">{{ ticket.service ? ticket.service : 'Unassigned' }}</td>
+              <td class="text-center py-3">
+                <div class="btn-group">
+                  <button type="button" :class="getButtonClass(ticket.status)">{{ ticket.status }}</button>
+                  <button type="button" :class="getButtonClass(ticket.status)"
+                    class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
+                    data-bs-reference="parent">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li @click="updateStatus(ticket.ticket_number, 'New')" class="btn dropdown-item">New</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Pending')" class="btn dropdown-item">Pending</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Ongoing')" class="btn dropdown-item">Ongoing</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Resolved')" class="btn dropdown-item">Resolved</li>
+                  </ul>
+                </div>
+              </td>
+              <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
+              <td class="text-center py-3">{{ ticket.resolved_at ? formatDate(ticket.resolved_at) : 'Not yet resolved' }}</td>
+            </tr>
+          </tbody>
+        </table>
     </div>
   </div>
 </template>
@@ -124,7 +107,7 @@ const handleAllButtonClick = () => {
   console.log("Handle All Button Click");
   selectedStatus.value = 'all';
   // Filter tickets to include both "Pending" and "New" statuses
-  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'New' || ticket.status === 'Pending');
+  filteredTickets.value = tickets.value;
 };
 
 const handleNewButtonClick = () => {
@@ -173,7 +156,7 @@ const formatDate = (date) => {
 };
 
 onMounted(() => {
-  handleAllButtonClick(); // Call the method to display all tickets initially
+  handleAllButtonClick();
 });
 
 const getButtonClass = (status) => {
@@ -195,7 +178,7 @@ const updateStatus = (ticket_id, status) => {
     status: status
   });
 
-  form.put(route('admin.tickets.update.status', { ticket_id: ticket_id }));
+  form.put(route('technician.tickets.update.status', { ticket_id: ticket_id }));
 }
 </script>
 
@@ -274,4 +257,31 @@ Link.create-ticket-link:hover {
   background-color: #063970;
   color: white;
   border-color: #063970;
-}</style>
+}
+
+.primary {
+    background-color: #063970;
+}
+
+.btnm {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btnm:hover {
+    background-color: #00009c;
+    color: #CC9900;
+}
+
+.secondary {
+    background-color: #efefef;
+}
+
+.btnn {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btnn:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+</style>

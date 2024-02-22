@@ -52,6 +52,8 @@ class AdminTicketController extends Controller
             'filters' => $filter,
         ]);
     }
+
+    
     public function create()
     {
         $technicians = Technician::with('user')->get();
