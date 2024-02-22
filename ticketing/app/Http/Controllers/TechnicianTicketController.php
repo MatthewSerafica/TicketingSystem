@@ -10,41 +10,57 @@ use Illuminate\Http\Request;
 class TechnicianTicketController extends Controller
 {
     public function index(Request $request) {
-        $tickets = Ticket::query()
-            ->with('employee.user', 'technician.user')
-            ->when($request->filled('search'), function ($query) use ($request) {
-                $search = $request->input('search');
-                $query->where('ticket_number', 'like', '%' . $search . '%')
-                    ->where('status', 'like', '%' . $search . '%')
-                    ->orWhereHas('employee.user', function ($subquery) use ($search) {
-                        $subquery->where('name', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('employee', function ($subquery) use ($search) {
-                        $subquery->where('department', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('technician.user', function ($subquery) use ($search) {
-                        $subquery->where('name', 'like', '%' . $search . '%');
-                    });
-            })
-            ->whereYear('created_at', Carbon::now()->year)
-            ->whereMonth('created_at', Carbon::now()->month)
-            ->orderBy('ticket_number')
-            ->get();
-
-        $filters = $request->only(['search']);
-        $technicians = Technician::with('user')->get();
-        return inertia('Technician/Tickets/Index', [
-            'tickets' => $tickets,
-            'technicians' => $technicians,
-            'filters' => $filters,
-        ]);
+        // Get the authenticated user's ID
+        $userId = auth()->id();
+    
+        // Find the technician corresponding to the authenticated user
+        $technician = Technician::where('user_id', $userId)->first();
+    
+        // If the technician is found, retrieve tickets assigned to that technician
+        if ($technician) {
+            $tickets = Ticket::query()
+                ->with('employee.user', 'technician.user')
+                ->where('technician', $technician->technician_id)
+                ->when($request->filled('search'), function ($query) use ($request) {
+                    $search = $request->input('search');
+                    $query->where('ticket_number', 'like', '%' . $search . '%')
+                        ->where('status', 'like', '%' . $search . '%')
+                        ->orWhereHas('employee.user', function ($subquery) use ($search) {
+                            $subquery->where('name', 'like', '%' . $search . '%');
+                        })
+                        ->orWhereHas('employee', function ($subquery) use ($search) {
+                            $subquery->where('department', 'like', '%' . $search . '%');
+                        })
+                        ->orWhereHas('technician.user', function ($subquery) use ($search) {
+                            $subquery->where('name', 'like', '%' . $search . '%');
+                        });
+                })
+                ->whereYear('created_at', Carbon::now()->year)
+                ->whereMonth('created_at', Carbon::now()->month)
+                ->orderBy('ticket_number')
+                ->get();
+    
+            $filters = $request->only(['search']);
+            $technicians = Technician::with('user')->get();
+            return inertia('Technician/Tickets/Index', [
+                'tickets' => $tickets,
+                'technicians' => $technicians,
+                'filters' => $filters,
+            ]);
+        } else {
+            // If the technician is not found, return an empty array of tickets
+            return inertia('Technician/Tickets/Index', [
+                'tickets' => [],
+                'technicians' => [],
+                'filters' => $request->only(['search']),
+            ]);
+        }
     }
     
+    
     public function create() {
-        $technicians = Technician::with('user')->get();
         $employees = Employee::with('user')->get();
         return inertia('Technician/Tickets/Create', [
-            'technicians' => $technicians,
             'employees' => $employees,
         ]);
     }
@@ -60,7 +76,7 @@ class TechnicianTicketController extends Controller
             'technician' => 'required',
         ]);
         $technician = Technician::where('user_id', $request->technician)->firstOrFail();
-        $employee = Employee::where('user_id', $request->employee)->firstOrFail();
+        $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
 
         if ($employee->made_ticket >= 5) {
             return redirect()->back()->with('error', 'You have already made the max number of tickets.');
@@ -93,7 +109,32 @@ class TechnicianTicketController extends Controller
         $ticket->save();
     }
 
+    public function search(Request $request)
+    {
+        $search_query = $request->input('search_query');
 
+        if (is_numeric($search_query)) {
+            $tickets = Ticket::where('employee_id', $search_query)->get();
+        } else {
+            $tickets = Ticket::whereHas('employee.user', function ($query) use ($search_query) {
+                $query->where('name', 'like', '%' . $search_query . '%');
+            })->get();
+        }
+        $tickets = Ticket::with('employee.user', 'technician.user')
+            ->where('issue', 'LIKE', "%$search_query%")
+            ->orWhere('technician', 'LIKE', "%$search_query%")
+            ->orWhere('ticket_number', 'LIKE', "%$search_query%")
+            ->orWhere('employee', 'LIKE', "%$search_query%")
+            ->orWhere('status', 'LIKE', "%$search_query%")
+            ->orWhere('service', 'LIKE', "%$search_query%")
+            ->get();
+        $technicians = Technician::with('user')->get();
+
+        return inertia('Admin/Tickets/Index', [
+            'tickets' => $tickets,
+            'technicians' => $technicians
+        ]);
+    }
 
 
 }

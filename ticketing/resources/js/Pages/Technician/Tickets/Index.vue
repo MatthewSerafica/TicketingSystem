@@ -3,7 +3,7 @@
   <div>
     <Header></Header>
     <br>
-
+    {{ ticket }}
     <div class="search">
       <input
         type="text"
@@ -12,7 +12,7 @@
         @input="handleSearch"
       />
     </div>
-
+    {{ tickets }}
     <div class="container text-center w-100 h-100 justify-center">
       <h1>View All Tickets</h1>
       <p>Manage and Track all TMDD tickets</p>
@@ -25,41 +25,167 @@
     </div>
 
     <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Ticket No</th>
-            <th>Employee</th>
-            <th>Department</th>
-            <th>Issue</th>
-            <th>Technician</th>
-            <th>Status</th>
-            <th>Date Issued</th>
-            <th>Date Resolved</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="ticket in filteredTickets" :key="ticket.id">
-            <td>{{ ticket.ticketNo }}</td>
-            <td>{{ ticket.employee }}</td>
-            <td>{{ ticket.department }}</td>
-            <td>{{ ticket.issue }}</td>
-            <td>{{ ticket.technician }}</td>
-            <td>{{ ticket.status }}</td>
-            <td>{{ ticket.dateIssued }}</td>
-            <td>{{ ticket.dateResolved }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <table class="table table-striped">
+          <thead class="">
+            <tr class="text-center">
+              <th>Ticket No</th>
+              <th>Employee</th>
+              <th>Department</th>
+              <th>Issue</th>
+              <th>Service</th>
+              <th>Status</th> 
+              <th>Date Issued</th>
+              <th>Date Resolved</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number">
+              <td class="text-center py-3">{{ ticket.ticket_number }}</td>
+              <td class="text-center py-3">{{ ticket.employee.user.name }}</td>
+              <td class="text-center py-3">{{ ticket.employee.department }}</td>
+              <td class="text-center py-3">{{ ticket.issue }}</td>
+              <td class="text-center py-3">{{ ticket.service ? ticket.service : 'Unassigned' }}</td>
+              <td class="text-center py-3">
+                <div class="btn-group">
+                  <button type="button" :class="getButtonClass(ticket.status)">{{ ticket.status }}</button>
+                  <button type="button" :class="getButtonClass(ticket.status)"
+                    class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
+                    data-bs-reference="parent">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li @click="updateStatus(ticket.ticket_number, 'New')" class="btn dropdown-item">New</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Pending')" class="btn dropdown-item">Pending</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Ongoing')" class="btn dropdown-item">Ongoing</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Resolved')" class="btn dropdown-item">Resolved</li>
+                  </ul>
+                </div>
+              </td>
+              <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
+              <td class="text-center py-3">{{ ticket.resolved_at ? ticket.resolved_at : 'Not yet resolved' }}</td>
+            </tr>
+          </tbody>
+        </table>
     </div>
   </div>
 </template>
 
 <script setup>
-import Header from "@/Pages/Layouts/TechnicianHeader.vue"
-import {Link, router} from "@inertiajs/vue3"
+import Header from "@/Pages/Layouts/TechnicianHeader.vue";
+import {Link, router} from "@inertiajs/vue3";
+import moment from "moment";
+import { ref, watch, onMounted } from "vue";
+
+const props = defineProps({
+  tickets: Object,
+  technicians: Object,
+  filters: Object,
+});
+
+const selectedStatus = ref('all');
+const filteredTickets = ref(props.tickets); 
+
+let search = ref(props.filters.search);
+let sortColumn = ref("ticket_number");
+let sortDirection = ref("asc");
+let timeoutId = null;
+const tickets = ref(props.tickets);
 
 
+
+const fetchData = () => {
+  router.get(
+    route('technician.tickets'),
+    {
+      search: search.value,
+      sort: sortColumn.value,
+      direction: sortDirection.value,
+      status: selectedStatus.value,
+    },
+    {
+      preserveState: true,
+      replace: true,
+    }
+  )
+}
+
+const handleAllButtonClick = () => {
+  console.log("Handle All Button Click");
+  selectedStatus.value = 'all';
+  // Filter tickets to include both "Pending" and "New" statuses
+  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'New' || ticket.status === 'Pending');
+};
+
+const handleNewButtonClick = () => {
+  console.log("Handle New Button Click");
+  selectedStatus.value = 'new';
+  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'New');
+};
+
+const handleResolvedButtonClick = () => {
+  console.log("Handle Resolved Button Click");
+  selectedStatus.value = 'resolved';
+  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'Resolved');
+};
+
+const handlePendingButtonClick = () => {
+  console.log("Handle Pending Button Click");
+  selectedStatus.value = 'pending';
+  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'Pending');
+};
+
+const resetSorting = () => {
+  console.log("Reset Sorting");
+  sortColumn.value = "ticket_number"
+  sortDirection.value = "asc"
+}
+
+
+const debouncedFetchData = () => {
+  if (timeoutId) {
+    clearTimeout(timeoutId)
+  }
+  timeoutId = setTimeout(() => {
+    fetchData()
+  }, 500)
+}
+
+watch(search, () => {
+  if (!search.value) {
+    resetSorting()
+  }
+  debouncedFetchData();
+})
+
+const formatDate = (date) => {
+  return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
+};
+
+onMounted(() => {
+  handleAllButtonClick(); // Call the method to display all tickets initially
+});
+
+const getButtonClass = (status) => {
+  switch (status.toLowerCase()) {
+    case 'new':
+      return 'btn btn-danger';
+    case 'pending':
+      return 'btn btn-warning';
+    case 'resolved':
+      return 'btn btn-success';
+    default:
+      return 'btn btn-secondary';
+  }
+};
+
+const updateStatus = (ticket_id, status) => {
+  const form = useForm({
+    ticket_id: ticket_id,
+    status: status
+  });
+
+  form.put(route('admin.tickets.update.status', { ticket_id: ticket_id }));
+}
 </script>
 
 
@@ -129,5 +255,11 @@ Link.create-ticket-link:hover {
 .ticket-button:hover {
   background-color: #898989;
   color: #e7e7e7;
+}
+
+.btn-tickets {
+  background-color: #063970;
+  color: white;
+  border-color: #063970;
 }
 </style>
