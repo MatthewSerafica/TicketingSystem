@@ -9,15 +9,33 @@ use Illuminate\Http\Request;
 
 class AdminUsersController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $employees = Employee::with('user')->get();
-        $users = User::with('technician', 'employee')->get();
+        // Fetch all users initially
+        $query = User::query();
+    
+        // Filter users by user type if provided
+        if ($request->has('user_type')) {
+            $query->where('user_type', $request->user_type);
+        }
+    
+        // Search for users by name or email if search query provided
+        if ($request->has('search')) {
+            $search = '%' . $request->search . '%';
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', $search)
+                  ->orWhere('email', 'like', $search);
+            });
+        }
+    
+        // Fetch the users based on the query
+        $users = $query->with('technician', 'employee')->get();
+    
         return inertia('Admin/Users/Index', [
             'users' => $users,
-            'employees'=> $employees
         ]);
     }
+    
 
     public function create()
     {
