@@ -1,4 +1,5 @@
 <template>
+    <div>
     <section class="d-flex vh-100 justify-content-center align-items-center">
         <div class="d-flex flex-column justify-content-center align-items-center h-custom">
             <div class="d-flex flex-row justify-content-center align-items-center gap-5">
@@ -6,13 +7,16 @@
                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
                         class="img-fluid" alt="Sample image">
                 </div>
-                <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <div class="card p-4 col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                    <div class="card-body">
+                    <h3 class="mb-5 text-primary">TMDD Ticketing System</h3>
                     <form @submit.prevent="login">
                         <!-- Email input -->
                         <div class="form-outline mb-4">
+                            
                             <div class="input-group">
                                 <span class="input-group-text" id="email-addon"><i class="bi bi-envelope-fill"></i></span>
-                                <input type="email" id="email" class="form-control p-2" @keydown.space.prevent
+                                <input type="email" id="email" class="form-control p-2 " @keydown.space.prevent
                                     v-model="form.email" placeholder="Enter email address" aria-label="Username"
                                     aria-describedby="email-addon" />
                             </div>
@@ -34,9 +38,19 @@
                             </span>
                         </div>
 
-                        <div class="d-flex justify-content-between align-items-center ms-2">
-                            <!-- Checkbox -->
-                            <a href="#!" class="text-body">Forgot password?</a>
+                         <!-- Remember Me-->
+                        <div class="row mb-4">
+                            <div class="col d-flex justify-content-center">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="rememberMeCheckbox">
+                                    <label class="form-check-label" for="rememberMeCheckbox">Remember me</label>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <!-- Checkbox -->
+                                <a href="#!">Forgot password?</a>
+                            </div>
                         </div>
 
                         <div class="text-center text-lg-start mt-4 pt-2">
@@ -47,16 +61,20 @@
                         </div>
 
                     </form>
+                    </div>
                 </div>
             </div>
         </div>
+        
     </section>
+    <Footer style="position: fixed; bottom: 0; width: 100%;"></Footer>
+  </div>
 </template>
 
 <script setup>
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useForm, Link } from '@inertiajs/vue3'
-
+import Footer from '@/Pages/Layouts/Footer.vue'
 
 const form = useForm({
     email: '',
