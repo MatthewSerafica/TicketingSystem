@@ -18,7 +18,7 @@ class AdminTicketController extends Controller
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where('ticket_number', 'like', '%' . $search . '%')
-                    ->where('status', 'like', '%' . $search . '%')
+                    ->orWhere('status', 'like', '%' . $search . '%')
                     ->orWhereHas('employee.user', function ($subquery) use ($search) {
                         $subquery->where('name', 'like', '%' . $search . '%');
                     })
@@ -29,44 +29,27 @@ class AdminTicketController extends Controller
                         $subquery->where('name', 'like', '%' . $search . '%');
                     });
             })
+            ->when($request->filled('filterTickets'), function ($query) use ($request) {
+                $ticketFilter = $request->input('filterTickets');
+                if ($ticketFilter === 'new') {
+                    $query->where('status', 'like', '%' . $ticketFilter . '%');
+                } elseif ($ticketFilter === 'resolved') {
+                    $query->where('status', 'like', '%' . $ticketFilter . '%');
+                }elseif ($ticketFilter === 'pending') {
+                    $query->where('status', 'like', '%' . $ticketFilter . '%');
+                }
+            })
             ->whereYear('created_at', Carbon::now()->year)
             ->whereMonth('created_at', Carbon::now()->month)
             ->orderBy('ticket_number')
             ->get();
 
-        $filters = $request->only(['search']);
+        $filter = $request->only(['search']);
         $technicians = Technician::with('user')->get();
         return inertia('Admin/Tickets/Index', [
             'tickets' => $tickets,
             'technicians' => $technicians,
-            'filters' => $filters,
-        ]);
-    }
-
-    public function search(Request $request)
-    {
-        $search_query = $request->input('search_query');
-
-        if (is_numeric($search_query)) {
-            $tickets = Ticket::where('employee_id', $search_query)->get();
-        } else {
-            $tickets = Ticket::whereHas('employee.user', function ($query) use ($search_query) {
-                $query->where('name', 'like', '%' . $search_query . '%');
-            })->get();
-        }
-        $tickets = Ticket::with('employee.user', 'technician.user')
-            ->where('issue', 'LIKE', "%$search_query%")
-            ->orWhere('technician', 'LIKE', "%$search_query%")
-            ->orWhere('ticket_number', 'LIKE', "%$search_query%")
-            ->orWhere('employee', 'LIKE', "%$search_query%")
-            ->orWhere('status', 'LIKE', "%$search_query%")
-            ->orWhere('service', 'LIKE', "%$search_query%")
-            ->get();
-        $technicians = Technician::with('user')->get();
-
-        return inertia('Admin/Tickets/Index', [
-            'tickets' => $tickets,
-            'technicians' => $technicians
+            'filters' => $filter,
         ]);
     }
     public function create()

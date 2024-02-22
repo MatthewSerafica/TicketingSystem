@@ -42,7 +42,7 @@ class EmployeeTicketController extends Controller
             'issue' => $request->issue,
             'description' => $request->description,
             'service' => $request->service,
-            'status' => 'Pending',
+            'status' => 'New',
         ];
 
         Ticket::create($ticketData);

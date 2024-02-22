@@ -11,31 +11,35 @@ class AdminUsersController extends Controller
 {
     public function index(Request $request)
     {
-        // Fetch all users initially
-        $query = User::query();
-    
-        // Filter users by user type if provided
-        if ($request->has('user_type')) {
-            $query->where('user_type', $request->user_type);
-        }
-    
-        // Search for users by name or email if search query provided
-        if ($request->has('search')) {
-            $search = '%' . $request->search . '%';
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', $search)
-                  ->orWhere('email', 'like', $search);
-            });
-        }
-    
-        // Fetch the users based on the query
-        $users = $query->with('technician', 'employee')->get();
-    
+        $users = User::query()->with('technician', 'employee')
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = $request->input('search');
+                $query->where('id', 'like', '%' . $search . '%')
+                    ->orWhere('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%')
+                    ->orWhere('user_type', 'like', '%' . $search . '%')
+                    ->orWhereHas('employee', function ($subquery) use ($search) {
+                        $subquery->where('department', 'like', '%' . $search . '%');
+                    });
+            })
+            ->when($request->filled('filterUsers'), function ($query) use ($request) {
+                $userFilter = $request->input('filterUsers');
+                if ($userFilter === 'employee') {
+                    $query->where('user_type', 'like', '%' . $userFilter . '%');
+                } elseif ($userFilter === 'technician') {
+                    $query->where('user_type', 'like', '%' . $userFilter . '%');
+                }
+            })
+            ->get();
+
+        $filters = $request->only(['search']);
+
         return inertia('Admin/Users/Index', [
             'users' => $users,
+            'filter' => $filters,
         ]);
     }
-    
+
 
     public function create()
     {
