@@ -5,12 +5,7 @@
     <br>
     {{ ticket }}
     <div class="search">
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Search Tickets..."
-        @input="handleSearch"
-      />
+      <input type="text" v-model="searchQuery" placeholder="Search Tickets..." @input="handleSearch" />
     </div>
     {{ tickets }}
     <div class="container text-center w-100 h-100 justify-center">
@@ -26,53 +21,69 @@
 
     <div class="table-container">
       <table class="table table-striped">
-          <thead class="">
-            <tr class="text-center">
-              <th>Ticket No</th>
-              <th>Employee</th>
-              <th>Department</th>
-              <th>Issue</th>
-              <th>Service</th>
-              <th>Status</th> 
-              <th>Date Issued</th>
-              <th>Date Resolved</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number">
-              <td class="text-center py-3">{{ ticket.ticket_number }}</td>
-              <td class="text-center py-3">{{ ticket.employee.user.name }}</td>
-              <td class="text-center py-3">{{ ticket.employee.department }}</td>
-              <td class="text-center py-3">{{ ticket.issue }}</td>
-              <td class="text-center py-3">{{ ticket.service ? ticket.service : 'Unassigned' }}</td>
-              <td class="text-center py-3">
-                <div class="btn-group">
-                  <button type="button" :class="getButtonClass(ticket.status)">{{ ticket.status }}</button>
-                  <button type="button" :class="getButtonClass(ticket.status)"
-                    class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
-                    data-bs-reference="parent">
-                    <span class="visually-hidden">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li @click="updateStatus(ticket.ticket_number, 'New')" class="btn dropdown-item">New</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Pending')" class="btn dropdown-item">Pending</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Ongoing')" class="btn dropdown-item">Ongoing</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Resolved')" class="btn dropdown-item">Resolved</li>
-                  </ul>
-                </div>
-              </td>
-              <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
-              <td class="text-center py-3">{{ ticket.resolved_at ? ticket.resolved_at : 'Not yet resolved' }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <thead class="">
+          <tr class="text-center">
+            <th>Ticket No</th>
+            <th>Employee</th>
+            <th>Department</th>
+            <th>Issue</th>
+            <th>Service</th>
+            <th>Status</th>
+            <th>Date Issued</th>
+            <th>Date Resolved</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number">
+            <td class="text-center py-3">
+              <Link class="text-decoration-none text-dark p-3"
+                :href="route('technician.tickets.show', ticket.ticket_number)">{{ ticket.ticket_number }}</Link>
+            </td>
+            <td class="text-center py-3">
+              <Link class="text-decoration-none text-dark p-3"
+                :href="route('technician.tickets.show', ticket.ticket_number)">
+              {{ ticket.employee.user.name }}</Link>
+            </td>
+            <td class="text-center py-3">
+              <Link class="text-decoration-none text-dark p-3"
+                :href="route('technician.tickets.show', ticket.ticket_number)">{{ ticket.employee.department }}</Link>
+            </td>
+            <td class="text-center py-3">
+              <Link class="text-decoration-none text-dark p-3"
+                :href="route('technician.tickets.show', ticket.ticket_number)">{{ ticket.issue }}</Link>
+            </td>
+            <td class="text-center py-3">
+              <Link class="text-decoration-none text-dark p-3"
+                :href="route('technician.tickets.show', ticket.ticket_number)">{{ ticket.service ? ticket.service :
+                  'Unassigned' }}</Link>
+            </td>
+            <td class="text-center py-3">
+              <div class="btn-group">
+                <button type="button" :class="getButtonClass(ticket.status)">{{ ticket.status }}</button>
+                <button type="button" :class="getButtonClass(ticket.status)" class="dropdown-toggle dropdown-toggle-split"
+                  data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                  <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li @click="updateStatus(ticket.ticket_number, 'New')" class="btn dropdown-item">New</li>
+                  <li @click="updateStatus(ticket.ticket_number, 'Pending')" class="btn dropdown-item">Pending</li>
+                  <li @click="updateStatus(ticket.ticket_number, 'Ongoing')" class="btn dropdown-item">Ongoing</li>
+                  <li @click="updateStatus(ticket.ticket_number, 'Resolved')" class="btn dropdown-item">Resolved</li>
+                </ul>
+              </div>
+            </td>
+            <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
+            <td class="text-center py-3">{{ ticket.resolved_at ? ticket.resolved_at : 'Not yet resolved' }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
 
 <script setup>
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
-import {Link, router} from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import moment from "moment";
 import { ref, watch, onMounted } from "vue";
 
@@ -83,7 +94,7 @@ const props = defineProps({
 });
 
 const selectedStatus = ref('all');
-const filteredTickets = ref(props.tickets); 
+const filteredTickets = ref(props.tickets);
 
 let search = ref(props.filters.search);
 let sortColumn = ref("ticket_number");
@@ -228,7 +239,8 @@ p {
 Link.create-ticket-link {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #000000; /* Green */
+  background-color: #000000;
+  /* Green */
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
@@ -247,7 +259,8 @@ Link.create-ticket-link:hover {
   border: none;
   background-color: #cecece;
   color: #1e1e1e;
-  border-radius: 8px; /* Adjust border-radius for rounded edges */
+  border-radius: 8px;
+  /* Adjust border-radius for rounded edges */
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -261,5 +274,4 @@ Link.create-ticket-link:hover {
   background-color: #063970;
   color: white;
   border-color: #063970;
-}
-</style>
+}</style>
