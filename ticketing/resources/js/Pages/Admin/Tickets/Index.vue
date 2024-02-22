@@ -16,9 +16,9 @@
           </div>
         </div>
         <div class="input-group mt-3 mb-4">
-          <span class="input-group-text" id="search"><i class="bi bi-search"></i></span>
-          <input type="text" class="form-control py-2" v-model="searchQuery" placeholder="Search Tickets..."
-            @input="handleSearch" aria-label="search" aria-describedby="search" />
+          <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
+          <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
+            placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
       <div class="w-75">
@@ -46,27 +46,33 @@
               <!-- <td class="text-center py-3">{{ ticket.technician ? ticket.technician.user.name : 'Unassigned' }}</td> -->
               <td class="text-center py-3">
                 <div class="btn-group">
-                  <button type="button" class="btn">{{ ticket.technician ? ticket.technician.user.name : 'Unassigned' }}</button>
-                  <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                  <button type="button" class="btn">{{ ticket.technician ? ticket.technician.user.name :
+                    'Unassigned' }}</button>
+                  <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
+                    aria-expanded="false" data-bs-reference="parent">
                     <span class="visually-hidden">Toggle Dropdown</span>
                   </button>
-                  <ul class="dropdown-menu" >
+                  <ul class="dropdown-menu">
                     <li class="dropdown-item disabled">Select a technician</li>
-                    <li v-for="technician in technicians" class="btn dropdown-item">{{technician.user.name}}</li>
+                    <li v-for="technician in technicians" class="btn dropdown-item"
+                      @click="updateTechnician(ticket.ticket_number, technician.technician_id)">{{ technician.user.name }}
+                    </li>
                   </ul>
                 </div>
               </td>
               <td class="text-center py-3">
                 <div class="btn-group">
                   <button type="button" :class="getButtonClass(ticket.status)">{{ ticket.status }}</button>
-                  <button type="button" :class="getButtonClass(ticket.status)" class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                  <button type="button" :class="getButtonClass(ticket.status)"
+                    class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
+                    data-bs-reference="parent">
                     <span class="visually-hidden">Toggle Dropdown</span>
                   </button>
                   <ul class="dropdown-menu">
-                    <li class="dropdown-item">New</li>
-                    <li class="dropdown-item">Pending</li>
-                    <li class="dropdown-item">Ongoing</li>
-                    <li class="dropdown-item">Resolved</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'New')" class="btn dropdown-item">New</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Pending')" class="btn dropdown-item">Pending</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Ongoing')" class="btn dropdown-item">Ongoing</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Resolved')" class="btn dropdown-item">Resolved</li>
                   </ul>
                 </div>
               </td>
@@ -81,14 +87,55 @@
 </template>
 <script setup>
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link } from "@inertiajs/vue3";
+import { Link, router, useForm } from "@inertiajs/vue3";
 import moment from "moment";
+import { ref, watch } from "vue";
 
 const props = defineProps({
   tickets: Object,
   technicians: Object,
-})
+  filters: Object,
+});
 
+let search = ref(props.filters.search);
+let sortColumn = ref("ticket_number");
+let sortDirection = ref("asc");
+let timeoutId = null;
+
+const fetchData = () => {
+  router.get(
+    route('admin.tickets'),
+    {
+      search: search.value,
+      sort: sortColumn.value,
+      direction: sortDirection.value,
+    },
+    {
+      preserveState: true,
+      replace: true,
+    }
+  )
+}
+const resetSorting = () => {
+  sortColumn.value = "ticket_number"
+  sortDirection.value = "asc"
+}
+
+const debouncedFetchData = () => {
+  if (timeoutId) {
+    clearTimeout(timeoutId)
+  }
+  timeoutId = setTimeout(() => {
+    fetchData()
+  }, 500)
+}
+
+watch(search, () => {
+  if (!search.value) {
+    resetSorting()
+  }
+  debouncedFetchData();
+})
 
 const formatDate = (date) => {
   return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
@@ -106,6 +153,23 @@ const getButtonClass = (status) => {
       return 'btn btn-secondary';
   }
 };
+
+const updateTechnician = (ticket_id, technician_id) => {
+  const form = useForm({
+    technician_id: technician_id,
+  });
+
+  form.put(route('admin.tickets.update.technician', { ticket_id: ticket_id }));
+}
+
+const updateStatus = (ticket_id, status) => {
+  const form = useForm({
+    ticket_id: ticket_id,
+    status: status
+  });
+
+  form.put(route('admin.tickets.update.status', { ticket_id: ticket_id }));
+}
 </script>
 
 <style scoped>

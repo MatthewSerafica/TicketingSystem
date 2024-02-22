@@ -29,4 +29,6 @@ class Ticket extends Model
         'status',
         'resolved_at'
     ];
+    
+    protected $primaryKey = 'ticket_number';
 }
