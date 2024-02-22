@@ -98,10 +98,8 @@ const props = defineProps({
   filters: Object,
 });
 
-
 const selectedStatus = ref('all');
 const filteredTickets = ref(props.tickets); 
-
 
 let search = ref(props.filters.search);
 let sortColumn = ref("ticket_number");
@@ -200,6 +198,8 @@ const updateTechnician = (ticket_id, technician_id) => {
 
   form.put(route('admin.tickets.update.technician', { ticket_id: ticket_id }));
 }
+
+
 
 const updateStatus = (ticket_id, status) => {
   const form = useForm({

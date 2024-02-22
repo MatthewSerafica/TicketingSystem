@@ -3,7 +3,6 @@
   <div>
     <Header></Header>
     <br>
-    {{ ticket }}
     <div class="search">
       <input
         type="text"
@@ -12,16 +11,16 @@
         @input="handleSearch"
       />
     </div>
-    {{ tickets }}
+
     <div class="container text-center w-100 h-100 justify-center">
       <h1>View All Tickets</h1>
       <p>Manage and Track all TMDD tickets</p>
-      <Link :href="`/technician/tickets/create`" class="create-ticket-link">Create New Ticket</Link>
+      <Link :href="`/technician/tickets/create`" class="rounded primary btnm text-light">Create New Ticket</Link>
       <br><br>
-      <button class="ticket-button" @click="filterTickets('All')">All</button>
-      <button class="ticket-button" @click="filterTickets('New')">New</button>
-      <button class="ticket-button" @click="filterTickets('Pending')">Pending</button>
-      <button class="ticket-button" @click="filterTickets('Resolved')">Resolved</button>
+      <button class="ticket-button" @click="handleAllButtonClick">All</button>
+      <button class="ticket-button" @click="handleNewButtonClick">New</button>
+      <button class="ticket-button" @click="handleResolvedButtonClick">Resolved</button>
+      <button class="ticket-button" @click="handlePendingButtonClick">Pending</button>
     </div>
 
     <div class="table-container">
@@ -62,7 +61,7 @@
                 </div>
               </td>
               <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
-              <td class="text-center py-3">{{ ticket.resolved_at ? ticket.resolved_at : 'Not yet resolved' }}</td>
+              <td class="text-center py-3">{{ ticket.resolved_at ? formatDate(ticket.resolved_at) : 'Not yet resolved' }}</td>
             </tr>
           </tbody>
         </table>
@@ -113,7 +112,7 @@ const handleAllButtonClick = () => {
   console.log("Handle All Button Click");
   selectedStatus.value = 'all';
   // Filter tickets to include both "Pending" and "New" statuses
-  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'New' || ticket.status === 'Pending');
+  filteredTickets.value = tickets.value;
 };
 
 const handleNewButtonClick = () => {
@@ -162,7 +161,7 @@ const formatDate = (date) => {
 };
 
 onMounted(() => {
-  handleAllButtonClick(); // Call the method to display all tickets initially
+  handleAllButtonClick();
 });
 
 const getButtonClass = (status) => {
@@ -184,7 +183,7 @@ const updateStatus = (ticket_id, status) => {
     status: status
   });
 
-  form.put(route('admin.tickets.update.status', { ticket_id: ticket_id }));
+  form.put(route('technician.tickets.update.status', { ticket_id: ticket_id }));
 }
 </script>
 
@@ -261,5 +260,31 @@ Link.create-ticket-link:hover {
   background-color: #063970;
   color: white;
   border-color: #063970;
+}
+
+.primary {
+    background-color: #063970;
+}
+
+.btnm {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btnm:hover {
+    background-color: #00009c;
+    color: #CC9900;
+}
+
+.secondary {
+    background-color: #efefef;
+}
+
+.btnn {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btnn:hover {
+    background-color: #ffffff;
+    color: #000000;
 }
 </style>

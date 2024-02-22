@@ -10,13 +10,9 @@ use Illuminate\Http\Request;
 class TechnicianTicketController extends Controller
 {
     public function index(Request $request) {
-        // Get the authenticated user's ID
         $userId = auth()->id();
-    
-        // Find the technician corresponding to the authenticated user
         $technician = Technician::where('user_id', $userId)->first();
     
-        // If the technician is found, retrieve tickets assigned to that technician
         if ($technician) {
             $tickets = Ticket::query()
                 ->with('employee.user', 'technician.user')

@@ -69,6 +69,8 @@ class AdminTicketController extends Controller
             'technicians' => $technicians
         ]);
     }
+
+    
     public function create()
     {
         $technicians = Technician::with('user')->get();
