@@ -1,7 +1,8 @@
 <template>
-    <nav class="navbar navbar-expand-lg shadow-sm header-color">
+    <div>
+    <nav class="navbar navbar-expand-lg shadow-sm h-color header-color">
         <div class="container-fluid gap-3">
-            <div class="d-flex gap-2 col-8">
+            <div class="d-flex gap-2 col-6">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                     class="bi bi-brilliance mt-2" viewBox="0 0 16 16">
                     <path
@@ -10,7 +11,7 @@
                 <a class="navbar-brand text-white" href="/technician">TMDD Ticketing System</a>
             </div>
             <div class="" id="navbarNav">
-                <ul class="navbar-nav gap-4">
+                <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link text-white" aria-current="page" href="/technician">Dashboard</a>
                     </li>
@@ -23,7 +24,12 @@
                 </ul>
             </div>
             <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
-                <i class="bi bi-bell text-white me-3"  style="font-size: 20px;"></i> 
+                <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationBar"
+                    aria-controls="notificationBar">
+                    <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
+                    <span class="text-light bg-danger position-absolute top-0 rounded-pill badge" id="count"
+                        style="font-size: small; padding: 2px 5px 2px 5px;"></span>
+                </button>
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                     class="bi bi-person-circle" viewBox="0 0 16 16">
                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
@@ -46,12 +52,36 @@
             </div>
         </div>
     </nav>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationBar" aria-labelledby="notificationBarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="notificationBarLabel">Notifications</h5>
+            <button type="button" class="btn-close text reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="container mt-4">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Notification Title</h5>
+                        <p class="card-text">Ticket# has been given to you.</p>
+                        <p class="card-text fst-italic text-muted"> {{ notificationDateTime() }}</p>
+                    </div>
+                </div>  
+            </div>    
+        </div>
+    </div>
+</div>
 </template>
 
 <script setup>
 import { Link, usePage } from "@inertiajs/vue3";
 
 const page = usePage();
+
+function notificationDateTime(){
+    const currentDateTime = new Date();
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    return currentDateTime.toLocaleDateString('en-US', options).replace(/\//g, '-');
+}
 </script>
 
 <style>

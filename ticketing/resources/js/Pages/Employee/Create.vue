@@ -38,7 +38,7 @@
         </div>
         <div class="button-container">
           <button class="submit-ticket-button" type="submit" as="button">Submit</button>
-          <Link :href="`/admin/tickets`" class="create-ticket-link">Cancel</Link>
+          <Link :href="`/employee`" class="create-ticket-link">Cancel</Link>
         </div>
 
         <div class="table-container"></div>

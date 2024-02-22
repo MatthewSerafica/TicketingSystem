@@ -53,22 +53,19 @@
                 <option value="Network Troubleshoot">Network Troubleshoot</option>
               </select>
             </div>
-            <div class="d-flex flex-column flex-shrink-0 w-25">
-              <label for="service" class="fw-semibold">Technicians</label>
-              <select id="service" class="h-100 rounded border-secondary-subtle" placeholder="Assign Technician..."
-                v-model.number="form.technician">
-                <option disabled>Assign Technician</option>
-                <option v-for="technician in technicians" :value="technician.technician_id">{{ technician.user.name }}
-                </option>
-              </select>
+          </div>
+          <div class="d-flex flex-row gap-5 justify-content-center">
+            <div class="flex-shirnk-0">
+              <label for="description" class="fw-semibold">Description</label>
+              <input for="description" class="border-secondary-subtle" type="text"
+                placeholder="Enter Ticket Description..." v-model="form.description" />
             </div>
           </div>
         </div>
         <div class="button-container">
           <button class="submit-ticket-button" type="submit" as="button">Submit</button>
-          <Link :href="`/technician/tickets`" class="create-ticket-link">Cancel</Link>
-        </div>
-
+          <button class="btn btn-link text-decoration-none" @click="cancel">Cancel</button>
+          </div>
         <div class="table-container"></div>
 
       </div>

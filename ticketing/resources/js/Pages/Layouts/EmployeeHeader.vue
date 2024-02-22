@@ -1,4 +1,5 @@
 <template>
+    <div>
     <nav class="navbar navbar-expand-lg shadow-sm header-color">
         <div class="container-fluid gap-3">
             <div class="d-flex gap-2 col-8">
@@ -38,14 +39,37 @@
             </div>
         </div>
     </nav>
-    <OffCanvas></OffCanvas>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationBar" aria-labelledby="notificationBarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="notificationBarLabel">Notifications</h5>
+            <button type="button" class="btn-close text reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="container mt-4">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Notification Title</h5>
+                        <p class="card-text">Your ticket# has been resolved.</p>
+                        <p class="card-text fst-italic text-muted"> {{ notificationDateTime() }}</p>
+                    </div>
+                </div>  
+            </div>    
+        </div>
+    </div>
+    </div>
 </template>
 
 <script setup>
-import OffCanvas from '@/Components/OffCanvas.vue';
 import { Link, usePage } from "@inertiajs/vue3";
 
 const page = usePage();
+
+function notificationDateTime(){
+    const currentDateTime = new Date();
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    return currentDateTime.toLocaleDateString('en-US', options).replace(/\//g, '-');
+}
+
 </script>
 
 <style>
