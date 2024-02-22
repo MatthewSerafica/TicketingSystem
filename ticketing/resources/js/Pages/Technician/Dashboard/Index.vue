@@ -40,7 +40,7 @@
 import Button from '@/Components/Button.vue';
 import Card from '@/Components/Cards.vue';
 import EmptyCard from '@/Components/EmptyState/Cards.vue';
-import Header from '@/Pages/Layouts/AdminHeader.vue';
+import Header from '@/Pages/Layouts/TechnicianHeader.vue';
 import { Link } from '@inertiajs/vue3';
 import moment from "moment";
 

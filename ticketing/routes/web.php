@@ -47,6 +47,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/technician', [TechnicianDashboardController::class, 'index']);
         Route::get('/technician/tickets', [TechnicianTicketController::class, 'index']);
         Route::get('/technician/tickets/create', [TechnicianTicketController::class, 'create']);
+        Route::get('/technician/tickets/create/store', [TechnicianTicketController::class, 'store']);
         Route::get('/technician/service-report', [TechnicianServiceController::class, 'index']);
         Route::get('/technician/service-report/create', [TechnicianServiceController::class, 'create']);
     });
