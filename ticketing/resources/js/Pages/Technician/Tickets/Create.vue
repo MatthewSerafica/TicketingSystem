@@ -2,19 +2,31 @@
   <div>
     <Header></Header>
     <div class="mt-5 pt-5">
-    <form @submit.prevent="create">
-      <br />
-      <div class="container">
-        <div class="title-container">
-          <h1>Create Tickets</h1>
-        </div>
+      <form @submit.prevent="create">
+        <br />
+        <div class="container">
+          <div class="title-container">
+            <h1>Create Tickets</h1>
+          </div>
 
-        <div class="create-ticket">
-          <div class="d-flex flex-row gap-5 justify-content-center">
-            <div class="flex-shrink-1">
-              <label for="issue" class="fw-semibold">Title</label>
-              <input id="issue" class="border-secondary-subtle" type="text" placeholder="Enter Ticket Title..."
-                v-model="form.issue" />
+          <div class="create-ticket">
+            <div class="d-flex flex-row gap-5 justify-content-center">
+              <div class="flex-shrink-1">
+                <label for="issue" class="fw-semibold">Title</label>
+                <input id="issue" class="border-secondary-subtle" type="text" placeholder="Enter Ticket Title..."
+                  v-model="form.issue" />
+              </div>
+              <div class="d-flex flex-column flex-shrink-0 w-25">
+                <label for="service" class="fw-semibold">Service</label>
+                <select id="service" class="h-100 rounded border-secondary-subtle" placeholder="Select Service..."
+                  v-model="form.service">
+                  <option disabled>Select Service</option>
+                  <option value="Network Troubleshoot">Network Troubleshoot</option>
+                  <option value="Hardware Repair">Hardware Repair</option>
+                  <option value="Software Troubleshoot">Software Troubleshoot</option>
+                  <option value="Network Troubleshoot">Network Troubleshoot</option>
+                </select>
+              </div>
             </div>
             <div class="d-flex flex-column flex-shrink-0 w-25">
               <label for="department" class="fw-semibold">Department/Office</label>
@@ -54,16 +66,14 @@
               </select>
             </div>
           </div>
-        </div>
-        <div class="button-container">
-          <button class="submit-ticket-button" type="submit" as="button">Submit</button>
-          <button class="btn btn-link text-decoration-none" @click="cancel">Cancel</button>
+          <div class="button-container">
+            <button class="submit-ticket-button" type="submit" as="button">Submit</button>
+            <button class="btn btn-secondary"><Link :href="`/technician`" class="text-decoration-none btn btn-secondary">Cancel</Link></button>
           </div>
-        <div class="table-container"></div>
-
-      </div>
-    </form>
-  </div>
+          <div class="table-container"></div>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
