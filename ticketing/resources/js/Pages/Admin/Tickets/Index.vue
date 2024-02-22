@@ -9,11 +9,12 @@
           <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket
           </Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
-            <button class="btn btn-secondary px-5 py-2">All</button>
-            <button class="btn btn-secondary px-5 py-2">New</button>
-            <button class="btn btn-secondary px-4 py-2">Resolved</button>
-            <button class="btn btn-secondary px-4 py-2">Pending</button>
+            <button class="btn btn-secondary px-5 py-2" @click="handleAllButtonClick">All</button>
+            <button class="btn btn-secondary px-5 py-2" @click="handleNewButtonClick">New</button>
+            <button class="btn btn-secondary px-4 py-2" @click="handleResolvedButtonClick">Resolved</button>
+            <button class="btn btn-secondary px-4 py-2" @click="handlePendingButtonClick">Pending</button>
           </div>
+
         </div>
         <div class="input-group mt-3 mb-4">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
@@ -31,13 +32,13 @@
               <th>Issue</th>
               <th>Service</th>
               <th>Technician</th>
-              <th>Status</th>
+              <th>Status</th> 
               <th>Date Issued</th>
               <th>Date Resolved</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="ticket in tickets" :key="tickets.ticket_number">
+            <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number">
               <td class="text-center py-3">{{ ticket.ticket_number }}</td>
               <td class="text-center py-3">{{ ticket.employee.user.name }}</td>
               <td class="text-center py-3">{{ ticket.employee.department }}</td>
@@ -89,7 +90,7 @@
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link, router, useForm } from "@inertiajs/vue3";
 import moment from "moment";
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 
 const props = defineProps({
   tickets: Object,
@@ -97,10 +98,16 @@ const props = defineProps({
   filters: Object,
 });
 
+
+const selectedStatus = ref('all');
+const filteredTickets = ref(props.tickets); 
+
+
 let search = ref(props.filters.search);
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
 let timeoutId = null;
+const tickets = ref(props.tickets);
 
 const fetchData = () => {
   router.get(
@@ -109,6 +116,7 @@ const fetchData = () => {
       search: search.value,
       sort: sortColumn.value,
       direction: sortDirection.value,
+      status: selectedStatus.value,
     },
     {
       preserveState: true,
@@ -116,7 +124,34 @@ const fetchData = () => {
     }
   )
 }
+
+const handleAllButtonClick = () => {
+  console.log("Handle All Button Click");
+  selectedStatus.value = 'all';
+  // Filter tickets to include both "Pending" and "New" statuses
+  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'New' || ticket.status === 'Pending');
+};
+
+const handleNewButtonClick = () => {
+  console.log("Handle New Button Click");
+  selectedStatus.value = 'new';
+  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'New');
+};
+
+const handleResolvedButtonClick = () => {
+  console.log("Handle Resolved Button Click");
+  selectedStatus.value = 'resolved';
+  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'Resolved');
+};
+
+const handlePendingButtonClick = () => {
+  console.log("Handle Pending Button Click");
+  selectedStatus.value = 'pending';
+  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'Pending');
+};
+
 const resetSorting = () => {
+  console.log("Reset Sorting");
   sortColumn.value = "ticket_number"
   sortDirection.value = "asc"
 }
@@ -140,6 +175,10 @@ watch(search, () => {
 const formatDate = (date) => {
   return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
 };
+
+onMounted(() => {
+  handleAllButtonClick(); // Call the method to display all tickets initially
+});
 
 const getButtonClass = (status) => {
   switch (status.toLowerCase()) {
