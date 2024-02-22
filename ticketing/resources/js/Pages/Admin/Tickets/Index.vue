@@ -23,10 +23,10 @@
         </div>
       </div>
       <div class="w-75">
-        <table class="table table-striped">
-          <thead class="">
-            <tr class="text-center">
-              <th>Ticket No</th>
+        <table class="table table-striped border border-secondary-subtle">
+          <thead>
+            <tr class="text-start">
+              <th class="text-center">Ticket No</th>
               <th>Employee</th>
               <th>Department</th>
               <th>Issue</th>
@@ -37,15 +37,14 @@
               <th>Date Resolved</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="">
             <tr v-for="ticket in tickets" :key="ticket.ticket_number">
-              <td class="text-center py-3">{{ ticket.ticket_number }}</td>
-              <td class="text-center py-3">{{ ticket.employee.user.name }}</td>
-              <td class="text-center py-3">{{ ticket.employee.department }}</td>
-              <td class="text-center py-3">{{ ticket.issue }}</td>
-              <td class="text-center py-3">{{ ticket.service ? ticket.service : 'Unassigned' }}</td>
-              <!-- <td class="text-center py-3">{{ ticket.technician ? ticket.technician.user.name : 'Unassigned' }}</td> -->
-              <td class="text-center py-3">
+              <td class="text-center py-4">{{ ticket.ticket_number }}</td>
+              <td class="text-start py-4">{{ ticket.employee.user.name }}</td>
+              <td class="text-start py-4">{{ ticket.employee.department }}</td>
+              <td class="text-start py-4">{{ ticket.issue }}</td>
+              <td class="text-start py-4">{{ ticket.service ? ticket.service : 'Unassigned' }}</td>
+              <td class="text-start py-3">
                 <div class="btn-group">
                   <button type="button" class="btn">{{ ticket.technician ? ticket.technician.user.name :
                     'Unassigned' }}</button>
@@ -61,7 +60,7 @@
                   </ul>
                 </div>
               </td>
-              <td class="text-center py-3">
+              <td class="text-start py-3">
                 <div class="btn-group">
                   <button type="button" :class="getButtonClass(ticket.status)">{{ ticket.status }}</button>
                   <button type="button" :class="getButtonClass(ticket.status)"
@@ -77,8 +76,10 @@
                   </ul>
                 </div>
               </td>
-              <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
-              <td class="text-center py-3">{{ ticket.resolved_at ? ticket.resolved_at : 'Not yet resolved' }}</td>
+              <td class="text-start py-4">{{ formatDate(ticket.created_at) }}</td>
+              <td class="text-start py-4">{{ isNaN(new Date(formatDate(ticket.resolved_at)))
+                ? 'Not yet resolved'
+                : formatDate(ticket.resolved_at) }}</td>
             </tr>
           </tbody>
         </table>
@@ -192,6 +193,8 @@ const getButtonClass = (status) => {
       return 'btn btn-danger';
     case 'pending':
       return 'btn btn-warning';
+    case 'ongoing':
+      return 'btn btn-primary';
     case 'resolved':
       return 'btn btn-success';
     default:

@@ -101,6 +101,11 @@ class AdminTicketController extends Controller
         $ticket = Ticket::where('ticket_number', $ticket_id)->first();
 
         $ticket->status = $request->status;
+        if ($ticket->status == 'Resolved') {
+            $ticket->resolved_at = now();
+        } else {
+            $ticket->resolved_at = null;
+        }
         $ticket->save();
     }
 
