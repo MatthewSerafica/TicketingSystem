@@ -68,8 +68,20 @@
                     <a class="nav-link" :class="{ 'active': activeTab === 'employee' }" href="#employee-content" @click.prevent="showTab('employee')">Employee</a>
                 </nav>
                 <div id="tab-content">
-                    <div v-if="activeTab === 'technician'">Technician Content...</div>
-                    <div v-if="activeTab === 'employee'">Employee Content...</div>
+                    <div v-if="activeTab === 'technician'" class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Notification Title</h5> <!--PLACEHOLDER-->
+                            <p class="card-text">Technician is going on a vacation</p> <!--PLACEHOLDER-->
+                            <p class="card-text fst-italic text-muted">{{ notificationDateTime() }}</p>
+                        </div>
+                    </div>
+                    <div v-if="activeTab === 'employee'" class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Notification Title</h5><!--PLACEHOLDER-->
+                            <p class="card-content">Employee is having a bachelors party.</p> <!--PLACEHOLDER-->
+                            <p class="card-text fst-italic text-muted">{{ notificationDateTime() }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -79,14 +91,20 @@
 
 <script setup>
 import { ref } from 'vue';
+import { Link, usePage } from "@inertiajs/vue3";
 const activeTab = ref('technician'); // Default active tab
+const page = usePage();
+
+function notificationDateTime(){
+    const currentDateTime =  new Date();
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    return currentDateTime.toLocaleDateString('en-US', options).replace(/\//g, '-');
+}
 
 function showTab(tab) {
     activeTab.value = tab;
 }
 
-import { Link, usePage } from "@inertiajs/vue3";
-const page = usePage();
 </script>
 
 <style>

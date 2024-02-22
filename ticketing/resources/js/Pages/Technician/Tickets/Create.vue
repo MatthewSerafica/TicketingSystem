@@ -1,110 +1,81 @@
 <template>
   <div>
     <Header></Header>
-    <br />
+    <div class="mt-5 pt-5">
+    <form @submit.prevent="create">
+      <br />
+      <div class="container">
+        <div class="title-container">
+          <h1>Create Tickets</h1>
+        </div>
 
-    <div class="title-container">
-      <h1>Create Tickets</h1>
-    </div>
+        <div class="create-ticket">
+          <div class="d-flex flex-row gap-5 justify-content-center">
+            <div class="flex-shrink-1">
+              <label for="issue" class="fw-semibold">Title</label>
+              <input id="issue" class="border-secondary-subtle" type="text" placeholder="Enter Ticket Title..."
+                v-model="form.issue" />
+            </div>
+            <div class="d-flex flex-column flex-shrink-0 w-25">
+              <label for="service" class="fw-semibold">Service</label>
+              <select id="service" class="h-100 rounded border-secondary-subtle" placeholder="Select Service..."
+                v-model="form.service">
+                <option disabled>Select Service</option>
+                <option value="Network Troubleshoot">Network Troubleshoot</option>
+                <option value="Hardware Repair">Hardware Repair</option>
+                <option value="Software Troubleshoot">Software Troubleshoot</option>
+                <option value="Network Troubleshoot">Network Troubleshoot</option>
+              </select>
+            </div>
+          </div>
+          <div class="d-flex flex-row gap-5 justify-content-center">
+            <div class="flex-shirnk-0">
+              <label for="description" class="fw-semibold">Description</label>
+              <input for="description" class="border-secondary-subtle" type="text"
+                placeholder="Enter Ticket Description..." v-model="form.description" />
+            </div>
+          </div>
+        </div>
+        <div class="button-container">
+          <button class="submit-ticket-button" type="submit" as="button">Submit</button>
+          <button class="btn btn-link text-decoration-none" @click="cancel">Cancel</button>
+          </div>
+        <div class="table-container"></div>
 
-    <div class="create-ticket">
-      <div>
-        <p>Title</p>
-        <input type="text" placeholder="Enter Ticket Title..." />
       </div>
-      <div>
-        <p>Description</p>
-        <input type="text" placeholder="Enter Ticket Description..." />
-      </div>
-    </div>
-    
-    <div class="button-container">
-      <button type="button" @click="submitForm" class="submit-button">Submit</button>
-      <Link href="/technician/tickets">
-        <button type="button" class="cancel-button">Cancel</button>
-      </Link>
-    </div>
-
-    <!-- Add class to the container element if needed -->
-    <div class="table-container"></div>
+    </form>
+  </div>
   </div>
 </template>
 
 <script setup>
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
-import { Link, router } from "@inertiajs/vue3";
+import { Link, useForm, usePage } from "@inertiajs/vue3";
+
+const page = usePage();
+
+const form = useForm({
+  issue: null,
+  service: null,
+  description: null,
+  employee: page.props.user.id,
+})
+const create = () => {
+    const url = route('employee.store');
+    console.log('Generated URL:', url);
+    form.post(url, { preserveScroll: false, preserveState: false });
+};
+
+const cancel = () => {
+    const url = route('employee.index'); 
+    console.log('Generated URL:', url);
+    $inertia.visit(url);
+};
 </script>
 
 <style>
-* {
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.title-container {
-  text-align: center;
-}
-
-.create-ticket {
-  margin: 10px 0;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
-
-.create-ticket div {
-  margin-bottom: 20px;
-  width: 80%;
-}
-
-.create-ticket input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-/* Add styling for create-ticket-link */
-.create-ticket-link {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #000066;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-.create-ticket-link:hover {
-  background-color: #898989;
-}
-
-.cancel-button {
-  background-color: #000066;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.submit-button {
-  width: 10%;
-  background-color: #000066;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-right: 10px; /* Add margin to create space */
-  transition: background-color 0.3s;
-}
-
-.cancel-button:hover,
-.submit-button:hover {
-  background-color: #0c0c36; 
+/* Remove underline from Link component */
+.text-decoration-none {
+    text-decoration: none;
 }
 </style>
