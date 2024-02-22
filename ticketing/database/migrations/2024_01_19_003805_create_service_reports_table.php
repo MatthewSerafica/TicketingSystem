@@ -12,15 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('service_reports', function (Blueprint $table) {
-            $table->id('service_number'); 
+            $table->id('service_id');
+            $table->unsignedBigInteger('technicians_id');
+            $table->foreign('technicians_id')->references('technician_id')->on('technicians');
             $table->date('date_started');
             $table->time('time_started');
+            $table->unsignedBigInteger('ticket_number');
+            $table->foreign('ticket_number')->references('ticket_number')->on('tickets');
             $table->string('technician_name');
-            $table->foreignId('employee_id')->references('employee_id')->on('employees');
+            $table->string('requesting_office'); 
+            $table->string('equipment_no');
             $table->string('issue');
             $table->string('action');
             $table->string('recommendation');
-            $table->string('status_update');
+            $table->date('date_done');
+            $table->time('time_done'); 
             $table->timestamps();
         });
     }

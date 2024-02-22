@@ -84,6 +84,7 @@ class DatabaseSeeder extends Seeder
             $tickets = [
                 [
                 'employee' => '1',
+                'technician' => '1',
                 'issue' => 'Hardware Issue',
                 'service' => 'Hardware Repair',
                 'description' => 'broken monitor',
@@ -101,6 +102,25 @@ class DatabaseSeeder extends Seeder
         foreach ($tickets as $ticket) {
             \App\Models\Ticket::factory()->create($ticket);
         }
-        
+
+        $service_reports = [
+            [
+                'date_started' => '2022-02-22',
+                'time_started' => '08:00:00',
+                'ticket_number' => 1,
+                'technician_name' => 'John Doe',
+                'requesting_office' => 'IT Department',
+                'equipment_no' => 'E123',
+                'issue' => 'Network connectivity problem',
+                'action' => 'Checked cables and fixed the issue',
+                'recommendation' => 'Install additional network equipment',
+                'date_done' => '2022-02-22',
+                'time_done' => '10:00:00',
+                'technicians_id' => 3, 
+            ],
+        ];
+        foreach ($service_reports as $service_reports) {
+            \App\Models\ServiceReport::factory()->create($service_reports);
+        }
     }
 }
