@@ -33,7 +33,7 @@ class TechnicianTicketController extends Controller
 
         $filters = $request->only(['search']);
         $technicians = Technician::with('user')->get();
-        return inertia('Admin/Tickets/Index', [
+        return inertia('Technician/Tickets/Index', [
             'tickets' => $tickets,
             'technicians' => $technicians,
             'filters' => $filters,
@@ -43,7 +43,7 @@ class TechnicianTicketController extends Controller
     public function create() {
         $technicians = Technician::with('user')->get();
         $employees = Employee::with('user')->get();
-        return inertia('Admin/Tickets/Create', [
+        return inertia('Technician/Tickets/Create', [
             'technicians' => $technicians,
             'employees' => $employees,
         ]);
@@ -76,7 +76,7 @@ class TechnicianTicketController extends Controller
         Ticket::create($ticketData);
         $employee->update(['made_ticket' => $employee->made_ticket + 1]);
 
-        return redirect()->to('/admin/tickets')->with('success', 'Ticket Created');
+        return redirect()->to('/technician/tickets')->with('success', 'Ticket Created');
     }
 
     public function status(Request $request, $ticket_id)

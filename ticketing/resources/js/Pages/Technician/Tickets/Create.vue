@@ -54,13 +54,6 @@
               </select>
             </div>
           </div>
-          <div class="d-flex flex-row gap-5 justify-content-center">
-            <div class="flex-shirnk-0">
-              <label for="description" class="fw-semibold">Description</label>
-              <input for="description" class="border-secondary-subtle" type="text"
-                placeholder="Enter Ticket Description..." v-model="form.description" />
-            </div>
-          </div>
         </div>
         <div class="button-container">
           <button class="submit-ticket-button" type="submit" as="button">Submit</button>
@@ -76,7 +69,7 @@
 
 <script setup>
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
-import { Link, router } from "@inertiajs/vue3";
+import { Link, router, useForm } from "@inertiajs/vue3";
 
 const props = defineProps({
   technicians: Object,
