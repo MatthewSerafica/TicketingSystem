@@ -79,19 +79,24 @@
 
 <script setup>
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
-import { Link, router, useForm } from "@inertiajs/vue3";
+import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 
 const props = defineProps({
   technicians: Object,
   employees: Object,
 })
 
+const page = usePage(
+
+
+)
+
 const form = useForm({
   issue: null,
   service: null,
   description: null,
   employee: null,
-  technician: null,
+  technician: page.props.user.id,
 })
 
 const create = () => form.post(route('technician.tickets.store'), { preserveScroll: false, preserveState: false })

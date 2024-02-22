@@ -59,14 +59,16 @@ class TechnicianTicketController extends Controller
             'service' => 'required',
             'technician' => 'required',
         ]);
-        $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
+        $technician = Technician::where('user_id', $request->technician)->firstOrFail();
+        $employee = Employee::where('user_id', $request->employee)->firstOrFail();
+
         if ($employee->made_ticket >= 5) {
             return redirect()->back()->with('error', 'You have already made the max number of tickets.');
         }
 
         $ticketData = [
             'employee' => $request->employee,
-            'technician' => $request->technician,
+            'technician' => $technician->technician_id,
             'issue' => $request->issue,
             'description' => $request->description,
             'service' => $request->service,

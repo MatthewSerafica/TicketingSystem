@@ -47,7 +47,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/technician', [TechnicianDashboardController::class, 'index'])->name('technician');
         Route::get('/technician/tickets', [TechnicianTicketController::class, 'index'])->name('technician.tickets');
         Route::get('/technician/tickets/create', [TechnicianTicketController::class, 'create'])->name('technician.tickets.create');
-        Route::get('/technician/tickets/create/store', [TechnicianTicketController::class, 'store'])->name('technician.tickets.store');
+        Route::post('/technician/tickets/create/store', [TechnicianTicketController::class, 'store'])->name('technician.tickets.store');
         Route::get('/technician/service-report', [TechnicianServiceController::class, 'index']);
         Route::get('/technician/service-report/create', [TechnicianServiceController::class, 'create']);
     });
