@@ -4,12 +4,7 @@
     <Header></Header>
     <br>
     <div class="search">
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Search Tickets..."
-        @input="handleSearch"
-      />
+      <input type="text" v-model="searchQuery" placeholder="Search Tickets..." @input="handleSearch" />
     </div>
 
     <div class="container text-center w-100 h-100 justify-center">
@@ -71,7 +66,7 @@
 
 <script setup>
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
-import {Link, router} from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import moment from "moment";
 import { ref, watch, onMounted } from "vue";
 
@@ -82,7 +77,7 @@ const props = defineProps({
 });
 
 const selectedStatus = ref('all');
-const filteredTickets = ref(props.tickets); 
+const filteredTickets = ref(props.tickets);
 
 let search = ref(props.filters.search);
 let sortColumn = ref("ticket_number");
@@ -227,7 +222,8 @@ p {
 Link.create-ticket-link {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #000000; /* Green */
+  background-color: #000000;
+  /* Green */
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
@@ -246,7 +242,8 @@ Link.create-ticket-link:hover {
   border: none;
   background-color: #cecece;
   color: #1e1e1e;
-  border-radius: 8px; /* Adjust border-radius for rounded edges */
+  border-radius: 8px;
+  /* Adjust border-radius for rounded edges */
   cursor: pointer;
   transition: background-color 0.3s;
 }
