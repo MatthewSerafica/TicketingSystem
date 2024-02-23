@@ -89,7 +89,7 @@
 </template>
 <script setup>
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link, router, useForm, usePage } from "@inertiajs/vue3";
+import { Link, router, useForm } from "@inertiajs/vue3";
 import moment from "moment";
 import { nextTick, reactive, ref, watch } from "vue";
 
