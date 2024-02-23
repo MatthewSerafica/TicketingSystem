@@ -72,7 +72,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Notification Title</h5> <!--PLACEHOLDER-->
                             <p class="card-text">Technician is going on a vacation</p> <!--PLACEHOLDER-->
-                            <p class="card-text fst-italic text-muted">{{ notificationDateTime() }}</p>
+                            <small class="card-text fst-italic text-muted">{{ notificationDateTime() }}</small>
                         </div>
                     </div>
                     <div v-if="activeTab === 'employee'" class="card mt-3">
