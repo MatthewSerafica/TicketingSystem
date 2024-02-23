@@ -3,9 +3,7 @@
   <div>
     <Header></Header>
     <br>
-    <div class="search">
-      <input type="text" v-model="searchQuery" placeholder="Search Tickets..." @input="handleSearch" />
-    </div>
+
 
     <div class="container text-center w-100 h-100 justify-center">
       <h1>View All Tickets</h1>
@@ -14,8 +12,14 @@
       <br><br>
       <button class="ticket-button" @click="handleAllButtonClick">All</button>
       <button class="ticket-button" @click="handleNewButtonClick">New</button>
-      <button class="ticket-button" @click="handleResolvedButtonClick">Resolved</button>
       <button class="ticket-button" @click="handlePendingButtonClick">Pending</button>
+      <button class="ticket-button" @click="handleResolvedButtonClick">Resolved</button>
+    </div>
+
+    <div class="search">
+        <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
+            placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
     </div>
 
     <div class="table-container">
