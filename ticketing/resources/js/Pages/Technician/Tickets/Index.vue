@@ -44,7 +44,7 @@
               <td class="text-center py-3">{{ ticket.ticket_number }}</td>
               <td class="text-center py-3">{{ ticket.employee.user.name }}</td>
               <td class="text-center py-3">{{ ticket.employee.department }}</td>
-              <td class="text-center py-3">{{ ticket.issue }}</td>
+              <td class="text-center py-3 text-truncate" style="max-width: 80px;">{{ ticket.issue }}</td>
               <td class="text-center py-3">{{ ticket.service ? ticket.service : 'Unassigned' }}</td>
               <td class="text-center py-3">
                 <div class="btn-group">
@@ -73,7 +73,7 @@
 
 <script setup>
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
-import { Link, router } from "@inertiajs/vue3";
+import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 import moment from "moment";
 import { ref, watch, onMounted } from "vue";
 
@@ -180,6 +180,14 @@ const getButtonClass = (status) => {
 };
 
 const updateStatus = (ticket_id, status) => {
+  const { props } = usePage();
+  const updatedTickets = props.tickets.map(ticket => {
+    if (ticket.ticket_number === ticket_id) {
+      return { ...ticket, status: status };
+    }
+    return ticket;
+  });
+  filteredTickets.value = updatedTickets;
   const form = useForm({
     ticket_id: ticket_id,
     status: status
@@ -198,12 +206,7 @@ const updateStatus = (ticket_id, status) => {
   box-sizing: border-box;
 }
 
-.table-container td {
-  max-width: 150px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+
 
 .search {
   margin: 10px 0;
