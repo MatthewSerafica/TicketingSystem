@@ -122,5 +122,115 @@ class DatabaseSeeder extends Seeder
         foreach ($service_reports as $service_reports) {
             \App\Models\ServiceReport::factory()->create($service_reports);
         }
+
+        $departments =[
+            [
+                'department' => 'LES'
+            ],
+            [
+                'department' => 'JHS'
+            ],
+            [
+                'department' => 'SHS'
+            ],
+            [
+                'department' => 'SAMCIS'
+            ],
+            [
+                'department' => 'SAS'
+            ],
+            [
+                'department' => 'SEA'
+            ],
+            [
+                'department' => 'SOL'
+            ],
+            [
+                'department' => 'SOM'
+            ],
+            [
+                'department' => 'SONAHBS'
+            ],
+            [
+                'department' => 'STELA'
+            ],
+        ];
+        foreach ($departments as $departments) {
+            \App\Models\Department::factory()->create($departments);
+        }
+
+        $offices =[
+            [
+                'office' => 'Registrars Office'
+            ],
+            [
+                'office' => 'Deans office'
+            ],
+            [
+                'office' => 'library'
+            ],
+            [
+                'office' => 'Research and Innovation Office'
+            ],
+            [
+                'office' => 'Finance Office'
+            ],
+            [
+                'office' => 'Printing Operations Office'
+            ],
+            [
+                'office' => 'Technology Management and Development Department'
+            ],
+            [
+                'office' => 'Center for Culture and the Arts'
+            ],
+            [
+                'office' => 'Dental Clinic'
+            ],
+            [
+                'office' => 'Guidance Center'
+            ],
+            [
+                'office' => 'Human Resource Department'
+            ],
+            [
+                'office' => 'Students Residence Hall'
+            ],
+            [
+                'office' => 'Medical Clinic'
+            ],
+            [
+                'office' => 'Office of Legal Affairs'
+            ],
+            [
+                'office' => 'Office of Students Affairs'
+            ],
+            [
+                'office' => 'SLU Sacred Heart Medical Center'
+            ],
+        ];
+        foreach ($offices as $offices) {
+            \App\Models\Office::factory()->create($offices);
+        }
+
+        $services = [
+            [
+            'service' => 'Network Troubleshoot',
+            ],
+            [
+            'service' => 'Hardware Repair',
+            ],
+            [
+            'service' => 'Software Troubleshoot',
+            ],
+            [
+            'service' => 'Network Troubleshoot',
+            ],
+                
+        ];
+        foreach ($services as $services) {
+            \App\Models\Service::factory()->create($services);
+        }
+
     }
 }
