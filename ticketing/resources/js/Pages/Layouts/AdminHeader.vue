@@ -24,6 +24,9 @@
                     <li class="nav-item">
                         <a class="nav-link text-light" href="/admin/users">Users</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="/admin/department">Department</a>
+                    </li>
                 </ul>
             </div>
             <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
