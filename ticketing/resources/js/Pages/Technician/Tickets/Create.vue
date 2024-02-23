@@ -11,27 +11,15 @@
           </div>
 
           <div class="create-ticket">
-            <div class="d-flex flex-row gap-5 justify-content-center">
-              <div class="flex-shrink-1">
-                <label for="issue" class="fw-semibold">Title</label>
-                <input id="issue" class="border-secondary-subtle" type="text" placeholder="Enter Ticket Title..."
-                  v-model="form.issue" />
-              </div>
-              <div class="d-flex flex-column flex-shrink-0 w-25">
-                <label for="service" class="fw-semibold">Service</label>
-                <select id="service" class="h-100 rounded border-secondary-subtle" placeholder="Select Service..."
-                  v-model="form.service">
-                  <option disabled>Select Service</option>
-                  <option value="Network Troubleshoot">Network Troubleshoot</option>
-                  <option value="Hardware Repair">Hardware Repair</option>
-                  <option value="Software Troubleshoot">Software Troubleshoot</option>
-                  <option value="Network Troubleshoot">Network Troubleshoot</option>
-                </select>
-              </div>
+          <div class="d-flex flex-row gap-5 justify-content-center">
+            <div class="flex-shrink-1">
+              <label for="issue" class="fw-semibold">Title</label>
+              <input id="issue" class="border-secondary-subtle" type="text" placeholder="Enter Ticket Title..."
+                v-model="form.issue" />
             </div>
             <div class="d-flex flex-column flex-shrink-0 w-25">
               <label for="department" class="fw-semibold">Department/Office</label>
-              <select id="department" class="h-100 rounded border-secondary-subtle" placeholder="Select Department..."
+              <select id="department" class="h-100 rounded border-secondary-subtle form-select" placeholder="Select Department..."
                 v-model="form.department">
                 <option disabled>Select Department</option>
                 <option>Finance Department</option>
@@ -41,25 +29,36 @@
             </div>
             <div class="d-flex flex-column flex-shrink-0 w-25">
               <label for="service" class="fw-semibold">Employee</label>
-              <select id="service" class="h-100 rounded border-secondary-subtle" placeholder="Assign Technician..."
+              <select id="service" class="h-100 rounded border-secondary-subtle form-select" placeholder="Assign Technician..."
                 v-model.number="form.employee">
                 <option disabled>Assign Employee</option>
                 <option v-for="employee in employees" :value="employee.employee_id">{{ employee.user.name }}
                 </option>
               </select>
             </div>
-              <div class="d-flex flex-row gap-5 justify-content-center">
-                <div class="flex-shrink-1">
-                  <label for="description" class="fw-semibold">Description</label>
-                  <input for="description" class="border-secondary-subtle" type="text"
-                    placeholder="Enter Ticket Description..." v-model="form.description" />
-                </div>
-              </div>
           </div>
-
+          <div class="d-flex flex-row gap-5 justify-content-center">
+            <div class="flex-shirnk-0">
+              <label for="description" class="fw-semibold">Description</label>
+              <input for="description" class="border-secondary-subtle" type="text"
+                placeholder="Enter Ticket Description..." v-model="form.description" />
+            </div>
+            <div class="d-flex flex-column flex-shrink-0 w-25">
+              <label for="service" class="fw-semibold">Service</label>
+              <select id="service" class="h-100 rounded border-secondary-subtle form-select" placeholder="Select Service..."
+                v-model="form.service">
+                <option disabled>Select Service</option>
+                <option value="Network Troubleshoot">Network Troubleshoot</option>
+                <option value="Hardware Repair">Hardware Repair</option>
+                <option value="Software Troubleshoot">Software Troubleshoot</option>
+                <option value="Network Troubleshoot">Network Troubleshoot</option>
+              </select>
+            </div>
+          </div>
+        </div>
           <div class="button-container">
             <button class="submit-ticket-button" type="submit" as="button">Submit</button>
-            <button class="btn btn-secondary"><Link :href="`/technician`" class="text-decoration-none btn btn-secondary">Cancel</Link></button>
+            <button class="btn btn-secondary"><Link :href="`/technician/tickets`" class="text-decoration-none btn btn-secondary">Cancel</Link></button>
           </div>
           <div class="table-container"></div>
         </div>

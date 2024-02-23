@@ -8,7 +8,9 @@
     <div class="container text-center w-100 h-100 justify-center">
       <h1>View All Tickets</h1>
       <p>Manage and Track all TMDD tickets</p>
-      <Link :href="`/technician/tickets/create`" class="rounded primary btnm text-light">Create New Ticket</Link>
+      <Link class="text-decoration-none" href="/technician/tickets/create">
+              <Button class="rounded btnn primary" value="Create Ticket">Create New Ticket</Button>
+            </Link>
       <br><br>
       <button class="ticket-button" @click="handleAllButtonClick">All</button>
       <button class="ticket-button" @click="handleNewButtonClick">New</button>
@@ -23,8 +25,9 @@
     </div>
 
     <div class="table-container">
-      <table class="table table-striped">
-          <thead class="">
+      <table class="table table-striped table-hover table-sm align-middle">
+        
+          <thead class="table-group-divider ">
             <tr class="text-center">
               <th>Ticket No</th>
               <th>Employee</th>
@@ -36,12 +39,12 @@
               <th>Date Resolved</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="table-group-divider">
             <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number">
               <td class="text-center py-3">{{ ticket.ticket_number }}</td>
               <td class="text-center py-3">{{ ticket.employee.user.name }}</td>
               <td class="text-center py-3">{{ ticket.employee.department }}</td>
-              <td class="text-center py-3">{{ ticket.issue }}</td>
+              <td class="text-center py-3 text-truncate" style="max-width: 80px;">{{ ticket.issue }}</td>
               <td class="text-center py-3">{{ ticket.service ? ticket.service : 'Unassigned' }}</td>
               <td class="text-center py-3">
                 <div class="btn-group">
@@ -70,7 +73,7 @@
 
 <script setup>
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
-import { Link, router } from "@inertiajs/vue3";
+import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 import moment from "moment";
 import { ref, watch, onMounted } from "vue";
 
@@ -177,6 +180,14 @@ const getButtonClass = (status) => {
 };
 
 const updateStatus = (ticket_id, status) => {
+  const { props } = usePage();
+  const updatedTickets = props.tickets.map(ticket => {
+    if (ticket.ticket_number === ticket_id) {
+      return { ...ticket, status: status };
+    }
+    return ticket;
+  });
+  filteredTickets.value = updatedTickets;
   const form = useForm({
     ticket_id: ticket_id,
     status: status
@@ -194,6 +205,7 @@ const updateStatus = (ticket_id, status) => {
   padding: 0;
   box-sizing: border-box;
 }
+
 
 
 .search {
@@ -267,11 +279,11 @@ Link.create-ticket-link:hover {
     background-color: #063970;
 }
 
-.btnm {
+.btnn {
     transition: background-color 0.3s, color 0.3s;
 }
 
-.btnm:hover {
+.btn:hover {
     background-color: #00009c;
     color: #CC9900;
 }

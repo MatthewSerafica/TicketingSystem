@@ -53,12 +53,8 @@
                             </div>
                         </div>
 
-                        <div class="text-center text-lg-start mt-4 pt-2">
-                            <button type="submit" class="btn btn-primary btn-lg"
-                                style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
-                            <!-- <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="#!"
-                                    class="link-danger">Register</a></p> -->
-                        </div>
+                        
+                        <Button :name="'Login'" :color="'primary'"></Button>
 
                     </form>
                     </div>
@@ -75,6 +71,7 @@
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useForm, Link } from '@inertiajs/vue3'
 import Footer from '@/Pages/Layouts/Footer.vue'
+import Button from '@/Components/Button.vue'
 
 const form = useForm({
     email: '',

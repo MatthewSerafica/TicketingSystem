@@ -1,11 +1,16 @@
 <template>
-    <input class="button shadow-sm" type="button">
+    <button :class="handleColor(color)" class="w-100" type="submit">{{ name }}</button>
 </template>
 
 <script setup>
 const props = defineProps({
-    text: String,
+    name: String,
+    color: String
 })
+
+const handleColor = (color) => {
+return color ? 'btn btn-' + color : 'btn';
+}
 </script>
 
 <style scoped>
