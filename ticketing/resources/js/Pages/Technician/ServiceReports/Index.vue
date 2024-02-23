@@ -34,7 +34,7 @@ import moment from "moment";
 import { ref, watch, onMounted } from "vue";
 
 const props = defineProps({
-    serviceReport: Object,
+    service_report: Object,
     technicians: Object,
     filters: Object,
 
