@@ -1,20 +1,19 @@
 <template>
   <div>
     <Header></Header>
-
     <div class="mt-5 pt-5">
       <form @submit.prevent="create">
         <br />
         <div class="container">
-          <div class="title-container">
+          <div class="title-container fw-bold mb-5 text-center">
             <h1>Create Tickets</h1>
           </div>
 
           <div class="create-ticket">
-          <div class="d-flex flex-row gap-5 justify-content-center">
-            <div class="flex-shrink-1">
+          <div class="d-flex flex-row gap-5 justify-content-center mb-4">
+            <div class="d-flex flex-column flex-shrink-0 w-25">
               <label for="issue" class="fw-semibold">Title</label>
-              <input id="issue" class="border-secondary-subtle" type="text" placeholder="Enter Ticket Title..."
+              <input id="issue" class="form-control h-100 border-secondary-subtle" type="text" placeholder="Enter Ticket Title..."
                 v-model="form.issue" />
             </div>
             <div class="d-flex flex-column flex-shrink-0 w-25">
@@ -37,10 +36,10 @@
               </select>
             </div>
           </div>
-          <div class="d-flex flex-row gap-5 justify-content-center">
-            <div class="flex-shirnk-0">
+          <div class="d-flex flex-row gap-5 justify-content-center mb-4">
+            <div class="d-flex flex-column flex-shrink-0 w-25">
               <label for="description" class="fw-semibold">Description</label>
-              <input for="description" class="border-secondary-subtle" type="text"
+              <input for="description" class="form-control border-secondary-subtle" type="text"
                 placeholder="Enter Ticket Description..." v-model="form.description" />
             </div>
             <div class="d-flex flex-column flex-shrink-0 w-25">
@@ -56,11 +55,20 @@
             </div>
           </div>
         </div>
-          <div class="button-container">
-            <button class="submit-ticket-button" type="submit" as="button">Submit</button>
-            <button class="btn btn-secondary"><Link :href="`/technician/tickets`" class="text-decoration-none btn btn-secondary">Cancel</Link></button>
+
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <div class="d-flex justify-content-center gap-2">
+                <Button :name="'Submit'" :color="'primary'" class="submit-btn"></button>
+                <Link :href="`/technician/tickets`" class=" btn btn-outline-primary">Cancel</Link>
+              </div>
+            </div>
           </div>
-          <div class="table-container"></div>
+        </div>
+
+
+
         </div>
       </form>
     </div>
@@ -68,6 +76,7 @@
 </template>
 
 <script setup>
+import Button from '@/Components/Button.vue';
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
 import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 
@@ -92,61 +101,11 @@ const form = useForm({
 const create = () => form.post(route('technician.tickets.store'), { preserveScroll: false, preserveState: false })
 </script>
 
-<style scoped>
-.title-container {
-  text-align: center;
+<style scoped>.submit-btn {
+  transition: all 0.2s;
 }
 
-.create-ticket {
-  margin: 10px 0;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
-
-.create-ticket div {
-  margin-bottom: 20px;
-  width: 80%;
-}
-
-.create-ticket input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.container {
-  padding: 20px;
-}
-
-h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
-}
-
-p {
-  justify-content: start;
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
-.button-container {
-  display: flex;
-  justify-content: center;
-}
-
-.submit-ticket-button {
-  width: 10%;
-  margin-right: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  background-color: #000066;
-  color: #fff;
-  border-radius: 8px;
-  /* Adjust border-radius for rounded edges */
-  cursor: pointer;
-  transition: background-color 0.3s;
+.submit-btn:hover {
+  transform: scale(1.1);
 }
 </style>

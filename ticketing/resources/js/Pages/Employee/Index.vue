@@ -1,23 +1,17 @@
 <template>
   <div>
     <Header></Header>
-    <!-- <div class="d-flex justify-content-end align-items-center p-4">
-    <Link :href="route('logout')" method="delete" as="button" v-if="page.props.user" class="btn btn-outline-secondary">
-    <i class="bi bi-box-arrow-right"></i>
-    </Link>
-    </div> -->
-    <br>
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          <H1 class="fw-bold">View All Tickets</H1>
+          <h1 class="fw-bold">View All Tickets</h1>
           <p class="fs-5"> Manage and Track all TMDD tickets</p>
           <Link :href="route('employee.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket</Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
-            <button class="btn btn-secondary px-5 py-2">All</button>
-            <button class="btn btn-secondary px-5 py-2">New</button>
-            <button class="btn btn-secondary px-4 py-2">Resolved</button>
-            <button class="btn btn-secondary px-4 py-2">Pending</button>
+            <Button :name="'All'" :color="'secondary'" class="btn-options"></button>
+            <Button :name="'New'" :color="'secondary'" class="btn-options"></button>
+            <Button :name="'Pending'" :color="'secondary'" class="btn-options"></button>
+            <Button :name="'Resolved'" :color="'secondary'" class="btn-options"></button>
           </div>
         </div>
         <div class="input-group mt-3 mb-4">
@@ -28,10 +22,10 @@
       </div>
 
       <div class="w-75">
-        <table class="table table-striped">
-          <thead class="">
-            <tr class="text-center">
-              <th>Ticket No</th>
+        <table class="table table-striped border border-secondary-subtle">
+          <thead>
+            <tr class="text-start">
+              <th class="text-center">Ticket No</th>
               <th>Employee</th>
               <th>Department</th>
               <th>Issue</th>
@@ -75,6 +69,7 @@
 import Header from "@/Pages/Layouts/EmployeeHeader.vue";
 import { Link, usePage } from "@inertiajs/vue3";
 import moment from "moment";
+import Button from '@/Components/Button.vue'
 
 const page = usePage();
 
@@ -99,9 +94,15 @@ const formatDate = (date) => {
 
 
 <style scoped>
+
 .btn-tickets {
-  background-color: #063970;
-  color: white;
-  border-color: #063970;
+  transition: all 0.2s;
+}
+
+.btn-tickets:hover {
+  transform: scale(1.1);
+}
+.btn-options {
+  width: 100px;
 }
 </style>

@@ -4,15 +4,14 @@
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          <H1 class="fw-bold">View All Tickets</H1>
+          <h1 class="fw-bold">View All Tickets</h1>
           <p class="fs-5"> Manage and Track all TMDD tickets</p>
-          <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket
-          </Link>
+          <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket </Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
-            <button class="btn btn-secondary px-5 py-2" @click="filterTickets('all')">All</button>
-            <button class="btn btn-secondary px-5 py-2" @click="filterTickets('new')">New</button>
-            <button class="btn btn-secondary px-4 py-2" @click="filterTickets('pending')">Pending</button>
-            <button class="btn btn-secondary px-4 py-2" @click="filterTickets('resolved')">Resolved</button>
+            <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
+            <Button :name="'New'" :color="'secondary'" class="btn-options" @click="filterTickets('new')"></Button>
+            <Button :name="'Pending'" :color="'secondary'" class="btn-options" @click="filterTickets('pending')"></Button>
+            <Button :name="'Resolved'" :color="'secondary'" class="btn-options" @click="filterTickets('resolved')"></Button>
           </div>
 
         </div>
@@ -22,6 +21,7 @@
             placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
+      
       <div class="w-75">
         <table class="table table-striped border border-secondary-subtle">
           <thead>
@@ -92,6 +92,7 @@ import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link, router, useForm } from "@inertiajs/vue3";
 import moment from "moment";
 import { nextTick, reactive, ref, watch } from "vue";
+import Button from '@/Components/Button.vue'
 
 const props = defineProps({
   tickets: Object,
@@ -226,8 +227,13 @@ const updateStatus = (ticket_id, status) => {
 
 <style scoped>
 .btn-tickets {
-  background-color: #063970;
-  color: white;
-  border-color: #063970;
+  transition: all 0.2s;
+}
+
+.btn-tickets:hover {
+  transform: scale(1.1);
+}
+.btn-options {
+  width: 100px;
 }
 </style>

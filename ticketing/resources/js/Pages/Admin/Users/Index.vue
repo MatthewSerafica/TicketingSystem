@@ -10,9 +10,9 @@
           <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New User
           </Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
-            <button class="btn btn-secondary px-5 py-2" @click="filterUsers('all')">All</button>
-            <button class="btn btn-secondary px-4 py-2" @click="filterUsers('employee')">Employees</button>
-            <button class="btn btn-secondary px-4 py-2" @click="filterUsers('technician')">Technician</button>
+            <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterUsers('all')"></Button>
+            <Button :name="'Employees'" :color="'secondary'" class="btn-options" @click="filterUsers('employee')"></Button>
+            <Button :name="'Technician'" :color="'secondary'" class="btn-options" @click="filterUsers('technician')"></Button>
           </div>
           <!-- Add buttons for filtering if needed -->
           <div class="input-group mt-3 mb-4">
@@ -54,6 +54,7 @@ import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { router } from '@inertiajs/vue3';
 import moment from "moment";
 import { defineProps, nextTick, reactive, ref, watch } from 'vue';
+import Button from '@/Components/Button.vue'
 
 const props = defineProps({
   users: Object,
@@ -146,32 +147,17 @@ const formatDate = (date) => {
 </script>
 
 <style scoped>
-.search {
-  margin: 10px 0;
-  display: flex;
-  justify-content: center;
+.btn-tickets {
+  transition: all 0.2s;
 }
 
-.search input {
-  width: 50%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.btn-tickets:hover {
+  transform: scale(1.1);
 }
 
-.container {
-  padding: 20px;
+.btn-options {
+  width: 100px;
 }
 
-h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
-}
 
-p {
-  font-size: 16px;
-  margin-bottom: 20px;
-}
-
-/* Add your custom styles */
 </style>

@@ -59,12 +59,18 @@
           </div>
         </div>
 
-        <div class="button-container">
-          <button type="button" @click="submitForm" class="submit-button">Submit</button>
-          <Link href="/technician/service-report">
-            <button type="button" class="cancel-button">Cancel</button>
-          </Link>
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <div class="d-flex justify-content-center gap-2">
+                <Button :name="'Submit'" :color="'primary'" @click="submitForm"></Button>
+                <Link :href=" '/technician/service-report'"  class="btn btn-outline-primary">Cancel</Link>
+              </div>
+            </div>
+          </div>
         </div>
+
+        
       </div>
     </form>
   </div>
@@ -73,6 +79,7 @@
 <script setup>
 import Header from '@/Pages/Layouts/TechnicianHeader.vue'
 import { Link, router, useForm, usePage } from '@inertiajs/vue3';
+import Button from '@/Components/Button.vue'
 
 const today = new Date();
 const minDate = today.toISOString().split('T')[0]; 

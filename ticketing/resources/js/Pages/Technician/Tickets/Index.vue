@@ -2,34 +2,32 @@
 <template>
   <div>
     <Header></Header>
-    <br>
-
-
-    <div class="container text-center w-100 h-100 justify-center">
-      <h1>View All Tickets</h1>
-      <p>Manage and Track all TMDD tickets</p>
-      <Link class="text-decoration-none" href="/technician/tickets/create">
-              <Button class="rounded btnn primary" value="Create Ticket">Create New Ticket</Button>
-            </Link>
-      <br><br>
-      <button class="ticket-button" @click="handleAllButtonClick">All</button>
-      <button class="ticket-button" @click="handleNewButtonClick">New</button>
-      <button class="ticket-button" @click="handlePendingButtonClick">Pending</button>
-      <button class="ticket-button" @click="handleResolvedButtonClick">Resolved</button>
+    <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
+      <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
+        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+          <h1 class="fw-bold">View All Tickets</h1>
+          <p class="fs-5">Manage and Track all TMDD tickets</p>
+          <Link :href="route('technician.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket </Link>
+          <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
+            <Button :name="'All'" :color="'secondary'" class="btn-options" @click="handleAllButtonClick"></Button>
+            <Button :name="'New'" :color="'secondary'" class="btn-options" @click="handleNewButtonClick"></Button>
+            <Button :name="'Pending'" :color="'secondary'" class="btn-options" @click="handlePendingButtonClick"></Button>
+            <Button :name="'Resolved'" :color="'secondary'" class="btn-options" @click="handleResolvedButtonClick"></Button>
+          </div>
     </div>
 
-    <div class="search">
+      <div class="input-group mt-3 mb-4">
         <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
         <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
             placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
+      </div>
     </div>
 
-    <div class="table-container">
-      <table class="table table-striped table-hover table-sm align-middle">
-        
-          <thead class="table-group-divider ">
-            <tr class="text-center">
-              <th>Ticket No</th>
+    <div class="w-75">
+      <table class="table table-striped border border-secondary-subtle">
+          <thead>
+            <tr class="text-start">
+              <th class="text-center">Ticket No</th>
               <th>Employee</th>
               <th>Department</th>
               <th>Issue</th>
@@ -39,7 +37,7 @@
               <th>Date Resolved</th>
             </tr>
           </thead>
-          <tbody class="table-group-divider">
+          <tbody>
             <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number">
               <td class="text-center py-3">{{ ticket.ticket_number }}</td>
               <td class="text-center py-3">{{ ticket.employee.user.name }}</td>
@@ -69,13 +67,17 @@
         </table>
     </div>
   </div>
+  </div>
 </template>
 
 <script setup>
+
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
 import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 import moment from "moment";
 import { ref, watch, onMounted } from "vue";
+import Button from '@/Components/Button.vue'
+
 
 const props = defineProps({
   tickets: Object,
@@ -199,105 +201,14 @@ const updateStatus = (ticket_id, status) => {
 
 
 <style>
-* {
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-
-
-.search {
-  margin: 10px 0;
-  display: flex;
-  justify-content: center;
-}
-
-.search input {
-  width: 50%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.container {
-  padding: 20px;
-}
-
-h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
-}
-
-p {
-  font-size: 16px;
-  margin-bottom: 20px;
-}
-
-Link.create-ticket-link {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #000000;
-  /* Green */
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-Link.create-ticket-link:hover {
-  background-color: #898989;
-}
-
-.ticket-button {
-  width: 10%;
-  margin-right: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  background-color: #cecece;
-  color: #1e1e1e;
-  border-radius: 8px;
-  /* Adjust border-radius for rounded edges */
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.ticket-button:hover {
-  background-color: #898989;
-  color: #e7e7e7;
-}
-
 .btn-tickets {
-  background-color: #063970;
-  color: white;
-  border-color: #063970;
+  transition: all 0.2s;
 }
 
-.primary {
-    background-color: #063970;
+.btn-tickets:hover {
+  transform: scale(1.1);
 }
-
-.btnn {
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.btn:hover {
-    background-color: #00009c;
-    color: #CC9900;
-}
-
-.secondary {
-    background-color: #efefef;
-}
-
-.btnn {
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.btnn:hover {
-    background-color: #ffffff;
-    color: #000000;
+.btn-options {
+  width: 100px;
 }
 </style>
