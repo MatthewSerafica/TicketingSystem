@@ -18,7 +18,7 @@
                     <div v-if="tickets && tickets.length > 0" class="d-flex flex-column gap-4 justify-content-center align-items-center">
                         <div class="" v-for="ticket in tickets" :key="tickets.ticket_number">
                             <Link class="text-decoration-none" :href="`/admin/tickets/${ticket.ticket_number}`">
-                            <Card class="" :no="ticket.ticket_number" :issue="ticket.issue"
+                            <Card class="text-truncate" :no="ticket.ticket_number" :issue="ticket.issue"
                                 :employee="ticket.employee.user.name" :department="ticket.employee.department"
                                 :date="formatDate(ticket.created_at)" :status="ticket.status"
                                 :technician="ticket.technician ? ticket.technician.user.name : 'Unassigned'">

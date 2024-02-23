@@ -1,73 +1,113 @@
 <template>
     <div>
-    <nav class="navbar navbar-expand-lg shadow-sm header-color">
-        <div class="container-fluid gap-3">
-            <div class="d-flex gap-2 col-8">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                    class="bi bi-brilliance mt-2" viewBox="0 0 16 16">
-                    <path
-                        d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16M1 8a7 7 0 0 0 7 7 3.5 3.5 0 1 0 0-7 3.5 3.5 0 1 1 0-7 7 7 0 0 0-7 7" />
-                </svg>
-                <Link class="navbar-brand text-white" :href="`/employee`">TMDD Ticketing System</Link>
+        <nav class="navbar navbar-expand-lg shadow-sm header-color">
+            <div class="container-fluid gap-3">
+                <div class="d-flex gap-2 col-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                        class="bi bi-brilliance mt-2" viewBox="0 0 16 16">
+                        <path
+                            d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16M1 8a7 7 0 0 0 7 7 3.5 3.5 0 1 0 0-7 3.5 3.5 0 1 1 0-7 7 7 0 0 0-7 7" />
+                    </svg>
+                    <Link class="navbar-brand text-white" :href="`/employee`">TMDD Ticketing System</Link>
+                </div>
+                <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
+                    <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationBar"
+                        aria-controls="notificationBar" @click="fetchNotifications">
+                        <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
+                        <span v-if="notificationCount"
+                            class="position-absolute translate-middle badge rounded-pill bg-danger" id="count"
+                            style="font-size: small; top: 20px; right: 285px; padding: 2px 5px 2px 5px;">{{
+                                notificationCount }}</span>
+                    </button>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                        class="bi bi-person-circle" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                        <path fill-rule="evenodd"
+                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                    </svg>
+                    <div class="dropdown-center">
+                        <a class="text-decoration-none dropdown-toggle text-white" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            {{ page.props.user.name }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <Link :href="route('logout')" method="delete" v-if="page.props.user"
+                                    class="text-decoration-none dropdown-item">Logout
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
-                <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationBar"
-                    aria-controls="notificationBar">
-                    <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
-                    <span class="text-light bg-danger position-absolute top-0 rounded-pill badge" id="count"
-                        style="font-size: small; padding: 2px 5px 2px 5px;"></span>
-                </button>
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                    class="bi bi-person-circle" viewBox="0 0 16 16">
-                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                    <path fill-rule="evenodd"
-                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                </svg>
-                <div class="dropdown-center">
-                    <a class="text-decoration-none dropdown-toggle text-white" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        {{ page.props.user.name }}
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <Link :href="route('logout')" method="delete" v-if="page.props.user"
-                                class="text-decoration-none dropdown-item">Logout
-                            </Link>
-                        </li>
-                    </ul>
+        </nav>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationBar" aria-labelledby="notificationBarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="notificationBarLabel">Notifications</h5>
+                <button type="button" class="btn-close text reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div class="container mt-4">
+                    <div class="card mt-3" v-for="notification in notifications.slice(0, 9)" :key="notification.id">
+                        <div class="card-body" v-if="notification.type === 'App\\Notifications\\UpdateTicketStatus'">
+                            <h5 class="card-title">Ticket Update</h5>
+                            <p class="card-text">Your Ticket #{{ notification.data.ticket_number }} for {{
+                                notification.data.service }} with the {{ notification.data.issue }} is now <span
+                                    class="p-2" :class="handleBadge(notification.data.status)">{{
+                                        notification.data.status }}</span>.</p>
+                            <small class="card-text fst-italic text-muted"> {{ notificationDateTime() }}</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </nav>
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationBar" aria-labelledby="notificationBarLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="notificationBarLabel">Notifications</h5>
-            <button type="button" class="btn-close text reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div class="container mt-4">
-                <div class="card mt-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Notification Title</h5>
-                        <p class="card-text">Your ticket# has been resolved.</p>
-                        <small class="card-text fst-italic text-muted"> {{ notificationDateTime() }}</small>
-                    </div>
-                </div>  
-            </div>    
-        </div>
-    </div>
     </div>
 </template>
 
 <script setup>
 import { Link, usePage } from "@inertiajs/vue3";
+import axios from "axios";
+import { computed, ref } from "vue";
 
 const page = usePage();
 
-function notificationDateTime(){
+function notificationDateTime() {
     const currentDateTime = new Date();
     const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
     return currentDateTime.toLocaleDateString('en-US', options).replace(/\//g, '-');
+}
+
+const notifications = ref([]);
+
+const notificationCount = computed(
+    () => Math.min(page.props.user.notificationCount, 9)
+)
+
+const fetchNotifications = async () => {
+    try {
+        const response = await axios.get(route('employee.notifications'))
+        notifications.value = response.data.notifications
+
+        await axios.post(route('employee.notifications.seen'))
+        page.props.user.notificationCount = 0;
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+const handleBadge = (status) => {
+    switch (status.toLowerCase()) {
+        case 'new':
+            return 'badge text-bg-danger';
+        case 'pending':
+            return 'badge text-bg-warning';
+        case 'ongoing':
+            return 'badge text-bg-primary';
+        case 'resolved':
+            return 'badge text-bg-success';
+        default:
+            return 'badge text-bg-secondary';
+    }
 }
 
 </script>
@@ -75,5 +115,4 @@ function notificationDateTime(){
 <style>
 .header-color {
     background-color: #063970;
-}
-</style>
+}</style>

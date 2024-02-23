@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\Technician;
 use App\Models\Ticket;
+use App\Notifications\UpdateTicketStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -101,13 +102,17 @@ class AdminTicketController extends Controller
         ]);
 
         $ticket = Ticket::where('ticket_number', $ticket_id)->first();
-
+        $employee = Employee::where('employee_id', $ticket->employee)->with('user')->first();
         $ticket->status = $request->status;
         if ($ticket->status == 'Resolved') {
             $ticket->resolved_at = now();
+            $employee->update(['made_ticket' => $employee->made_ticket - 1]);
         } else {
             $ticket->resolved_at = null;
         }
+        $employee->user->notify(
+            new UpdateTicketStatus($ticket)
+        );
         $ticket->save();
     }
 
