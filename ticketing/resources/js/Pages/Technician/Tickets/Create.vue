@@ -58,7 +58,7 @@
         </div>
           <div class="button-container">
             <button class="submit-ticket-button" type="submit" as="button">Submit</button>
-            <button class="btn btn-secondary"><Link :href="`/technician`" class="text-decoration-none btn btn-secondary">Cancel</Link></button>
+            <button class="btn btn-secondary"><Link :href="`/technician/tickets`" class="text-decoration-none btn btn-secondary">Cancel</Link></button>
           </div>
           <div class="table-container"></div>
         </div>
