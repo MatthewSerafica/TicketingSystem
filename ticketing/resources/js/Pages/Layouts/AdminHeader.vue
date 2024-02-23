@@ -67,11 +67,18 @@
                 <div class="container">
                     <nav class="nav nav-pills nav-fill navbar-light" style="background-color: #fafafa;">
                         <a class="nav-link" :class="{ 'active': activeTab === 'technician' }" aria-current="page"
-                            href="#technician-content" @click.prevent="showTab('technician')">Technician</a>
+                            href="#technician-content" @click.prevent="showTab('technician')">Technician<span
+                                v-if="technicianCount"
+                                class="position-absolute translate-middle badge rounded-pill bg-danger" id="count"
+                                style="font-size: small; top: 100px; right: 185px; padding: 2px 5px 2px 5px;">{{
+                                    technicianCount }}</span></a>
                         <a class="nav-link" :class="{ 'active': activeTab === 'employee' }" href="#employee-content"
-                            @click.prevent="showTab('employee')">Employee</a>
+                            @click.prevent="showTab('employee')">Employee<span v-if="employeeCount"
+                                class="position-absolute translate-middle badge rounded-pill bg-danger" id="count"
+                                style="font-size: small; top: 100px; right: 15px; padding: 2px 5px 2px 5px;">{{
+                                    employeeCount }}</span></a>
                     </nav>
-                    <div id="tab-content" v-for="notification in notifications.slice(0, 9)" :key="notification.notification.id">
+                    <div id="tab-content">
                         <div v-if="activeTab === 'technician'" class="card mt-3">
                             <div class="card-body">
                                 <h5 class="card-title">Notification Title</h5> <!--PLACEHOLDER-->
@@ -79,13 +86,19 @@
                                 <small class="card-text fst-italic text-muted">{{ notificationDateTime() }}</small>
                             </div>
                         </div>
-                        <div v-if="activeTab === 'employee'" class="card mt-3">
+                        <div v-if="activeTab === 'employee'" class="card mt-3"
+                            v-for="notification in notifications.slice(0, 9)" :key="notification.notification.id">
                             <div>
                                 <div class="card-body"
                                     v-if="notification.notification.type === 'App\\Notifications\\TicketMade'">
-                                    <h5 class="card-title">{{ notification.notification.data.issue }}</h5>
-                                    <p class="card-text">{{ notification.notification.data.description }}</p>
-                                    <small class="card-text">{{ notification.name }} | {{ notification.department }} - {{ notification.office }}
+                                    <div class="d-flex flex-row">
+                                        <div class="d-flex flex-column">
+                                            <h5 class="card-title fw-bold">{{ notification.notification.data.issue }}</h5>
+                                            <p class="card-text">{{ notification.notification.data.description }}</p>
+                                        </div>
+                                    </div>
+                                    <small class="card-text">{{ notification.name }} | {{ notification.department }} - {{
+                                        notification.office }}
                                     </small>
                                     <br>
                                     <small class="card-text fst-italic text-muted">{{
@@ -126,6 +139,7 @@ function notificationDateTime() {
 
 function showTab(tab) {
     activeTab.value = tab;
+
 }
 
 const notifications = ref([]);
@@ -134,6 +148,12 @@ const notificationCount = computed(
     () => Math.min(page.props.user.notificationCount, 9),
 )
 
+const employeeCount = computed(
+    () => Math.min(notifications.value.length, 9),
+)
+const technicianCount = computed(
+    () => Math.min(0, 9)
+)
 const fetchNotifications = async () => {
     try {
         const response = await axios.get(route('admin.notifications'))
