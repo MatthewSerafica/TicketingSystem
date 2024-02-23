@@ -213,5 +213,24 @@ class DatabaseSeeder extends Seeder
             \App\Models\Office::factory()->create($offices);
         }
 
+        $services = [
+            [
+            'service' => 'Network Troubleshoot',
+            ],
+            [
+            'service' => 'Hardware Repair',
+            ],
+            [
+            'service' => 'Software Troubleshoot',
+            ],
+            [
+            'service' => 'Network Troubleshoot',
+            ],
+                
+        ];
+        foreach ($services as $services) {
+            \App\Models\Service::factory()->create($services);
+        }
+
     }
 }
