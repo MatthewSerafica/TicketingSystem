@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Ticket;
+use App\Models\User;
+use App\Notifications\TicketMade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,8 +47,14 @@ class EmployeeTicketController extends Controller
             'status' => 'New',
         ];
 
-        Ticket::create($ticketData);
+        $ticket = Ticket::create($ticketData);
         $employee->update(['made_ticket' => $employee->made_ticket + 1]);
+        $admins = User::where('user_type', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(
+                new TicketMade($ticket)
+            );
+        }
 
         return redirect()->to('/employee')->with('success', 'Ticket Created');
     }
