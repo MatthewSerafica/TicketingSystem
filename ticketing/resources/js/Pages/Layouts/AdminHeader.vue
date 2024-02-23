@@ -64,15 +64,14 @@
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
-                {{ notifications }}
-                <div class="container mt-4">
+                <div class="container">
                     <nav class="nav nav-pills nav-fill navbar-light" style="background-color: #fafafa;">
                         <a class="nav-link" :class="{ 'active': activeTab === 'technician' }" aria-current="page"
                             href="#technician-content" @click.prevent="showTab('technician')">Technician</a>
                         <a class="nav-link" :class="{ 'active': activeTab === 'employee' }" href="#employee-content"
                             @click.prevent="showTab('employee')">Employee</a>
                     </nav>
-                    <div id="tab-content">
+                    <div id="tab-content" v-for="notification in notifications.slice(0, 9)" :key="notification.notification.id">
                         <div v-if="activeTab === 'technician'" class="card mt-3">
                             <div class="card-body">
                                 <h5 class="card-title">Notification Title</h5> <!--PLACEHOLDER-->
@@ -80,16 +79,15 @@
                                 <small class="card-text fst-italic text-muted">{{ notificationDateTime() }}</small>
                             </div>
                         </div>
-                        <div v-if="activeTab === 'employee'" class="card mt-3"
-                            v-for="notification in notifications.slice(0, 9)" :key="notification.notification.id">
+                        <div v-if="activeTab === 'employee'" class="card mt-3">
                             <div>
                                 <div class="card-body"
                                     v-if="notification.notification.type === 'App\\Notifications\\TicketMade'">
                                     <h5 class="card-title">{{ notification.notification.data.issue }}</h5>
-                                    <p class="card-content">{{ notification.notification.data.description }}</p>
-                                    <p class="card-content">{{ notification.name }}
-                                        <br>{{ notification.department }} - {{ notification.office }}
-                                    </p>
+                                    <p class="card-text">{{ notification.notification.data.description }}</p>
+                                    <small class="card-text">{{ notification.name }} | {{ notification.department }} - {{ notification.office }}
+                                    </small>
+                                    <br>
                                     <small class="card-text fst-italic text-muted">{{
                                         formatDate(notification.notification.created_at) }} /
                                         {{ formatTime(notification.notification.created_at) }}</small>
