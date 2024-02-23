@@ -11,8 +11,8 @@
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <button class="btn btn-secondary px-5 py-2" @click="filterTickets('all')">All</button>
             <button class="btn btn-secondary px-5 py-2" @click="filterTickets('new')">New</button>
-            <button class="btn btn-secondary px-4 py-2" @click="filterTickets('resolved')">Resolved</button>
             <button class="btn btn-secondary px-4 py-2" @click="filterTickets('pending')">Pending</button>
+            <button class="btn btn-secondary px-4 py-2" @click="filterTickets('resolved')">Resolved</button>
           </div>
 
         </div>
