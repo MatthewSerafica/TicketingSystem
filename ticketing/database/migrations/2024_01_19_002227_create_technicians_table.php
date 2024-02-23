@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('is_working')->default(true);
             $table->integer('tickets_assigned')->default(0);
             $table->integer('tickets_resolved')->default(0);
+            $table->string('assigned_department')->nullable();
             $table->timestamps();
         });
     }
