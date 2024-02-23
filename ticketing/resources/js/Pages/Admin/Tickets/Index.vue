@@ -85,11 +85,11 @@
         </table>
       </div>
     </div>
-  </div><!-- <p class="fs-5"><span :class="getBadgeClass(ticket.status)">{{ ticket.status }}</span></p> -->
+  </div>
 </template>
 <script setup>
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link, router, useForm } from "@inertiajs/vue3";
+import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 import moment from "moment";
 import { nextTick, reactive, ref, watch } from "vue";
 
@@ -99,8 +99,6 @@ const props = defineProps({
   filters: Object,
 });
 
-const selectedStatus = ref('all');
-const filteredTickets = ref(props.tickets); 
 
 let search = ref(props.filters.search);
 let sortColumn = ref("ticket_number");
@@ -179,8 +177,8 @@ const filterTickets = async (type) => {
     filter.resolved = false;
     filter.pending = true;
   }
-  await fetchData(type); // Pass the type to fetchData and wait for it to complete
-  // Use nextTick to log the updated state after the next DOM update
+  await fetchData(type); 
+
   await nextTick();
   console.log("After filter change:", filter);
 }
