@@ -5,75 +5,60 @@
       <div class="form-container1">
         <h2>SERVICE REPORT FORM</h2>
 
-        <!-- Group for Date Started, Time Started, Ticket Number -->
         <div class="row-input-container">
-          <!-- Date Started -->
           <div class="input-container">
             <label for="dateStarted">Date Started:</label>
-            <input type="date" id="dateStarted" v-model="form.dateStarted">
+            <input type="date" id="dateStarted" v-model="form.date_started">
           </div>
 
-          <!-- Time Started -->
           <div class="input-container">
             <label for="timeStarted">Time Started:</label>
-            <input type="time" id="timeStarted" v-model="form.timeStarted">
+            <input type="time" id="timeStarted" v-model="form.time_started">
           </div>
 
-          <!-- Ticket Number -->
           <div class="input-container">
             <label for="ticketNumber">Ticket Number:</label>
-            <input type="text" id="ticketNumber" v-model="form.ticketNumber">
+            <input type="text" id="ticketNumber" v-model="form.ticket_number">
           </div>
         </div>
 
-        <!-- Group for Technician Name, Requesting Office, Equipment, Property Tag/Serial No., Action Taken, Recommendation -->
         <div class="input-container">
-          <!-- Technician Name -->
           <label for="technicianName">Technician Name:</label>
-          <input type="text" id="technicianName" v-model="form.technicianName" class="long-input1">
+          <input type="text" id="technicianName" v-model="form.technician_name" class="long-input1">
 
-          <!-- Requesting Office -->
           <label for="requestingOffice">Requesting Office:</label>
-          <input type="text" id="requestingOffice" v-model="form.requestingOffice" class="long-input1">
+          <input type="text" id="requestingOffice" v-model="form.requesting_office" class="long-input1">
 
-          <!-- Equipment, Property Tag/Serial No. -->
           <label for="equipmentNumber">Equipment, Property Tag/Serial No.:</label>
-          <input type="text" id="equipmentNumber" v-model="form.equipmentNumber" class="long-input1">
+          <input type="text" id="equipmentNumber" v-model="form.equipment_number" class="long-input1">
 
-          <!-- Problem Encountered -->
           <label for="problemEncountered">Problem Encountered:</label>
-          <select id="problemEncountered" v-model="form.problemEncountered" class="long-input1 custom-select">
+          <select id="problemEncountered" v-model="form.problem_encountered" class="long-input1 custom-select">
             <option value="">Select an option</option>
             <option value="No Internet">No Internet</option>
             <option value="Software Installation">Software Installation</option>
             <option value="Printer Problem">Printer Problem</option>
           </select>
 
-          <!-- Action Taken -->
           <label for="actionTaken">Action Taken:</label>
-          <input type="text" id="actionTaken" v-model="form.actionTaken" class="long-input1">
+          <input type="text" id="actionTaken" v-model="form.action_taken" class="long-input1">
 
-          <!-- Recommendation -->
           <label for="recommendation">Recommendation:</label>
           <input type="text" id="recommendation" v-model="form.recommendation" class="long-input1">
         </div>
 
-        <!-- Group for Date Done, Time Done -->
         <div class="row-input-container">
-          <!-- Date Done -->
           <div class="input-container">
             <label for="dateDone">Date Done:</label>
-            <input type="date" id="dateDone" v-model="form.dateDone" class="long-input2" :min="minDate">
+            <input type="date" id="dateDone" v-model="form.date_done" class="long-input2" :min="minDate">
           </div>
 
-          <!-- Time Done -->
           <div class="input-container">
             <label for="timeDone">Time Done:</label>
-            <input type="time" id="timeDone" v-model="form.timeDone" class="long-input2">
+            <input type="time" id="timeDone" v-model="form.time_done" class="long-input2">
           </div>
         </div>
 
-        <!-- Submit Button -->
         <div class="button-container">
           <button type="button" @click="submitForm" class="submit-button">Submit</button>
           <Link href="/technician/service-report">
@@ -87,23 +72,25 @@
 
 <script setup>
 import Header from '@/Pages/Layouts/TechnicianHeader.vue'
-import { Link, router, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm, usePage } from '@inertiajs/vue3';
 
 const today = new Date();
 const minDate = today.toISOString().split('T')[0]; 
 
+const page = usePage();
+
 const form = useForm({
-  dateStarted: '',
-  timeStarted: '',
-  ticketNumber: '',
-  technicianName: '',
-  requestingOffice: '',
-  equipmentNumber: '',
-  problemEncountered: '',
-  actionTaken: '',
+  date_started: '',
+  time_started: '',
+  ticket_number: '',
+  technician_name: page.props.user.name,
+  requesting_office: '',
+  equipment_number: '',
+  problem_encountered: '',
+  action_taken: '',
   recommendation: '',
-  dateDone: '',
-  timeDone: ''
+  date_done: '',
+  time_done: ''
 });
 
 
@@ -180,7 +167,7 @@ input, select {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  margin-right: 10px; /* Add margin to create space */
+  margin-right: 10px;
   transition: background-color 0.3s;
 }
 
