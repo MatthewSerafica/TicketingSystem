@@ -1,8 +1,9 @@
 <template>
   <div class="justify-content-center">
     <Header></Header>
+
     <div class="recents justify-content-center align-items-center d-flex flex-column">
-      <div class="d-flex flex-row">
+      <div class="d-flex flex-row gap-5">
         <div class="recents-tickets">
           <h2 class="fw-semibold">Recent Tickets</h2>
           <div class="d-flex gap-2">
@@ -53,7 +54,7 @@ const formatDate = (date) => {
 };
 </script>
 
-<style>
+<style scoped>
 
 .recents {
   margin-top: 150px;
@@ -74,6 +75,7 @@ const formatDate = (date) => {
 
 .secondary {
   background-color: #efefef;
+  color: #000000;
 }
 
 .btnn {
