@@ -138,11 +138,11 @@ function showTab(tab) {
 }
 
 const user = computed(
-    () => page.props.value.user
+    () => page.props.user
 )
 
 const notificationCount = computed(
-    () => Math.min(page.props.value.user.notificationCount, 9),
+    () => Math.min(page.props.user.notificationCount, 9),
 )
 
 </script>
