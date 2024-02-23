@@ -54,10 +54,12 @@ class DatabaseSeeder extends Seeder
             [
             'user_id' => '2',
             'department' => 'SEA',
+            'office' => 'Dental Clinic',
             ],
             [
             'user_id' => '5',
             'department' => 'SAMCIS',
+            'office' => 'Guidance Center'
             ],
                 
         ];
