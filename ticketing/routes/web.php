@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminTicketController;
 use App\Http\Controllers\AdminUsersController;
+use App\Http\Controllers\AdminDepartmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeTicketController;
 use App\Http\Controllers\TechnicianDashboardController;
@@ -35,6 +36,7 @@ Route::middleware(['web'])->group(function () {
         Route::put('/admin/tickets/update-technician/{ticket_id}', [AdminTicketController::class, 'technician'])->name('admin.tickets.update.technician');
         Route::get('/admin/tickets/search', [AdminTicketController::class, 'search'])->name('admin.tickets.search');
         Route::get('/admin/users', [AdminUsersController::class, 'index'])->name('admin.users');
+        Route::get('/admin/department', [AdminDepartmentController::class, 'index'])->name('admin.department');
     });
 
     Route::middleware(['auth', 'employee'])->group(function () {
