@@ -54,7 +54,7 @@
                         </div>
 
                         
-                        <Button :name="'Login'" :color="'primary'"></Button>
+                        <Button :name="'Login'" :color="'primary'" :width="'100'" :height="'50'"></Button>
 
                     </form>
                     </div>

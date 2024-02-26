@@ -7,10 +7,10 @@
                     <h2 class="fw-semibold">Recent Tickets</h2>
                     <div class="d-flex gap-2">
                         <Link class="text-decoration-none" :href="route('admin.tickets.create')">
-                        <Button class="rounded btnn secondary" value="Create Ticket"></Button>
+                        <Button :name="'Create'" :color="'primary'" class="btn-width"></Button>
                         </Link>
                         <Link class="text-decoration-none" :href="route('admin.tickets')">
-                        <Button class="rounded primary btnm text-light" value="View All"></Button>
+                        <Button :name="'View All'" :color="'primary'" class="btn-width"></Button>
                         </Link>
                     </div>
                 </div>
@@ -57,29 +57,8 @@ const formatDate = (date) => {
 </script>
 
 <style>
-.primary {
-    background-color: #063970;
-}
-
-.btnm {
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.btnm:hover {
-    background-color: #00009c;
-    color: #CC9900;
-}
-
-.secondary {
-    background-color: #efefef;
-}
-
-.btnn {
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.btnn:hover {
-    background-color: #ffffff;
-    color: #000000;
+.btn-width {
+    width: 150px;
+    height: 50px;
 }
 </style>
