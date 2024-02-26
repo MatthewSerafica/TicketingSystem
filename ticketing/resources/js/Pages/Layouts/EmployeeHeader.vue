@@ -2,45 +2,60 @@
     <div>
         <nav class="navbar navbar-expand-lg shadow-sm header-color">
             <div class="container-fluid gap-3">
+                <!-- Logo -->
                 <div class="d-flex gap-2 col-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
                         class="bi bi-brilliance mt-2" viewBox="0 0 16 16">
                         <path
                             d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16M1 8a7 7 0 0 0 7 7 3.5 3.5 0 1 0 0-7 3.5 3.5 0 1 1 0-7 7 7 0 0 0-7 7" />
                     </svg>
                     <Link class="navbar-brand text-white" :href="`/employee`">TMDD Ticketing System</Link>
                 </div>
-                <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
-                    <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationBar"
-                        aria-controls="notificationBar" @click="fetchNotifications">
-                        <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
-                        <span v-if="notificationCount"
-                            class="position-absolute translate-middle badge rounded-pill bg-danger" id="count"
-                            style="font-size: small; top: 20px; right: 285px; padding: 2px 5px 2px 5px;">{{
-                                notificationCount }}</span>
-                    </button>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                        class="bi bi-person-circle" viewBox="0 0 16 16">
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                        <path fill-rule="evenodd"
-                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                    </svg>
-                    <div class="dropdown-center">
-                        <a class="text-decoration-none dropdown-toggle text-white" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            {{ page.props.user.name }}
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <Link :href="route('logout')" method="delete" v-if="page.props.user"
-                                    class="text-decoration-none dropdown-item">Logout
-                                </Link>
-                            </li>
-                        </ul>
+
+                <!-- Hamburger Menu Button -->
+                <button class="navbar-toggler order-lg-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Hamburger Menu Content -->
+                <div class="collapse navbar-collapse order-lg-3" id="navbarNav">
+                    <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
+                        <!-- Notification Bell -->
+                        <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationBar"
+                            aria-controls="notificationBar" @click="fetchNotifications">
+                            <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
+                            <span v-if="notificationCount"
+                                class="position-absolute translate-middle badge rounded-pill bg-danger" id="count"
+                                style="font-size: small; top: 20px; right: 285px; padding: 2px 5px 2px 5px;">{{
+                                    notificationCount }}</span>
+                        </button>
+
+                        <!-- Username Dropdown -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
+                            class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                            <path fill-rule="evenodd"
+                                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                        </svg>
+                        <div class="dropdown-center">
+                            <a class="text-decoration-none dropdown-toggle text-white" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                {{ page.props.user.name }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <Link :href="route('logout')" method="delete" v-if="page.props.user"
+                                        class="text-decoration-none dropdown-item">Logout
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </nav>
+
         <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationBar" aria-labelledby="notificationBarLabel">
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title" id="notificationBarLabel">Notifications</h5>
