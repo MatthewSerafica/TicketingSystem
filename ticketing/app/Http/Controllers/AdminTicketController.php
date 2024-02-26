@@ -155,4 +155,37 @@ class AdminTicketController extends Controller
         $ticket->rr_no = $request->rr_no;
         $ticket->save();
     }
+    public function ms(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'ms_no' => 'nullable',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->ms_no = $request->ms_no;
+        $ticket->save();
+    }
+    public function rs(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'rs_no' => 'nullable',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->rs_no = $request->rs_no;
+        $ticket->save();
+    }
+    public function sr(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'sr_no' => 'nullable',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->sr_no = $request->sr_no;
+        $ticket->save();
+    }
 }
