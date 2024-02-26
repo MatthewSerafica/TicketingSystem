@@ -23,6 +23,7 @@ class ServiceReport extends Model
     }
 
     protected $fillable = [
+        'service_id',
         'technicians_id',
         'date_started',
         'time_started',
@@ -35,7 +36,8 @@ class ServiceReport extends Model
         'recommendation',
         'date_done',
         'time_done',
+        'remarks',
     ];
     
-    protected $primaryKey = 'service_id';
+    /* protected $primaryKey = 'service_id'; */
 }

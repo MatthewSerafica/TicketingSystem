@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminTicketController;
 use App\Http\Controllers\AdminUsersController;
 use App\Http\Controllers\AdminDepartmentController;
+use App\Http\Controllers\AdminOfficeController;
 use App\Http\Controllers\AdminNotificationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeNotificationController;
@@ -36,9 +37,15 @@ Route::middleware(['web'])->group(function () {
         Route::post('/admin/tickets/create/store', [AdminTicketController::class, 'store'])->name('admin.tickets.store');
         Route::put('/admin/tickets/update-status/{ticket_id}', [AdminTicketController::class, 'status'])->name('admin.tickets.update.status');
         Route::put('/admin/tickets/update-technician/{ticket_id}', [AdminTicketController::class, 'technician'])->name('admin.tickets.update.technician');
+        Route::put('/admin/tickets/update-service/{ticket_id}', [AdminTicketController::class, 'service'])->name('admin.tickets.update.service');
+        Route::put('/admin/tickets/update-rr/{ticket_id}', [AdminTicketController::class, 'rr'])->name('admin.tickets.update.rr');
+        Route::put('/admin/tickets/update-ms/{ticket_id}', [AdminTicketController::class, 'ms'])->name('admin.tickets.update.ms');
+        Route::put('/admin/tickets/update-rs/{ticket_id}', [AdminTicketController::class, 'rs'])->name('admin.tickets.update.rs');
+        Route::put('/admin/tickets/update-sr/{ticket_id}', [AdminTicketController::class, 'sr'])->name('admin.tickets.update.sr');
         Route::get('/admin/tickets/search', [AdminTicketController::class, 'search'])->name('admin.tickets.search');
         Route::get('/admin/users', [AdminUsersController::class, 'index'])->name('admin.users');
         Route::get('/admin/department', [AdminDepartmentController::class, 'index'])->name('admin.department');
+        Route::get('/admin/office', [AdminOfficeController::class, 'index'])->name('admin.office');
         Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications');
         Route::post('/admin/notifications/seen', [AdminNotificationController::class, 'update'])->name('admin.notifications.seen');
     });
@@ -49,6 +56,7 @@ Route::middleware(['web'])->group(function () {
         Route::post('/employee/create/store', [EmployeeTicketController::class, 'store'])->name('employee.store');
         Route::get('/employee/notifications', [EmployeeNotificationController::class, 'index'])->name('employee.notifications');
         Route::post('/employee/notifications/seen', [EmployeeNotificationController::class, 'update'])->name('employee.notifications.seen');
+        Route::put('/employee/tickets/update-status/{ticket_id}', [EmployeeTicketController::class, 'status'])->name('employee.tickets.update.status');
     });
 
     Route::middleware(['auth', 'technician'])->group(function () {
@@ -57,7 +65,8 @@ Route::middleware(['web'])->group(function () {
         Route::get('/technician/tickets/create', [TechnicianTicketController::class, 'create'])->name('technician.tickets.create');
         Route::post('/technician/tickets/create/store', [TechnicianTicketController::class, 'store'])->name('technician.tickets.store');
         Route::put('/technician/tickets/update-status/{ticket_id}', [TechnicianTicketController::class, 'status'])->name('technician.tickets.update.status');
-        Route::get('/technician/service-report', [TechnicianServiceController::class, 'index']);
+        Route::get('/technician/service-report', [TechnicianServiceController::class, 'index'])->name('technician.service-reports');
         Route::get('/technician/service-report/create', [TechnicianServiceController::class, 'create'])->name('technician.service-report.create');
+        Route::post('/technician/service-report/create/store', [TechnicianServiceController::class, 'store'])->name('technician.service-report.store');
     });
 });

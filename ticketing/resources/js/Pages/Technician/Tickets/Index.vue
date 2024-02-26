@@ -28,7 +28,6 @@
           <thead>
             <tr class="text-start">
               <th class="text-center">Ticket No</th>
-              <th>Employee</th>
               <th>Department</th>
               <th>Issue</th>
               <th>Service</th>
@@ -40,7 +39,6 @@
           <tbody>
             <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number">
               <td class="text-center py-3">{{ ticket.ticket_number }}</td>
-              <td class="text-center py-3">{{ ticket.employee.user.name }}</td>
               <td class="text-center py-3">{{ ticket.employee.department }}</td>
               <td class="text-center py-3 text-truncate" style="max-width: 80px;">{{ ticket.issue }}</td>
               <td class="text-center py-3">{{ ticket.service ? ticket.service : 'Unassigned' }}</td>

@@ -2,19 +2,19 @@
     <div class="justify-content-center">
         <Header></Header>
         <div class="justify-content-center align-items-center d-flex flex-column mt-5 pt-5 gap-5">
-            <div class="d-flex flex-row gap-5">
-                <div class="mt-5 pt-5">
+            <div class="d-flex flex-row gap-5 justify-content-center align-items-center">
+                <div>
                     <h2 class="fw-semibold">Recent Tickets</h2>
                     <div class="d-flex gap-2">
                         <Link class="text-decoration-none" :href="route('admin.tickets.create')">
                         <Button :name="'Create'" :color="'primary'" class="btn-width"></Button>
                         </Link>
                         <Link class="text-decoration-none" :href="route('admin.tickets')">
-                        <Button :name="'View All'" :color="'primary'" class="btn-width"></Button>
+                        <Button :name="'View All'" :color="'secondary'" class="btn-width"></Button>
                         </Link>
                     </div>
                 </div>
-                <div class="d-flex flex-column gap-4 justify-content-center align-items-center">
+                <div class="d-flex flex-column gap-4 justify-content-center align-items-center ms-5">
                     <div v-if="tickets && tickets.length > 0" class="d-flex flex-column gap-4 justify-content-center align-items-center">
                         <div class="" v-for="ticket in tickets" :key="tickets.ticket_number">
                             <Link class="text-decoration-none" :href="`/admin/tickets/${ticket.ticket_number}`">
