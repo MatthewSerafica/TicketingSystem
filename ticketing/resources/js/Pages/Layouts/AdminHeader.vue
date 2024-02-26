@@ -1,28 +1,34 @@
 <template>
     <div>
-        <nav class="navbar navbar-expand-lg shadow-sm h-color text-white">
+        <nav class="navbar navbar-expand-lg shadow-sm header-color">
             <div class="container-fluid gap-3">
                 <div class="d-flex gap-2 col-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
                         class="bi bi-brilliance mt-2" viewBox="0 0 16 16">
                         <path
                             d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16M1 8a7 7 0 0 0 7 7 3.5 3.5 0 1 0 0-7 3.5 3.5 0 1 1 0-7 7 7 0 0 0-7 7" />
                     </svg>
                     <a class="navbar-brand text-white" href="/admin">TMDD Ticketing System</a>
                 </div>
-                <div class="" id="navbarNav">
-                    <ul class="navbar-nav ">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" aria-current="page" href="/admin">Dashboard</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item" :class="{ 'active': activeLink === 'dashboard' }">
+                            <a class="nav-link text-white" aria-current="page" href="/admin" @click="setActiveLink('dashboard')">Dashboard</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" href="/admin/tickets">Tickets</a>
+                        <li class="nav-item" :class="{ 'active': activeLink === 'tickets' }">
+                            <a class="nav-link text-light" href="/admin/tickets" @click="setActiveLink('tickets')">Tickets</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" href="#">Reports</a>
+                        <li class="nav-item" :class="{ 'active': activeLink === 'reports' }">
+                            <a class="nav-link text-light" href="#" @click="setActiveLink('reports')">Reports</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" href="/admin/users">Users</a>
+                        <li class="nav-item" :class="{ 'active': activeLink === 'users' }" >
+                            <a class="nav-link text-light" href="/admin/users" @click="setActiveLink('users')">Users</a>
                         </li>
                         <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -34,7 +40,7 @@
                         </ul>
                     </li>
                     </ul>
-                </div>
+                
                 <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
                     <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationBar"
                         aria-controls="notificationBar" @click="fetchNotifications">
@@ -44,7 +50,7 @@
                             style="font-size: small; top: 20px; right: 230px; padding: 2px 5px 2px 5px;">{{
                                 notificationCount }}</span>
                     </button>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
                         class="bi bi-person-circle" viewBox="0 0 16 16">
                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
                         <path fill-rule="evenodd"
@@ -64,6 +70,7 @@
                         </ul>
                     </div>
                 </div>
+            </div>
             </div>
         </nav>
 
@@ -126,8 +133,28 @@
 <script setup>
 import { Link, usePage } from "@inertiajs/vue3";
 import axios from 'axios';
-import { computed, ref } from 'vue';
+import { computed, ref, defineProps, onMounted } from 'vue';
 import moment from "moment";
+
+const props = defineProps({});
+const activeLink = ref('');
+
+const setActiveLink = (link) => {
+    activeLink.value = link;
+}
+
+const determineActiveLink = () => {
+    const currentPath = window.location.pathname;
+    if (currentPath.includes('tickets')) {
+        setActiveLink('tickets');
+    } else if (currentPath.includes('reports')) {
+        setActiveLink('reports');
+    } else if (currentPath.includes('users')) {
+        setActiveLink('users');
+    } else {
+        setActiveLink('dashboard');
+    }
+}
 
 const formatDate = (date) => {
     return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
@@ -148,7 +175,6 @@ function notificationDateTime() {
 
 function showTab(tab) {
     activeTab.value = tab;
-
 }
 
 const notifications = ref([]);
@@ -160,9 +186,11 @@ const notificationCount = computed(
 const employeeCount = computed(
     () => Math.min(notifications.value.length, 9),
 )
+
 const technicianCount = computed(
     () => Math.min(0, 9)
 )
+
 const fetchNotifications = async () => {
     try {
         const response = await axios.get(route('admin.notifications'))
@@ -176,10 +204,24 @@ const fetchNotifications = async () => {
     }
 }
 
+onMounted(() => {
+    determineActiveLink(); // Set initial active link based on the current URL
+});
+
 </script>
 
-<style>
-.h-color {
-    background-color: #063970;
+
+<style scoped>
+.nav-link::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background-color: white;
+    transition: width 0.3s ease;
+}
+
+.nav-item.active .nav-link::after {
+    width: 100%;
 }
 </style>
