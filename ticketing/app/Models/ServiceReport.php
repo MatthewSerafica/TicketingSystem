@@ -39,5 +39,5 @@ class ServiceReport extends Model
         'remarks',
     ];
     
-    protected $primaryKey = 'service_id';
+    /* protected $primaryKey = 'service_id'; */
 }
