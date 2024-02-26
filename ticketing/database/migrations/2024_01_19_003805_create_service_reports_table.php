@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('service_reports', function (Blueprint $table) {
-            $table->id('service_id');
+            $table->id();
+            $table->string('service_id')->unique();
             $table->unsignedBigInteger('technicians_id');
             $table->foreign('technicians_id')->references('technician_id')->on('technicians');
             $table->date('date_started');
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->string('recommendation');
             $table->date('date_done');
             $table->time('time_done'); 
+            $table->string('remarks');
             $table->timestamps();
         });
     }

@@ -107,10 +107,11 @@ class DatabaseSeeder extends Seeder
 
         $service_reports = [
             [
+                'service_id' => 'SR-B 0001',
                 'date_started' => '2022-02-22',
                 'time_started' => '08:00:00',
                 'ticket_number' => 1,
-                'technician_name' => 'John Doe',
+                'technician_name' => 'Matthew Serafica ',
                 'requesting_office' => 'IT Department',
                 'equipment_no' => 'E123',
                 'issue' => 'Network connectivity problem',
@@ -119,6 +120,7 @@ class DatabaseSeeder extends Seeder
                 'date_done' => '2022-02-22',
                 'time_done' => '10:00:00',
                 'technicians_id' => 3, 
+                'remarks' => 'Done',
             ],
         ];
         foreach ($service_reports as $service_reports) {

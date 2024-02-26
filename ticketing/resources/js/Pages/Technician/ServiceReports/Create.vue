@@ -1,9 +1,11 @@
 <template>
   <div>
     <Header></Header>
-    <form>
+    <form @submit.prevent="create">
       <div class="form-container1">
         <h2>SERVICE REPORT FORM</h2>
+        {{ service_report }}
+        <div class="placeholder-text">{{ nextTicketNumber || 'SR-0001' }}</div>
 
         <div class="row-input-container">
           <div class="input-container">
@@ -29,11 +31,11 @@
           <label for="requestingOffice">Requesting Office:</label>
           <input type="text" id="requestingOffice" v-model="form.requesting_office" class="long-input1">
 
-          <label for="equipmentNumber">Equipment, Property Tag/Serial No.:</label>
-          <input type="text" id="equipmentNumber" v-model="form.equipment_number" class="long-input1">
+          <label for="equipment_no">Equipment, Property Tag/Serial No.:</label>
+          <input type="text" id="equipment_no" v-model="form.equipment_no" class="long-input1">
 
           <label for="problemEncountered">Problem Encountered:</label>
-          <select id="problemEncountered" v-model="form.problem_encountered" class="long-input1 custom-select">
+          <select id="problemEncountered" v-model="form.issue" class="long-input1 custom-select">
             <option value="">Select an option</option>
             <option value="No Internet">No Internet</option>
             <option value="Software Installation">Software Installation</option>
@@ -41,7 +43,7 @@
           </select>
 
           <label for="actionTaken">Action Taken:</label>
-          <input type="text" id="actionTaken" v-model="form.action_taken" class="long-input1">
+          <input type="text" id="action" v-model="form.action_taken" class="long-input1">
 
           <label for="recommendation">Recommendation:</label>
           <input type="text" id="recommendation" v-model="form.recommendation" class="long-input1">
@@ -59,8 +61,14 @@
           </div>
         </div>
 
+        <div class="input-container">
+          <label for="remarks">Remarks:</label>
+          <input type="text" id="remarks" v-model="form.remarks" class="long-input1" rows="2">
+          <!-- textarea id="remarks" v-model="form.remarks" class="long-input1" rows="4"></textarea> -->
+        </div>
+
         <div class="button-container">
-          <button type="button" @click="submitForm" class="submit-button">Submit</button>
+          <button type="submit" as="button" @click="submitForm" class="submit-button">Submit</button>
           <Link href="/technician/service-report">
             <button type="button" class="cancel-button">Cancel</button>
           </Link>
@@ -74,29 +82,35 @@
 import Header from '@/Pages/Layouts/TechnicianHeader.vue'
 import { Link, router, useForm, usePage } from '@inertiajs/vue3';
 
+const props = defineProps({
+  technicians: Object,
+  next_service_number: Object,
+  service_report: Object,
+})
+
 const today = new Date();
 const minDate = today.toISOString().split('T')[0]; 
 
 const page = usePage();
 
 const form = useForm({
+  service_id: props.nextTicketNumber,
   date_started: '',
   time_started: '',
   ticket_number: '',
   technician_name: page.props.user.name,
   requesting_office: '',
-  equipment_number: '',
-  problem_encountered: '',
-  action_taken: '',
+  equipment_no: '',
+  issue: '',
+  action: '',
   recommendation: '',
   date_done: '',
-  time_done: ''
+  time_done: '',
+  remarks:''
 });
 
 
-const submitForm = () => {
-  console.log('Form submitted:', form);
-};
+const create = () => form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false })
 </script>
 
 <style scoped>
@@ -124,6 +138,7 @@ const submitForm = () => {
 .input-container {
   margin-top: 15px;
   margin-right: 10px;
+  margin-bottom: 15px;
 }
 
 .custom-select {

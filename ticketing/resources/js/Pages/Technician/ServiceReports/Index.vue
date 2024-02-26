@@ -6,20 +6,17 @@
     <h1>View All Service Reports</h1>
     <p>Manage and Track all TMDD Service Reports</p>
     <div class="d-flex gap-2">
-      <Link class="text-decoration-none" href="/technician/service-report/create">
-        <Button class="rounded btnn secondary large-btn">Create Reports</Button>
-      </Link>
+      <Link :href="route('technician.service-report.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Reports </Link>
+
+    </div>
+    <div class="input-group mt-3 mb-4">
+          <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
+          <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
+            placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
     </div>
   </div>
 
-  <div class="search">
-    <input
-      type="text"
-      v-model="searchQuery"
-      placeholder="Search Reports..."
-      @input="handleSearch"
-    />
-  </div>
+  
 
   <div class="table-container">
     <table class="table table-striped">
@@ -37,6 +34,7 @@
               <th>Recommendation</th>
               <th>Date Done</th>
               <th>Time Done</th>
+              <th>Remarks</th>
             </tr>
           </thead>
           <tbody>
@@ -53,6 +51,7 @@
               <td class="text-center py-3">{{ service_report.recommendation }}</td>
               <td class="text-center py-3">{{ moment(service_report.date_done).format("YYYY-MM-DD") }}</td>
               <td class="text-center py-3">{{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}</td>
+              <td class="text-center py-3">{{ service_report.remarks }} </td>
             </tr>
           </tbody>
         </table>
@@ -62,18 +61,62 @@
 
 <script setup>
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
-import { Link, router } from "@inertiajs/vue3";
+import { Link, router, useForm  } from "@inertiajs/vue3";
 import moment from "moment";
-import { ref, watch, onMounted } from "vue";
+import { nextTick, reactive, ref, watch, onMounted } from "vue";
 
 const props = defineProps({
     service_report: Object,
     technicians: Object,
-    filters: Object,
+    //filters: Object,
 
 })
 
 const service_reports = ref( props.service_report) ;
+
+let search = ref(props.search);
+let sortColumn = ref("service_id");
+let sortDirection = ref("asc");
+let timeoutId = null;
+
+const fetchData = (type) => {
+  router.get(
+    route('technician.service-reports'),
+    {
+      search: search.value,
+      sort: sortColumn.value,
+      direction: sortDirection.value,
+    },
+    {
+      preserveState: true,
+      replace: true,
+    }
+  )
+
+}
+
+
+const resetSorting = () => {
+  console.log("Reset Sorting");
+  sortColumn.value = "service_id"
+  sortDirection.value = "asc"
+}
+
+const debouncedFetchData = () => {
+  if (timeoutId) {
+    clearTimeout(timeoutId)
+  }
+  timeoutId = setTimeout(() => {
+    fetchData()
+  }, 500)
+}
+
+watch(search, () => {
+  if (!search.value) {
+    resetSorting()
+  }
+  debouncedFetchData();
+})
 
 </script>
 
