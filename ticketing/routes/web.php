@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminTicketController;
 use App\Http\Controllers\AdminUsersController;
 use App\Http\Controllers\AdminDepartmentController;
+use App\Http\Controllers\AdminNotificationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeTicketController;
 use App\Http\Controllers\TechnicianDashboardController;
@@ -37,6 +38,8 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/tickets/search', [AdminTicketController::class, 'search'])->name('admin.tickets.search');
         Route::get('/admin/users', [AdminUsersController::class, 'index'])->name('admin.users');
         Route::get('/admin/department', [AdminDepartmentController::class, 'index'])->name('admin.department');
+        Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications');
+        Route::post('/admin/notifications/seen', [AdminNotificationController::class, 'update'])->name('admin.notifications.seen');
     });
 
     Route::middleware(['auth', 'employee'])->group(function () {

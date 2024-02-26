@@ -54,10 +54,12 @@ class DatabaseSeeder extends Seeder
             [
             'user_id' => '2',
             'department' => 'SEA',
+            'office' => 'Dental Clinic',
             ],
             [
             'user_id' => '5',
             'department' => 'SAMCIS',
+            'office' => 'Guidance Center'
             ],
                 
         ];
@@ -211,6 +213,25 @@ class DatabaseSeeder extends Seeder
         ];
         foreach ($offices as $offices) {
             \App\Models\Office::factory()->create($offices);
+        }
+
+        $services = [
+            [
+            'service' => 'Network Troubleshoot',
+            ],
+            [
+            'service' => 'Hardware Repair',
+            ],
+            [
+            'service' => 'Software Troubleshoot',
+            ],
+            [
+            'service' => 'Network Troubleshoot',
+            ],
+                
+        ];
+        foreach ($services as $services) {
+            \App\Models\Service::factory()->create($services);
         }
 
     }
