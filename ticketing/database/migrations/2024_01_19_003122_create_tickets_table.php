@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('issue');
             $table->string('service')->nullable();
             $table->text('description')->nullable();
-            $table->unsignedBigInteger('sr_no')->nullable();
+            $table->string('sr_no')->nullable();
             $table->text('remarks')->nullable();
             $table->string('status');
             $table->timestamps();
