@@ -13,13 +13,18 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id('ticket_number');
+            $table->unsignedBigInteger('rr_no')->nullable();
+            $table->unsignedBigInteger('ms_no')->nullable();
+            $table->unsignedBigInteger('rs_no')->nullable();
             $table->unsignedBigInteger('employee');
             $table->unsignedBigInteger('technician')->nullable();
             $table->foreign('employee')->references('employee_id')->on('employees')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('technician')->references('technician_id')->on('technicians')->onUpdate('cascade')->onDelete('cascade');
             $table->string('issue');
             $table->string('service')->nullable();
-            $table->string('description');
+            $table->text('description')->nullable();
+            $table->unsignedBigInteger('sr_no')->nullable();
+            $table->text('remarks')->nullable();
             $table->string('status');
             $table->timestamps();
             $table->timestamp('resolved_at')->nullable();
