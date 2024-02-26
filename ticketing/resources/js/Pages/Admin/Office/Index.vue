@@ -17,6 +17,10 @@
 
 
       <div class="w-75">
+        <div v-if="offices.data.length" class="flex justify-center w-full mt-6">
+            <pagination :links="offices.links" :key="'offices'"/>
+            <br>
+        </div>
         <table class="table table-striped border border-secondary-subtle">
           <thead>
             <tr class="text-start">
@@ -35,9 +39,6 @@
             </tr>
           </tbody>
         </table>
-        <div v-if="offices.data.length" class="flex justify-center w-full mt-6">
-            <pagination :links="offices.links" :key="'offices'"/>
-        </div>
       </div> 
 
     </div>

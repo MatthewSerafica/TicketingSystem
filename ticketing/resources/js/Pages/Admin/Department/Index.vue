@@ -16,6 +16,10 @@
       </div>
 
        <div class="w-75">
+        <div v-if="departments.data.length" class="flex justify-center w-full mt-6">
+            <Pagination :links="departments.links" :key="'departments'"/>
+            <br>
+        </div>
         <table class="table table-striped border border-secondary-subtle">
           <thead>
             <tr class="text-start">
@@ -34,9 +38,6 @@
             </tr>
           </tbody>
         </table>
-        <div v-if="departments.data.length" class="flex justify-center w-full mt-6">
-            <Pagination :links="departments.links" :key="'departments'"/>
-        </div>
       </div> 
 
     </div>
