@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\Service;
+use App\Models\ServiceReport;
 use App\Models\Technician;
 use App\Models\Ticket;
 use App\Notifications\UpdateTicketStatus;
@@ -36,7 +38,7 @@ class AdminTicketController extends Controller
                     $query->where('status', 'like', '%' . $ticketFilter . '%');
                 } elseif ($ticketFilter === 'resolved') {
                     $query->where('status', 'like', '%' . $ticketFilter . '%');
-                }elseif ($ticketFilter === 'pending') {
+                } elseif ($ticketFilter === 'pending') {
                     $query->where('status', 'like', '%' . $ticketFilter . '%');
                 }
             })
@@ -47,14 +49,16 @@ class AdminTicketController extends Controller
 
         $filter = $request->only(['search']);
         $technicians = Technician::with('user')->get();
+        $services = Service::all();
         return inertia('Admin/Tickets/Index', [
             'tickets' => $tickets,
             'technicians' => $technicians,
             'filters' => $filter,
+            'services' => $services,
         ]);
     }
 
-    
+
     public function create()
     {
         $technicians = Technician::with('user')->get();
@@ -125,6 +129,30 @@ class AdminTicketController extends Controller
         $ticket = Ticket::where('ticket_number', $ticket_id)->first();
 
         $ticket->technician = $request->technician_id;
+        $ticket->save();
+    }
+
+    public function service(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'service' => 'required',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->service = $request->service;
+        $ticket->save();
+    }
+
+    public function rr(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'rr_no' => 'nullable',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->rr_no = $request->rr_no;
         $ticket->save();
     }
 }
