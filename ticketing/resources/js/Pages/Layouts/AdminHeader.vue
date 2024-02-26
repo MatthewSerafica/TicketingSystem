@@ -25,9 +25,14 @@
                             <a class="nav-link text-light" href="/admin/users">Users</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link text-light" href="/admin/department">Departments</a>
-                            <a class="nav-link text-light" href="/admin/office">Offices</a>
-                        </li>
+                        <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Departments & Offices
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/admin/department">Departments</a></li>
+                            <li><a class="dropdown-item" href="/admin/office">Offices</a></li>
+                        </ul>
+                    </li>
                     </ul>
                 </div>
                 <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
