@@ -10,38 +10,35 @@
           </div>
 
           <div class="create-ticket">
-            <div class="d-flex flex-row gap-5 justify-content-center">
-              <div class="flex-shrink-1">
+            <div class="d-flex flex-row gap-5 justify-content-center mb-4">
+              <div class="d-flex flex-column flex-shrink-0 w-25">
                 <label for="issue" class="fw-semibold">Title</label>
-                <input id="issue" class="border-secondary-subtle" type="text" placeholder="Enter Ticket Title..."
+                <input id="issue" class="form-control h-100 rounded border-secondary-subtle" type="text" placeholder="Enter Ticket Title..."
                   v-model="form.issue" />
               </div>
-              <div class="d-flex flex-column flex-shrink-0 w-25">
-                <label for="service" class="fw-semibold">Service</label>
-                <select id="service" class="h-100 rounded border-secondary-subtle" placeholder="Select Service..."
-                  v-model="form.service">
-                  <option disabled>Select Service</option>
-                  <option value="Network Troubleshoot">Network Troubleshoot</option>
-                  <option value="Hardware Repair">Hardware Repair</option>
-                  <option value="Software Troubleshoot">Software Troubleshoot</option>
-                  <option value="Network Troubleshoot">Network Troubleshoot</option>
-                </select>
-              </div>
+
             </div>
             <div class="d-flex flex-row gap-5 justify-content-center">
-              <div class="flex-shirnk-0 d-flex flex-column">
+              <div class="d-flex flex-column flex-shrink-0 w-25">
                 <label for="description" class="fw-semibold">Description</label>
-                <textarea for="description" class="rounded border-secondary-subtle p-3" type="text"
+                <textarea for="description" class="form-control auto-resize rounded border-secondary-subtle p-3" type="text"
                   placeholder="Enter Ticket Description..." v-model="form.description"> </textarea>
               </div>
             </div>
           </div>
-          <div class="button-container">
-            <button class="submit-ticket-button" type="submit" as="button">Submit</button>
-            <button class="btn btn-secondary">
-              <Link :href="`/employee`" class="text-decoration-none btn btn-secondary">Cancel</Link>
-            </button>
+
+
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-md-6">
+              <div class="d-flex justify-content-center gap-2">
+                <Link :href="`/employee`" class="btn btn-outline-primary">Cancel</Link>
+                <button class="submit-ticket-button btn btn-primary" type="submit" as="button">Submit</button>
+              </div>
+              </div>
+            </div>
           </div>
+          
         </div>
       </form>
     </div>

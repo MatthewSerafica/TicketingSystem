@@ -32,7 +32,6 @@ class EmployeeTicketController extends Controller
             'description' => 'required',
             'employee' => 'required',
             'issue' => 'required',
-            'service' => 'required',
         ]);
 
         $employee = Employee::where('user_id', $request->employee)->firstOrFail();
@@ -44,7 +43,6 @@ class EmployeeTicketController extends Controller
             'employee' => $employee->employee_id,
             'issue' => $request->issue,
             'description' => $request->description,
-            'service' => $request->service,
             'status' => 'New',
         ];
 
@@ -58,5 +56,17 @@ class EmployeeTicketController extends Controller
         }
 
         return redirect()->to('/employee')->with('success', 'Ticket Created');
+    }
+
+    public function status(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'status' => 'required',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->status = $request->status;
+        $ticket->save();
     }
 }
