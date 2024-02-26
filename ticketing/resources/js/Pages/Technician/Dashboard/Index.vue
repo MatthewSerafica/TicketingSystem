@@ -4,14 +4,14 @@
 
     <div class="recents justify-content-center align-items-center d-flex flex-column">
       <div class="d-flex flex-row gap-5">
-        <div class="recents-tickets">
+        <div class="mt-5 pt-5">
           <h2 class="fw-semibold">Recent Tickets</h2>
           <div class="d-flex gap-2">
-            <Link class="text-decoration-none" href="/technician/tickets/create">
-              <Button class="rounded btnn secondary" value="Create Ticket"></Button>
+            <Link class="text-decoration-none" :href="route('technician.tickets.create')">
+              <Button :name="'Create'" :color="'primary'" class="btn-width"></Button>
             </Link>
-            <Link class="text-decoration-none" href="/technician/tickets">
-              <Button class="rounded primary btnm text-white" value="View All"></Button>
+            <Link class="text-decoration-none" :href="route('technician.tickets')">
+              <Button :name="'View All'" :color="'primary'" class="btn-width"></Button>
             </Link>
           </div>
         </div>
@@ -55,35 +55,8 @@ const formatDate = (date) => {
 </script>
 
 <style scoped>
-
-.recents {
-  margin-top: 150px;
-}
-
-.primary {
-  background-color: #063970;
-}
-
-.btnm {
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.btnm:hover {
-  background-color: #00009c;
-  color: #CC9900;
-}
-
-.secondary {
-  background-color: #efefef;
-  color: #000000;
-}
-
-.btnn {
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.btnn:hover {
-  background-color: #ffffff;
-  color: #000000;
+.btn-width {
+  width: 150px;
+  height: 50px;
 }
 </style>

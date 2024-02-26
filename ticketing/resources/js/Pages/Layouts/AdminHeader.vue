@@ -24,6 +24,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" href="/admin/users">Users</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="/admin/department">Departments</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
@@ -64,13 +67,19 @@
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
-                {{ notifications }}
-                <div class="container mt-4">
+                <div class="container">
                     <nav class="nav nav-pills nav-fill navbar-light" style="background-color: #fafafa;">
                         <a class="nav-link" :class="{ 'active': activeTab === 'technician' }" aria-current="page"
-                            href="#technician-content" @click.prevent="showTab('technician')">Technician</a>
+                            href="#technician-content" @click.prevent="showTab('technician')">Technician<span
+                                v-if="technicianCount"
+                                class="position-absolute translate-middle badge rounded-pill bg-danger" id="count"
+                                style="font-size: small; top: 100px; right: 185px; padding: 2px 5px 2px 5px;">{{
+                                    technicianCount }}</span></a>
                         <a class="nav-link" :class="{ 'active': activeTab === 'employee' }" href="#employee-content"
-                            @click.prevent="showTab('employee')">Employee</a>
+                            @click.prevent="showTab('employee')">Employee<span v-if="employeeCount"
+                                class="position-absolute translate-middle badge rounded-pill bg-danger" id="count"
+                                style="font-size: small; top: 100px; right: 15px; padding: 2px 5px 2px 5px;">{{
+                                    employeeCount }}</span></a>
                     </nav>
                     <div id="tab-content">
                         <div v-if="activeTab === 'technician'" class="card mt-3">
@@ -85,11 +94,16 @@
                             <div>
                                 <div class="card-body"
                                     v-if="notification.notification.type === 'App\\Notifications\\TicketMade'">
-                                    <h5 class="card-title">{{ notification.notification.data.issue }}</h5>
-                                    <p class="card-content">{{ notification.notification.data.description }}</p>
-                                    <p class="card-content">{{ notification.name }}
-                                        <br>{{ notification.department }} - {{ notification.office }}
-                                    </p>
+                                    <div class="d-flex flex-row">
+                                        <div class="d-flex flex-column">
+                                            <h5 class="card-title fw-bold">{{ notification.notification.data.issue }}</h5>
+                                            <p class="card-text">{{ notification.notification.data.description }}</p>
+                                        </div>
+                                    </div>
+                                    <small class="card-text">{{ notification.name }} | {{ notification.department }} - {{
+                                        notification.office }}
+                                    </small>
+                                    <br>
                                     <small class="card-text fst-italic text-muted">{{
                                         formatDate(notification.notification.created_at) }} /
                                         {{ formatTime(notification.notification.created_at) }}</small>
@@ -128,6 +142,7 @@ function notificationDateTime() {
 
 function showTab(tab) {
     activeTab.value = tab;
+
 }
 
 const notifications = ref([]);
@@ -136,6 +151,12 @@ const notificationCount = computed(
     () => Math.min(page.props.user.notificationCount, 9),
 )
 
+const employeeCount = computed(
+    () => Math.min(notifications.value.length, 9),
+)
+const technicianCount = computed(
+    () => Math.min(0, 9)
+)
 const fetchNotifications = async () => {
     try {
         const response = await axios.get(route('admin.notifications'))

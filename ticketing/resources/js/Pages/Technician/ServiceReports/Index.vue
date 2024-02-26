@@ -1,6 +1,12 @@
 <template>
   <Header></Header>
-  <br />
+  <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
+      <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
+        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+          <h1 class="fw-bold">View All Service Reports</h1>
+          <p class="fs-5">Manage and Track all TMDD Service Reports</p>
+          <Link class="btn btn-tickets btn-primary py-2 px-5" :href="route('technician.service-report.create')">Create Report</Link>
+        </div>
 
   <div class="container text-center w-100 h-100 justify-center">
     <h1>View All Service Reports</h1>
@@ -13,16 +19,14 @@
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
           <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
             placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
-    </div>
-  </div>
+        </div>
+      </div>
 
-  
-
-  <div class="table-container">
-    <table class="table table-striped">
-          <thead class="">
-            <tr class="text-center">
-              <th>Service No</th>
+  <div class="w-75">
+    <table class="table table-striped border border-secondary-subtle">
+          <thead>
+            <tr class="text-start">
+              <th class="text-center">Service No</th>
               <th>Date Started</th>
               <th>Time Started</th>
               <th>Ticket No</th>
@@ -37,7 +41,7 @@
               <th>Remarks</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="">
             <tr v-for="service_report in service_reports" :key="service_report.service_id">
               <td class="text-center py-3">{{ service_report.service_id }}</td>
               <td class="text-center py-3">{{ moment(service_report.date_started).format("YYYY-MM-DD") }}</td>
@@ -57,6 +61,8 @@
         </table>
 
   </div>
+  </div>
+  </div>
 </template>
 
 <script setup>
@@ -64,6 +70,7 @@ import Header from "@/Pages/Layouts/TechnicianHeader.vue";
 import { Link, router, useForm  } from "@inertiajs/vue3";
 import moment from "moment";
 import { nextTick, reactive, ref, watch, onMounted } from "vue";
+import Button from '@/Components/Button.vue'
 
 const props = defineProps({
     service_report: Object,
@@ -207,5 +214,14 @@ watch(search, () => {
     background-color: #e0e0e0;
   }
   
-  
+  .btn-tickets {
+  transition: all 0.2s;
+}
+
+.btn-tickets:hover {
+  transform: scale(1.1);
+}
+.btn-options {
+  width: 100px;
+}
 </style>
