@@ -24,8 +24,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" href="/admin/users">Users</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item dropdown">
                             <a class="nav-link text-light" href="/admin/department">Departments</a>
+                            <a class="nav-link text-light" href="/admin/office">Offices</a>
                         </li>
                     </ul>
                 </div>
