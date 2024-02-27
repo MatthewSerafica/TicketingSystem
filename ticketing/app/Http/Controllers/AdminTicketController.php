@@ -45,7 +45,7 @@ class AdminTicketController extends Controller
             ->whereYear('created_at', Carbon::now()->year)
             ->whereMonth('created_at', Carbon::now()->month)
             ->orderBy('ticket_number')
-            ->get();
+            ->paginate(10);
 
         $filter = $request->only(['search']);
         $technicians = Technician::with('user')->get();

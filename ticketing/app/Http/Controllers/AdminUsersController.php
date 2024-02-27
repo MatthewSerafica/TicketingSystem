@@ -30,7 +30,7 @@ class AdminUsersController extends Controller
                     $query->where('user_type', 'like', '%' . $userFilter . '%');
                 }
             })
-            ->get();
+            ->paginate(10);
 
         $filters = $request->only(['search']);
 
