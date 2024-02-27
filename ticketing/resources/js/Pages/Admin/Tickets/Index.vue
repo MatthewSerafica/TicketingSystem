@@ -25,6 +25,10 @@
       </div>
 
       <div>
+        <div v-if="tickets.data.length" class="flex justify-center w-full mt-6">
+            <Pagination :links="tickets.links" :key="'tickets'"/>
+            <br>
+        </div>
         <table class="table table-hover shadow custom-rounded-table" style="max-width: 110rem;">
           <thead>
             <tr class="text-start">
@@ -45,7 +49,7 @@
             </tr>
           </thead>
           <tbody class="">
-            <tr v-for="ticket in tickets" :key="ticket.ticket_number" class="align-middle">
+            <tr v-for="ticket in tickets.data" :key="ticket.ticket_number" class="align-middle">
               <td class="text-center">{{ ticket.ticket_number }}</td>
               <td class="text-start">{{ formatDate(ticket.created_at) }}</td>
               <td class="text-center" style="max-width: 60px;" @click="showRRInput(ticket.rr_no, ticket.ticket_number)">
@@ -119,7 +123,7 @@
                 'N/A' }}</td>
               <td class="text-start">
                 <div class="btn-group">
-                  <button type="button" :class="getButtonClass(ticket.status)" class="text-start" style="width: 5rem;">{{ ticket.status }}</button>
+                  <button type="button" :class="getButtonClass(ticket.status)" class="text-center" style="width: 5rem;">{{ ticket.status }}</button>
                   <button type="button" :class="getButtonClass(ticket.status)"
                     class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
                     data-bs-reference="parent">
@@ -141,11 +145,12 @@
   </div>
 </template>
 <script setup>
+import Button from '@/Components/Button.vue';
+import Pagination from '@/Components/Pagination.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link, router, useForm } from "@inertiajs/vue3";
 import moment from "moment";
 import { nextTick, reactive, ref, watch } from "vue";
-import Button from '@/Components/Button.vue'
 
 const props = defineProps({
   tickets: Object,
@@ -392,7 +397,5 @@ const updateSR = async (srNo, ticket_id) => {
 
 .custom-rounded-table {
   border-radius: 10px;
-  /* Adjust the value to your preference */
-  /* Ensure rounded corners are visible */
 }
 </style>
