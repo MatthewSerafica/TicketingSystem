@@ -78,6 +78,7 @@ class AdminTicketController extends Controller
             'issue' => 'required',
             'service' => 'required',
             'technician' => 'required',
+            'rs_no' => 'nullable',
         ]);
         $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
         if ($employee->made_ticket >= 5) {
@@ -85,6 +86,7 @@ class AdminTicketController extends Controller
         }
 
         $ticketData = [
+            'rs_no' => $request->rs_no,
             'employee' => $request->employee,
             'technician' => $request->technician,
             'issue' => $request->issue,

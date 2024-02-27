@@ -21,6 +21,7 @@ class Ticket extends Model
     }
 
     protected $fillable = [
+        'rs_no',
         'employee',
         'issue',
         'description',

@@ -7,10 +7,16 @@
       <div class="container">
         <div class="title-container fw-bold mb-5 text-center">
           <h1>Create Tickets</h1>
+          
         </div>
 
         <div class="create-ticket">
           <div class="d-flex flex-row gap-5 justify-content-center mb-4">
+            <div class="d-flex flex-column flex-shrink-0 w-25">
+              <label for="rs_no" class="fw-semibold">Requisition Slip No.</label>
+              <input id="rs_no" class="form-control h-100 rounded border-secondary-subtle" type="text" placeholder="Enter RS No..." v-model="form.rs_no" />
+          </div>
+
             <div class="d-flex flex-column flex-shrink-0 w-25">
               <label for="issue" class="fw-semibold">Title</label>
               <input id="issue" class="form-control h-100 rounded border-secondary-subtle" type="text" placeholder="Enter Ticket Title..." v-model="form.issue" />
@@ -92,6 +98,7 @@ const props = defineProps({
 })
 
 const form = useForm({
+  rs_no: null,
   issue: null,
   service: null,
   description: null,

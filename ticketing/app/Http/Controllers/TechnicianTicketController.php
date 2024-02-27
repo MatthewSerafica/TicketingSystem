@@ -70,6 +70,7 @@ class TechnicianTicketController extends Controller
             'issue' => 'required',
             'service' => 'required',
             'technician' => 'required',
+            'rs_no' => 'nullable',
         ]);
         $technician = Technician::where('user_id', $request->technician)->firstOrFail();
         $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
@@ -79,6 +80,7 @@ class TechnicianTicketController extends Controller
         }
 
         $ticketData = [
+            'rs_no' => $request->rs_no,
             'employee' => $request->employee,
             'technician' => $technician->technician_id,
             'issue' => $request->issue,
