@@ -24,7 +24,7 @@
         </div>
       </div>
 
-      <div>
+      <div class="table-responsive">
         <div v-if="tickets.data.length" class="flex justify-center w-full mt-6">
             <Pagination :links="tickets.links" :key="'tickets'"/>
             <br>
