@@ -49,11 +49,13 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/department', [AdminDepartmentController::class, 'index'])->name('admin.department');
         Route::get('/admin/department/create', [AdminDepartmentController::class, 'create'])->name('admin.department.create');
         Route::post('/admin/department/create/store', [AdminDepartmentController::class, 'store'])->name('admin.department.store');
+        Route::put('/admin/department/update/{department_id}', [AdminDepartmentController::class, 'update'])->name('admin.department.update');
 
         Route::get('/admin/office', [AdminOfficeController::class, 'index'])->name('admin.office');
         Route::get('/admin/office/create', [AdminOfficeController::class, 'create'])->name('admin.office.create');
         Route::post('/admin/office/create/store', [AdminOfficeController::class, 'store'])->name('admin.office.store');
-        
+        Route::put('/admin/office/update/{office_id}', [AdminOfficeController::class, 'update'])->name('admin.office.update');
+
         Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications');
         Route::post('/admin/notifications/seen', [AdminNotificationController::class, 'update'])->name('admin.notifications.seen');
     });

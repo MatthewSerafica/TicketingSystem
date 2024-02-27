@@ -30,11 +30,18 @@
             </tr>
           </thead>
           <tbody class="">
-            <tr v-for="department in departments.data">
+            <tr v-for="department in departments.data" :key="department.id">
+
               <td class="text-center py-4">{{ department.id }}</td>
-              <td  class="text-center">{{ department.department }}</td>
-              <td  class="text-center">{{ formatDate(department.created_at) }}</td>
-              <td  class="text-center">{{ formatDate(department.updated_at) }}</td>
+              <td class="text-center" style="max-width: 60px;" @dblclick="startEditing(department.id, department.department)">
+                <span v-if="selectedDepartmentId !== department.id">{{ department.department }}</span>
+                <input v-model="editedDepartment[department.id]" v-if="selectedDepartmentId === department.id" @keyup.enter="saveDepartment(department.id)" @blur="saveDepartment(department.id)">
+
+              </td>
+              <!-- Date Created -->
+              <td class="text-center">{{ formatDate(department.created_at) }}</td>
+              <!-- Date Updated -->
+              <td class="text-center">{{ formatDate(department.updated_at) }}</td>
             </tr>
           </tbody>
         </table>
@@ -51,18 +58,47 @@
 import Pagination from "@/Components/Pagination.vue";
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import moment from "moment";
-import { Link, router, useForm } from "@inertiajs/vue3";
-import { ref, computed } from 'vue'; 
+import { Link, useForm } from "@inertiajs/vue3";
+import { ref, reactive} from 'vue'; 
 
 const props = defineProps({
   departments: Object,
-  offices: Object,
 });
 
 const search = ref('');
 
 const formatDate = (date) => {
   return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
+};
+//Start of Update Methods (In progress)
+let editedDepartment = reactive({});
+let selectedDepartmentId = ref(null);
+
+let selectedRow = ref(null); 
+
+
+const startEditing = (departmentId, departmentName) => {
+  selectedDepartmentId.value = departmentId;
+  if (!editedDepartment[departmentId]) {
+    editedDepartment[departmentId] = departmentName;
+  }
+};
+
+// Method to save the edited department name
+const saveDepartment = async (departmentId) => {
+    if (departmentId && editedDepartment[departmentId] !== null) {
+        const form = useForm({
+            department: editedDepartment[departmentId],
+        });
+        
+        await form.put(route('admin.department.update', { department_id: departmentId }), {
+            _method: 'put', // Specify the HTTP method as PUT
+            department: editedDepartment[departmentId], // Pass the updated department data
+        });
+        
+        // Reset the state
+        selectedDepartmentId.value = null;
+    }
 };
 
 </script>

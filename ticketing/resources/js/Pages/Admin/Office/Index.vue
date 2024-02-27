@@ -19,10 +19,6 @@
 
 
       <div class="w-75">
-        <div v-if="offices.data.length" class="flex justify-center w-full mt-6">
-            <pagination :links="offices.links" :key="'offices'"/>
-            <br>
-        </div>
         <table class="table table-striped border border-secondary-subtle">
           <thead>
             <tr class="text-start">
@@ -35,12 +31,20 @@
           <tbody class="">
             <tr v-for="office in offices.data">
               <td class="text-center py-4">{{ office.id }}</td>
-              <td class="text-start py-4">{{ office.office }}</td>
+              <td class="text-center" style="max-width: 60px;" @dblclick="startEditing(office.id, office.office)">
+                <span v-if="selectedOfficeId !== office.id">{{ office.office }}</span>
+                <input v-model="editedOffice[office.id]" v-if="selectedOfficeId === office.id" @keyup.enter="saveOffice(office.id)" @blur="saveOffice(office.id)">
+
+              </td>
               <td  class="text-center">{{ formatDate(office.created_at) }}</td>
               <td  class="text-center">{{ formatDate(office.updated_at) }}</td>
             </tr>
           </tbody>
         </table>
+        <div v-if="offices.data.length" class="flex justify-center w-full mt-6">
+            <pagination :links="offices.links" :key="'offices'"/>
+            <br>
+        </div>
       </div> 
 
     </div>
@@ -50,8 +54,8 @@
 import pagination from "@/Components/Pagination.vue";
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import moment from "moment";
-import { Link, router, useForm } from "@inertiajs/vue3";
-import { ref, computed } from 'vue'; 
+import { Link, useForm } from "@inertiajs/vue3";
+import { ref, reactive} from 'vue'; 
 
 const props = defineProps({
   offices: Object,
@@ -63,6 +67,36 @@ const formatDate = (date) => {
   return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
 };
 
+
+let editedOffice = reactive({});
+let selectedOfficeId = ref(null);
+
+let selectedRow = ref(null); 
+
+
+const startEditing = (officeId, officeName) => {
+  selectedOfficeId.value = officeId;
+  if (!editedOffice[officeId]) {
+    editedOffice[officeId] = officeName;
+  }
+};
+
+// Method to save the edited office name
+const saveOffice = async (officeId) => {
+    if (officeId && editedOffice[officeId] !== null) {
+        const form = useForm({
+            office: editedOffice[officeId],
+        });
+        
+        await form.put(route('admin.office.update', { office_id: officeId }), {
+            _method: 'put', // Specify the HTTP method as PUT
+            office: editedOffice[officeId], // Pass the updated department data
+        });
+        
+        // Reset the state
+        selectedOfficeId.value = null;
+    }
+};
 </script>
 
 <style scoped>

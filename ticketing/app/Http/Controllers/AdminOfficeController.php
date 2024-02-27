@@ -39,4 +39,18 @@ class AdminOfficeController extends Controller
 
         return redirect()->to('/admin/office')->with('success', 'Office Created');
     }
+
+    public function update(Request $request, $office_id)
+    {
+        $request->validate([
+            'office' => 'required',
+        ]);
+
+        $office = Office::findOrFail($office_id);
+        $office->office = $request->office;
+        $office->save();
+
+        return redirect()->back()->with('success', 'Office updated successfully');
+    }
+
 }

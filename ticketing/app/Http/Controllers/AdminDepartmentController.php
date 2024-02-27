@@ -39,4 +39,18 @@ class AdminDepartmentController extends Controller
 
         return redirect()->to('/admin/department')->with('success', 'Department Created');
     }
+
+    public function update(Request $request, $department_id)
+    {
+        $request->validate([
+            'department' => 'required',
+        ]);
+
+        $department = Department::findOrFail($department_id);
+        $department->department = $request->department;
+        $department->save();
+
+        return redirect()->back()->with('success', 'Department updated successfully');
+    }
+
 }
