@@ -24,8 +24,8 @@
         </div>
       </div>
 
-      <div>
-        <table class="table table-hover shadow custom-rounded-table" style="max-width: 110rem;">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped table-sm shadow custom-rounded-table">
           <thead>
             <tr class="text-start">
               <th class="text-center text-muted">Ticket No</th>
