@@ -15,7 +15,7 @@
             <div class="d-flex flex-column flex-shrink-0 w-25">
               <label for="rs_no" class="fw-semibold">Requisition Slip No.</label>
               <input id="rs_no" class="form-control h-100 rounded border-secondary-subtle" type="text" placeholder="Enter RS No..." v-model="form.rs_no" />
-          </div>
+            </div>
 
             <div class="d-flex flex-column flex-shrink-0 w-25">
               <label for="issue" class="fw-semibold">Title</label>
