@@ -19,56 +19,59 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item" :class="{ 'active': activeLink === 'dashboard' }">
-                            <a class="nav-link dashboard text-white" aria-current="page" href="/admin" @click="setActiveLink('dashboard')">Dashboard</a>
+                            <a class="nav-link dashboard text-white" aria-current="page" href="/admin"
+                                @click="setActiveLink('dashboard')">Dashboard</a>
                         </li>
                         <li class="nav-item" :class="{ 'active': activeLink === 'tickets' }">
-                            <a class="nav-link tickets text-light" href="/admin/tickets" @click="setActiveLink('tickets')">Tickets</a>
+                            <a class="nav-link tickets text-light" href="/admin/tickets"
+                                @click="setActiveLink('tickets')">Tickets</a>
                         </li>
                         <li class="nav-item" :class="{ 'active': activeLink === 'reports' }">
                             <a class="nav-link reports text-light" href="#" @click="setActiveLink('reports')">Reports</a>
                         </li>
                         <li class="nav-item dropdown settings" :class="{ 'active': activeLink === 'settings' }">
-                        <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Settings
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >
-                            <li><a class="dropdown-item" href="/admin/users">Users</a></li>
-                            <li><a class="dropdown-item" href="/admin/department">Departments</a></li>
-                            <li><a class="dropdown-item" href="/admin/office">Offices</a></li>
-                        </ul>
-                    </li>
+                            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Settings
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="/admin/users">Users</a></li>
+                                <li><a class="dropdown-item" href="/admin/department">Departments</a></li>
+                                <li><a class="dropdown-item" href="/admin/office">Offices</a></li>
+                            </ul>
+                        </li>
                     </ul>
-                
-                <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
-                    <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationBar"
-                        aria-controls="notificationBar" @click="fetchNotifications">
-                        <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
-                        <span v-if="notificationCount"
-                            class="position-absolute translate-middle badge rounded-pill bg-danger" id="count"
-                            style="font-size: small; top: 20px; right: 230px; padding: 2px 5px 2px 5px;">{{
-                                notificationCount }}</span>
-                    </button>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
-                        class="bi bi-person-circle" viewBox="0 0 16 16">
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                        <path fill-rule="evenodd"
-                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                    </svg>
-                    <div class="dropdown-center">
-                        <a class="text-decoration-none dropdown-toggle text-white" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            {{ page.props.user.name }}
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <Link :href="route('logout')" method="delete" v-if="page.props.user"
-                                    class="text-decoration-none dropdown-item">Logout
-                                </Link>
-                            </li>
-                        </ul>
+
+                    <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
+                        <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationBar"
+                            aria-controls="notificationBar" @click="fetchNotifications">
+                            <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
+                            <span v-if="notificationCount"
+                                class="position-absolute translate-middle badge rounded-pill bg-danger" id="count"
+                                style="font-size: small; top: 20px; right: 230px; padding: 2px 5px 2px 5px;">{{
+                                    notificationCount }}</span>
+                        </button>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
+                            class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                            <path fill-rule="evenodd"
+                                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                        </svg>
+                        <div class="dropdown-center">
+                            <a class="text-decoration-none dropdown-toggle text-white" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ page.props.user.name }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <Link :href="route('logout')" method="delete" v-if="page.props.user"
+                                        class="text-decoration-none dropdown-item">Logout
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
         </nav>
 
@@ -150,7 +153,7 @@ const determineActiveLink = () => {
         setActiveLink('reports');
     } else if (currentPath.includes('users') || currentPath.includes('department') || currentPath.includes('office')) {
         setActiveLink('settings');
-  
+
     } else {
         setActiveLink('dashboard');
     }
@@ -213,7 +216,7 @@ onMounted(() => {
 <style scoped>
 .nav-link.dashboard::after,
 .nav-link.tickets::after,
-.nav-link.reports::after{
+.nav-link.reports::after {
     content: '';
     display: block;
     width: 0;
@@ -224,12 +227,11 @@ onMounted(() => {
 
 .nav-item.active .nav-link.dashboard::after,
 .nav-item.active .nav-link.tickets::after,
-.nav-item.active .nav-link.reports::after{
+.nav-item.active .nav-link.reports::after {
     width: 100%;
 }
 
-.nav-item.settings .nav-link::after{
+.nav-item.settings .nav-link::after {
     content: none;
 }
-
 </style>

@@ -7,7 +7,7 @@
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Users</h1>
           <p class="fs-5">Manage and Track all Users</p>
-          <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New User
+          <Link :href="route('admin.users.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New User
           </Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterUsers('all')"></Button>

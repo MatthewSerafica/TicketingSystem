@@ -9,8 +9,8 @@
 
           <Link :href="route('admin.department.create')" class="btn btn-tickets btn-primary py-2 px-5">Add Department
           </Link>
-          
-          
+
+
         </div>
         <div class="input-group mt-3 mb-4">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
@@ -19,7 +19,7 @@
         </div>
       </div>
 
-       <div class="w-75">
+      <div class="w-75">
         <table class="table table-striped border border-secondary-subtle">
           <thead>
             <tr class="text-start">
@@ -34,24 +34,26 @@
             <tr v-for="department in departments.data" :key="department.id">
 
               <td class="text-center py-4">{{ department.id }}</td>
-              <td class="text-center" style="max-width: 60px;" @dblclick="startEditing(department.id, department.department)">
+              <td class="text-center" style="max-width: 60px;"
+                @dblclick="startEditing(department.id, department.department)">
                 <span v-if="selectedDepartmentId !== department.id">{{ department.department }}</span>
-                <input v-model="editedDepartment[department.id]" v-if="selectedDepartmentId === department.id" @keyup.enter="saveDepartment(department.id)" @blur="saveDepartment(department.id)">
+                <input v-model="editedDepartment[department.id]" v-if="selectedDepartmentId === department.id"
+                  @keyup.enter="saveDepartment(department.id)" @blur="saveDepartment(department.id)">
               </td>
               <td class="text-center">{{ formatDate(department.created_at) }}</td>
               <td class="text-center">{{ formatDate(department.updated_at) }}</td>
-              <td><button class="btn btn-danger" @click="showDeleteModal(department.id)">Delete</button></td>
+              <td><button class="btn btn-danger" type="button" @click="showModal">Delete</button></td>
             </tr>
           </tbody>
         </table>
         <div v-if="departments.data.length" class="flex justify-center w-full mt-6">
-            <Pagination :links="departments.links" :key="'departments'"/>
-            <br>
+          <Pagination :links="departments.links" :key="'departments'" />
+          <br>
         </div>
-      </div> 
+      </div>
     </div>
   </div>
-  <DeleteModal v-if="isDeleteModalVisible"/>
+  <DeleteModal v-if="isShowModal" />
 </template>
 <script setup>
 import Pagination from "@/Components/Pagination.vue";
@@ -59,7 +61,7 @@ import Header from "@/Pages/Layouts/AdminHeader.vue";
 import DeleteModal from "@/Components/DeleteModal.vue";
 import moment from "moment";
 import { Link, useForm } from "@inertiajs/vue3";
-import { ref, reactive} from 'vue'; 
+import { ref, reactive } from 'vue';
 
 const props = defineProps({
   departments: Object,
@@ -83,28 +85,29 @@ const startEditing = (departmentId, departmentName) => {
 };
 
 const saveDepartment = async (departmentId) => {
-    if (departmentId && editedDepartment[departmentId] !== null) {
-        const form = useForm({
-            department: editedDepartment[departmentId],
-        });
-        await form.put(route('admin.department.update', { department_id: departmentId }), {
-            _method: 'put',
-            department: editedDepartment[departmentId],
-        });
-        selectedDepartmentId.value = null;
-    }
+  if (departmentId && editedDepartment[departmentId] !== null) {
+    const form = useForm({
+      department: editedDepartment[departmentId],
+    });
+    await form.put(route('admin.department.update', { department_id: departmentId }), {
+      _method: 'put',
+      department: editedDepartment[departmentId],
+    });
+    selectedDepartmentId.value = null;
+  }
 };
 
-//Start of Delete Functions
-const isDeleteModalVisible = ref(false);
 const selectedDepartmentForDeletion = ref(null);
+const isShowModal = ref(false);
 
-const showDeleteModal = (departmentId) => {
-  selectedDepartmentForDeletion.value = departmentId;
-  console.log('selectedDepartmentForDeletion: ', selectedDepartmentForDeletion.value);
-  isDeleteModalVisible.value = true; 
-  console.log('isDeleteModalVisible: ', isDeleteModalVisible.value);
-};
+function closeModal() {
+  isShowModal.value = false
+}
+
+function showModal() {
+  console.log(isShowModal.value)
+  isShowModal.value = true;
+}
 
 const deleteDepartment = async () => {
   isDeleteModalVisible.value = false; // Close the delete modal
@@ -113,6 +116,4 @@ const deleteDepartment = async () => {
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

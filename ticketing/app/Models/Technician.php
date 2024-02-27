@@ -25,6 +25,7 @@ class Technician extends Model
         'is_working',
         'tickets_assigned',
         'tickets_resolved',
+        'assigned_department',
         'status'
     ];
 

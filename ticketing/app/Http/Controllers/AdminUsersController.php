@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\Employee;
+use App\Models\Office;
 use App\Models\Technician;
 use App\Models\User;
+use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class AdminUsersController extends Controller
 {
@@ -43,13 +49,48 @@ class AdminUsersController extends Controller
 
     public function create()
     {
-        // Add logic here if needed
-        return inertia('Admin/Users/Create');
+        $departments = Department::all();
+        $offices = Office::all();
+        return inertia('Admin/Users/Create', [
+            'departments' => $departments,
+            'offices' => $offices,
+        ]);
     }
 
     public function store(Request $request)
     {
-        // Add logic here to store new users
+        DB::beginTransaction();
+        $request->validate([
+            'user_type' => 'required',
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'department' => 'nullable',
+            'office' => 'nullable',
+            'assigned' => 'nullable',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'user_type' => $request->user_type,
+            'email' => $request->email,
+            'password' => $request->password,
+        ]);
+
+        if ($request->user_type == 'employee') {
+            Employee::create([
+                'user_id' => $user->id,
+                'department' => $request->department,
+                'office' => $request->office,
+            ]);
+        } else {
+            Technician::create([
+                'user_id' => $user->id,
+                'assigned_department' => $request->assigned
+            ]);
+        }
+        DB::commit();
+        return redirect(route('admin.users'))->with('success', 'User created!');
     }
 
     public function edit($id)

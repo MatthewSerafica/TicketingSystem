@@ -197,4 +197,15 @@ class AdminTicketController extends Controller
         $ticket->sr_no = $request->sr_no;
         $ticket->save();
     }
+    public function remark(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'remark' => 'nullable',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->remarks = $request->remark;
+        $ticket->save();
+    }
 }

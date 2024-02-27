@@ -25,10 +25,6 @@
       </div>
 
       <div class="table-responsive">
-        <div v-if="tickets.data.length" class="flex justify-center w-full mt-6">
-            <Pagination :links="tickets.links" :key="'tickets'"/>
-            <br>
-        </div>
         <table class="table table-hover shadow custom-rounded-table" style="max-width: 110rem;">
           <thead>
             <tr class="text-start">
@@ -37,8 +33,7 @@
               <th class="text-center text-muted">RR No</th>
               <th class="text-center text-muted">MS No</th>
               <th class="text-center text-muted">RS No</th>
-              <th class="text-muted">Employee</th>
-              <th class="text-muted">Office/Dept.</th>
+              <th class="text-muted">Client</th>
               <th class="text-muted">Request</th>
               <th class="text-muted">Service</th>
               <th class="text-muted">Technician</th>
@@ -73,13 +68,14 @@
                   @keyup.enter="updateRS(ticket.rs_no, ticket.ticket_number)"
                   class="w-100 rounded border border-secondary-subtle text-center">
               </td>
-              <td class="text-start">{{ ticket.employee.user.name }}</td>
-              <td class="text-start text-break" style="max-width: 10rem;">{{ ticket.employee.department }} - {{
-                ticket.employee.office }}</td>
+              <td class="text-start"><span class="fw-medium">{{ ticket.employee.user.name }}</span><br><small>{{
+                ticket.employee.department }} - {{
+    ticket.employee.office }}</small></td>
               <td class="text-start text-truncate" style="max-width: 130px;">{{ ticket.description }}</td>
               <td class="text-start">
                 <div class="btn-group">
-                  <button type="button" class="btn text-start" style="width: 12rem;">{{ ticket.service ? ticket.service : 'Unassigned' }}</button>
+                  <button type="button" class="btn text-start" style="width: 12rem;">{{ ticket.service ? ticket.service :
+                    'Unassigned' }}</button>
                   <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
                     aria-expanded="false" data-bs-reference="parent">
                     <span class="visually-hidden">Toggle Dropdown</span>
@@ -94,7 +90,8 @@
               </td>
               <td class="text-start">
                 <div class="btn-group">
-                  <button type="button" class="btn text-start"  style="width: 10rem;">{{ ticket.technician ? ticket.technician.user.name :
+                  <button type="button" class="btn text-start" style="width: 10rem;">{{ ticket.technician ?
+                    ticket.technician.user.name :
                     'Unassigned' }}</button>
                   <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
                     aria-expanded="false" data-bs-reference="parent">
@@ -119,27 +116,44 @@
                 ? 'Not yet resolved'
                 : formatDate(ticket.resolved_at) }}
               </td>
-              <td class="text-start text-break" style="max-width: 120px;">{{ ticket.remarks ? ticket.remarks :
-                'N/A' }}</td>
+              <td class="text-start text-break" style="max-width: 120px;"
+                @click="showRemarkInput(ticket.remarks, ticket.ticket_number)">
+                <span v-if="!selectedRemarkInput || selectedRemarkInput !== ticket.remarks">
+                  {{ ticket.remarks }}
+                </span>
+                <textarea v-if="selectedRow === ticket.ticket_number && selectedRemarkInput === ticket.remarks"
+                  v-model="editedRemark[ticket.remarks]" @blur="updateRem(ticket.remarks, ticket.ticket_number)"
+                  @keyup.enter="updateSR(ticket.sr_no, ticket.ticket_number)"
+                  class="w-100 rounded border border-secondary-subtle text-center"> </textarea>
+              </td>
               <td class="text-start">
                 <div class="btn-group">
-                  <button type="button" :class="getButtonClass(ticket.status)" class="text-center" style="width: 5rem;">{{ ticket.status }}</button>
+                  <button type="button" :class="getButtonClass(ticket.status)" class="text-center" style="width: 5rem;">{{
+                    ticket.status }}</button>
                   <button type="button" :class="getButtonClass(ticket.status)"
                     class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
                     data-bs-reference="parent">
                     <span class="visually-hidden">Toggle Dropdown</span>
                   </button>
                   <ul class="dropdown-menu">
-                    <li @click="updateStatus(ticket.ticket_number, 'New', ticket.status)" class="btn dropdown-item">New</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Pending', ticket.status)" class="btn dropdown-item">Pending</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Ongoing', ticket.status)" class="btn dropdown-item">Ongoing</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Resolved', ticket.status)" class="btn dropdown-item">Resolved</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'New', ticket.status)" class="btn dropdown-item">New
+                    </li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Pending', ticket.status)" class="btn dropdown-item">
+                      Pending</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Ongoing', ticket.status)" class="btn dropdown-item">
+                      Ongoing</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Resolved', ticket.status)" class="btn dropdown-item">
+                      Resolved</li>
                   </ul>
                 </div>
               </td>
             </tr>
           </tbody>
         </table>
+        <div v-if="tickets.data.length" class="flex justify-center w-full mt-6">
+          <Pagination :links="tickets.links" :key="'tickets'" />
+          <br>
+        </div>
       </div>
     </div>
   </div>
@@ -378,6 +392,29 @@ const updateSR = async (srNo, ticket_id) => {
     // Reset the state
     selectedSRInput.value = null;
     editedSR[srNo] = '';
+  }
+};
+
+let selectedRemarkInput = ref(null);
+let editedRemark = reactive({});
+
+const showRemarkInput = (remark, ticketNumber) => {
+  selectedRemarkInput.value = remark;
+  selectedRow.value = ticketNumber;
+  editedRemark[remark] = remark ? remark : '';
+}
+
+const updateRem = async (remark, ticket_id) => {
+  if (selectedRemarkInput.value === remark) {
+    const form = useForm({
+      remark: editedRemark[remark],
+    });
+
+    await form.put(route('admin.tickets.update.remark', { ticket_id: ticket_id }));
+
+    // Reset the state
+    selectedRemarkInput.value = null;
+    editedRemark[remark] = '';
   }
 };
 </script>
