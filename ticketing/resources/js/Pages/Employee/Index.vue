@@ -144,22 +144,6 @@ const getBadgeColor = (status) => {
   } 
 };
 
-const updateStatus = (ticket_id, status) => {
-  const { props } = usePage();
-  const updatedTickets = props.tickets.map(ticket => {
-    if (ticket.ticket_number === ticket_id) {
-      return { ...ticket, status: status };
-    }
-    return ticket;
-  });
-  filteredTickets.value = updatedTickets;
-  const form = useForm({
-    ticket_id: ticket_id,
-    status: status
-  });
-
-  form.put(route('employee.tickets.update.status', { ticket_id: ticket_id }));
-}
 </script>
 
 
