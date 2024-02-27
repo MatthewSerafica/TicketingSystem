@@ -1,48 +1,40 @@
 <template>
   <Header></Header>
-  <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
-      <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
-        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          <h1 class="fw-bold">View All Service Reports</h1>
-          <p class="fs-5">Manage and Track all TMDD Service Reports</p>
-          <Link class="btn btn-tickets btn-primary py-2 px-5" :href="route('technician.service-report.create')">Create Report</Link>
-        </div>
-
-  <div class="container text-center w-100 h-100 justify-center">
-    <h1>View All Service Reports</h1>
-    <p>Manage and Track all TMDD Service Reports</p>
-    <div class="d-flex gap-2">
-      <Link :href="route('technician.service-report.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Reports </Link>
-
+  <div class="d-flex justify-content-center flex-column align-items-center mt-5">
+    <div class="text-center justify-content-center align-items-center d-flex flex-column gap-2">
+      <h1 class="fw-bold">View All Service Reports</h1>
+      <p class="fs-5">Manage and Track all TMDD Service Reports</p>
+      <Link :href="route('technician.service-report.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Reports</Link>
     </div>
-    <div class="input-group mt-3 mb-4">
-          <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
-          <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
-            placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
-        </div>
-      </div>
 
-  <div class="w-75">
-    <table class="table table-striped border border-secondary-subtle">
-          <thead>
-            <tr class="text-start">
-              <th class="text-center">Service No</th>
-              <th>Date Started</th>
-              <th>Time Started</th>
-              <th>Ticket No</th>
-              <th>Technician Name</th>
-              <th>Requesting Office</th> 
-              <th>Equipment No</th>
-              <th>Issue</th>
-              <th>Action</th>
-              <th>Recommendation</th>
-              <th>Date Done</th>
-              <th>Time Done</th>
-              <th>Remarks</th>
-            </tr>
-          </thead>
-          <tbody class="">
-            <tr v-for="service_report in service_reports" :key="service_report.service_id">
+    <div class="container text-center w-75 mt-3">
+      <div class="input-group">
+        <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control py-2" id="search" name="search" v-model="search" placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
+      </div>
+    </div>
+
+    <div class="table-container mt-4">
+      <table class="table table-striped border border-secondary-subtle">
+        <thead>
+          <tr class="text-center">
+            <th>Service No</th>
+            <th>Date Started</th>
+            <th>Time Started</th>
+            <th>Ticket No</th>
+            <th>Technician Name</th>
+            <th>Requesting Office</th>
+            <th>Equipment No</th>
+            <th>Issue</th>
+            <th>Action</th>
+            <th>Recommendation</th>
+            <th>Date Done</th>
+            <th>Time Done</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="service_report in service_reports" :key="service_report.service_id" class="text-center">
               <td class="text-center py-3">{{ service_report.service_id }}</td>
               <td class="text-center py-3">{{ moment(service_report.date_started).format("YYYY-MM-DD") }}</td>
               <td class="text-center py-3">{{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</td>
@@ -57,11 +49,9 @@
               <td class="text-center py-3">{{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}</td>
               <td class="text-center py-3">{{ service_report.remarks }} </td>
             </tr>
-          </tbody>
-        </table>
-
-  </div>
-  </div>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 

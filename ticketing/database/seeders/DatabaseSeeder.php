@@ -119,7 +119,6 @@ class DatabaseSeeder extends Seeder
                 'recommendation' => 'Install additional network equipment',
                 'date_done' => '2022-02-22',
                 'time_done' => '10:00:00',
-                'technicians_id' => 3, 
                 'remarks' => 'Done',
             ],
         ];
