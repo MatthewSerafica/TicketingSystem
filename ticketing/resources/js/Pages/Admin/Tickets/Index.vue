@@ -40,6 +40,7 @@
               <th class="text-center text-muted">SR No</th>
               <th class="text-muted">Date Resolved</th>
               <th class="text-muted">Remarks</th>
+              <th class="text-center text-muted">Complexity</th>
               <th class="text-center text-muted">Status</th>
             </tr>
           </thead>
@@ -125,6 +126,23 @@
                   v-model="editedRemark[ticket.remarks]" @blur="updateRem(ticket.remarks, ticket.ticket_number)"
                   @keyup.enter="updateSR(ticket.sr_no, ticket.ticket_number)"
                   class="w-100 rounded border border-secondary-subtle text-center"> </textarea>
+              </td>
+              <td class="text-start">
+                <div class="btn-group">
+                  <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center" style="width: 5rem;">{{
+                    ticket.complexity ? ticket.complexity : 'N/A' }}</button>
+                  <button type="button" :class="getComplexityClass(ticket.complexity)"
+                    class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
+                    data-bs-reference="parent">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li @click="updateComplexity(ticket.ticket_number, 'Simple')" class="btn dropdown-item">Simple
+                    </li>
+                    <li @click="updateComplexity(ticket.ticket_number, 'Complex')" class="btn dropdown-item">
+                      Complex</li>
+                  </ul>
+                </div>
               </td>
               <td class="text-start">
                 <div class="btn-group">
@@ -276,6 +294,17 @@ const getButtonClass = (status) => {
   }
 };
 
+const getComplexityClass = (complexity) => {
+  switch (complexity) {
+    case 'Simple':
+      return 'btn btn-warning';
+    case 'Complex':
+      return 'btn btn-danger';
+    default:
+      return 'btn btn-secondary';
+  }
+};
+
 const updateTechnician = (ticket_id, technician_id) => {
   const form = useForm({
     technician_id: technician_id,
@@ -301,6 +330,15 @@ const updateStatus = (ticket_id, status, old_status) => {
   });
 
   form.put(route('admin.tickets.update.status', { ticket_id: ticket_id }));
+}
+
+const updateComplexity = (ticket_id, complexity) => {
+  const form = useForm({
+    ticket_id: ticket_id,
+    complexity: complexity,
+  });
+
+  form.put(route('admin.tickets.update.complexity', { ticket_id: ticket_id }));
 }
 
 let selectedRRInput = ref(null);
