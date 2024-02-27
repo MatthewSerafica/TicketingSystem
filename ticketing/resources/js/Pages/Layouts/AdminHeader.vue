@@ -19,22 +19,20 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item" :class="{ 'active': activeLink === 'dashboard' }">
-                            <a class="nav-link text-white" aria-current="page" href="/admin" @click="setActiveLink('dashboard')">Dashboard</a>
+                            <a class="nav-link dashboard text-white" aria-current="page" href="/admin" @click="setActiveLink('dashboard')">Dashboard</a>
                         </li>
                         <li class="nav-item" :class="{ 'active': activeLink === 'tickets' }">
-                            <a class="nav-link text-light" href="/admin/tickets" @click="setActiveLink('tickets')">Tickets</a>
+                            <a class="nav-link tickets text-light" href="/admin/tickets" @click="setActiveLink('tickets')">Tickets</a>
                         </li>
                         <li class="nav-item" :class="{ 'active': activeLink === 'reports' }">
-                            <a class="nav-link text-light" href="#" @click="setActiveLink('reports')">Reports</a>
+                            <a class="nav-link reports text-light" href="#" @click="setActiveLink('reports')">Reports</a>
                         </li>
-                        <li class="nav-item" :class="{ 'active': activeLink === 'users' }" >
-                            <a class="nav-link text-light" href="/admin/users" @click="setActiveLink('users')">Users</a>
-                        </li>
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown settings" :class="{ 'active': activeLink === 'settings' }">
                         <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Departments & Offices
+                            Settings
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >
+                            <li><a class="dropdown-item" href="/admin/users">Users</a></li>
                             <li><a class="dropdown-item" href="/admin/department">Departments</a></li>
                             <li><a class="dropdown-item" href="/admin/office">Offices</a></li>
                         </ul>
@@ -149,8 +147,9 @@ const determineActiveLink = () => {
         setActiveLink('tickets');
     } else if (currentPath.includes('reports')) {
         setActiveLink('reports');
-    } else if (currentPath.includes('users')) {
-        setActiveLink('users');
+    } else if (currentPath.includes('users') || currentPath.includes('department') || currentPath.includes('office')) {
+        setActiveLink('settings');
+  
     } else {
         setActiveLink('dashboard');
     }
@@ -164,7 +163,6 @@ const formatTime = (time) => {
     return moment(time, 'HH:mm:ss').format('hh:mm A');
 }
 
-const activeTab = ref('technician');
 const page = usePage();
 
 function notificationDateTime() {
@@ -212,7 +210,9 @@ onMounted(() => {
 
 
 <style scoped>
-.nav-link::after {
+.nav-link.dashboard::after,
+.nav-link.tickets::after,
+.nav-link.reports::after{
     content: '';
     display: block;
     width: 0;
@@ -221,7 +221,14 @@ onMounted(() => {
     transition: width 0.3s ease;
 }
 
-.nav-item.active .nav-link::after {
+.nav-item.active .nav-link.dashboard::after,
+.nav-item.active .nav-link.tickets::after,
+.nav-item.active .nav-link.reports::after{
     width: 100%;
 }
+
+.nav-item.settings .nav-link::after{
+    content: none;
+}
+
 </style>

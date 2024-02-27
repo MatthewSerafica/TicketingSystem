@@ -19,13 +19,13 @@
             <div class="collapse navbar-collapse gap-5  " id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item" :class="{ 'active': activeLink === 'dashboard' }">
-                        <a class="nav-link text-white" aria-current="page" href="/technician">Dashboard</a>
+                        <a class="nav-link text-white" aria-current="page" href="/technician" @click="setActiveLink('dashboard')">Dashboard</a>
                     </li>
                     <li class="nav-item" :class="{ 'active': activeLink === 'tickets' }">
-                        <a class="nav-link text-white" href="/technician/tickets">Tickets</a>
+                        <a class="nav-link text-white" href="/technician/tickets" @click="setActiveLink('tickets')">Tickets</a>
                     </li>
                     <li class="nav-item" :class="{ 'active': activeLink === 'service-report' }">
-                        <a class="nav-link text-white" href="/technician/service-report">Service Reports</a>
+                        <a class="nav-link text-white" href="/technician/service-report" @click="setActiveLink('service-report')">Service Reports</a>
                     </li>
                 </ul>
       
