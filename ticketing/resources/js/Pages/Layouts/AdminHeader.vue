@@ -136,6 +136,7 @@ import moment from "moment";
 
 const props = defineProps({});
 const activeLink = ref('');
+const activeTab = ref('technician'); 
 
 const setActiveLink = (link) => {
     activeLink.value = link;
