@@ -134,5 +134,17 @@ class TechnicianTicketController extends Controller
         ]);
     }
 
+    public function sr(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'sr_no' => 'nullable',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->sr_no = $request->sr_no;
+        $ticket->save();
+    }
+
 
 }
