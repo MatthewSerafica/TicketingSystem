@@ -1,38 +1,40 @@
 <template>
   <div class="justify-content-center">
     <Header></Header>
-
-    <div class="recents justify-content-center align-items-center d-flex flex-column">
-      <div class="d-flex flex-row gap-5">
-        <div class="mt-5 pt-5">
+    <div class="justify-content-center align-items-center d-flex flex-column mt-5 pt-5 gap-5">
+      <div class="d-flex flex-row gap-5 justify-content-center align-items-center">
+        <div>
           <h2 class="fw-semibold">Recent Tickets</h2>
           <div class="d-flex gap-2">
-            <Link class="text-decoration-none" :href="route('technician.tickets.create')">
-              <Button :name="'Create'" :color="'primary'" class="btn-width"></Button>
+            <Link class="text-decoration-none" :href="route('admin.tickets.create')">
+            <Button :name="'Create'" :color="'primary'" class="btn-width"></Button>
             </Link>
-            <Link class="text-decoration-none" :href="route('technician.tickets')">
-              <Button :name="'View All'" :color="'primary'" class="btn-width"></Button>
+            <Link class="text-decoration-none" :href="route('admin.tickets')">
+            <Button :name="'View All'" :color="'secondary'" class="btn-width"></Button>
             </Link>
           </div>
         </div>
-
-        <div class="d-flex flex-column gap-4 justify-content-center align-items-center">
-          <div v-if="tickets && tickets.length > 0" class="d-flex flex-column gap-4 justify-content-center align-items-center">
+        <div class="d-flex flex-column gap-4 justify-content-center align-items-center ms-5">
+          <div v-if="tickets && tickets.length > 0"
+            class="d-flex flex-column gap-4 justify-content-center align-items-center">
             <div class="" v-for="ticket in tickets" :key="tickets.ticket_number">
-                  <Link class="text-decoration-none" :href="`/technician/tickets/${ticket.ticket_number}`">
-                  <Card class="" :no="ticket.ticket_number" :issue="ticket.issue"
-                    :employee="ticket.employee.user.name" :department="ticket.employee.department"
-                    :date="formatDate(ticket.created_at)" :status="ticket.status"
-                    :technician="ticket.technician.user.name">
-                  </Card>
-                  </Link>
+              <Link class="text-decoration-none" :href="`/admin/tickets/${ticket.ticket_number}`">
+              <Card class="text-truncate" :no="ticket.ticket_number" :issue="ticket.issue"
+                :employee="ticket.employee.user.name" :department="ticket.employee.department"
+                :date="formatDate(ticket.created_at)" :status="ticket.status"
+                :technician="ticket.technician ? ticket.technician.user.name : 'Unassigned'">
+              </Card>
+              </Link>
             </div>
           </div>
           <div v-else>
             <EmptyCard></EmptyCard>
           </div>
         </div>
-        </div>
+      </div>
+      <div>
+        <h1>Statistics</h1>
+      </div>
     </div>
   </div>
 </template>
