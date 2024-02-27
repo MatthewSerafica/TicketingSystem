@@ -22,6 +22,10 @@ class AdminTicketController extends Controller
                 $search = $request->input('search');
                 $query->where('ticket_number', 'like', '%' . $search . '%')
                     ->orWhere('status', 'like', '%' . $search . '%')
+                    ->orWhere('rr_no', 'like', '%' . $search . '%')
+                    ->orWhere('ms_no', 'like', '%' . $search . '%')
+                    ->orWhere('rs_no', 'like', '%' . $search . '%')
+                    ->orWhere('sr_no', 'like', '%' . $search . '%')
                     ->orWhereHas('employee.user', function ($subquery) use ($search) {
                         $subquery->where('name', 'like', '%' . $search . '%');
                     })
@@ -206,6 +210,18 @@ class AdminTicketController extends Controller
         $ticket = Ticket::where('ticket_number', $ticket_id)->first();
 
         $ticket->remarks = $request->remark;
+        $ticket->save();
+    }
+    
+    public function complexity(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'complexity' => 'nullable',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->complexity = $request->complexity;
         $ticket->save();
     }
 }
