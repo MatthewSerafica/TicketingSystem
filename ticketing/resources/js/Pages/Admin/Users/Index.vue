@@ -1,7 +1,6 @@
 <template>
   <div>
     <Header></Header>
-
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
@@ -59,7 +58,7 @@
 import Button from '@/Components/Button.vue';
 import Pagination from '@/Components/Pagination.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { router } from '@inertiajs/vue3';
+import { router, Link } from '@inertiajs/vue3';
 import moment from "moment";
 import { defineProps, nextTick, reactive, ref, watch } from 'vue';
 

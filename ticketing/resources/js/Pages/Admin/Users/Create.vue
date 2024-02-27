@@ -77,8 +77,8 @@
                     </div>
                 </div>
 
-                <div class="container">
-                    <div class="row justify-content-center">
+                <div class="container w-25">
+                    <div class="row justify-content-end">
                         <div class="col-md-6">
                             <div class="d-flex justify-content-center gap-2">
                                 <Button :name="'Submit'" :color="'primary'" class="submit-btn"></button>
