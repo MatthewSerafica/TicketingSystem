@@ -5,14 +5,16 @@
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          <h1>View All Users</h1>
-          <p>Manage and Track all Users</p>
+          <h1 class="fw-bold">View All Users</h1>
+          <p class="fs-5">Manage and Track all Users</p>
           <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New User
           </Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterUsers('all')"></Button>
-            <Button :name="'Employees'" :color="'secondary'" class="btn-options" @click="filterUsers('employee')"></Button>
-            <Button :name="'Technician'" :color="'secondary'" class="btn-options" @click="filterUsers('technician')"></Button>
+            <Button :name="'Employees'" :color="'secondary'" class="btn-options"
+              @click="filterUsers('employee')"></Button>
+            <Button :name="'Technician'" :color="'secondary'" class="btn-options"
+              @click="filterUsers('technician')"></Button>
           </div>
           <!-- Add buttons for filtering if needed -->
           <div class="input-group mt-3 mb-4">
@@ -24,7 +26,7 @@
       </div>
 
       <div class="w-75">
-        <table class="table table-striped border border-secondary-subtle">
+        <table class="table table-hover shadow custom-rounded-table">
           <thead v-if="!isLoading">
             <tr class="text-start">
               <th class="text-center">ID</th>
@@ -35,7 +37,7 @@
             </tr>
           </thead>
           <tbody v-if="!isLoading">
-            <tr v-for="user in users" :key="user.id">
+            <tr v-for="user in users.data" :key="user.id">
               <td class="text-center py-3">{{ user.id }}</td>
               <td class="text-start py-3">{{ user.name }}</td>
               <td class="text-start py-3">{{ user.email }}</td>
@@ -44,17 +46,22 @@
             </tr>
           </tbody>
         </table>
+        <div v-if="users.data.length" class="flex justify-center w-full mt-6">
+            <Pagination :links="users.links" :key="'users'"/>
+            <br>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import Button from '@/Components/Button.vue';
+import Pagination from '@/Components/Pagination.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { router } from '@inertiajs/vue3';
 import moment from "moment";
 import { defineProps, nextTick, reactive, ref, watch } from 'vue';
-import Button from '@/Components/Button.vue'
 
 const props = defineProps({
   users: Object,
@@ -158,6 +165,7 @@ const formatDate = (date) => {
 .btn-options {
   width: 100px;
 }
-
-
+.custom-rounded-table {
+  border-radius: 10px;
+}
 </style>

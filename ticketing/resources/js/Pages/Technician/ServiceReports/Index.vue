@@ -57,19 +57,19 @@
 
 <script setup>
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
-import { Link, router, useForm  } from "@inertiajs/vue3";
+import { Link, router, useForm } from "@inertiajs/vue3";
 import moment from "moment";
 import { nextTick, reactive, ref, watch, onMounted } from "vue";
 import Button from '@/Components/Button.vue'
 
 const props = defineProps({
-    service_report: Object,
-    technicians: Object,
-    //filters: Object,
+  service_report: Object,
+  technicians: Object,
+  //filters: Object,
 
 })
 
-const service_reports = ref( props.service_report) ;
+const service_reports = ref(props.service_report);
 
 let search = ref(props.search);
 let sortColumn = ref("service_id");
@@ -118,99 +118,101 @@ watch(search, () => {
 </script>
 
 <style scoped>
-  .search {
-    margin: 10px 0;
-    display: flex;
-    justify-content: center;
-  }
+.search {
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+}
 
-  .search input {
-    width: 50%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+.search input {
+  width: 50%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
-  .container {
-    padding: 20px;
-  }
+.container {
+  padding: 20px;
+}
 
-  h1 {
-    font-size: 36px;
-    margin-bottom: 10px;
-  }
+h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
 
-  p {
-    font-size: 16px;
-    margin-bottom: 20px;
-  }
+p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
 
-  .d-flex {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+.d-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .btnn{
-    width: 150px; 
-    height: 50px; 
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
+.btnn {
+  width: 150px;
+  height: 50px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
 
-  .btnn {
-    background-color: #aca9b6; 
-    color: #fff; 
-  }
+.btnn {
+  background-color: #aca9b6;
+  color: #fff;
+}
 
 
-  .btnn:hover{
-    background-color: #898989; 
-  }
-  .large-btn {
-    margin: 10px;
-    color: #000000; 
-  }
+.btnn:hover {
+  background-color: #898989;
+}
 
-  .table-container {
-    margin-top: 20px;
-    overflow-x: auto;
-  }
+.large-btn {
+  margin: 10px;
+  color: #000000;
+}
 
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
+.table-container {
+  margin-top: 20px;
+  overflow-x: auto;
+}
 
-  .table th,
-  .table td {
-    padding: 12px;
-    text-align: center;
-  }
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
 
-  .table th {
-    background-color: #ffffff;
-    color: #000000;
-  }
+.table th,
+.table td {
+  padding: 12px;
+  text-align: center;
+}
 
-  .table tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
+.table th {
+  background-color: #ffffff;
+  color: #000000;
+}
 
-  .table tbody tr:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .btn-tickets {
+.table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table tbody tr:hover {
+  background-color: #e0e0e0;
+}
+
+.btn-tickets {
   transition: all 0.2s;
 }
 
 .btn-tickets:hover {
   transform: scale(1.1);
 }
+
 .btn-options {
   width: 100px;
 }

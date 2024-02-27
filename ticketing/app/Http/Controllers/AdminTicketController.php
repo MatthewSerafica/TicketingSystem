@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\Service;
+use App\Models\ServiceReport;
 use App\Models\Technician;
 use App\Models\Ticket;
 use App\Notifications\UpdateTicketStatus;
@@ -36,25 +38,27 @@ class AdminTicketController extends Controller
                     $query->where('status', 'like', '%' . $ticketFilter . '%');
                 } elseif ($ticketFilter === 'resolved') {
                     $query->where('status', 'like', '%' . $ticketFilter . '%');
-                }elseif ($ticketFilter === 'pending') {
+                } elseif ($ticketFilter === 'pending') {
                     $query->where('status', 'like', '%' . $ticketFilter . '%');
                 }
             })
             ->whereYear('created_at', Carbon::now()->year)
             ->whereMonth('created_at', Carbon::now()->month)
             ->orderBy('ticket_number')
-            ->get();
+            ->paginate(10);
 
         $filter = $request->only(['search']);
         $technicians = Technician::with('user')->get();
+        $services = Service::all();
         return inertia('Admin/Tickets/Index', [
             'tickets' => $tickets,
             'technicians' => $technicians,
             'filters' => $filter,
+            'services' => $services,
         ]);
     }
 
-    
+
     public function create()
     {
         $technicians = Technician::with('user')->get();
@@ -99,14 +103,23 @@ class AdminTicketController extends Controller
     {
         $request->validate([
             'status' => 'required',
+            'old_status' => 'required',
         ]);
 
         $ticket = Ticket::where('ticket_number', $ticket_id)->first();
         $employee = Employee::where('employee_id', $ticket->employee)->with('user')->first();
         $ticket->status = $request->status;
-        if ($ticket->status == 'Resolved') {
-            $ticket->resolved_at = now();
-            $employee->update(['made_ticket' => $employee->made_ticket - 1]);
+        if ($ticket->status == 'Resolved' && $request->old_status != 'Resolved') {
+            if ($employee->made_ticket > 0) {
+                $ticket->resolved_at = now();
+                $employee->update(['made_ticket' => $employee->made_ticket - 1]);
+            } else {
+                $ticket->resolved_at = now();
+                $employee->update(['made_ticket' => 0]);
+            }
+        } else if ($request->old_status == 'Resolved' && $ticket->status != 'Resolved') {
+            $ticket->resolved_at = null;
+            $employee->update(['made_ticket' => $employee->made_ticket + 1]);
         } else {
             $ticket->resolved_at = null;
         }
@@ -125,6 +138,63 @@ class AdminTicketController extends Controller
         $ticket = Ticket::where('ticket_number', $ticket_id)->first();
 
         $ticket->technician = $request->technician_id;
+        $ticket->save();
+    }
+
+    public function service(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'service' => 'required',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->service = $request->service;
+        $ticket->save();
+    }
+
+    public function rr(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'rr_no' => 'nullable',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->rr_no = $request->rr_no;
+        $ticket->save();
+    }
+    public function ms(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'ms_no' => 'nullable',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->ms_no = $request->ms_no;
+        $ticket->save();
+    }
+    public function rs(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'rs_no' => 'nullable',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->rs_no = $request->rs_no;
+        $ticket->save();
+    }
+    public function sr(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'sr_no' => 'nullable',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->sr_no = $request->sr_no;
         $ticket->save();
     }
 }

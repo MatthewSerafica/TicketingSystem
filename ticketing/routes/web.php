@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminTicketController;
 use App\Http\Controllers\AdminUsersController;
 use App\Http\Controllers\AdminDepartmentController;
+use App\Http\Controllers\AdminOfficeController;
 use App\Http\Controllers\AdminNotificationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeNotificationController;
@@ -36,9 +37,25 @@ Route::middleware(['web'])->group(function () {
         Route::post('/admin/tickets/create/store', [AdminTicketController::class, 'store'])->name('admin.tickets.store');
         Route::put('/admin/tickets/update-status/{ticket_id}', [AdminTicketController::class, 'status'])->name('admin.tickets.update.status');
         Route::put('/admin/tickets/update-technician/{ticket_id}', [AdminTicketController::class, 'technician'])->name('admin.tickets.update.technician');
+        Route::put('/admin/tickets/update-service/{ticket_id}', [AdminTicketController::class, 'service'])->name('admin.tickets.update.service');
+        Route::put('/admin/tickets/update-rr/{ticket_id}', [AdminTicketController::class, 'rr'])->name('admin.tickets.update.rr');
+        Route::put('/admin/tickets/update-ms/{ticket_id}', [AdminTicketController::class, 'ms'])->name('admin.tickets.update.ms');
+        Route::put('/admin/tickets/update-rs/{ticket_id}', [AdminTicketController::class, 'rs'])->name('admin.tickets.update.rs');
+        Route::put('/admin/tickets/update-sr/{ticket_id}', [AdminTicketController::class, 'sr'])->name('admin.tickets.update.sr');
         Route::get('/admin/tickets/search', [AdminTicketController::class, 'search'])->name('admin.tickets.search');
+
         Route::get('/admin/users', [AdminUsersController::class, 'index'])->name('admin.users');
+
         Route::get('/admin/department', [AdminDepartmentController::class, 'index'])->name('admin.department');
+        Route::get('/admin/department/create', [AdminDepartmentController::class, 'create'])->name('admin.department.create');
+        Route::post('/admin/department/create/store', [AdminDepartmentController::class, 'store'])->name('admin.department.store');
+        Route::put('/admin/department/update/{department_id}', [AdminDepartmentController::class, 'update'])->name('admin.department.update');
+
+        Route::get('/admin/office', [AdminOfficeController::class, 'index'])->name('admin.office');
+        Route::get('/admin/office/create', [AdminOfficeController::class, 'create'])->name('admin.office.create');
+        Route::post('/admin/office/create/store', [AdminOfficeController::class, 'store'])->name('admin.office.store');
+        Route::put('/admin/office/update/{office_id}', [AdminOfficeController::class, 'update'])->name('admin.office.update');
+
         Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications');
         Route::post('/admin/notifications/seen', [AdminNotificationController::class, 'update'])->name('admin.notifications.seen');
     });
