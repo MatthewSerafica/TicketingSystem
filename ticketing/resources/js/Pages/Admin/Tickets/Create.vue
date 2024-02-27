@@ -68,7 +68,7 @@
           <div class="row justify-content-center">
             <div class="col-md-6">
               <div class="d-flex justify-content-center gap-2">
-                <Button :name="'Submit'" :color="'primary'" class="submit-btn"></button>
+                <Button :name="'Submit'" :color="'primary'"></Button>
                 <Link :href="`/admin/tickets`" class=" btn btn-outline-primary">Cancel</Link>
               </div>
             </div>
@@ -103,13 +103,5 @@ const create = () => form.post(route('admin.tickets.store'), { preserveScroll: f
 </script>
   
 <style>
-
-.submit-btn {
-  transition: all 0.2s;
-}
-
-.submit-btn:hover {
-  transform: scale(1.1);
-}
 </style>
   

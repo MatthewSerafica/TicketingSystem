@@ -5,11 +5,11 @@
       <form @submit.prevent="create">
         <br />
         <div class="container">
-          <div class="title-container">
+          <div class="title-container text-center">
             <h1>Create Tickets</h1>
           </div>
 
-          <div class="create-ticket">
+          <div class="create-ticket mt-5">
             <div class="d-flex flex-row gap-5 justify-content-center mb-4">
               <div class="d-flex flex-column flex-shrink-0 w-25">
                 <label for="issue" class="fw-semibold">Title</label>
@@ -32,8 +32,8 @@
             <div class="row justify-content-center">
               <div class="col-md-6">
               <div class="d-flex justify-content-center gap-2">
+                <Button :name="'Submit'" :color="'primary'"></Button>
                 <Link :href="`/employee`" class="btn btn-outline-primary">Cancel</Link>
-                <button class="submit-ticket-button btn btn-primary" type="submit" as="button">Submit</button>
               </div>
               </div>
             </div>
@@ -48,6 +48,7 @@
 <script setup>
 import Header from "@/Pages/Layouts/EmployeeHeader.vue";
 import { Link, useForm, usePage } from "@inertiajs/vue3";
+import Button from "@/Components/Button.vue";
 
 const page = usePage();
 
