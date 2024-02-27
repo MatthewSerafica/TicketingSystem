@@ -24,33 +24,22 @@
           <thead>
             <tr class="text-start">
               <th class="text-center">Ticket No</th>
+              <th class="text-center">Date Created</th>
               <th class="text-center">Issue</th>
               <th class="text-center">Technician</th>
               <th class="text-center">Status</th>
-              <th class="text-center">Date Created</th>
+              <th class="text-center">Service Report No.</th>
               <th class="text-center">Date Resolved</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number">
               <td class="text-center py-3">{{ ticket.ticket_number }}</td>
+              <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
               <td class="text-center py-3">{{ ticket.issue }}</td>
               <td class="text-center py-3">{{ ticket.technician ? ticket.technician.user.name : 'Unassigned' }}</td>
-              <td class="text-center py-3">
-                <div class="btn-group">
-                  <button type="button" :class="getButtonClass(ticket.status)">{{ ticket.status }}</button>
-                  <button type="button" :class="getButtonClass(ticket.status)"
-                    class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
-                    data-bs-reference="parent">
-                    <span class="visually-hidden">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li @click="updateStatus(ticket.ticket_number, 'New')" class="btn dropdown-item">New</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Cancel')" class="btn dropdown-item">Cancel</li>
-                  </ul>
-                </div>
-              </td>
-              <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
+              <td class="text-center py-3"><span :class="getBadgeColor(ticket.status)" class="p-3">{{ ticket.status }}</span></td>
+              <td class="text-center py-3">{{ ticket.rs_no ? ticket.rs_no : 'Unavailable' }}</td>
               <td class="text-center py-3">{{ ticket.resolved_at ? ticket.resolved_at : 'Not yet resolved' }}</td>
             </tr>
           </tbody>
@@ -140,15 +129,19 @@ onMounted(() => {
   handleAllButtonClick();
 });
 
-const getButtonClass = (status) => {
+const getBadgeColor = (status) => {
   switch (status.toLowerCase()) {
     case 'new':
-      return 'btn btn-danger';
-    case 'cancelled':
-      return 'btn btn-warning';
+      return 'badge text-bg-danger';
+    case 'pending':
+      return 'badge  text-bg-warning';
+    case 'ongoing':
+      return 'badge  text-bg-primary';
+    case 'resolved':
+      return 'badge  text-bg-success';
     default:
       return 'btn btn-secondary';
-  }
+  } 
 };
 
 const updateStatus = (ticket_id, status) => {
