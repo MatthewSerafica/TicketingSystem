@@ -13,6 +13,7 @@
     <title>TMDD Ticketing System</title>
     <?php echo app('Tightenco\Ziggy\BladeRouteGenerator')->generate(); ?>
     <link rel="icon" type="image/x-icon" href="{{asset('images/favicon.ico')}}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     @vite('resources/js/app.js')
     @inertiaHead
 </head>
