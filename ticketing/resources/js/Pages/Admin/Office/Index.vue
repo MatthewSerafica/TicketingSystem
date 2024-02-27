@@ -26,18 +26,20 @@
               <th>Offices</th>
               <th class="text-center">Date Created</th>
               <th class="text-center">Date Updated</th>
+              <th>Delete Option</th>
             </tr>
           </thead>
           <tbody class="">
             <tr v-for="office in offices.data">
               <td class="text-center py-4">{{ office.id }}</td>
-              <td class="text-center" style="max-width: 60px;" @dblclick="startEditing(office.id, office.office)">
+              <td style="max-width: 60px;" @dblclick="startEditing(office.id, office.office)">
                 <span v-if="selectedOfficeId !== office.id">{{ office.office }}</span>
                 <input v-model="editedOffice[office.id]" v-if="selectedOfficeId === office.id" @keyup.enter="saveOffice(office.id)" @blur="saveOffice(office.id)">
 
               </td>
               <td  class="text-center">{{ formatDate(office.created_at) }}</td>
               <td  class="text-center">{{ formatDate(office.updated_at) }}</td>
+              <td><button class="btn btn-danger" @click="showDeleteModal(office.id)">Delete</button></td>
             </tr>
           </tbody>
         </table>
@@ -87,16 +89,18 @@ const saveOffice = async (officeId) => {
         const form = useForm({
             office: editedOffice[officeId],
         });
-        
         await form.put(route('admin.office.update', { office_id: officeId }), {
-            _method: 'put', // Specify the HTTP method as PUT
-            office: editedOffice[officeId], // Pass the updated department data
+            _method: 'put',
+            office: editedOffice[officeId],
         });
-        
-        // Reset the state
         selectedOfficeId.value = null;
     }
 };
+
+
+
+
+
 </script>
 
 <style scoped>
