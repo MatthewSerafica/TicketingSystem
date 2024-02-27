@@ -95,8 +95,9 @@
 
 <script setup>
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link, useForm } from "@inertiajs/vue3";
+import { Link, useForm} from "@inertiajs/vue3";
 import Button from '@/Components/Button.vue';
+import { defineProps, ref, watch } from 'vue'; 
 
 const props = defineProps({
     departments: Object,
@@ -114,5 +115,23 @@ const form = useForm({
     assigned: null,
 })
 
+
 const create = () => form.post(route('admin.users.store'), { preserveScroll: false, preserveState: false })
+
+watch(() => form.name, (newValue) => {
+    // Check if the name contains a space
+    const spaceIndex = newValue.indexOf(' ');
+    if (spaceIndex !== -1) {
+        // Split the name into first and last names
+        const firstName = newValue.substring(0, spaceIndex);
+        const lastName = newValue.substring(spaceIndex + 1);
+        // Update the form fields with first and last names
+        form.firstName = firstName;
+        form.lastName = lastName;
+    } else {
+        // If no space is found, assume the entire input is the first name
+        form.firstName = newValue;
+        form.lastName = '';
+    }
+});
 </script>

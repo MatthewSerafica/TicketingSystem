@@ -9,7 +9,7 @@
             <h1>Create Tickets</h1>
           </div>
 
-          <div class="create-ticket mt-5">
+          <div class="create-ticket mt-2">
             <div class="d-flex flex-row gap-5 justify-content-center mb-4">
               <div class="d-flex flex-column flex-shrink-0 w-25">
                 <label for="issue" class="fw-semibold">Title</label>
@@ -22,7 +22,7 @@
               <div class="d-flex flex-column flex-shrink-0 w-25">
                 <label for="description" class="fw-semibold">Description</label>
                 <textarea for="description" class="form-control auto-resize rounded border-secondary-subtle p-3" type="text"
-                  placeholder="Enter Ticket Description..." v-model="form.description"> </textarea>
+                  rows="5" placeholder="Enter Ticket Description..." v-model="form.description"> </textarea>
               </div>
             </div>
           </div>
@@ -67,4 +67,8 @@ const create = () => {
 
 </script>
   
-  
+ <style scoped>
+.auto-resize {
+  min-height: 100px; /* Set the minimum height */
+  resize: vertical; /* Allow vertical resizing */
+}</style> 
