@@ -1,13 +1,12 @@
 <template>
   <div>
     <Header></Header>
-
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Users</h1>
           <p class="fs-5">Manage and Track all Users</p>
-          <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New User
+          <Link :href="route('admin.users.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New User
           </Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterUsers('all')"></Button>
@@ -59,7 +58,7 @@
 import Button from '@/Components/Button.vue';
 import Pagination from '@/Components/Pagination.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { router } from '@inertiajs/vue3';
+import { router, Link } from '@inertiajs/vue3';
 import moment from "moment";
 import { defineProps, nextTick, reactive, ref, watch } from 'vue';
 

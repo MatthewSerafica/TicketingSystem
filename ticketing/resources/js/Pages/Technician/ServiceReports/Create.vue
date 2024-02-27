@@ -5,7 +5,8 @@
       <div class="form-container1">
         <h2>SERVICE REPORT FORM</h2>
         {{ service_report }}
-        <div class="placeholder-text">{{ nextTicketNumber || 'SR-0001' }}</div>
+
+        <div class="placeholder-text">{{ new_service_id || 'SR-0001' }}</div>
 
         <div class="row-input-container">
           <div class="input-container">
@@ -42,8 +43,8 @@
             <option value="Printer Problem">Printer Problem</option>
           </select>
 
-          <label for="actionTaken">Action Taken:</label>
-          <input type="text" id="action" v-model="form.action_taken" class="long-input1">
+          <label for="action">Action Taken:</label>
+          <input type="text" id="action" v-model="form.action" class="long-input1">
 
           <label for="recommendation">Recommendation:</label>
           <input type="text" id="recommendation" v-model="form.recommendation" class="long-input1">
@@ -65,7 +66,7 @@
           <div class="row justify-content-center">
             <div class="col-md-6">
               <div class="d-flex justify-content-center gap-2">
-                <Button :name="'Submit'" :color="'primary'" @click="submitForm"></Button>
+                <button class="submit-ticket-button btn btn-primary" type="submit" as="button">Submit</button>
                 <Link :href=" '/technician/service-report'"  class="btn btn-outline-primary">Cancel</Link>
               </div>
             </div>
@@ -85,7 +86,7 @@ import Button from '@/Components/Button.vue'
 
 const props = defineProps({
   technicians: Object,
-  next_service_number: Object,
+  new_service_id: String,
   service_report: Object,
 })
 
@@ -95,7 +96,7 @@ const minDate = today.toISOString().split('T')[0];
 const page = usePage();
 
 const form = useForm({
-  service_id: props.nextTicketNumber,
+  service_id: props.new_service_id,
   date_started: '',
   time_started: '',
   ticket_number: '',
@@ -111,7 +112,10 @@ const form = useForm({
 });
 
 
-const create = () => form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false })
+const create = () => {
+    form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false });
+}
+
 </script>
 
 <style scoped>

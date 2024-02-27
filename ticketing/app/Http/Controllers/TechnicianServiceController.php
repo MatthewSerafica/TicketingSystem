@@ -35,20 +35,38 @@ class TechnicianServiceController extends Controller
     
     public function create()
     {
-        $service_report = ServiceReport::orderBy('created_at', 'desc')->firstOrFail();
-    
-        $next_service_number = $service_report
-            ? 'SR-B ' . str_pad((int)substr($service_report->service_id, 5) + 1, 4, '0', STR_PAD_LEFT)
-            : 'SR-B 0001';
-    
+        // Fetch the latest service report if it exists
+        $latest_report = ServiceReport::orderBy('created_at', 'desc')->first();
+
+        // Increment the service_id for the new form
+        $new_service_id = $latest_report ? $this->incrementServiceId($latest_report->service_id) : 'SR-B 0001';
+
         $technicians = Technician::all();
-    
+
         return inertia('Technician/ServiceReports/Create', [
             'technicians' => $technicians,
-            'nextTicketNumber' => $next_service_number,
-            'service_report' => $service_report,
+            'new_service_id' => $new_service_id,
         ]);
     }
+
+    // Helper function to increment the service_id
+    private function incrementServiceId($currentServiceId)
+    {
+        // Extract the numeric part of the service_id and increment it
+        $numericPart = (int)substr($currentServiceId, 5);
+        $newNumericPart = $numericPart + 1;
+
+        // Format the new numeric part with leading zeros
+        $newNumericPartFormatted = sprintf('%04d', $newNumericPart);
+
+        // Construct the new service_id
+        $newServiceId = 'SR-B ' . $newNumericPartFormatted;
+
+        return $newServiceId;
+    }
+
+
+
 
     public function store(Request $request) 
     {
@@ -65,9 +83,8 @@ class TechnicianServiceController extends Controller
             'recommendation' => 'required',
             'date_done' => 'required',
             'time_done' => 'required',
-            'remarks' => 'required',
+            'remarks' => 'nullable',
         ]);
-    
 
         $serviceData = [
             'service_id' => $request -> service_id,
@@ -87,6 +104,6 @@ class TechnicianServiceController extends Controller
 
         ServiceReport::create($serviceData);
 
-        return redirect()->to('/technician/service_reports')->with('success', 'Report Created');
+        return redirect()->to('/technician/service-report')->with('success', 'Report Created');
     }
 }

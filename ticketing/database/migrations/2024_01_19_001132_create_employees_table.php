@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('department');
-            $table->string('office')->nullable();
+            $table->string('office');
             $table->unsignedInteger('made_ticket')->default(0);
             $table->timestamps();
         });

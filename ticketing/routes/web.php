@@ -32,6 +32,7 @@ Route::middleware(['web'])->group(function () {
 
     Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin');
+
         Route::get('/admin/tickets', [AdminTicketController::class, 'index'])->name('admin.tickets');
         Route::get('/admin/tickets/create', [AdminTicketController::class, 'create'])->name('admin.tickets.create');
         Route::post('/admin/tickets/create/store', [AdminTicketController::class, 'store'])->name('admin.tickets.store');
@@ -42,9 +43,12 @@ Route::middleware(['web'])->group(function () {
         Route::put('/admin/tickets/update-ms/{ticket_id}', [AdminTicketController::class, 'ms'])->name('admin.tickets.update.ms');
         Route::put('/admin/tickets/update-rs/{ticket_id}', [AdminTicketController::class, 'rs'])->name('admin.tickets.update.rs');
         Route::put('/admin/tickets/update-sr/{ticket_id}', [AdminTicketController::class, 'sr'])->name('admin.tickets.update.sr');
+        Route::put('/admin/tickets/update-remark/{ticket_id}', [AdminTicketController::class, 'remark'])->name('admin.tickets.update.remark');
         Route::get('/admin/tickets/search', [AdminTicketController::class, 'search'])->name('admin.tickets.search');
 
         Route::get('/admin/users', [AdminUsersController::class, 'index'])->name('admin.users');
+        Route::get('/admin/users/create', [AdminUsersController::class, 'create'])->name('admin.users.create');
+        Route::post('/admin/users/create/store', [AdminUsersController::class, 'store'])->name('admin.users.store');
 
         Route::get('/admin/department', [AdminDepartmentController::class, 'index'])->name('admin.department');
         Route::get('/admin/department/create', [AdminDepartmentController::class, 'create'])->name('admin.department.create');

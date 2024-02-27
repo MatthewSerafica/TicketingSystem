@@ -24,7 +24,6 @@ class ServiceReport extends Model
 
     protected $fillable = [
         'service_id',
-        'technicians_id',
         'date_started',
         'time_started',
         'ticket_number',

@@ -22,6 +22,7 @@ class Employee extends Model
         'employee_id',
         'user_id',
         'department',
+        'office',
         'made_ticket'
     ];
 
