@@ -6,6 +6,10 @@
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <H1 class="fw-bold">View All Departments</H1>
           <p class="fs-5"> Manage all Departments</p>
+
+          <Link :href="route('admin.department.create')" class="btn btn-tickets btn-primary py-2 px-5">Add Department
+          </Link>
+          
           
         </div>
         <div class="input-group mt-3 mb-4">
@@ -16,10 +20,6 @@
       </div>
 
        <div class="w-75">
-        <div v-if="departments.data.length" class="flex justify-center w-full mt-6">
-            <Pagination :links="departments.links" :key="'departments'"/>
-            <br>
-        </div>
         <table class="table table-striped border border-secondary-subtle">
           <thead>
             <tr class="text-start">
@@ -38,6 +38,10 @@
             </tr>
           </tbody>
         </table>
+        <div v-if="departments.data.length" class="flex justify-center w-full mt-6">
+            <Pagination :links="departments.links" :key="'departments'"/>
+            <br>
+        </div>
       </div> 
 
     </div>
@@ -47,6 +51,7 @@
 import Pagination from "@/Components/Pagination.vue";
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import moment from "moment";
+import { Link, router, useForm } from "@inertiajs/vue3";
 import { ref, computed } from 'vue'; 
 
 const props = defineProps({

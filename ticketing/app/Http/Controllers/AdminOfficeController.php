@@ -14,4 +14,29 @@ class AdminOfficeController extends Controller
             'offices' => $offices,
         ]);
     }
+
+    public function create()
+    {
+        $offices = Office::get();
+        return inertia('Admin/Office/Create', [
+            'offices' => $offices,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+
+        $request->validate([
+            'office' => 'required',
+        ]);
+
+
+        $officeData = [
+            'office' => $request->office,
+        ];
+
+        Office::create($officeData);
+
+        return redirect()->to('/admin/office')->with('success', 'Office Created');
+    }
 }

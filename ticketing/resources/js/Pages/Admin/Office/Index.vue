@@ -6,6 +6,8 @@
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <H1 class="fw-bold">View All Offices</H1>
           <p class="fs-5"> Manage all Offices</p>
+          <Link :href="route('admin.office.create')" class="btn btn-tickets btn-primary py-2 px-5">Add Office
+          </Link>
         </div>
         <div class="input-group mt-3 mb-4">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
@@ -48,6 +50,7 @@
 import pagination from "@/Components/Pagination.vue";
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import moment from "moment";
+import { Link, router, useForm } from "@inertiajs/vue3";
 import { ref, computed } from 'vue'; 
 
 const props = defineProps({
