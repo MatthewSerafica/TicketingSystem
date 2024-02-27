@@ -103,14 +103,23 @@ class AdminTicketController extends Controller
     {
         $request->validate([
             'status' => 'required',
+            'old_status' => 'required',
         ]);
 
         $ticket = Ticket::where('ticket_number', $ticket_id)->first();
         $employee = Employee::where('employee_id', $ticket->employee)->with('user')->first();
         $ticket->status = $request->status;
-        if ($ticket->status == 'Resolved') {
-            $ticket->resolved_at = now();
-            $employee->update(['made_ticket' => $employee->made_ticket - 1]);
+        if ($ticket->status == 'Resolved' && $request->old_status != 'Resolved') {
+            if ($employee->made_ticket > 0) {
+                $ticket->resolved_at = now();
+                $employee->update(['made_ticket' => $employee->made_ticket - 1]);
+            } else {
+                $ticket->resolved_at = now();
+                $employee->update(['made_ticket' => 0]);
+            }
+        } else if ($request->old_status == 'Resolved' && $ticket->status != 'Resolved') {
+            $ticket->resolved_at = null;
+            $employee->update(['made_ticket' => $employee->made_ticket + 1]);
         } else {
             $ticket->resolved_at = null;
         }

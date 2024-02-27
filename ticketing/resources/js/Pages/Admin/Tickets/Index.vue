@@ -25,47 +25,44 @@
       </div>
 
       <div>
-        <table class="table table-hover border border-secondary-subtle shadow" style="max-width: 110rem;">
+        <table class="table table-hover shadow custom-rounded-table" style="max-width: 110rem;">
           <thead>
             <tr class="text-start">
-              <th class="text-center">Ticket No</th>
-              <th>Date Issued</th>
-              <th class="text-center">RR No</th>
-              <th class="text-center">MS No</th>
-              <th class="text-center">RS No</th>
-              <th>Employee</th>
-              <th>Office/Dept.</th>
-              <th>Request</th>
-              <th>Service</th>
-              <th>Technician</th>
-              <th class="text-center">SR No</th>
-              <th>Date Resolved</th>
-              <th>Remarks</th>
-              <th class="text-center">Status</th>
+              <th class="text-center text-muted">Ticket No</th>
+              <th class="text-muted">Date Issued</th>
+              <th class="text-center text-muted">RR No</th>
+              <th class="text-center text-muted">MS No</th>
+              <th class="text-center text-muted">RS No</th>
+              <th class="text-muted">Employee</th>
+              <th class="text-muted">Office/Dept.</th>
+              <th class="text-muted">Request</th>
+              <th class="text-muted">Service</th>
+              <th class="text-muted">Technician</th>
+              <th class="text-center text-muted">SR No</th>
+              <th class="text-muted">Date Resolved</th>
+              <th class="text-muted">Remarks</th>
+              <th class="text-center text-muted">Status</th>
             </tr>
           </thead>
           <tbody class="">
             <tr v-for="ticket in tickets" :key="ticket.ticket_number" class="align-middle">
               <td class="text-center">{{ ticket.ticket_number }}</td>
               <td class="text-start">{{ formatDate(ticket.created_at) }}</td>
-              <td class="text-center" style="max-width: 60px;"
-                @click="showRRInput(ticket.rr_no, ticket.ticket_number)">
+              <td class="text-center" style="max-width: 60px;" @click="showRRInput(ticket.rr_no, ticket.ticket_number)">
                 <span v-if="!selectedRRInput || selectedRRInput !== ticket.rr_no">{{ ticket.rr_no }}</span>
                 <input type="text" v-if="selectedRow === ticket.ticket_number && selectedRRInput === ticket.rr_no"
                   v-model="editedRR[ticket.rr_no]" @blur="updateRR(ticket.rr_no, ticket.ticket_number)"
                   @keyup.enter="updateRR(ticket.rr_no, ticket.ticket_number)"
                   class="w-100 rounded border border-secondary-subtle text-center">
               </td>
-              <td class="text-center" style="max-width: 60px;"
-                @click="showMSInput(ticket.ms_no, ticket.ticket_number)">
+              <td class="text-center" style="max-width: 60px;" @click="showMSInput(ticket.ms_no, ticket.ticket_number)">
                 <span v-if="!selectedMSInput || selectedMSInput !== ticket.ms_no">{{ ticket.ms_no }}</span>
                 <input type="text" v-if="selectedRow === ticket.ticket_number && selectedMSInput === ticket.ms_no"
                   v-model="editedMS[ticket.ms_no]" @blur="updateMS(ticket.ms_no, ticket.ticket_number)"
                   @keyup.enter="updateMS(ticket.ms_no, ticket.ticket_number)"
                   class="w-100 rounded border border-secondary-subtle text-center">
               </td>
-              <td class="text-center" style="max-width: 60px;"
-                @click="showRSInput(ticket.rs_no, ticket.ticket_number)">
+              <td class="text-center" style="max-width: 60px;" @click="showRSInput(ticket.rs_no, ticket.ticket_number)">
                 <span v-if="!selectedRSInput || selectedRSInput !== ticket.rs_no">{{ ticket.rs_no }}</span>
                 <input type="text" v-if="selectedRow === ticket.ticket_number && selectedRSInput === ticket.rs_no"
                   v-model="editedRS[ticket.rs_no]" @blur="updateRS(ticket.rs_no, ticket.ticket_number)"
@@ -73,11 +70,12 @@
                   class="w-100 rounded border border-secondary-subtle text-center">
               </td>
               <td class="text-start">{{ ticket.employee.user.name }}</td>
-              <td class="text-start text-break" style="max-width: 10rem;">{{ ticket.employee.department }} - {{ ticket.employee.office }}</td>
+              <td class="text-start text-break" style="max-width: 10rem;">{{ ticket.employee.department }} - {{
+                ticket.employee.office }}</td>
               <td class="text-start text-truncate" style="max-width: 130px;">{{ ticket.description }}</td>
               <td class="text-start">
                 <div class="btn-group">
-                  <button type="button" class="btn">{{ ticket.service ? ticket.service : 'Unassigned' }}</button>
+                  <button type="button" class="btn text-start" style="width: 12rem;">{{ ticket.service ? ticket.service : 'Unassigned' }}</button>
                   <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
                     aria-expanded="false" data-bs-reference="parent">
                     <span class="visually-hidden">Toggle Dropdown</span>
@@ -92,7 +90,7 @@
               </td>
               <td class="text-start">
                 <div class="btn-group">
-                  <button type="button" class="btn">{{ ticket.technician ? ticket.technician.user.name :
+                  <button type="button" class="btn text-start"  style="width: 10rem;">{{ ticket.technician ? ticket.technician.user.name :
                     'Unassigned' }}</button>
                   <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
                     aria-expanded="false" data-bs-reference="parent">
@@ -106,8 +104,7 @@
                   </ul>
                 </div>
               </td>
-              <td class="text-center" style="max-width: 100px;"
-                @click="showSRInput(ticket.sr_no, ticket.ticket_number)">
+              <td class="text-center" style="max-width: 100px;" @click="showSRInput(ticket.sr_no, ticket.ticket_number)">
                 <span v-if="!selectedSRInput || selectedSRInput !== ticket.sr_no">{{ ticket.sr_no }}</span>
                 <input type="text" v-if="selectedRow === ticket.ticket_number && selectedSRInput === ticket.sr_no"
                   v-model="editedSR[ticket.sr_no]" @blur="updateSR(ticket.sr_no, ticket.ticket_number)"
@@ -120,19 +117,19 @@
               </td>
               <td class="text-start text-break" style="max-width: 120px;">{{ ticket.remarks ? ticket.remarks :
                 'N/A' }}</td>
-              <td class="text-end">
+              <td class="text-start">
                 <div class="btn-group">
-                  <button type="button" :class="getButtonClass(ticket.status)">{{ ticket.status }}</button>
+                  <button type="button" :class="getButtonClass(ticket.status)" class="text-start" style="width: 5rem;">{{ ticket.status }}</button>
                   <button type="button" :class="getButtonClass(ticket.status)"
                     class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
                     data-bs-reference="parent">
                     <span class="visually-hidden">Toggle Dropdown</span>
                   </button>
                   <ul class="dropdown-menu">
-                    <li @click="updateStatus(ticket.ticket_number, 'New')" class="btn dropdown-item">New</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Pending')" class="btn dropdown-item">Pending</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Ongoing')" class="btn dropdown-item">Ongoing</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Resolved')" class="btn dropdown-item">Resolved</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'New', ticket.status)" class="btn dropdown-item">New</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Pending', ticket.status)" class="btn dropdown-item">Pending</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Ongoing', ticket.status)" class="btn dropdown-item">Ongoing</li>
+                    <li @click="updateStatus(ticket.ticket_number, 'Resolved', ticket.status)" class="btn dropdown-item">Resolved</li>
                   </ul>
                 </div>
               </td>
@@ -277,10 +274,11 @@ const updateService = (ticket_id, service) => {
   form.put(route('admin.tickets.update.service', { ticket_id: ticket_id }));
 }
 
-const updateStatus = (ticket_id, status) => {
+const updateStatus = (ticket_id, status, old_status) => {
   const form = useForm({
     ticket_id: ticket_id,
-    status: status
+    status: status,
+    old_status: old_status,
   });
 
   form.put(route('admin.tickets.update.status', { ticket_id: ticket_id }));
@@ -390,4 +388,11 @@ const updateSR = async (srNo, ticket_id) => {
 
 .btn-options {
   width: 100px;
-}</style>
+}
+
+.custom-rounded-table {
+  border-radius: 10px;
+  /* Adjust the value to your preference */
+  /* Ensure rounded corners are visible */
+}
+</style>
