@@ -50,11 +50,23 @@
           </thead>
           <tbody v-if="!isLoading">
             <tr v-for="user in users.data" :key="user.id">
-              <td class="text-center py-3">{{ user.id }}</td>
-              <td class="text-start py-3">{{ user.name }}</td>
-              <td class="text-start py-3">{{ user.email }}</td>
-              <td class="text-start py-3">{{ user.user_type }}</td>
-              <td class="text-start py-3">{{ formatDate(user.created_at) }}</td>
+              <td class="text-center py-3">
+                <Link :href="route('admin.users.show', user.id)" class="btn">
+                {{ user.id }}
+                </Link>
+              </td>
+              <td class="text-start py-3">
+                <Link :href="route('admin.users.show', user.id)" class="btn">{{ user.name }}</Link>
+              </td>
+              <td class="text-start py-3">
+                <Link :href="route('admin.users.show', user.id)" class="btn">{{ user.email }}</Link>
+              </td>
+              <td class="text-start py-3">
+                <Link :href="route('admin.users.show', user.id)" class="btn">{{ user.user_type }}</Link>
+              </td>
+              <td class="text-start py-3">
+                <Link :href="route('admin.users.show', user.id)" class="btn">{{ formatDate(user.created_at) }}</Link>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -201,5 +213,4 @@ const formatDate = (date) => {
 
 .custom-rounded-table {
   border-radius: 10px;
-}
-</style>
+}</style>

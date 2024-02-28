@@ -93,14 +93,25 @@ class AdminUsersController extends Controller
         return redirect(route('admin.users'))->with('success', 'User created')->with('message', $request->user_type . ' ' . $request->name . ' account has been created!');
     }
 
-    public function edit($id)
+    public function show($id)
     {
-        // Add logic here to retrieve user data for editing
+        $user = User::where('id', $id)->with('employee', 'technician')->firstOrFail();;
+        return inertia('Admin/Users/Show', [
+            'user' => $user,
+        ]);
     }
 
-    public function update(Request $request, $id)
+    public function name(Request $request, $id)
     {
-        // Add logic here to update user data
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $user = User::where('id', $id)->first();
+        $old_name = $user->name;
+        $user->name = $request->name;
+        $user->save();
+        return redirect()->back()->with('success', 'Name Update!')->with('message', $old_name . ' is updated to ' . $request->name);
     }
 
     public function destroy($id)

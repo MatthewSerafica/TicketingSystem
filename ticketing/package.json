@@ -18,9 +18,11 @@
         "@popperjs/core": "^2.11.8",
         "alpinejs": "^3.13.5",
         "bootstrap": "^5.3.3",
+        "chart.js": "^4.4.1",
         "lodash": "^4.17.21",
         "moment": "^2.30.1",
         "vue": "^3.4.20",
+        "vue-chartjs": "^3.5.1",
         "ziggy": "^2.4.0"
     }
 }
