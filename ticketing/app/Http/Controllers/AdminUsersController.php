@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+
 
 use App\Models\Department;
 use App\Models\Employee;
@@ -108,18 +111,68 @@ class AdminUsersController extends Controller
     }
 }
 
-    public function edit($id)
+    public function show($id)
     {
-        // Add logic here to retrieve user data for editing
+        $user = User::where('id', $id)->with('employee', 'technician')->firstOrFail();;
+        return inertia('Admin/Users/Show', [
+            'user' => $user,
+        ]);
     }
 
-    public function update(Request $request, $id)
+    public function name(Request $request, $id)
     {
-        // Add logic here to update user data
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $user = User::where('id', $id)->first();
+        $old_name = $user->name;
+        $user->name = $request->name;
+        $user->save();
+        return redirect()->back()->with('success', 'Name Update!')->with('message', $old_name . ' is updated to ' . $request->name);
     }
 
     public function destroy($id)
     {
         // Add logic here to delete user
     }
+
+    public function password()
+    {
+        $user = Auth::user();
+        
+        return inertia('Admin/Users/Change', [
+            'user' => $user,
+        ]);
+    }
+
+    public function changePassword(Request $request, $userId)
+{
+    $request->validate([
+        'old_password' => 'required',
+        'password' => 'required|min:8',
+    ]);
+
+    $user = User::findOrFail($userId);
+
+    // Verify the old password
+    if (!Hash::check($request->old_password, $user->password)) {
+        return redirect()->back()->withErrors(['old_password' => 'The old password is incorrect.'])->withInput();
+    }
+
+    $newPassword = $request->password;
+
+    // Check if the provided password is already hashed
+    if (!Hash::needsRehash($newPassword)) {
+        // If not hashed, hash the password
+        $newPassword = Hash::make($newPassword);
+    }
+
+    // Update the user's password in the database
+    $user->password = $newPassword;
+    $user->save();
+
+    return redirect()->back()->with('success', 'Password changed successfully');
+}
+
 }
