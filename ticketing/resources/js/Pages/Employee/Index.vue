@@ -9,7 +9,9 @@
           <Link :href="route('employee.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket</Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options" @click="handleAllButtonClick"></button>
-            <Button :name="'Cancelled'" :color="'secondary'" class="btn-options" @click="handleCancelledButtonClick"></button>
+            <Button :name="'Pending'" :color="'secondary'" class="btn-options" @click="handlePendingButtonClick"></button>
+            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options" @click="handleOngoingButtonClick"></button>
+            <Button :name="'Resolved'" :color="'secondary'" class="btn-options" @click="handleResolvedButtonClick"></button>
           </div>
         </div>
         <div class="input-group mt-3 mb-4">
@@ -62,12 +64,12 @@ const props = defineProps({
 
 const selectedStatus = ref('all');
 const filteredTickets = ref(props.tickets);
+const tickets = ref(props.tickets);
 
 let search = ref('');
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
 let timeoutId = null;
-const tickets = ref(props.tickets);
 
 const fetchData = () => {
   router.get(
@@ -85,20 +87,32 @@ const fetchData = () => {
   )
 }
 
+//Button Filtering Actions
 const handleAllButtonClick = () => {
   console.log("Handle All Button Click");
   selectedStatus.value = 'all';
-  // Filter tickets to include all statuses
   filteredTickets.value = tickets.value;
 };
 
-const handleCancelledButtonClick = () => {
+const handlePendingButtonClick = () => {
   console.log("Handle Cancelled Button Click");
-  selectedStatus.value = 'cancelled';
-  // Filter tickets to include only "Cancelled" statuses
-  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'Cancel');
+  selectedStatus.value = 'pending';
+  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'Pending');
 };
 
+const handleOngoingButtonClick = () => {
+  console.log("Handle Cancelled Button Click");
+  selectedStatus.value = 'ongoing';
+  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'Ongoing');
+};
+
+const handleResolvedButtonClick = () => {
+  console.log("Handle Cancelled Button Click");
+  selectedStatus.value = 'resolved';
+  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'Resolved');
+};
+
+//Sorting
 const resetSorting = () => {
   console.log("Reset Sorting");
   sortColumn.value = "ticket_number"
