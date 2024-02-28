@@ -6,7 +6,11 @@
         <h2>SERVICE REPORT FORM</h2>
         {{ service_report }}
 
-        <div class="placeholder-text">{{ new_service_id || 'SR-0001' }}</div>
+        <div class="input-container">
+            <label for="newServiceId">Service ID:</label>
+            <input type="text" id="service_id" v-model="form.service_id">
+            <span v-if="form.errors.service_id" class="error-message">{{ form.errors.service_id }}</span>
+        </div>
 
         <div class="row-input-container">
           <div class="input-container">
@@ -118,10 +122,41 @@ const form = useForm({
 });
 
 
-const create = () => {
+/* const create = () => {
+    form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false });
+} */
+
+
+
+const create = async () => {
+    const is_validserviceid = await validate_service_id(form.service_id);
+
+    if (!is_validserviceid) {
+        form.errors.service_id = 'Invalid or duplicate service id';
+        return;
+    }
+
     form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false });
 }
 
+const validate_service_id = async (service_id) => {
+    const service_id_regex = /^SR-B \d{4}$/;
+
+    if (!service_id_regex.test(service_id)) {
+        console.error('Invalid service_id format');
+        return false;
+    }
+
+    const response = await fetch(`/check-service-id/${service_id}`);
+    const data = await response.json();
+
+    if (data.exists) {
+        console.error('Service id already exists');
+        return false;
+    }
+
+    return true;
+}
 </script>
 
 <style scoped>
