@@ -61,6 +61,11 @@
             <input type="time" id="timeDone" v-model="form.time_done" class="long-input2">
           </div>
         </div>
+        
+        <div class="input-container">
+            <label for="remarks">Remarks</label>
+            <input type="text" id="remarks" v-model="remarks" class="long-input1">
+            
 
         <div class="container">
           <div class="row justify-content-center">
@@ -72,6 +77,7 @@
             </div>
           </div>
         </div>
+      </div>
 
         
       </div>

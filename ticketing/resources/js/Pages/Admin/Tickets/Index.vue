@@ -4,6 +4,9 @@
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+          
+         <Toast></Toast>
+
           <h1 class="fw-bold">View All Tickets</h1>
           <p class="fs-5"> Manage and Track all TMDD tickets</p>
           <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket
@@ -15,6 +18,7 @@
             <Button :name="'Resolved'" :color="'secondary'" class="btn-options"
               @click="filterTickets('resolved')"></Button>
           </div>
+          
 
         </div>
         <div class="input-group mt-3 mb-4">
@@ -154,20 +158,23 @@
                     <span class="visually-hidden">Toggle Dropdown</span>
                   </button>
                   <ul class="dropdown-menu">
-                    <li @click="updateStatus(ticket.ticket_number, 'New', ticket.status)" class="btn dropdown-item">New
+                    <li @click="updateStatus(ticket.ticket_number, 'New', ticket.status, ticket.sr_no)" class="btn dropdown-item">New
                     </li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Pending', ticket.status)" class="btn dropdown-item">
+                    <li @click="updateStatus(ticket.ticket_number, 'Pending', ticket.status, ticket.sr_no)" class="btn dropdown-item">
                       Pending</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Ongoing', ticket.status)" class="btn dropdown-item">
+                    <li @click="updateStatus(ticket.ticket_number, 'Ongoing', ticket.status, ticket.sr_no)" class="btn dropdown-item">
                       Ongoing</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Resolved', ticket.status)" class="btn dropdown-item">
+                    <li @click="updateStatus(ticket.ticket_number, 'Resolved', ticket.status, ticket.sr_no)" class="btn dropdown-item">
                       Resolved</li>
+                      
                   </ul>
                 </div>
               </td>
             </tr>
           </tbody>
         </table>
+       
+
         <div v-if="tickets.data.length" class="flex justify-center w-full mt-6">
           <Pagination :links="tickets.links" :key="'tickets'" />
           <br>
@@ -183,6 +190,14 @@ import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link, router, useForm } from "@inertiajs/vue3";
 import moment from "moment";
 import { nextTick, reactive, ref, watch } from "vue";
+import Toast from '@/Components/Toast.vue';
+
+let showToast = ref(false);
+
+let errorMessage = ref('');
+watch(errorMessage, (newValue) => {
+  showToast.value = newValue !== '';
+})
 
 const props = defineProps({
   tickets: Object,
@@ -322,7 +337,18 @@ const updateService = (ticket_id, service) => {
   form.put(route('admin.tickets.update.service', { ticket_id: ticket_id }));
 }
 
-const updateStatus = (ticket_id, status, old_status) => {
+const updateStatus = (ticket_id, status, old_status, srNo) => {
+  if (status === 'Resolved') {
+    // Check if the ticket has a Service Request (SR) number
+    if (!srNo) {
+      errorMessage.value = "SR No is required for Resolved status.";
+      // Display an error message 
+      return;
+    }
+  }
+
+  errorMessage.value = '';
+
   const form = useForm({
     ticket_id: ticket_id,
     status: status,
