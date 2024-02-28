@@ -44,6 +44,8 @@ class AdminTicketController extends Controller
                     $query->where('status', 'like', '%' . $ticketFilter . '%');
                 } elseif ($ticketFilter === 'pending') {
                     $query->where('status', 'like', '%' . $ticketFilter . '%');
+                } elseif ($ticketFilter === 'ongoing') {
+                    $query->where('status', 'like', '%' . $ticketFilter . '%');
                 }
             })
             ->whereYear('created_at', Carbon::now()->year)
