@@ -1,6 +1,19 @@
 <template>
   <div>
     <Header></Header>
+    <div class="position-absolute end-0">
+      <Toast
+        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showSuccessToast"
+        :success="page.props.flash.success" :message="page.props.flash.message" @close="handleClose">
+      </Toast>
+
+      <Toast
+        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showErrorToast"
+        :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
+      </Toast>
+    </div>
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
@@ -46,8 +59,8 @@
           </tbody>
         </table>
         <div v-if="users.data.length" class="flex justify-center w-full mt-6">
-            <Pagination :links="users.links" :key="'users'"/>
-            <br>
+          <Pagination :links="users.links" :key="'users'" />
+          <br>
         </div>
       </div>
     </div>
@@ -58,9 +71,30 @@
 import Button from '@/Components/Button.vue';
 import Pagination from '@/Components/Pagination.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { router, Link } from '@inertiajs/vue3';
+import Toast from '@/Components/Toast.vue';
+import { router, Link, usePage } from '@inertiajs/vue3';
 import moment from "moment";
-import { defineProps, nextTick, reactive, ref, watch } from 'vue';
+import Alpine from 'alpinejs';
+import { defineProps, nextTick, reactive, ref, watch, watchEffect } from 'vue';
+
+Alpine.start()
+
+const page = usePage();
+
+let showSuccessToast = ref(false);
+let showErrorToast = ref(false);
+
+watchEffect(() => {
+  showSuccessToast.value = !!page.props.flash.success;
+  showErrorToast.value = !!page.props.flash.error;
+})
+
+const handleClose = () => {
+  page.props.flash.success = null;
+  page.props.flash.error = null;
+  showSuccessToast.value = false;
+  showErrorToast.value = false;
+}
 
 const props = defineProps({
   users: Object,
@@ -164,6 +198,7 @@ const formatDate = (date) => {
 .btn-options {
   width: 100px;
 }
+
 .custom-rounded-table {
   border-radius: 10px;
 }

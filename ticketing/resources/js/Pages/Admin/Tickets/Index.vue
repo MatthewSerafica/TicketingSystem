@@ -15,9 +15,9 @@
         :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
       </Toast>
     </div>
-
-
+    <!--Main Content-->
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
+      <!--CTAs and Search-->
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Tickets</h1>
@@ -32,8 +32,6 @@
             <Button :name="'Resolved'" :color="'secondary'" class="btn-options"
               @click="filterTickets('resolved')"></Button>
           </div>
-
-
         </div>
         <div class="input-group mt-3 mb-4">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
@@ -41,7 +39,7 @@
             placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
-
+      <!--Data Table-->
       <div class="table-responsive">
         <table class="table table-hover shadow custom-rounded-table" style="max-width: 110rem;">
           <thead>
@@ -191,8 +189,7 @@
             </tr>
           </tbody>
         </table>
-
-
+        <!--Pagination-->
         <div v-if="tickets.data.length" class="flex justify-center w-full mt-6">
           <Pagination :links="tickets.links" :key="'tickets'" />
           <br>

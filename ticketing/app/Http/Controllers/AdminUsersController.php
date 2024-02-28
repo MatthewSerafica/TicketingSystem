@@ -90,7 +90,7 @@ class AdminUsersController extends Controller
             ]);
         }
         DB::commit();
-        return redirect(route('admin.users'))->with('success', 'User created!');
+        return redirect(route('admin.users'))->with('success', 'User created')->with('message', $request->user_type . ' ' . $request->name . ' account has been created!');
     }
 
     public function edit($id)
