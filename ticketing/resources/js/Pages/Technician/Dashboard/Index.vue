@@ -6,10 +6,10 @@
         <div>
           <h2 class="fw-semibold">Recent Tickets</h2>
           <div class="d-flex gap-2">
-            <Link class="text-decoration-none" :href="route('admin.tickets.create')">
+            <Link class="text-decoration-none" :href="route('technician.tickets.create')">
             <Button :name="'Create'" :color="'primary'" class="btn-width"></Button>
             </Link>
-            <Link class="text-decoration-none" :href="route('admin.tickets')">
+            <Link class="text-decoration-none" :href="route('technician.tickets')">
             <Button :name="'View All'" :color="'secondary'" class="btn-width"></Button>
             </Link>
           </div>
