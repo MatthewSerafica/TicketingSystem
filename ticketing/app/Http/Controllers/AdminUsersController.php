@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+
 
 use App\Models\Department;
 use App\Models\Employee;
@@ -12,6 +15,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rule;
 
 class AdminUsersController extends Controller
 {
@@ -62,16 +66,23 @@ class AdminUsersController extends Controller
         DB::beginTransaction();
         $request->validate([
             'user_type' => 'required',
-            'name' => 'required',
-            'email' => 'required',
+            'name' => ['required', 'regex:/^\S+(?: \S+)+$/'],
+            'email' => ['required', Rule::unique('users')],
             'password' => 'required',
             'department' => 'nullable',
             'office' => 'nullable',
             'assigned' => 'nullable',
         ]);
 
+        try {
+            $nameParts = explode(' ', $request->name, 2);
+            $firstName = $nameParts[0];
+            $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
+
         $user = User::create([
             'name' => $request->name,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
             'user_type' => $request->user_type,
             'email' => $request->email,
             'password' => $request->password,
@@ -90,8 +101,15 @@ class AdminUsersController extends Controller
             ]);
         }
         DB::commit();
-        return redirect(route('admin.users'))->with('success', 'User created')->with('message', $request->user_type . ' ' . $request->name . ' account has been created!');
+        return redirect(route('admin.users'))->with('success', 'User created!');
+    } catch (QueryException $e) {
+        DB::rollback();
+        if($e->errorInfo[1] === 1062) {
+            return redirect()->back()->withInput()->withErrors(['email' => 'The email has already been taken.']);
+        }
+        return redirect()->back()->withInput()->withErrors(['error' => 'An error occurred while creating the user.']);
     }
+}
 
     public function show($id)
     {
@@ -118,4 +136,43 @@ class AdminUsersController extends Controller
     {
         // Add logic here to delete user
     }
+
+    public function password()
+    {
+        $user = Auth::user();
+        
+        return inertia('Admin/Users/Change', [
+            'user' => $user,
+        ]);
+    }
+
+    public function changePassword(Request $request, $userId)
+{
+    $request->validate([
+        'old_password' => 'required',
+        'password' => 'required|min:8',
+    ]);
+
+    $user = User::findOrFail($userId);
+
+    // Verify the old password
+    if (!Hash::check($request->old_password, $user->password)) {
+        return redirect()->back()->withErrors(['old_password' => 'The old password is incorrect.'])->withInput();
+    }
+
+    $newPassword = $request->password;
+
+    // Check if the provided password is already hashed
+    if (!Hash::needsRehash($newPassword)) {
+        // If not hashed, hash the password
+        $newPassword = Hash::make($newPassword);
+    }
+
+    // Update the user's password in the database
+    $user->password = $newPassword;
+    $user->save();
+
+    return redirect()->back()->with('success', 'Password changed successfully');
+}
+
 }

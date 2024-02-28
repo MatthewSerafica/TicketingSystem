@@ -87,7 +87,13 @@
               </td>
               <td class="text-start"><span class="fw-medium">{{ ticket.employee.user.name }}</span><br><small>{{
                 ticket.employee.department }} - {{ ticket.employee.office }}</small></td>
-              <td class="text-start text-truncate" style="max-width: 130px;">{{ ticket.description }}</td>
+
+<td class="text-start text-truncate ticket-description" style="max-width: 130px;" data-hover-text="{{ ticket.description }}">
+  <span class="d-inline-block" tabindex="0" :title="ticket.description">
+    {{ ticket.description }}
+  </span>
+</td>
+
               <td class="text-start">
                 <div class="btn-group">
                   <button type="button" class="btn text-start" style="width: 12rem;">{{ ticket.service ? ticket.service :
@@ -540,4 +546,22 @@ const getComplexityClass = (complexity) => {
 .custom-rounded-table {
   border-radius: 10px;
 }
+
+
+.ticket-description {
+    position: relative;
+    cursor: default;
+  }
+
+  .ticket-description:hover::after {
+    content: attr(data-hover-text);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: pink;
+    color: red;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 9999;
+  }
 </style>
