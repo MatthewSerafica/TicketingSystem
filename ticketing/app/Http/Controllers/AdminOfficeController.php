@@ -37,7 +37,7 @@ class AdminOfficeController extends Controller
 
         Office::create($officeData);
 
-        return redirect()->to('/admin/office')->with('success', 'Office Created');
+        return redirect()->to('/admin/office')->with('success', 'Office Created!')->with('message', $request->office . ' is added to the offices!');
     }
 
     public function update(Request $request, $office_id)
@@ -47,10 +47,11 @@ class AdminOfficeController extends Controller
         ]);
 
         $office = Office::findOrFail($office_id);
+        $old_office = $office->office;
         $office->office = $request->office;
         $office->save();
 
-        return redirect()->back()->with('success', 'Office updated successfully');
+        return redirect()->back()->with('success', 'Office Updated!')->with('message', $old_office . ' is updated to ' . $request->office);
     }
 
 }
