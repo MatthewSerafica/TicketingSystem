@@ -15,6 +15,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rule;
 
 class AdminUsersController extends Controller
 {
@@ -65,16 +66,23 @@ class AdminUsersController extends Controller
         DB::beginTransaction();
         $request->validate([
             'user_type' => 'required',
-            'name' => 'required',
-            'email' => 'required',
+            'name' => ['required', 'regex:/^\S+(?: \S+)+$/'],
+            'email' => ['required', Rule::unique('users')],
             'password' => 'required',
             'department' => 'nullable',
             'office' => 'nullable',
             'assigned' => 'nullable',
         ]);
 
+        try {
+            $nameParts = explode(' ', $request->name, 2);
+            $firstName = $nameParts[0];
+            $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
+
         $user = User::create([
             'name' => $request->name,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
             'user_type' => $request->user_type,
             'email' => $request->email,
             'password' => $request->password,
@@ -94,7 +102,14 @@ class AdminUsersController extends Controller
         }
         DB::commit();
         return redirect(route('admin.users'))->with('success', 'User created!');
+    } catch (QueryException $e) {
+        DB::rollback();
+        if($e->errorInfo[1] === 1062) {
+            return redirect()->back()->withInput()->withErrors(['email' => 'The email has already been taken.']);
+        }
+        return redirect()->back()->withInput()->withErrors(['error' => 'An error occurred while creating the user.']);
     }
+}
 
     public function edit($id)
     {

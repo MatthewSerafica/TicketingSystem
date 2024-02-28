@@ -21,24 +21,25 @@
                         <div class="d-flex flex-column">
                             <label for="name" class="fw-semibold">Name</label>
                             <input id="name" class="form-control rounded border-secondary-subtle" type="text"
-                                placeholder="First and Last Name..." v-model="form.name" />
+                                placeholder="First and Last Name..." v-model="form.name" required />
                         </div>
                         <div class="d-flex flex-column">
                             <label for="email" class="fw-semibold">Email</label>
                             <input id="email" class="form-control h-100 rounded border-secondary-subtle" type="email"
                                 placeholder="Enter Email..." v-model="form.email" />
+                                <div v-if="form.errors.email">{{ form.errors.email }}</div>
                         </div>
                     </div>
                     <div class="d-flex flex-row gap-3 justify-content-center">
                         <div class="d-flex flex-column">
                             <label for="password" class="fw-semibold">Password</label>
                             <input id="password" class="form-control rounded border-secondary-subtle" type="password"
-                                placeholder="Enter Password..." v-model="form.password" />
+                                placeholder="Enter Password..." v-model="form.password" required/>
                         </div>
                         <div class="d-flex flex-column">
                             <label for="conf" class="fw-semibold">Confirm Password</label>
                             <input id="conf" class="form-control h-100 rounded border-secondary-subtle" type="password"
-                                placeholder="Confirm Password..." v-model="form.conf" />
+                                placeholder="Confirm Password..." v-model="form.conf" required/>
                         </div>
                     </div>
                     <div v-if="form.user_type === 'employee'" class="d-flex flex-row gap-3 justify-content-center">
@@ -115,23 +116,51 @@ const form = useForm({
     assigned: null,
 })
 
+const create = async () => {
+    if (form.password !== form.conf) {
+        alert("Passwords don't match!");
+        return; 
+    }
 
-const create = () => form.post(route('admin.users.store'), { preserveScroll: false, preserveState: false })
+    try {
+        await form.post(route('admin.users.store'), { preserveScroll: false, preserveState: false });
+    } catch (error) {
+        console.error('Error submitting form:', error);
+    }
+};
+
 
 watch(() => form.name, (newValue) => {
-    // Check if the name contains a space
-    const spaceIndex = newValue.indexOf(' ');
+    const trimmedValue = newValue.trim();
+    const spaceIndex = trimmedValue.indexOf(' ');
     if (spaceIndex !== -1) {
-        // Split the name into first and last names
-        const firstName = newValue.substring(0, spaceIndex);
-        const lastName = newValue.substring(spaceIndex + 1);
-        // Update the form fields with first and last names
+        const firstName = trimmedValue.substring(0, spaceIndex);
+        const lastName = trimmedValue.substring(spaceIndex + 1);
         form.firstName = firstName;
         form.lastName = lastName;
     } else {
-        // If no space is found, assume the entire input is the first name
-        form.firstName = newValue;
+        form.firstName = '';
         form.lastName = '';
+    }
+});
+
+
+watch(() => form.email, async (newValue) => {
+    try {
+        if (!newValue.endsWith("@slu.edu.ph")) {
+            form.errors.email = ['Email must end with "@slu.edu.ph"'];
+            return; 
+        }
+
+        const response = await fetch(`/check-email?email=${newValue}`);
+        const data = await response.json();
+        if (data.exists) {
+            form.errors.email = ['This email is already in use.'];
+        } else {
+            form.errors.email = [];
+        }
+    } catch (error) {
+        console.error('Error checking email uniqueness:', error);
     }
 });
 </script>
