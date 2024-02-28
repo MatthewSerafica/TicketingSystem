@@ -133,6 +133,8 @@ class AdminTicketController extends Controller
             new UpdateTicketStatus($ticket)
         );
         $ticket->save();
+
+        return redirect()->back()->with('success', 'Status Update')->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now ' . $request->status);;
     }
 
     public function technician(Request $request, $ticket_id)
@@ -143,8 +145,10 @@ class AdminTicketController extends Controller
 
         $ticket = Ticket::where('ticket_number', $ticket_id)->first();
 
+        $technician = Technician::findOrFail($request->technician_id);
         $ticket->technician = $request->technician_id;
         $ticket->save();
+        return redirect()->back()->with('success', 'Technician Update')->with('message', $technician->user->name . ' is now assigned to Ticket #' . $ticket->ticket_number);
     }
 
     public function service(Request $request, $ticket_id)
@@ -157,6 +161,7 @@ class AdminTicketController extends Controller
 
         $ticket->service = $request->service;
         $ticket->save();
+        return redirect()->back()->with('success', 'Service Update')->with('message', $request->service . ' service is now assigned to Ticket No. ' . $ticket->ticket_number);
     }
 
     public function rr(Request $request, $ticket_id)
@@ -169,6 +174,7 @@ class AdminTicketController extends Controller
 
         $ticket->rr_no = $request->rr_no;
         $ticket->save();
+        return redirect()->back()->with('success', 'Receiving Report Update')->with('message', 'RR No. ' . $request->rr_no . ' is now assigned to Ticket No. ' . $ticket->ticket_number);
     }
     public function ms(Request $request, $ticket_id)
     {
@@ -180,6 +186,7 @@ class AdminTicketController extends Controller
 
         $ticket->ms_no = $request->ms_no;
         $ticket->save();
+        return redirect()->back()->with('success', 'Receiving Report Update')->with('message', 'MS No. ' . $request->ms_no . ' is now assigned to Ticket No. ' . $ticket->ticket_number);
     }
     public function rs(Request $request, $ticket_id)
     {
@@ -191,6 +198,7 @@ class AdminTicketController extends Controller
 
         $ticket->rs_no = $request->rs_no;
         $ticket->save();
+        return redirect()->back()->with('success', 'Receiving Report Update')->with('message', 'RS No. ' . $request->rs_no . ' is now assigned to Ticket No. ' . $ticket->ticket_number);
     }
     public function sr(Request $request, $ticket_id)
     {
@@ -202,7 +210,9 @@ class AdminTicketController extends Controller
 
         $ticket->sr_no = $request->sr_no;
         $ticket->save();
+        return redirect()->back()->with('success', 'Receiving Report Update')->with('message', 'SR No. ' . $request->sr_no . ' is now assigned to Ticket No. ' . $ticket->ticket_number);
     }
+
     public function remark(Request $request, $ticket_id)
     {
         $request->validate([
@@ -213,8 +223,9 @@ class AdminTicketController extends Controller
 
         $ticket->remarks = $request->remark;
         $ticket->save();
+        return redirect()->back()->with('success', 'Receiving Report Update')->with('message', 'Successfuly added remarks to Ticket No. ' . $ticket->ticket_number);
     }
-    
+
     public function complexity(Request $request, $ticket_id)
     {
         $request->validate([
@@ -225,5 +236,6 @@ class AdminTicketController extends Controller
 
         $ticket->complexity = $request->complexity;
         $ticket->save();
+        return redirect()->back()->with('success', 'Receiving Report Update')->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now set as ' . $request->complexity);
     }
 }

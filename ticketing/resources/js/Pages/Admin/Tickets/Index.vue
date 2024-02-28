@@ -1,12 +1,38 @@
 <template>
   <div>
     <Header></Header>
+    <!--Toast Render-->
+    <div class="position-absolute end-0">
+      <Toast
+        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showSuccessToast"
+        :success="page.props.flash.success" :message="page.props.flash.message" @close="handleClose">
+      </Toast>
+
+      <Toast
+        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showErrorToast"
+        :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
+      </Toast>
+    </div>
+
+
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          
-         <Toast></Toast>
-
+          <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="toast-header">
+                <img src="..." class="rounded me-2" alt="...">
+                <strong class="me-auto">Bootstrap</strong>
+                <small>11 mins ago</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+              <div class="toast-body">
+                Hello, world! This is a toast message.
+              </div>
+            </div>
+          </div>
           <h1 class="fw-bold">View All Tickets</h1>
           <p class="fs-5"> Manage and Track all TMDD tickets</p>
           <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket
@@ -18,7 +44,7 @@
             <Button :name="'Resolved'" :color="'secondary'" class="btn-options"
               @click="filterTickets('resolved')"></Button>
           </div>
-          
+
 
         </div>
         <div class="input-group mt-3 mb-4">
@@ -158,22 +184,26 @@
                     <span class="visually-hidden">Toggle Dropdown</span>
                   </button>
                   <ul class="dropdown-menu">
-                    <li @click="updateStatus(ticket.ticket_number, 'New', ticket.status, ticket.sr_no)" class="btn dropdown-item">New
+                    <li @click="updateStatus(ticket.ticket_number, 'New', ticket.status, ticket.sr_no)"
+                      class="btn dropdown-item">New
                     </li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Pending', ticket.status, ticket.sr_no)" class="btn dropdown-item">
+                    <li @click="updateStatus(ticket.ticket_number, 'Pending', ticket.status, ticket.sr_no)"
+                      class="btn dropdown-item">
                       Pending</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Ongoing', ticket.status, ticket.sr_no)" class="btn dropdown-item">
+                    <li @click="updateStatus(ticket.ticket_number, 'Ongoing', ticket.status, ticket.sr_no)"
+                      class="btn dropdown-item">
                       Ongoing</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Resolved', ticket.status, ticket.sr_no)" class="btn dropdown-item">
+                    <li @click="updateStatus(ticket.ticket_number, 'Resolved', ticket.status, ticket.sr_no)"
+                      class="btn dropdown-item">
                       Resolved</li>
-                      
+
                   </ul>
                 </div>
               </td>
             </tr>
           </tbody>
         </table>
-       
+
 
         <div v-if="tickets.data.length" class="flex justify-center w-full mt-6">
           <Pagination :links="tickets.links" :key="'tickets'" />
@@ -186,27 +216,44 @@
 <script setup>
 import Button from '@/Components/Button.vue';
 import Pagination from '@/Components/Pagination.vue';
-import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link, router, useForm } from "@inertiajs/vue3";
-import moment from "moment";
-import { nextTick, reactive, ref, watch } from "vue";
 import Toast from '@/Components/Toast.vue';
+import Header from "@/Pages/Layouts/AdminHeader.vue";
+import { Link, router, useForm, usePage } from "@inertiajs/vue3";
+import Alpine from 'alpinejs';
+import moment from "moment";
+import { nextTick, reactive, ref, watch, watchEffect } from "vue";
 
-let showToast = ref(false);
+// Toast Start
+Alpine.start()
 
-let errorMessage = ref('');
-watch(errorMessage, (newValue) => {
-  showToast.value = newValue !== '';
+const page = usePage();
+
+let showSuccessToast = ref(false);
+let showErrorToast = ref(false);
+
+watchEffect(() => {
+  showSuccessToast.value = !!page.props.flash.success;
+  showErrorToast.value = !!page.props.flash.error;
 })
 
+const handleClose = () => {
+  page.props.flash.success = null;
+  page.props.flash.error = null;
+  showSuccessToast.value = false;
+  showErrorToast.value = false;
+}
+// Toast End
+
+// Define Props
 const props = defineProps({
   tickets: Object,
   technicians: Object,
   filters: Object,
   services: Object,
 });
+// end
 
-
+// Search start
 let search = ref(props.filters.search);
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
@@ -253,7 +300,9 @@ watch(search, () => {
   }
   debouncedFetchData();
 })
+// Search end
 
+// Filter start
 const filter = reactive({
   all: true,
   new: false,
@@ -289,37 +338,9 @@ const filterTickets = async (type) => {
   await nextTick();
   console.log("After filter change:", filter);
 }
+// Filter end
 
-const formatDate = (date) => {
-  return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
-};
-
-const getButtonClass = (status) => {
-  switch (status.toLowerCase()) {
-    case 'new':
-      return 'btn btn-danger';
-    case 'pending':
-      return 'btn btn-warning';
-    case 'ongoing':
-      return 'btn btn-primary';
-    case 'resolved':
-      return 'btn btn-success';
-    default:
-      return 'btn btn-secondary';
-  }
-};
-
-const getComplexityClass = (complexity) => {
-  switch (complexity) {
-    case 'Simple':
-      return 'btn btn-warning';
-    case 'Complex':
-      return 'btn btn-danger';
-    default:
-      return 'btn btn-secondary';
-  }
-};
-
+// Table update start
 const updateTechnician = (ticket_id, technician_id) => {
   const form = useForm({
     technician_id: technician_id,
@@ -339,15 +360,12 @@ const updateService = (ticket_id, service) => {
 
 const updateStatus = (ticket_id, status, old_status, srNo) => {
   if (status === 'Resolved') {
-    // Check if the ticket has a Service Request (SR) number
     if (!srNo) {
-      errorMessage.value = "SR No is required for Resolved status.";
-      // Display an error message 
+      page.props.flash.error = 'Status Update Error'
+      page.props.flash.error_message = 'Please enter a Service Request Number!'
       return;
     }
   }
-
-  errorMessage.value = '';
 
   const form = useForm({
     ticket_id: ticket_id,
@@ -385,7 +403,6 @@ const updateRR = async (rrNo, ticket_id) => {
 
     await form.put(route('admin.tickets.update.rr', { ticket_id: ticket_id }));
 
-    // Reset the state
     selectedRRInput.value = null;
     editedRR[rrNo] = '';
   }
@@ -407,7 +424,6 @@ const updateMS = async (msNo, ticket_id) => {
 
     await form.put(route('admin.tickets.update.ms', { ticket_id: ticket_id }));
 
-    // Reset the state
     selectedMSInput.value = null;
     editedMS[msNo] = '';
   }
@@ -430,7 +446,6 @@ const updateRS = async (rsNo, ticket_id) => {
 
     await form.put(route('admin.tickets.update.rs', { ticket_id: ticket_id }));
 
-    // Reset the state
     selectedRSInput.value = null;
     editedRS[rsNo] = '';
   }
@@ -453,7 +468,6 @@ const updateSR = async (srNo, ticket_id) => {
 
     await form.put(route('admin.tickets.update.sr', { ticket_id: ticket_id }));
 
-    // Reset the state
     selectedSRInput.value = null;
     editedSR[srNo] = '';
   }
@@ -476,9 +490,40 @@ const updateRem = async (remark, ticket_id) => {
 
     await form.put(route('admin.tickets.update.remark', { ticket_id: ticket_id }));
 
-    // Reset the state
     selectedRemarkInput.value = null;
     editedRemark[remark] = '';
+  }
+};
+// Table update end
+
+// Styling and formatting
+const formatDate = (date) => {
+  return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
+};
+
+const getButtonClass = (status) => {
+  switch (status.toLowerCase()) {
+    case 'new':
+      return 'btn btn-danger';
+    case 'pending':
+      return 'btn btn-warning';
+    case 'ongoing':
+      return 'btn btn-primary';
+    case 'resolved':
+      return 'btn btn-success';
+    default:
+      return 'btn btn-secondary';
+  }
+};
+
+const getComplexityClass = (complexity) => {
+  switch (complexity) {
+    case 'Simple':
+      return 'btn btn-warning';
+    case 'Complex':
+      return 'btn btn-danger';
+    default:
+      return 'btn btn-secondary';
   }
 };
 </script>
