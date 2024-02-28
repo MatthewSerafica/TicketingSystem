@@ -19,7 +19,8 @@
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <H1 class="fw-bold">View All Offices</H1>
           <p class="fs-5"> Manage all Offices</p>
-          <Link :href="route('admin.office.create')" class="btn btn-tickets btn-primary py-2 px-5">Add Office
+          <Link :href="route('admin.office.create')">
+            <Button :name="'Add Office'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
           </Link>
         </div>
         <div class="input-group mt-3 mb-4">
@@ -53,7 +54,7 @@
               </td>
               <td class="text-center">{{ formatDate(office.created_at) }}</td>
               <td class="text-center">{{ formatDate(office.updated_at) }}</td>
-              <td><button class="btn btn-danger" @click="showDeleteModal(office.id)">Delete</button></td>
+              <td><Button :name="'Delete'" :color="'danger'"  @click="showDeleteModal(office.id)"></Button></td>
             </tr>
           </tbody>
         </table>
@@ -74,6 +75,7 @@ import { Link, useForm, usePage } from "@inertiajs/vue3";
 import { ref, reactive, watchEffect } from 'vue';
 import Toast from '@/Components/Toast.vue';
 import Alpine from 'alpinejs';
+import Button from '@/Components/Button.vue';
 
 Alpine.start()
 

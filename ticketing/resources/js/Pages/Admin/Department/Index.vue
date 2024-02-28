@@ -20,9 +20,9 @@
           <h1 class="fw-bold">View All Departments</h1>
           <p class="fs-5"> Manage all Departments</p>
 
-          <Link :href="route('admin.department.create')" class="btn btn-tickets btn-primary py-2 px-5">Add Department
+          <Link :href="route('admin.department.create')">
+            <Button :name="'Add Department'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
           </Link>
-
 
         </div>
         <div class="input-group mt-3 mb-4">
@@ -55,7 +55,7 @@
               </td>
               <td class="text-center">{{ formatDate(department.created_at) }}</td>
               <td class="text-center">{{ formatDate(department.updated_at) }}</td>
-              <td><Button :name="'Delete'" :color="'danger'" @click="showModal">Delete</button></td>
+              <td><Button :name="'Delete'" :color="'danger'" @click="showModal">Delete</Button></td>
             </tr>
           </tbody>
         </table>
