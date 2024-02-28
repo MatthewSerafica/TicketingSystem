@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
@@ -79,37 +80,37 @@ class AdminUsersController extends Controller
             $firstName = $nameParts[0];
             $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
 
-        $user = User::create([
-            'name' => $request->name,
-            'first_name' => $firstName,
-            'last_name' => $lastName,
-            'user_type' => $request->user_type,
-            'email' => $request->email,
-            'password' => $request->password,
-        ]);
+            $user = User::create([
+                'name' => $request->name,
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'user_type' => $request->user_type,
+                'email' => $request->email,
+                'password' => $request->password,
+            ]);
 
-        if ($request->user_type == 'employee') {
-            Employee::create([
-                'user_id' => $user->id,
-                'department' => $request->department,
-                'office' => $request->office,
-            ]);
-        } else {
-            Technician::create([
-                'user_id' => $user->id,
-                'assigned_department' => $request->assigned
-            ]);
+            if ($request->user_type == 'employee') {
+                Employee::create([
+                    'user_id' => $user->id,
+                    'department' => $request->department,
+                    'office' => $request->office,
+                ]);
+            } else {
+                Technician::create([
+                    'user_id' => $user->id,
+                    'assigned_department' => $request->assigned
+                ]);
+            }
+            DB::commit();
+            return redirect(route('admin.users'))->with('success', 'User created!');
+        } catch (QueryException $e) {
+            DB::rollback();
+            if ($e->errorInfo[1] === 1062) {
+                return redirect()->back()->withInput()->withErrors(['email' => 'The email has already been taken.']);
+            }
+            return redirect()->back()->withInput()->withErrors(['error' => 'An error occurred while creating the user.']);
         }
-        DB::commit();
-        return redirect(route('admin.users'))->with('success', 'User created!');
-    } catch (QueryException $e) {
-        DB::rollback();
-        if($e->errorInfo[1] === 1062) {
-            return redirect()->back()->withInput()->withErrors(['email' => 'The email has already been taken.']);
-        }
-        return redirect()->back()->withInput()->withErrors(['error' => 'An error occurred while creating the user.']);
     }
-}
 
     public function show($id)
     {
@@ -140,39 +141,33 @@ class AdminUsersController extends Controller
     public function password()
     {
         $user = Auth::user();
-        
         return inertia('Admin/Users/Change', [
             'user' => $user,
         ]);
     }
 
     public function changePassword(Request $request, $userId)
-{
-    $request->validate([
-        'old_password' => 'required',
-        'password' => 'required|min:8',
-    ]);
+    {
+        try {
+            $request->validate([
+                'oldPassword' => 'required',
+                'newPassword' => 'required|min:8',
+            ]);
 
-    $user = User::findOrFail($userId);
+            $user = User::where('id', $userId)->first();
 
-    // Verify the old password
-    if (!Hash::check($request->old_password, $user->password)) {
-        return redirect()->back()->withErrors(['old_password' => 'The old password is incorrect.'])->withInput();
+            if (!Hash::check($request->oldPassword, $user->password)) {
+                return redirect()->back()->with('error', 'Old Password does not match');
+            }
+
+            $newPassword = $request->newPassword;
+
+            $user->password = $newPassword;
+            $user->save();
+
+            return redirect()->back()->with('success', 'Password changed successfully');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage()) . $user->password;
+        }
     }
-
-    $newPassword = $request->password;
-
-    // Check if the provided password is already hashed
-    if (!Hash::needsRehash($newPassword)) {
-        // If not hashed, hash the password
-        $newPassword = Hash::make($newPassword);
-    }
-
-    // Update the user's password in the database
-    $user->password = $newPassword;
-    $user->save();
-
-    return redirect()->back()->with('success', 'Password changed successfully');
-}
-
 }
