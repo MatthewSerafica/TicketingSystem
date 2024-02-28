@@ -55,7 +55,7 @@
               </td>
               <td class="text-center">{{ formatDate(department.created_at) }}</td>
               <td class="text-center">{{ formatDate(department.updated_at) }}</td>
-              <td><button class="btn btn-danger" type="button" @click="showModal">Delete</button></td>
+              <td><Button :name="'Delete'" :color="'danger'" @click="showModal">Delete</button></td>
             </tr>
           </tbody>
         </table>
@@ -77,6 +77,7 @@ import Alpine from 'alpinejs';
 import moment from "moment";
 import { reactive, ref, watchEffect } from 'vue';
 import Toast from '@/Components/Toast.vue';
+import Button from '@/Components/Button.vue';
 
 Alpine.start()
 
