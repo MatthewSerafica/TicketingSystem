@@ -20,27 +20,15 @@
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          <div class="toast-container position-fixed bottom-0 end-0 p-3">
-            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-              <div class="toast-header">
-                <img src="..." class="rounded me-2" alt="...">
-                <strong class="me-auto">Bootstrap</strong>
-                <small>11 mins ago</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-              </div>
-              <div class="toast-body">
-                Hello, world! This is a toast message.
-              </div>
-            </div>
-          </div>
           <h1 class="fw-bold">View All Tickets</h1>
-          <p class="fs-5"> Manage and Track all TMDD tickets</p>
+          <p class="fs-5"> Manage and track all TMDD tickets</p>
           <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket
           </Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
             <Button :name="'New'" :color="'secondary'" class="btn-options" @click="filterTickets('new')"></Button>
             <Button :name="'Pending'" :color="'secondary'" class="btn-options" @click="filterTickets('pending')"></Button>
+            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options" @click="filterTickets('ongoing')"></Button>
             <Button :name="'Resolved'" :color="'secondary'" class="btn-options"
               @click="filterTickets('resolved')"></Button>
           </div>
@@ -308,6 +296,7 @@ const filter = reactive({
   new: false,
   resolved: false,
   pending: false,
+  ongoing: false,
 })
 
 const filterTickets = async (type) => {
@@ -317,21 +306,31 @@ const filterTickets = async (type) => {
     filter.new = false;
     filter.resolved = false;
     filter.pending = false;
+    filter.ongoing = false;
   } else if (type === "new") {
     filter.all = false;
     filter.new = true;
     filter.resolved = false;
     filter.pending = false;
+    filter.ongoing = false;
   } else if (type === "resolved") {
     filter.all = false;
     filter.new = false;
     filter.resolved = true;
     filter.pending = false;
+    filter.ongoing = false;
   } else if (type === "pending") {
     filter.all = false;
     filter.new = false;
     filter.resolved = false;
     filter.pending = true;
+    filter.ongoing = false;
+  } else if (type === "ongoing") {
+    filter.all = false;
+    filter.new = false;
+    filter.resolved = false;
+    filter.pending = false;
+    filter.ongoing = true;
   }
   await fetchData(type);
 
