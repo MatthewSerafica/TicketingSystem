@@ -114,6 +114,7 @@ class AdminUsersController extends Controller
     public function password()
     {
         $user = Auth::user();
+        
         return inertia('Admin/Users/Change', [
             'user' => $user,
         ]);
