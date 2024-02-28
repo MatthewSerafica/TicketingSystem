@@ -37,7 +37,7 @@ class AdminDepartmentController extends Controller
 
         Department::create($departmentData);
 
-        return redirect()->to('/admin/department')->with('success', 'Department Created');
+        return redirect()->to('/admin/department')->with('success', 'Department Created!')->with('message', $request->department . ' is added to the departments!');
     }
 
     public function update(Request $request, $department_id)
@@ -47,10 +47,11 @@ class AdminDepartmentController extends Controller
         ]);
 
         $department = Department::findOrFail($department_id);
+        $old_department = $department->department;
         $department->department = $request->department;
         $department->save();
 
-        return redirect()->back()->with('success', 'Department updated successfully');
+        return redirect()->back()->with('success', 'Department Updated!')->with('message', $old_department . ' is updated to ' . $request->department);
     }
 
 }
