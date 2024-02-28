@@ -64,6 +64,9 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
+                                    <Link :href="route('admin.change', page.props.user.id)" v-if="page.props.user"
+                                        class="text-decoration-none dropdown-item">Change password
+                                    </Link>
                                     <Link :href="route('logout')" method="delete" v-if="page.props.user"
                                         class="text-decoration-none dropdown-item">Logout
                                     </Link>
@@ -134,7 +137,7 @@
 <script setup>
 import { Link, usePage } from "@inertiajs/vue3";
 import axios from 'axios';
-import { computed, ref, defineProps, onMounted } from 'vue';
+import { computed, ref, defineProps, reactive, onMounted } from 'vue';
 import moment from "moment";
 
 const props = defineProps({});

@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+
 
 use App\Models\Department;
 use App\Models\Employee;
@@ -107,4 +110,42 @@ class AdminUsersController extends Controller
     {
         // Add logic here to delete user
     }
+
+    public function password()
+    {
+        $user = Auth::user();
+        return inertia('Admin/Users/Change', [
+            'user' => $user,
+        ]);
+    }
+
+    public function changePassword(Request $request, $userId)
+{
+    $request->validate([
+        'old_password' => 'required',
+        'password' => 'required|min:8',
+    ]);
+
+    $user = User::findOrFail($userId);
+
+    // Verify the old password
+    if (!Hash::check($request->old_password, $user->password)) {
+        return redirect()->back()->withErrors(['old_password' => 'The old password is incorrect.'])->withInput();
+    }
+
+    $newPassword = $request->password;
+
+    // Check if the provided password is already hashed
+    if (!Hash::needsRehash($newPassword)) {
+        // If not hashed, hash the password
+        $newPassword = Hash::make($newPassword);
+    }
+
+    // Update the user's password in the database
+    $user->password = $newPassword;
+    $user->save();
+
+    return redirect()->back()->with('success', 'Password changed successfully');
+}
+
 }
