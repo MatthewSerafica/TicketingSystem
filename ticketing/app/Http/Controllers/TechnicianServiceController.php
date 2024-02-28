@@ -35,33 +35,21 @@ class TechnicianServiceController extends Controller
     
     public function create()
     {
-        // Fetch the latest service report if it exists
         $latest_report = ServiceReport::orderBy('created_at', 'desc')->first();
-
-        // Increment the service_id for the new form
         $new_service_id = $latest_report ? $this->incrementServiceId($latest_report->service_id) : 'SR-B 0001';
-
         $technicians = Technician::all();
-
         return inertia('Technician/ServiceReports/Create', [
             'technicians' => $technicians,
             'new_service_id' => $new_service_id,
         ]);
     }
 
-    // Helper function to increment the service_id
     private function incrementServiceId($currentServiceId)
     {
-        // Extract the numeric part of the service_id and increment it
         $numericPart = (int)substr($currentServiceId, 5);
         $newNumericPart = $numericPart + 1;
-
-        // Format the new numeric part with leading zeros
         $newNumericPartFormatted = sprintf('%04d', $newNumericPart);
-
-        // Construct the new service_id
         $newServiceId = 'SR-B ' . $newNumericPartFormatted;
-
         return $newServiceId;
     }
 
@@ -105,5 +93,13 @@ class TechnicianServiceController extends Controller
         ServiceReport::create($serviceData);
 
         return redirect()->to('/technician/service-report')->with('success', 'Report Created');
+    }
+
+    public function check_service_id(Request $request, $service_id)
+    {
+        // Check if the service_id already exists in the database
+        $exists = ServiceReport::where('service_id', $service_id)->exists();
+
+        return response()->json(['exists' => $exists]);
     }
 }

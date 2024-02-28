@@ -1,6 +1,19 @@
 <template>
   <div>
     <Header></Header>
+    <div class="position-absolute end-0">
+      <Toast
+        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showSuccessToast"
+        :success="page.props.flash.success" :message="page.props.flash.message" @close="handleClose">
+      </Toast>
+
+      <Toast
+        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showErrorToast"
+        :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
+      </Toast>
+    </div>
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
@@ -34,20 +47,21 @@
               <td class="text-center py-4">{{ office.id }}</td>
               <td style="max-width: 60px;" @dblclick="startEditing(office.id, office.office)">
                 <span v-if="selectedOfficeId !== office.id">{{ office.office }}</span>
-                <input v-model="editedOffice[office.id]" v-if="selectedOfficeId === office.id" @keyup.enter="saveOffice(office.id)" @blur="saveOffice(office.id)">
+                <input v-model="editedOffice[office.id]" v-if="selectedOfficeId === office.id"
+                  @keyup.enter="saveOffice(office.id)" @blur="saveOffice(office.id)">
 
               </td>
-              <td  class="text-center">{{ formatDate(office.created_at) }}</td>
-              <td  class="text-center">{{ formatDate(office.updated_at) }}</td>
+              <td class="text-center">{{ formatDate(office.created_at) }}</td>
+              <td class="text-center">{{ formatDate(office.updated_at) }}</td>
               <td><button class="btn btn-danger" @click="showDeleteModal(office.id)">Delete</button></td>
             </tr>
           </tbody>
         </table>
         <div v-if="offices.data.length" class="flex justify-center w-full mt-6">
-            <pagination :links="offices.links" :key="'offices'"/>
-            <br>
+          <pagination :links="offices.links" :key="'offices'" />
+          <br>
         </div>
-      </div> 
+      </div>
 
     </div>
   </div>
@@ -56,8 +70,29 @@
 import pagination from "@/Components/Pagination.vue";
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import moment from "moment";
-import { Link, useForm } from "@inertiajs/vue3";
-import { ref, reactive} from 'vue'; 
+import { Link, useForm, usePage } from "@inertiajs/vue3";
+import { ref, reactive, watchEffect } from 'vue';
+import Toast from '@/Components/Toast.vue';
+import Alpine from 'alpinejs';
+
+Alpine.start()
+
+const page = usePage();
+
+let showSuccessToast = ref(false);
+let showErrorToast = ref(false);
+
+watchEffect(() => {
+  showSuccessToast.value = !!page.props.flash.success;
+  showErrorToast.value = !!page.props.flash.error;
+})
+
+const handleClose = () => {
+  page.props.flash.success = null;
+  page.props.flash.error = null;
+  showSuccessToast.value = false;
+  showErrorToast.value = false;
+}
 
 const props = defineProps({
   offices: Object,
@@ -73,7 +108,7 @@ const formatDate = (date) => {
 let editedOffice = reactive({});
 let selectedOfficeId = ref(null);
 
-let selectedRow = ref(null); 
+let selectedRow = ref(null);
 
 
 const startEditing = (officeId, officeName) => {
@@ -85,16 +120,16 @@ const startEditing = (officeId, officeName) => {
 
 // Method to save the edited office name
 const saveOffice = async (officeId) => {
-    if (officeId && editedOffice[officeId] !== null) {
-        const form = useForm({
-            office: editedOffice[officeId],
-        });
-        await form.put(route('admin.office.update', { office_id: officeId }), {
-            _method: 'put',
-            office: editedOffice[officeId],
-        });
-        selectedOfficeId.value = null;
-    }
+  if (officeId && editedOffice[officeId] !== null) {
+    const form = useForm({
+      office: editedOffice[officeId],
+    });
+    await form.put(route('admin.office.update', { office_id: officeId }), {
+      _method: 'put',
+      office: editedOffice[officeId],
+    });
+    selectedOfficeId.value = null;
+  }
 };
 
 
@@ -103,6 +138,4 @@ const saveOffice = async (officeId) => {
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
