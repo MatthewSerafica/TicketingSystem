@@ -107,6 +107,52 @@ class AdminTicketController extends Controller
         return redirect()->to('/admin/tickets')->with('success', 'Ticket Created');
     }
 
+    public function update(Request $request, $field, $id)
+    {
+        $request->validate([
+            $field => 'nullable',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $id)->first();
+
+        if ($field === 'technician_id') {
+            return $this->updateTechnician($request, $ticket);
+        } else {
+            return $this->updateField($request, $field, $ticket);
+        }
+    }
+
+    private function updateField(Request $request, $field, $ticket)
+    {
+        $ticket->$field = $request->$field;
+        $ticket->save();
+
+        $fieldMappings = [
+            'rr_no' => 'RR No.',
+            'ms_no' => 'MS No.',
+            'rs_no' => 'RS No.',
+            'sr_no' => 'SR No.',
+            'remarks' => 'Remark',
+        ];
+
+        $input = $fieldMappings[$field] ?? $field;
+
+        return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', $input . ' ' . $request->$field . ' is now assigned to Ticket #' . $ticket->ticket_number);
+    }
+
+    private function updateTechnician(Request $request, $ticket)
+    {
+        $request->validate([
+            'technician_id' => 'required',
+        ]);
+
+        $technician = Technician::findOrFail($request->technician_id);
+        $ticket->technician = $request->technician_id;
+        $ticket->save();
+
+        return redirect()->back()->with('success', 'Technician Update!')->with('message', 'Technician ' . $technician->user->name . ' is now assigned to Ticket #' . $ticket->ticket_number);
+    }
+
     public function status(Request $request, $ticket_id)
     {
         $request->validate([
@@ -136,7 +182,7 @@ class AdminTicketController extends Controller
         );
         $ticket->save();
 
-        return redirect()->back()->with('success', 'Status Update!')->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now ' . $request->status);;
+        return redirect()->back()->with('success', 'Status Update!')->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now ' . $request->status);
     }
 
     public function technician(Request $request, $ticket_id)
@@ -164,55 +210,6 @@ class AdminTicketController extends Controller
         $ticket->service = $request->service;
         $ticket->save();
         return redirect()->back()->with('success', 'Service Update!')->with('message', $request->service . ' service is now assigned to Ticket No. ' . $ticket->ticket_number);
-    }
-
-    public function rr(Request $request, $ticket_id)
-    {
-        $request->validate([
-            'rr_no' => 'nullable',
-        ]);
-
-        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
-
-        $ticket->rr_no = $request->rr_no;
-        $ticket->save();
-        return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', 'RR No. ' . $request->rr_no . ' is now assigned to Ticket No. ' . $ticket->ticket_number);
-    }
-    public function ms(Request $request, $ticket_id)
-    {
-        $request->validate([
-            'ms_no' => 'nullable',
-        ]);
-
-        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
-
-        $ticket->ms_no = $request->ms_no;
-        $ticket->save();
-        return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', 'MS No. ' . $request->ms_no . ' is now assigned to Ticket No. ' . $ticket->ticket_number);
-    }
-    public function rs(Request $request, $ticket_id)
-    {
-        $request->validate([
-            'rs_no' => 'nullable',
-        ]);
-
-        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
-
-        $ticket->rs_no = $request->rs_no;
-        $ticket->save();
-        return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', 'RS No. ' . $request->rs_no . ' is now assigned to Ticket No. ' . $ticket->ticket_number);
-    }
-    public function sr(Request $request, $ticket_id)
-    {
-        $request->validate([
-            'sr_no' => 'nullable',
-        ]);
-
-        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
-
-        $ticket->sr_no = $request->sr_no;
-        $ticket->save();
-        return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', 'SR No. ' . $request->sr_no . ' is now assigned to Ticket No. ' . $ticket->ticket_number);
     }
 
     public function remark(Request $request, $ticket_id)

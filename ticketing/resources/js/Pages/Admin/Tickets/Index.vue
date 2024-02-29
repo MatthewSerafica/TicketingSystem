@@ -64,35 +64,42 @@
             <tr v-for="ticket in tickets.data" :key="ticket.ticket_number" class="align-middle">
               <td class="text-center">{{ ticket.ticket_number }}</td>
               <td class="text-start">{{ formatDate(ticket.created_at) }}</td>
-              <td class="text-center" style="max-width: 60px;" @click="showRRInput(ticket.rr_no, ticket.ticket_number)">
-                <span v-if="!selectedRRInput || selectedRRInput !== ticket.rr_no">{{ ticket.rr_no }}</span>
-                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedRRInput === ticket.rr_no"
-                  v-model="editedRR[ticket.rr_no]" @blur="updateRR(ticket.rr_no, ticket.ticket_number)"
-                  @keyup.enter="updateRR(ticket.rr_no, ticket.ticket_number)"
+              <td class="text-center" style="max-width: 60px;"
+                @click="showInput(ticket.rr_no, ticket.ticket_number, 'rr')">
+                <span v-if="!selectedInput || selectedInput !== 'rr' || selectedRow !== ticket.ticket_number">{{
+                  ticket.rr_no }}</span>
+                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'rr'"
+                  v-model="editData[ticket.rr_no]" @blur="updateData(ticket.rr_no, ticket.ticket_number, 'rr_no', 'rr')"
+                  @keyup.enter="updateData(ticket.rr_no, ticket.ticket_number, 'rr_no')"
                   class="w-100 rounded border border-secondary-subtle text-center">
               </td>
-              <td class="text-center" style="max-width: 60px;" @click="showMSInput(ticket.ms_no, ticket.ticket_number)">
-                <span v-if="!selectedMSInput || selectedMSInput !== ticket.ms_no">{{ ticket.ms_no }}</span>
-                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedMSInput === ticket.ms_no"
-                  v-model="editedMS[ticket.ms_no]" @blur="updateMS(ticket.ms_no, ticket.ticket_number)"
-                  @keyup.enter="updateMS(ticket.ms_no, ticket.ticket_number)"
+              <td class="text-center" style="max-width: 60px;"
+                @click="showInput(ticket.ms_no, ticket.ticket_number, 'ms')">
+                <span v-if="!selectedInput || selectedInput !== 'ms' || selectedRow !== ticket.ticket_number">{{
+                  ticket.ms_no }}</span>
+                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'ms'"
+                  v-model="editData[ticket.ms_no]" @blur="updateData(ticket.ms_no, ticket.ticket_number, 'ms_no', 'ms')"
+                  @keyup.enter="updateData(ticket.ms_no, ticket.ticket_number, 'ms_no')"
                   class="w-100 rounded border border-secondary-subtle text-center">
               </td>
-              <td class="text-center" style="max-width: 60px;" @click="showRSInput(ticket.rs_no, ticket.ticket_number)">
-                <span v-if="!selectedRSInput || selectedRSInput !== ticket.rs_no">{{ ticket.rs_no }}</span>
-                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedRSInput === ticket.rs_no"
-                  v-model="editedRS[ticket.rs_no]" @blur="updateRS(ticket.rs_no, ticket.ticket_number)"
-                  @keyup.enter="updateRS(ticket.rs_no, ticket.ticket_number)"
+              <td class="text-center" style="max-width: 60px;"
+                @click="showInput(ticket.rs_no, ticket.ticket_number, 'rs')">
+                <span v-if="!selectedInput || selectedInput !== 'rs' || selectedRow !== ticket.ticket_number">{{
+                  ticket.rs_no }}</span>
+                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'rs'"
+                  v-model="editData[ticket.rs_no]" @blur="updateData(ticket.rs_no, ticket.ticket_number, 'rs_no', 'rs')"
+                  @keyup.enter="updateData(ticket.rs_no, ticket.ticket_number, 'rs_no')"
                   class="w-100 rounded border border-secondary-subtle text-center">
               </td>
               <td class="text-start"><span class="fw-medium">{{ ticket.employee.user.name }}</span><br><small>{{
                 ticket.employee.department }} - {{ ticket.employee.office }}</small></td>
 
-<td class="text-start text-truncate ticket-description" style="max-width: 130px;" data-hover-text="{{ ticket.description }}">
-  <span class="d-inline-block" tabindex="0" :title="ticket.description">
-    {{ ticket.description }}
-  </span>
-</td>
+              <td class="text-start text-truncate ticket-description" style="max-width: 130px;"
+                data-hover-text="{{ ticket.description }}">
+                <span class="d-inline-block" tabindex="0" :title="ticket.description">
+                  {{ ticket.description }}
+                </span>
+              </td>
 
               <td class="text-start">
                 <div class="btn-group">
@@ -140,16 +147,19 @@
                   <ul class="dropdown-menu">
                     <li class="dropdown-item disabled">Select a technician</li>
                     <li v-for="technician in technicians" class="btn dropdown-item"
-                      @click="updateTechnician(ticket.ticket_number, technician.technician_id)">{{ technician.user.name }}
+                      @click="showInput(technician.technician_id, ticket.ticket_number), updateData(technician.technician_id, ticket.ticket_number, 'technician_id')">
+                      {{ technician.user.name }}
                     </li>
                   </ul>
                 </div>
               </td>
-              <td class="text-center" style="max-width: 100px;" @click="showSRInput(ticket.sr_no, ticket.ticket_number)">
-                <span v-if="!selectedSRInput || selectedSRInput !== ticket.sr_no">{{ ticket.sr_no }}</span>
-                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedSRInput === ticket.sr_no"
-                  v-model="editedSR[ticket.sr_no]" @blur="updateSR(ticket.sr_no, ticket.ticket_number)"
-                  @keyup.enter="updateSR(ticket.sr_no, ticket.ticket_number)"
+              <td class="text-center" style="max-width: 60px;"
+                @click="showInput(ticket.rs_no, ticket.ticket_number, 'rs')">
+                <span v-if="!selectedInput || selectedInput !== 'rs' || selectedRow !== ticket.ticket_number">{{
+                  ticket.rs_no }}</span>
+                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'rs'"
+                  v-model="editData[ticket.rs_no]" @blur="updateData(ticket.rs_no, ticket.ticket_number, 'rs_no', 'rs')"
+                  @keyup.enter="updateData(ticket.rs_no, ticket.ticket_number, 'rs_no')"
                   class="w-100 rounded border border-secondary-subtle text-center">
               </td>
               <td class="text-start">{{ isNaN(new Date(formatDate(ticket.resolved_at)))
@@ -157,13 +167,13 @@
                 : formatDate(ticket.resolved_at) }}
               </td>
               <td class="text-start text-break" style="max-width: 120px;"
-                @click="showRemarkInput(ticket.remarks, ticket.ticket_number)">
-                <span v-if="!selectedRemarkInput || selectedRemarkInput !== ticket.remarks">
+                @click="showInput(ticket.remarks, ticket.ticket_number, 'remarks')">
+                <span v-if="!selectedInput || selectedInput !== 'remarks' || selectedRow !== ticket.ticket_number">
                   {{ ticket.remarks }}
                 </span>
-                <textarea v-if="selectedRow === ticket.ticket_number && selectedRemarkInput === ticket.remarks"
-                  v-model="editedRemark[ticket.remarks]" @blur="updateRem(ticket.remarks, ticket.ticket_number)"
-                  @keyup.enter="updateSR(ticket.sr_no, ticket.ticket_number)"
+                <textarea v-if="selectedRow === ticket.ticket_number && selectedInput === 'remarks'"
+                  v-model="editData[ticket.remarks]" @blur="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
+                  @keyup.enter="updateData(ticket.remarks, ticket.ticket_number, 'remarks')"
                   class="w-100 rounded border border-secondary-subtle text-center"> </textarea>
               </td>
               <td class="text-start">
@@ -343,15 +353,6 @@ const filterTickets = async (type) => {
 // Filter end
 
 // Table update start
-const updateTechnician = (ticket_id, technician_id) => {
-  const form = useForm({
-    technician_id: technician_id,
-  });
-
-  form.put(route('admin.tickets.update.technician', { ticket_id: ticket_id }));
-}
-
-
 const updateService = (ticket_id, service) => {
   const form = useForm({
     service: service,
@@ -387,115 +388,31 @@ const updateComplexity = (ticket_id, complexity) => {
   form.put(route('admin.tickets.update.complexity', { ticket_id: ticket_id }));
 }
 
-let selectedRRInput = ref(null);
+let selectedInput = ref(null);
 let selectedRow = ref(null);
-let editedRR = reactive({});
+let editData = reactive({});
 
-const showRRInput = (rrNo, ticketNumber) => {
-  selectedRRInput.value = rrNo;
-  selectedRow.value = ticketNumber;
-  editedRR[rrNo] = rrNo ? rrNo : '';
+const showInput = (data, id, type) => {
+  selectedInput.value = type;
+  selectedRow.value = id;
+  editData[data] = data ? data : '';
+  console.log(selectedInput.value, editData[data], selectedRow.value);
 }
 
-const updateRR = async (rrNo, ticket_id) => {
-  if (selectedRRInput.value === rrNo) {
+const updateData = async (data, id, updateField, type) => {
+  console.log(selectedInput.value, editData[data], updateField)
+  if (selectedInput.value === type) {
     const form = useForm({
-      rr_no: editedRR[rrNo],
+      [updateField]: editData[data],
     });
 
-    await form.put(route('admin.tickets.update.rr', { ticket_id: ticket_id }));
+    await form.put(route('admin.tickets.update', { ticket_id: id, field: updateField }));
 
-    selectedRRInput.value = null;
-    editedRR[rrNo] = '';
-  }
-};
-let selectedMSInput = ref(null);
-let editedMS = reactive({});
-
-const showMSInput = (msNo, ticketNumber) => {
-  selectedMSInput.value = msNo;
-  selectedRow.value = ticketNumber;
-  editedMS[msNo] = msNo ? msNo : '';
-}
-
-const updateMS = async (msNo, ticket_id) => {
-  if (selectedMSInput.value === msNo) {
-    const form = useForm({
-      ms_no: editedMS[msNo],
-    });
-
-    await form.put(route('admin.tickets.update.ms', { ticket_id: ticket_id }));
-
-    selectedMSInput.value = null;
-    editedMS[msNo] = '';
+    selectedInput.value = null;
+    editData[data] = '';
   }
 };
 
-let selectedRSInput = ref(null);
-let editedRS = reactive({});
-
-const showRSInput = (rsNo, ticketNumber) => {
-  selectedRSInput.value = rsNo;
-  selectedRow.value = ticketNumber;
-  editedRS[rsNo] = rsNo ? rsNo : '';
-}
-
-const updateRS = async (rsNo, ticket_id) => {
-  if (selectedRSInput.value === rsNo) {
-    const form = useForm({
-      rs_no: editedRS[rsNo],
-    });
-
-    await form.put(route('admin.tickets.update.rs', { ticket_id: ticket_id }));
-
-    selectedRSInput.value = null;
-    editedRS[rsNo] = '';
-  }
-};
-
-let selectedSRInput = ref(null);
-let editedSR = reactive({});
-
-const showSRInput = (srNo, ticketNumber) => {
-  selectedSRInput.value = srNo;
-  selectedRow.value = ticketNumber;
-  editedSR[srNo] = srNo ? srNo : '';
-}
-
-const updateSR = async (srNo, ticket_id) => {
-  if (selectedSRInput.value === srNo) {
-    const form = useForm({
-      sr_no: editedSR[srNo],
-    });
-
-    await form.put(route('admin.tickets.update.sr', { ticket_id: ticket_id }));
-
-    selectedSRInput.value = null;
-    editedSR[srNo] = '';
-  }
-};
-
-let selectedRemarkInput = ref(null);
-let editedRemark = reactive({});
-
-const showRemarkInput = (remark, ticketNumber) => {
-  selectedRemarkInput.value = remark;
-  selectedRow.value = ticketNumber;
-  editedRemark[remark] = remark ? remark : '';
-}
-
-const updateRem = async (remark, ticket_id) => {
-  if (selectedRemarkInput.value === remark) {
-    const form = useForm({
-      remark: editedRemark[remark],
-    });
-
-    await form.put(route('admin.tickets.update.remark', { ticket_id: ticket_id }));
-
-    selectedRemarkInput.value = null;
-    editedRemark[remark] = '';
-  }
-};
 // Table update end
 
 // Styling and formatting
@@ -549,19 +466,19 @@ const getComplexityClass = (complexity) => {
 
 
 .ticket-description {
-    position: relative;
-    cursor: default;
-  }
+  position: relative;
+  cursor: default;
+}
 
-  .ticket-description:hover::after {
-    content: attr(data-hover-text);
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: pink;
-    color: red;
-    padding: 5px;
-    border-radius: 5px;
-    z-index: 9999;
-  }
+.ticket-description:hover::after {
+  content: attr(data-hover-text);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: pink;
+  color: red;
+  padding: 5px;
+  border-radius: 5px;
+  z-index: 9999;
+}
 </style>

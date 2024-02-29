@@ -39,6 +39,7 @@ Route::middleware(['web'])->group(function () {
         Route::put('/admin/tickets/update-technician/{ticket_id}', [AdminTicketController::class, 'technician'])->name('admin.tickets.update.technician');
         Route::put('/admin/tickets/update-service/{ticket_id}', [AdminTicketController::class, 'service'])->name('admin.tickets.update.service');
         Route::put('/admin/tickets/update-rr/{ticket_id}', [AdminTicketController::class, 'rr'])->name('admin.tickets.update.rr');
+        Route::put('/admin/tickets/update/{field}/{ticket_id}', [AdminTicketController::class, 'update'])->name('admin.tickets.update');
         Route::put('/admin/tickets/update-ms/{ticket_id}', [AdminTicketController::class, 'ms'])->name('admin.tickets.update.ms');
         Route::put('/admin/tickets/update-rs/{ticket_id}', [AdminTicketController::class, 'rs'])->name('admin.tickets.update.rs');
         Route::put('/admin/tickets/update-sr/{ticket_id}', [AdminTicketController::class, 'sr'])->name('admin.tickets.update.sr');
