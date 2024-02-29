@@ -154,12 +154,12 @@
                 </div>
               </td>
               <td class="text-center" style="max-width: 60px;"
-                @click="showInput(ticket.rs_no, ticket.ticket_number, 'rs')">
-                <span v-if="!selectedInput || selectedInput !== 'rs' || selectedRow !== ticket.ticket_number">{{
-                  ticket.rs_no }}</span>
-                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'rs'"
-                  v-model="editData[ticket.rs_no]" @blur="updateData(ticket.rs_no, ticket.ticket_number, 'rs_no', 'rs')"
-                  @keyup.enter="updateData(ticket.rs_no, ticket.ticket_number, 'rs_no')"
+                @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
+                <span v-if="!selectedInput || selectedInput !== 'sr' || selectedRow !== ticket.ticket_number">{{
+                  ticket.sr_no }}</span>
+                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'sr'"
+                  v-model="editData[ticket.sr_no]" @blur="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no', 'sr')"
+                  @keyup.enter="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no')"
                   class="w-100 rounded border border-secondary-subtle text-center">
               </td>
               <td class="text-start">{{ isNaN(new Date(formatDate(ticket.resolved_at)))
