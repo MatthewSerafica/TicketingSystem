@@ -1,9 +1,6 @@
 <template>
   <div>
     <Header></Header>
-    {{ user }}
-    {{ page.props.flash.error }}
-    {{ page.props.flash.success }}
     <div class="mt-5 pt-5">
       <form @submit.prevent="changePassword">
         <br />
@@ -14,20 +11,21 @@
           </div>
 
           <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+            {{ page.props.flash.error }}
             <div class="d-flex flex-column flex-shrink-0 w-25">
               <label for="oldPassword" class="fw-semibold">Old Password</label>
               <input id="oldPassword" class="form-control h-100 rounded border-secondary-subtle" type="password"
                 v-model="form.oldPassword" @input="checkOldPassword" />
             </div>
-            <div class="d-flex flex-column flex-shrink-0 w-25 mt-3" :class="{ 'disabled': !isOldPasswordEntered }">
+            <div class="d-flex flex-column flex-shrink-0 w-25 mt-3">
               <label for="newPassword" class="fw-semibold">New Password</label>
               <input id="newPassword" class="form-control h-100 rounded border-secondary-subtle" type="password"
-                v-model="form.newPassword" :disabled="!isOldPasswordEntered" />
+                v-model="form.newPassword" />
             </div>
-            <div class="d-flex flex-column flex-shrink-0 w-25 mt-3" :class="{ 'disabled': !isOldPasswordEntered }">
+            <div class="d-flex flex-column flex-shrink-0 w-25 mt-3">
               <label for="confirmPassword" class="fw-semibold">Confirm Password</label>
               <input id="confirmPassword" class="form-control h-100 rounded border-secondary-subtle" type="password"
-                v-model="form.confirmPassword" :disabled="!isOldPasswordEntered" />
+                v-model="form.confirmPassword" />
             </div>
           </div>
 
@@ -35,7 +33,8 @@
             <div class="row justify-content-center">
               <div class="col-md-6">
                 <div class="d-flex justify-content-center gap-2 mt-4">
-                  <Button :name="'Submit'" :color="'primary'"></Button>
+                  <!-- Disable the Submit button if any input field is empty -->
+                  <Button :name="'Submit'" :color="'primary'" :disabled="!isFormValid"></Button>
                   <Link :href="`/admin/users`" class=" btn btn-outline-primary">Cancel</Link>
                 </div>
               </div>
@@ -51,7 +50,7 @@
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link, usePage, router, useForm } from "@inertiajs/vue3";
 import Button from '@/Components/Button.vue';
-import { reactive, computed, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const page = usePage()
 
@@ -66,15 +65,20 @@ const form = useForm({
 });
 
 const oldPassword = ref('');
-const isOldPasswordEntered = computed(() => form.oldPassword !== '');
 
+// Compute whether all input fields have been filled in
+const isFormValid = computed(() => {
+  return form.oldPassword !== '' && form.newPassword !== '' && form.confirmPassword !== '';
+});
 
 const changePassword = async () => {
-
-  await form.post(route('admin.change-password', { user_id: page.props.user.id }));
+  try {
+    await form.post(route('admin.change-password', { user_id: page.props.user.id }));
+    window.history.back();
+  } catch (error) {
+    console.error('Error changing password:', error);
+  }
 };
-
-
 </script>
   
 <style scoped>
@@ -83,4 +87,3 @@ const changePassword = async () => {
   opacity: 0.5;
 }
 </style>
-  
