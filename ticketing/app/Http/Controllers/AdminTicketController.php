@@ -77,20 +77,48 @@ class AdminTicketController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'description' => 'required',
             'employee' => 'required',
             'issue' => 'required',
             'service' => 'required',
             'technician' => 'required',
-            'rs_no' => 'nullable',
+            'rr_no' => 'nullable|numeric',
+            'rs_no' => 'nullable|numeric',
+            'ms_no' => 'nullable|numeric',
+            'sr_no' => 'nullable|numeric',
         ]);
+    
+       
+        if ($request->filled('rr_no') && is_numeric($request->rr_no)) {
+            $ticketData['rr_no'] = $request->rr_no;
+        } elseif ($request->filled('rr_no') && !is_numeric($request->rr_no)) {
+            return redirect()->back()->with('error', 'RR number must be numeric.');
+        }
+    
+        if ($request->filled('ms_no')) {
+            if (!is_numeric($request->ms_no)) {
+                return redirect()->back()->with('error', 'MS number must be numeric.');
+            }
+        }
+    
+        if ($request->filled('rs_no')) {
+            if (!is_numeric($request->rs_no)) {
+                return redirect()->back()->with('error', 'RS number must be numeric.');
+            }
+        }
+    
+        if ($request->filled('sr_no')) {
+            if (!is_numeric($request->sr_no)) {
+                return redirect()->back()->with('error', 'SR number must be numeric.');
+            }
+        }
+    
         $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
         if ($employee->made_ticket >= 5) {
-            return redirect()->back()->with('error', 'You have already made the max number of tickets.');
+            return redirect()->back()->with('error', 'You have already made the maximum number of tickets.');
         }
-
+    
         $ticketData = [
             'rs_no' => $request->rs_no,
             'employee' => $request->employee,
@@ -100,10 +128,15 @@ class AdminTicketController extends Controller
             'service' => $request->service,
             'status' => 'Pending',
         ];
-
+    
+        // Check if rr_no is filled and numeric before adding to ticketData
+        if ($request->filled('rr_no') && is_numeric($request->rr_no)) {
+            $ticketData['rr_no'] = $request->rr_no;
+        }
+    
         Ticket::create($ticketData);
         $employee->update(['made_ticket' => $employee->made_ticket + 1]);
-
+    
         return redirect()->to('/admin/tickets')->with('success', 'Ticket Created');
     }
 

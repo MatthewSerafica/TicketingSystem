@@ -172,7 +172,8 @@
                   {{ ticket.remarks }}
                 </span>
                 <textarea v-if="selectedRow === ticket.ticket_number && selectedInput === 'remarks'"
-                  v-model="editData[ticket.remarks]" @blur="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
+                  v-model="editData[ticket.remarks]"
+                  @blur="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
                   @keyup.enter="updateData(ticket.remarks, ticket.ticket_number, 'remarks')"
                   class="w-100 rounded border border-secondary-subtle text-center"> </textarea>
               </td>
@@ -445,6 +446,16 @@ const getComplexityClass = (complexity) => {
       return 'btn btn-secondary';
   }
 };
+
+const validateNumericInput = (inputValue, propName) => {
+  const isValid = /^\d+$/.test(inputValue);
+  if (!isValid) {
+    page.props.flash.error = `Invalid ${propName} number`;
+    return false;
+  }
+  return true;
+};
+
 </script>
 
 <style scoped>

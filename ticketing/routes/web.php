@@ -74,25 +74,29 @@ Route::middleware(['web'])->group(function () {
 
     Route::middleware(['auth', 'employee'])->group(function () {
         Route::get('/employee', [EmployeeTicketController::class, 'index'])->name('employee');
+            Route::get('/employee/change', [EmployeeTicketController::class, 'password'])->name('employee.change');
+            Route::post('/employee/change-password/{user_id}', [EmployeeTicketController::class, 'changePassword'])->name('employee.change-password');
         Route::get('/employee/create', [EmployeeTicketController::class, 'create'])->name('employee.create');
-        Route::post('/employee/create/store', [EmployeeTicketController::class, 'store'])->name('employee.store');
+            Route::post('/employee/create/store', [EmployeeTicketController::class, 'store'])->name('employee.store');
         Route::get('/employee/notifications', [EmployeeNotificationController::class, 'index'])->name('employee.notifications');
-        Route::post('/employee/notifications/seen', [EmployeeNotificationController::class, 'update'])->name('employee.notifications.seen');
+            Route::post('/employee/notifications/seen', [EmployeeNotificationController::class, 'update'])->name('employee.notifications.seen');
         Route::put('/employee/tickets/update-status/{ticket_id}', [EmployeeTicketController::class, 'status'])->name('employee.tickets.update.status');
     });
 
     Route::middleware(['auth', 'technician'])->group(function () {
         Route::get('/technician', [TechnicianDashboardController::class, 'index'])->name('technician');
+            Route::get('/technician/change', [TechnicianDashboardController::class, 'password'])->name('technician.change');
+            Route::post('/technician/change-password/{user_id}', [TechnicianDashboardController::class, 'changePassword'])->name('technician.change-password');
 
         Route::get('/technician/tickets', [TechnicianTicketController::class, 'index'])->name('technician.tickets');
-        Route::get('/technician/tickets/create', [TechnicianTicketController::class, 'create'])->name('technician.tickets.create');
-        Route::post('/technician/tickets/create/store', [TechnicianTicketController::class, 'store'])->name('technician.tickets.store');
-        Route::put('/technician/tickets/update-status/{ticket_id}', [TechnicianTicketController::class, 'status'])->name('technician.tickets.update.status');
-        Route::put('/technician/tickets/update-sr/{ticket_id}', [TechnicianTicketController::class, 'sr'])->name('technician.tickets.update.sr');
+            Route::get('/technician/tickets/create', [TechnicianTicketController::class, 'create'])->name('technician.tickets.create');
+            Route::post('/technician/tickets/create/store', [TechnicianTicketController::class, 'store'])->name('technician.tickets.store');
+            Route::put('/technician/tickets/update-status/{ticket_id}', [TechnicianTicketController::class, 'status'])->name('technician.tickets.update.status');
+            Route::put('/technician/tickets/update-sr/{ticket_id}', [TechnicianTicketController::class, 'sr'])->name('technician.tickets.update.sr');
 
         Route::get('/technician/service-report', [TechnicianServiceController::class, 'index'])->name('technician.service-reports');
-        Route::get('/technician/service-report/create', [TechnicianServiceController::class, 'create'])->name('technician.service-report.create');
-        Route::post('/technician/service-report/create/store', [TechnicianServiceController::class, 'store'])->name('technician.service-report.store');
-        Route::get('/check-service-id/{serviceId}', [TechnicianServiceController::class, 'check_service_id']);
+            Route::get('/technician/service-report/create', [TechnicianServiceController::class, 'create'])->name('technician.service-report.create');
+            Route::post('/technician/service-report/create/store', [TechnicianServiceController::class, 'store'])->name('technician.service-report.store');
+            Route::get('/check-service-id/{serviceId}', [TechnicianServiceController::class, 'check_service_id']);
     });
 });

@@ -45,6 +45,9 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
+                                    <Link :href="route('employee.change', page.props.user.id)" v-if="page.props.user"
+                                        class="text-decoration-none dropdown-item">Change password
+                                    </Link>
                                     <Link :href="route('logout')" method="delete" v-if="page.props.user"
                                         class="text-decoration-none dropdown-item">Logout
                                     </Link>
