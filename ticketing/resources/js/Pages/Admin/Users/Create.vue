@@ -1,13 +1,15 @@
 <template>
     <div>
         <Header></Header>
-        <div class="mt-5 pt-5">
+        <div class="mt-2 pt-5">
             <form @submit.prevent="create">
                 <br />
                 <div class="d-flex flex-column justify-content-center align-items-center gap-4">
                     <div class="title-container fw-bold text-center">
                         <h1>Create Users</h1>
                     </div>
+
+                   
                     <div class="d-flex flex-column">
                         <label for="user_type" class="fw-semibold">User Type</label>
                         <select id="user_type" class="form-select h-100 rounded border-secondary-subtle"
@@ -17,32 +19,44 @@
                             <option value="technician">Technician</option>
                         </select>
                     </div>
+                    
+
+                    
                     <div class="d-flex flex-row gap-3 justify-content-center">
+                        <div class="col-md-9">
                         <div class="d-flex flex-column">
                             <label for="name" class="fw-semibold">Name</label>
                             <input id="name" class="form-control rounded border-secondary-subtle" type="text"
                                 placeholder="First and Last Name..." v-model="form.name" required />
                         </div>
+                        </div>
+                        <div class="col-md-9">
                         <div class="d-flex flex-column">
                             <label for="email" class="fw-semibold">Email</label>
                             <input id="email" class="form-control h-100 rounded border-secondary-subtle" type="email"
                                 placeholder="Enter Email..." v-model="form.email" />
                                 <div v-if="form.errors.email">{{ form.errors.email }}</div>
                         </div>
+                        </div>
                     </div>
                     <div class="d-flex flex-row gap-3 justify-content-center">
+                        <div class="col-md-9">
                         <div class="d-flex flex-column">
                             <label for="password" class="fw-semibold">Password</label>
                             <input id="password" class="form-control rounded border-secondary-subtle" type="password"
                                 placeholder="Enter Password..." v-model="form.password" required/>
                         </div>
+                        </div>
+                        <div class="col-md-9">
                         <div class="d-flex flex-column">
                             <label for="conf" class="fw-semibold">Confirm Password</label>
                             <input id="conf" class="form-control h-100 rounded border-secondary-subtle" type="password"
                                 placeholder="Confirm Password..." v-model="form.conf" required/>
                         </div>
+                        </div>
                     </div>
                     <div v-if="form.user_type === 'employee'" class="d-flex flex-row gap-3 justify-content-center">
+                        <div class="col-md-6">
                         <div class="d-flex flex-column">
                             <label for="department" class="fw-semibold">Department</label>
                             <select id="department" class="form-select h-100 rounded border-secondary-subtle"
@@ -53,6 +67,8 @@
                                 </option>
                             </select>
                         </div>
+                        </div>
+                        <div class="col-md-6">
                         <div class="d-flex flex-column">
                             <label for="office" class="fw-semibold">Office</label>
                             <select id="office" class="form-select h-100 rounded border-secondary-subtle"
@@ -61,12 +77,14 @@
                                 <option v-for="office in offices" :value="office.office">{{
                                     office.office }}
                                 </option>
-                            </select>
+                            </select>  
+                        </div>
                         </div>
                     </div>
                     <div v-if="form.user_type === 'technician'" class="d-flex flex-row gap-3 justify-content-center">
+                        <div class="col-md-10">
                         <div class="d-flex flex-column">
-                            <label for="assigned" class="fw-semibold">Assign a department</label>
+                            <label for="assigned" class="fw-semibold">Assign a Department</label>
                             <select id="assigned" class="form-select h-100 rounded border-secondary-subtle"
                                 placeholder="Select Department..." v-model="form.assigned">
                                 <option disabled>Select Department</option>
@@ -75,13 +93,14 @@
                                 </option>
                             </select>
                         </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="container w-25">
-                    <div class="row justify-content-end">
+                <div class="container">    
+                    <div class="row justify-content-center">
                         <div class="col-md-6">
-                            <div class="d-flex justify-content-center gap-2">
+                            <div class="d-flex justify-content-end gap-2">
                                 <Button :name="'Submit'" :color="'primary'" class="submit-btn"></button>
                                 <Link :href="`/admin/users`" class=" btn btn-outline-primary">Cancel</Link>
                             </div>
