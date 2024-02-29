@@ -19,7 +19,7 @@
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Departments</h1>
-          <p class="fs-5"> Manage all Departments</p>
+          <p class="fs-5"> Manage All Departments</p>
 
           <Link :href="route('admin.department.create')">
             <Button :name="'Add Department'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>

@@ -18,7 +18,7 @@
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Users</h1>
-          <p class="fs-5">Manage and Track all Users</p>
+          <p class="fs-5">Manage and Track All Users</p>
           <Link :href="route('admin.users.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New User
           </Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
