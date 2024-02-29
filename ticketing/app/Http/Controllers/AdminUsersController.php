@@ -114,9 +114,13 @@ class AdminUsersController extends Controller
 
     public function show($id)
     {
-        $user = User::where('id', $id)->with('employee', 'technician')->firstOrFail();;
+        $user = User::where('id', $id)->with('employee', 'technician')->firstOrFail();
+        $departments = Department::all();
+        $offices = Office::all();
         return inertia('Admin/Users/Show', [
             'user' => $user,
+            'departments' => $departments,
+            'offices' => $offices,
         ]);
     }
 
@@ -131,6 +135,64 @@ class AdminUsersController extends Controller
         $user->name = $request->name;
         $user->save();
         return redirect()->back()->with('success', 'Name Update!')->with('message', $old_name . ' is updated to ' . $request->name);
+    }
+
+    public function email(Request $request, $id)
+    {
+        $request->validate([
+            'email' => 'required',
+        ]);
+
+        $user = User::where('id', $id)->first();
+        $old = $user->email;
+        $user->email = $request->email;
+        $user->save();
+        return redirect()->back()->with('success', 'Name Update!')->with('message', $old . ' is updated to ' . $request->email);
+    }
+
+    public function update(Request $request, $id, $field)
+    {
+        $request->validate([
+            $field => 'required',
+        ]);
+
+        $user = User::where('id', $id)->first();
+        $old = $user->$field;
+        $user->$field = $request->$field;
+        $user->save();
+        $input = ucfirst($field);
+
+        return redirect()->back()->with('success', $input . ' Update!')->with('message', $old . ' is updated to ' . $request->$field);
+    }
+
+    public function employee(Request $request, $id, $field)
+    {
+        $request->validate([
+            $field => 'required',
+        ]);
+
+        $employee = Employee::where('employee_id', $id)->first();
+        $old = $employee->$field;
+        $employee->$field = $request->$field;
+        $employee->save();
+        $input = ucfirst($field);
+
+        return redirect()->back()->with('success', $input . ' Update!')->with('message', $old . ' is updated to ' . $request->$field);
+    }
+
+    public function technician(Request $request, $id, $field)
+    {
+        $request->validate([
+            $field => 'required',
+        ]);
+
+        $technician = Technician::where('technician_id', $id)->first();
+        $old = $technician->$field;
+        $technician->$field = $request->$field;
+        $technician->save();
+        $input = ucfirst($field);
+
+        return redirect()->back()->with('success', $input . ' Update!')->with('message', $old . ' is updated to ' . $request->$field);
     }
 
     public function destroy($id)
