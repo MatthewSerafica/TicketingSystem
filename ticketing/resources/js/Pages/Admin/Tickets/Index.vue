@@ -66,21 +66,24 @@
               <td class="text-start">{{ formatDate(ticket.created_at) }}</td>
               <td class="text-center" style="max-width: 60px;" @click="showRRInput(ticket.rr_no, ticket.ticket_number)">
                 <span v-if="!selectedRRInput || selectedRRInput !== ticket.rr_no">{{ ticket.rr_no }}</span>
-                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedRRInput === ticket.rr_no"
+                <input type="text" name="rr_no" pattern="[0-9]*" title="RR number must be numeric"   
+                  v-if="selectedRow === ticket.ticket_number && selectedRRInput === ticket.rr_no"
                   v-model="editedRR[ticket.rr_no]" @blur="updateRR(ticket.rr_no, ticket.ticket_number)"
                   @keyup.enter="updateRR(ticket.rr_no, ticket.ticket_number)"
                   class="w-100 rounded border border-secondary-subtle text-center">
               </td>
               <td class="text-center" style="max-width: 60px;" @click="showMSInput(ticket.ms_no, ticket.ticket_number)">
                 <span v-if="!selectedMSInput || selectedMSInput !== ticket.ms_no">{{ ticket.ms_no }}</span>
-                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedMSInput === ticket.ms_no"
+                <input type="text" name="ms_no" pattern="[0-9]*" title="MS number must be numeric"
+                  v-if="selectedRow === ticket.ticket_number && selectedMSInput === ticket.ms_no"
                   v-model="editedMS[ticket.ms_no]" @blur="updateMS(ticket.ms_no, ticket.ticket_number)"
                   @keyup.enter="updateMS(ticket.ms_no, ticket.ticket_number)"
                   class="w-100 rounded border border-secondary-subtle text-center">
               </td>
               <td class="text-center" style="max-width: 60px;" @click="showRSInput(ticket.rs_no, ticket.ticket_number)">
                 <span v-if="!selectedRSInput || selectedRSInput !== ticket.rs_no">{{ ticket.rs_no }}</span>
-                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedRSInput === ticket.rs_no"
+                <input type="text" name="rs_no" pattern="[0-9]*" title="RS number must be numeric"
+                  v-if="selectedRow === ticket.ticket_number && selectedRSInput === ticket.rs_no"
                   v-model="editedRS[ticket.rs_no]" @blur="updateRS(ticket.rs_no, ticket.ticket_number)"
                   @keyup.enter="updateRS(ticket.rs_no, ticket.ticket_number)"
                   class="w-100 rounded border border-secondary-subtle text-center">
@@ -88,11 +91,11 @@
               <td class="text-start"><span class="fw-medium">{{ ticket.employee.user.name }}</span><br><small>{{
                 ticket.employee.department }} - {{ ticket.employee.office }}</small></td>
 
-<td class="text-start text-truncate ticket-description" style="max-width: 130px;" data-hover-text="{{ ticket.description }}">
+              <td class="text-start text-truncate ticket-description" style="max-width: 130px;" data-hover-text="{{ ticket.description }}">
   <span class="d-inline-block" tabindex="0" :title="ticket.description">
     {{ ticket.description }}
   </span>
-</td>
+              </td>
 
               <td class="text-start">
                 <div class="btn-group">
@@ -147,7 +150,8 @@
               </td>
               <td class="text-center" style="max-width: 100px;" @click="showSRInput(ticket.sr_no, ticket.ticket_number)">
                 <span v-if="!selectedSRInput || selectedSRInput !== ticket.sr_no">{{ ticket.sr_no }}</span>
-                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedSRInput === ticket.sr_no"
+                <input type="text" name="sr_no" pattern="[0-9]*" title="SR number must be numeric"
+                  v-if="selectedRow === ticket.ticket_number && selectedSRInput === ticket.sr_no"
                   v-model="editedSR[ticket.sr_no]" @blur="updateSR(ticket.sr_no, ticket.ticket_number)"
                   @keyup.enter="updateSR(ticket.sr_no, ticket.ticket_number)"
                   class="w-100 rounded border border-secondary-subtle text-center">
@@ -399,16 +403,30 @@ const showRRInput = (rrNo, ticketNumber) => {
 
 const updateRR = async (rrNo, ticket_id) => {
   if (selectedRRInput.value === rrNo) {
+    const editedValue = parseInt(editedRR[rrNo]);
+    if (isNaN(editedValue)) {
+      page.props.flash.error = 'Invalid RR number';
+      return;
+    }
+
     const form = useForm({
       rr_no: editedRR[rrNo],
     });
 
-    await form.put(route('admin.tickets.update.rr', { ticket_id: ticket_id }));
+    try{
 
+    await form.put(route('admin.tickets.update.rr', { ticket_id: ticket_id }));
     selectedRRInput.value = null;
     editedRR[rrNo] = '';
+    
+    } catch (error) {
+
+      page.props.flash.error = 'An error occurred while updating the RR number';
+    }
   }
 };
+
+
 let selectedMSInput = ref(null);
 let editedMS = reactive({});
 
@@ -420,6 +438,9 @@ const showMSInput = (msNo, ticketNumber) => {
 
 const updateMS = async (msNo, ticket_id) => {
   if (selectedMSInput.value === msNo) {
+    if (!validateNumericInput(editedMS[msNo], 'MS')) {
+      return;
+    }
     const form = useForm({
       ms_no: editedMS[msNo],
     });
@@ -442,6 +463,9 @@ const showRSInput = (rsNo, ticketNumber) => {
 
 const updateRS = async (rsNo, ticket_id) => {
   if (selectedRSInput.value === rsNo) {
+    if (!validateNumericInput(editedRS[rsNo], 'RS')) {
+      return;
+    }
     const form = useForm({
       rs_no: editedRS[rsNo],
     });
@@ -464,6 +488,9 @@ const showSRInput = (srNo, ticketNumber) => {
 
 const updateSR = async (srNo, ticket_id) => {
   if (selectedSRInput.value === srNo) {
+    if (!validateNumericInput(editedSR[srNo], 'SR')) {
+      return;
+    }
     const form = useForm({
       sr_no: editedSR[srNo],
     });
@@ -528,6 +555,16 @@ const getComplexityClass = (complexity) => {
       return 'btn btn-secondary';
   }
 };
+
+const validateNumericInput = (inputValue, propName) => {
+  const isValid = /^\d+$/.test(inputValue);
+  if (!isValid) {
+    page.props.flash.error = `Invalid ${propName} number`;
+    return false;
+  }
+  return true;
+};
+
 </script>
 
 <style scoped>
