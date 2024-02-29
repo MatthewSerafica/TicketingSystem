@@ -33,7 +33,7 @@
                 <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationBar"
                     aria-controls="notificationBar">
                     <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
-                    <span class="text-light bg-danger position-absolute top-0 rounded-pill badge" id="count"
+                    <span class="text-light bg-danger position-absolute top-0 end-0 rounded-pill badge" id="count"
                         style="font-size: small; padding: 2px 5px 2px 5px;"></span>
                 </button>
 

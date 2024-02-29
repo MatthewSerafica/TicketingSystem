@@ -25,10 +25,10 @@
                         <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationBar"
                             aria-controls="notificationBar" @click="fetchNotifications">
                             <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
-                            <span v-if="notificationCount"
-                                class="position-absolute translate-middle badge rounded-pill bg-danger" id="count"
-                                style="font-size: small; top: 20px; right: 285px; padding: 2px 5px 2px 5px;">{{
-                                    notificationCount }}</span>
+                            <span v-if="notificationCount" class="position-relative">
+                                <span class="position-absolute translate-middle badge rounded-pill bg-danger"
+                                      style="font-size: small; top: -5px; right: -5px; padding: 2px 5px 2px 5px;">{{ notificationCount }}</span>
+                            </span>
                         </button>
 
                         <!-- Username Dropdown -->
