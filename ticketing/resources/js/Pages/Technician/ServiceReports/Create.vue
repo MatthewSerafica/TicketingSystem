@@ -2,15 +2,18 @@
   <div>
     <Header></Header>
     <form @submit.prevent="create" class="container">
-      <div class="form-container1">
-        <h2 class="text-center">SERVICE REPORT FORM</h2>
+      <div class="form-container1 d-flex justify-content-center align-items-center flex-column">
+        <h2 class="text-center pt-5">SERVICE REPORT FORM</h2>
 
+        <div class="col-md-6">
         <div class="input-group mb-3">
           <span class="input-group-text">SR-A:</span>
           <input type="text" class="form-control" id="service_id" v-model="form.service_id" required>
           <span v-if="form.errors.service_id" class="error-message">{{ form.errors.service_id }}</span>
+          </div>
         </div>
 
+        <div class="col-md-6">
         <div class="row mb-3">
           <div class="col">
             <label for="dateStarted" class="form-label">Date Started:</label>
@@ -27,9 +30,10 @@
             <input type="text" class="form-control" id="ticketNumber" v-model="form.ticket_number" required>
           </div>
         </div>
+        </div>
 
         
-        <div class="col">
+        <div class="col-md-6">
           <label for="technicianName" class="form-label">Technician Name:</label>
           <input type="text" class="form-control" id="technicianName" v-model="form.technician_name">
   
@@ -50,7 +54,7 @@
           </select>
           </div>
           
-          <div class="col">
+          <div class="col-md-6">
           <label for="action" class="form-label">Action Taken:</label>
           <input type="text" class="form-control" id="action" v-model="form.action">
           </div>
@@ -60,6 +64,7 @@
           <input type="text" class="form-control" id="recommendation" v-model="form.recommendation">
         </div>
 
+        <div class="col-md-6">
         <div class="row mb-3">
           <div class="col">
             <label for="dateDone" class="form-label">Date Done:</label>
@@ -71,15 +76,18 @@
             <input type="time" class="form-control" id="timeDone" v-model="form.time_done">
           </div>
         </div>
+        </div>
         
+        <div class="col-md-6">
         <div class="mb-3">
           <label for="remarks" class="form-label">Remarks</label>
           <input type="text" class="form-control" id="remarks" v-model="remarks">
         </div>
+        </div>
 
-        <div class="row justify-content-center">
+        <div class="row justify-content-end">
           <div class="col-md-6">
-            <div class="d-flex justify-content-center gap-2">
+            <div class="d-flex justify-content-end gap-2">
               <Button :name="'Submit'" :color="'primary'" ></Button>
               <Link :href="'/technician/service-report'" class="btn btn-outline-primary">Cancel</Link>
             </div>
