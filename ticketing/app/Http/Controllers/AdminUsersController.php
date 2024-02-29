@@ -214,30 +214,23 @@ class AdminUsersController extends Controller
             $request->validate([
                 'oldPassword' => 'required',
                 'newPassword' => 'required|min:8',
-                'confirmPassword' => 'required',
             ]);
 
             $user = User::where('id', $userId)->first();
-
 
             if (!Hash::check($request->oldPassword, $user->password)) {
                 return redirect()->back()->with('error', 'Old Password does not match');
             }
 
-            if ($request->newPassword !== $request->confirmPassword) {
-                return redirect()->back()->with('error', 'New Password do not match');
-            }
-
             $newPassword = $request->newPassword;
-
             $user->password = $newPassword;
             $user->save();
 
-            return inertia('Admin/Users/Show', [
-                'user' => $user,
-            ]);
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('success', 'Password changed successfully');
+
+            if (session('error') === null) {
+                return redirect()->route('admin')->with('success', 'Password changed successfully');
+            }
         } catch (ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
         } catch (QueryException $e) {
@@ -246,4 +239,5 @@ class AdminUsersController extends Controller
             return back()->with('error', 'An error occurred while updating the user.')->withInput();
         }
     }
+
 }
