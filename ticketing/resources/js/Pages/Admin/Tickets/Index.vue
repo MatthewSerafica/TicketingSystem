@@ -403,6 +403,10 @@ const showInput = (data, id, type) => {
 const updateData = async (data, id, updateField, type) => {
   console.log(selectedInput.value, editData[data], updateField)
   if (selectedInput.value === type) {
+
+    if (!validateNumericInput(editData[data], updateField)) {
+      return; 
+    }
     const form = useForm({
       [updateField]: editData[data],
     });
@@ -411,6 +415,8 @@ const updateData = async (data, id, updateField, type) => {
 
     selectedInput.value = null;
     editData[data] = '';
+
+    
   }
 };
 
