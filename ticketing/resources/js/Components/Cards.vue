@@ -19,7 +19,7 @@
 
 <script setup>
 const props = defineProps({
-    no: BigInt,
+    no:  Number,
     issue: String,
     employee: String,
     department: String,
