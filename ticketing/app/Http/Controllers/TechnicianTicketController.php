@@ -119,15 +119,16 @@ class TechnicianTicketController extends Controller
         $ticket->save();
     }
 
-    public function sr(Request $request, $ticket_id)
+    public function update(Request $request, $field, $id)
     {
         $request->validate([
-            'sr_no' => 'nullable',
+            $field => 'nullable',
         ]);
 
-        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
-
-        $ticket->sr_no = $request->sr_no;
+        $ticket = Ticket::where('ticket_number', $id)->first();
+        $ticket->$field = $request->$field;
         $ticket->save();
     }
+
+
 }
