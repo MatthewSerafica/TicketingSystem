@@ -17,6 +17,7 @@
                   <div class="flex-grow-1 w-50">
                     <label for="rs_no" class="fw-semibold">Requisition Slip No.</label>
                     <input id="rs_no" class="form-control rounded border-secondary-subtle" type="text" placeholder="Enter RS No..." v-model="form.rs_no" />
+                    <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
                   </div>
                   <div class="flex-grow-1 w-50">
                     <label for="issue" class="fw-semibold">Title</label>
@@ -97,9 +98,19 @@ const form = useForm({
   technician: null,
 })
 
-const create = () => form.post(route('admin.tickets.store'), { preserveScroll: false, preserveState: false })
+const create = () => {
+  if (form.rs_no && !/^\d+$/.test(form.rs_no)) {
+    form.errors.rs_no = 'Requisition Slip Number should contain only numeric characters.';
+    return;
+  }
+
+  form.post(route('admin.tickets.store'), { preserveScroll: false, preserveState: false });
+}
 </script>
   
-<style>
+<style scoped>
+.error-message {
+  color: red;
+}
 </style>
   

@@ -508,15 +508,5 @@ const validateNumericInput = (inputValue, propName) => {
   cursor: default;
 }
 
-.ticket-description:hover::after {
-  content: attr(data-hover-text);
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: pink;
-  color: red;
-  padding: 5px;
-  border-radius: 5px;
-  z-index: 9999;
-}
+
 </style>

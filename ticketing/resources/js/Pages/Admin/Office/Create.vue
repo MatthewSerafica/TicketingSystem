@@ -13,7 +13,7 @@
           <div class="d-flex flex-row gap-5 justify-content-center mb-4">
             <div class="d-flex flex-column flex-shrink-0 w-25">
               <label for="issue" class="fw-semibold">Office</label>
-              <input id="issue" class="form-control h-100 rounded border-secondary-subtle" type="text" placeholder="Enter Office..." v-model="form.office" />
+              <input id="issue" class="form-control h-100 rounded border-secondary-subtle" type="text" placeholder="Enter Office..." v-model="form.office" required/>
             </div>
             
           </div>
