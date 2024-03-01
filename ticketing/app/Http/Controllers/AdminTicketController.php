@@ -114,8 +114,14 @@ class AdminTicketController extends Controller
             'status' => 'Pending',
         ];
 
-        Ticket::create($ticketData);
+        $ticket = Ticket::create($ticketData);
         $employee->update(['made_ticket' => $employee->made_ticket + 1]);
+        if ($request->technician) {
+            $technician = Technician::where('technician_id', $request->technician)->firstOrFail();
+            $technician->user->notify(
+                new UpdateTicketTechnician($ticket)
+            );
+        }
 
         return redirect()->to('/admin/tickets')->with('success', 'Ticket Created');
     }

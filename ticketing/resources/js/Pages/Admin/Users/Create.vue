@@ -9,7 +9,7 @@
                         <h1>Create Users</h1>
                     </div>
 
-                   
+
                     <div class="d-flex flex-column">
                         <label for="user_type" class="fw-semibold">User Type</label>
                         <select id="user_type" class="form-select h-100 rounded border-secondary-subtle"
@@ -19,85 +19,85 @@
                             <option value="technician">Technician</option>
                         </select>
                     </div>
-                    
 
-                    
+
+
                     <div class="d-flex flex-row gap-3 justify-content-center">
                         <div class="col-md-9">
-                        <div class="d-flex flex-column">
-                            <label for="name" class="fw-semibold">Name</label>
-                            <input id="name" class="form-control rounded border-secondary-subtle" type="text"
-                                placeholder="First and Last Name..." v-model="form.name" required />
+                            <div class="d-flex flex-column">
+                                <label for="name" class="fw-semibold">Name</label>
+                                <input id="name" class="form-control rounded border-secondary-subtle" type="text"
+                                    placeholder="First and Last Name..." v-model="form.name" required />
+                            </div>
                         </div>
-                        </div>
-                        <div class="col-md-9">
-                        <div class="d-flex flex-column">
-                            <label for="email" class="fw-semibold">Email</label>
-                            <input id="email" class="form-control h-100 rounded border-secondary-subtle" type="email"
-                                placeholder="Enter Email..." v-model="form.email" />
+                        <div class="col-md-9 ">
+                            <div class="d-flex flex-column">
+                                <label for="email" class="fw-semibold">Email</label>
+                                <input id="email" class="form-control rounded border-secondary-subtle" type="email"
+                                    placeholder="Enter Email..." v-model="form.email" />
                                 <div v-if="form.errors.email">{{ form.errors.email }}</div>
-                        </div>
+                            </div>
                         </div>
                     </div>
                     <div class="d-flex flex-row gap-3 justify-content-center">
                         <div class="col-md-9">
-                        <div class="d-flex flex-column">
-                            <label for="password" class="fw-semibold">Password</label>
-                            <input id="password" class="form-control rounded border-secondary-subtle" type="password"
-                                placeholder="Enter Password..." v-model="form.password" required/>
-                        </div>
+                            <div class="d-flex flex-column">
+                                <label for="password" class="fw-semibold">Password</label>
+                                <input id="password" class="form-control rounded border-secondary-subtle" type="password"
+                                    placeholder="Enter Password..." v-model="form.password" required />
+                            </div>
                         </div>
                         <div class="col-md-9">
-                        <div class="d-flex flex-column">
-                            <label for="conf" class="fw-semibold">Confirm Password</label>
-                            <input id="conf" class="form-control h-100 rounded border-secondary-subtle" type="password"
-                                placeholder="Confirm Password..." v-model="form.conf" required/>
-                        </div>
+                            <div class="d-flex flex-column">
+                                <label for="conf" class="fw-semibold">Confirm Password</label>
+                                <input id="conf" class="form-control rounded border-secondary-subtle" type="password"
+                                    placeholder="Confirm Password..." v-model="form.conf" required />
+                            </div>
                         </div>
                     </div>
                     <div v-if="form.user_type === 'employee'" class="d-flex flex-row gap-3 justify-content-center">
                         <div class="col-md-6">
-                        <div class="d-flex flex-column">
-                            <label for="department" class="fw-semibold">Department</label>
-                            <select id="department" class="form-select h-100 rounded border-secondary-subtle"
-                                placeholder="Select Department..." v-model="form.department">
-                                <option disabled>Select Department</option>
-                                <option v-for="department in departments" :value="department.department">{{
-                                    department.department }}
-                                </option>
-                            </select>
-                        </div>
+                            <div class="d-flex flex-column">
+                                <label for="department" class="fw-semibold">Department</label>
+                                <select id="department" class="form-select h-100 rounded border-secondary-subtle"
+                                    placeholder="Select Department..." v-model="form.department">
+                                    <option disabled>Select Department</option>
+                                    <option v-for="department in departments" :value="department.department">{{
+                                        department.department }}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                         <div class="col-md-6">
-                        <div class="d-flex flex-column">
-                            <label for="office" class="fw-semibold">Office</label>
-                            <select id="office" class="form-select h-100 rounded border-secondary-subtle"
-                                placeholder="Select Department..." v-model="form.office">
-                                <option disabled>Select Office</option>
-                                <option v-for="office in offices" :value="office.office">{{
-                                    office.office }}
-                                </option>
-                            </select>  
-                        </div>
+                            <div class="d-flex flex-column">
+                                <label for="office" class="fw-semibold">Office</label>
+                                <select id="office" class="form-select h-100 rounded border-secondary-subtle"
+                                    placeholder="Select Department..." v-model="form.office">
+                                    <option disabled>Select Office</option>
+                                    <option v-for="office in offices" :value="office.office">{{
+                                        office.office }}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div v-if="form.user_type === 'technician'" class="d-flex flex-row gap-3 justify-content-center">
+                    <div v-if="form.user_type === 'technician'" class="d-flex flex-row gap-3 justify-content-center w-25">
                         <div class="col-md-10">
-                        <div class="d-flex flex-column">
-                            <label for="assigned" class="fw-semibold">Assign a Department</label>
-                            <select id="assigned" class="form-select h-100 rounded border-secondary-subtle"
-                                placeholder="Select Department..." v-model="form.assigned">
-                                <option disabled>Select Department</option>
-                                <option v-for="department in departments" :value="department.department">{{
-                                    department.department }}
-                                </option>
-                            </select>
-                        </div>
+                            <div class="d-flex flex-column">
+                                <label for="assigned" class="fw-semibold">Assign a Department</label>
+                                <select id="assigned" class="form-select h-100 rounded border-secondary-subtle"
+                                    placeholder="Select Department..." v-model="form.assigned">
+                                    <option disabled>Select Department</option>
+                                    <option v-for="department in departments" :value="department.department">{{
+                                        department.department }}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="container">    
+                <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-md-6">
                             <div class="d-flex justify-content-end gap-2">
@@ -115,9 +115,9 @@
 
 <script setup>
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link, useForm} from "@inertiajs/vue3";
+import { Link, useForm } from "@inertiajs/vue3";
 import Button from '@/Components/Button.vue';
-import { defineProps, ref, watch } from 'vue'; 
+import { defineProps, ref, watch } from 'vue';
 
 const props = defineProps({
     departments: Object,
@@ -138,7 +138,7 @@ const form = useForm({
 const create = async () => {
     if (form.password !== form.conf) {
         alert("Passwords don't match!");
-        return; 
+        return;
     }
 
     try {
@@ -168,7 +168,7 @@ watch(() => form.email, async (newValue) => {
     try {
         if (!newValue.endsWith("@slu.edu.ph")) {
             form.errors.email = ['Email must end with "@slu.edu.ph"'];
-            return; 
+            return;
         }
 
         const response = await fetch(`/check-email?email=${newValue}`);
