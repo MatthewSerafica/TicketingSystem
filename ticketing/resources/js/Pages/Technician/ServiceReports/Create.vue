@@ -152,7 +152,7 @@ const create = async () => {
 }
 
 const validate_service_id = async (service_id) => {
-    const service_id_regex = /^SR-B \d{4}$/;
+    const service_id_regex = /^\d{4}$/;
 
     if (!service_id_regex.test(service_id)) {
         console.error('Invalid service_id format');
@@ -169,6 +169,7 @@ const validate_service_id = async (service_id) => {
 
     return true;
 }
+
 </script>
 
 <style scoped>
