@@ -26,7 +26,7 @@
           </Link>
 
         </div>
-        <div class="input-group mt-3 mb-4">
+        <div class="input-group mt-3">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
           <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
             placeholder="Search Department..." aria-label="searchIcon" aria-describedby="searchIcon" />
@@ -34,6 +34,10 @@
       </div>
 
       <div class="w-75">
+        <div v-if="departments.data.length" class="d-flex justify-content-end mb-2">
+          <Pagination :links="departments.links" :key="'departments'" />
+          <br>
+        </div>
         <table class="table table-striped border border-secondary-subtle">
           <thead>
             <tr class="text-start">
@@ -61,10 +65,6 @@
             </tr>
           </tbody>
         </table>
-        <div v-if="departments.data.length" class="flex justify-center w-full mt-6">
-          <Pagination :links="departments.links" :key="'departments'" />
-          <br>
-        </div>
       </div>
     </div>
     <Delete v-if="isShowDelete" :department="selectedDepartmentId" @closeDelete="closeDelete"/>

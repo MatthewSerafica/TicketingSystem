@@ -2,11 +2,9 @@
     <div class="d-flex gap-1">
       <template v-for="(link, index) in links">
         <Link v-if="link.url !== undefined && link.url !== null" :key="index"
-          class="btn btn-outline-primary"
+          class="btn btn-outline-primary border-2 fw-semibold"
           :href="link.url" :class="{ 'btn btn-outline-primary': link.active }" v-html="getLabel(link)">
         </Link>
-
-        
       </template>
     </div>
   </template>
