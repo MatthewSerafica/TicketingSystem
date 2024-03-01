@@ -22,9 +22,9 @@
         </div>
 
         <div class="container">
-          <div class="row justify-content-center">
+          <div class="row justify-content-end">
             <div class="col-md-6">
-              <div class="d-flex justify-content-center gap-2">
+              <div class="d-flex gap-2">
                 <Button :name="'Submit'" :color="'primary'" class="submit-btn"></button>
                 <Link :href="`/admin/department`" class=" btn btn-outline-primary">Cancel</Link>
               </div>
