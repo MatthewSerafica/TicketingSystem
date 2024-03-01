@@ -18,7 +18,8 @@ return new class extends Migration
             $table->time('time_started');
             $table->unsignedBigInteger('ticket_number');
             $table->foreign('ticket_number')->references('ticket_number')->on('tickets');
-            $table->string('technician_name');
+            $table->unsignedBigInteger('technician');
+            $table->foreign('technician')->references('technician_id')->on('technicians')->onUpdate('cascade')->onDelete('cascade');
             $table->string('requesting_office'); 
             $table->string('equipment_no');
             $table->string('issue');

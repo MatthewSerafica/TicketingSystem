@@ -9,12 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ServiceReport extends Model
 {
     use HasFactory;
-
-
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     public function technician(): BelongsTo
     {
-        return $this->belongsTo(Technician::class, 'technicians_id', 'technician_id');
+        return $this->belongsTo(Technician::class, 'technician', 'technician_id');
     }
 
     public function ticket(): BelongsTo
@@ -27,7 +29,7 @@ class ServiceReport extends Model
         'date_started',
         'time_started',
         'ticket_number',
-        'technician_name',
+        'technician',
         'requesting_office',
         'equipment_no',
         'issue',

@@ -43,7 +43,7 @@
             <div class="row mb-4">
               <div class="col-md-4">
                 <label for="technicianName" class="form-label">Technician Name:</label>
-                <input type="text" class="form-control" id="technicianName" v-model="form.technician_name">
+                <input type="text" class="form-control" id="technicianName" v-model="form.technician_name" readonly>
               </div>
               <div class="col-md-4">
                 <label for="requestingOffice" class="form-label">Requesting Office:</label>
@@ -130,6 +130,7 @@ const form = useForm({
   time_started: '',
   ticket_number: '',
   technician_name: page.props.user.name,
+  technician: page.props.user.id,
   requesting_office: '',
   equipment_no: '',
   issue: '',
