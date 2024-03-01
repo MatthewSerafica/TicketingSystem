@@ -42,7 +42,7 @@
               <td class="text-center py-3">{{ ticket.technician ? ticket.technician.user.name : 'Unassigned' }}</td>
               <td class="text-center py-3"><span :class="getBadgeColor(ticket.status)" class="p-3">{{ ticket.status }}</span></td>
               <td class="text-center py-3">{{ ticket.rs_no ? ticket.rs_no : 'Unavailable' }}</td>
-              <td class="text-center py-3">{{ ticket.resolved_at ? ticket.resolved_at : 'Not yet resolved' }}</td>
+              <td class="text-center py-3">{{ ticket.resolved_at ? ticket.resolved_at : 'Unresolved' }}</td>
             </tr>
           </tbody>
         </table>

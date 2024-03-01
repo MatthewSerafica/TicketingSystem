@@ -36,7 +36,6 @@ class TechnicianDashboardController extends Controller
             $request->validate([
                 'oldPassword' => 'required',
                 'newPassword' => 'required|min:8',
-                'confirmPassword' => 'required',
             ]);
 
             $user = User::where('id', $userId)->first();
@@ -46,16 +45,16 @@ class TechnicianDashboardController extends Controller
                 return redirect()->back()->with('error', 'Old Password does not match');
             }
 
-            if ($request->newPassword !== $request->confirmPassword) {
-                return redirect()->back()->with('error', 'New Password do not match');
-            }
-
             $newPassword = $request->newPassword;
-
             $user->password = $newPassword;
             $user->save();
 
-            return redirect()->to('Technician/Dashboard/Change')->with('success', 'Password changed successfully');
+            return redirect()->back()->with('success', 'Password changed successfully');
+
+            if (session('error') === null) {
+                return redirect()->route('technician')->with('success', 'Password changed successfully');
+            }
+
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         } catch (ValidationException $e) {
