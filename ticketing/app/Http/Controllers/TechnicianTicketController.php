@@ -126,7 +126,17 @@ class TechnicianTicketController extends Controller
         ]);
 
         $ticket = Ticket::where('ticket_number', $id)->first();
+        
         $ticket->$field = $request->$field;
+        
+        
+        if ($ticket->sr_no === null){
+            // lol tinamad na akong ayusin yung if statement kaya ganto nalang
+        } else {
+            $ticket->resolved_at = now();
+            $ticket->status = 'Resolved';
+        }
+
         $ticket->save();
     }
 
