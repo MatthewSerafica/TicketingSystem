@@ -14,52 +14,37 @@
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
                 <div class="d-flex flex-row gap-3">
-                  <div class="flex-grow-1">
+                  <div class="flex-grow-1 w-50">
                     <label for="rs_no" class="fw-semibold">Requisition Slip No.</label>
                     <input id="rs_no" class="form-control rounded border-secondary-subtle" type="text" placeholder="Enter RS No..." v-model="form.rs_no" />
+                    <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
                   </div>
-                  <div class="flex-grow-1">
+                  <div class="flex-grow-1 w-50">
                     <label for="issue" class="fw-semibold">Title</label>
-                    <input id="issue" class="form-control rounded border-secondary-subtle" type="text" placeholder="Enter Ticket Title..." v-model="form.issue" />
+                    <input id="issue" class="form-control rounded border-secondary-subtle" type="text" placeholder="Enter Ticket Title..." v-model="form.issue" required/>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row justify-content-center mb-4">
-              <div class="col-md-8">
-                <div class="d-flex flex-row gap-3">
-                  <div class="flex-grow-1">
-                    <label for="department" class="fw-semibold">Department/Office</label>
-                    <select id="department" class="form-select rounded border-secondary-subtle" placeholder="Select Department..." v-model="form.department">
-                      <option disabled>Select Department</option>
-                      <option>Finance Department</option>
-                      <option>Registrar</option>
-                      <option>Help Desk</option>
-                    </select>
-                  </div>
-                  <div class="flex-grow-1">
+                  <div class="flex-grow-1 w-50">
                     <label for="service" class="fw-semibold">Employee</label>
                     <select id="service" class="form-select rounded border-secondary-subtle" placeholder="Assign Technician..." v-model.number="form.employee">
                       <option disabled>Assign Employee</option>
-                      <option v-for="employee in employees" :value="employee.employee_id">{{ employee.user.name }}</option>
+                      <option v-for="employee in employees" :value="employee.employee_id">{{ employee.user.name }} | {{ employee.department }}-{{ employee.office }}</option>
                     </select>
                   </div>
                 </div>
               </div>
             </div>
-
+           
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
                 <label for="description" class="fw-semibold">Description</label>
-                <textarea id="description" class="form-control rounded border-secondary-subtle" placeholder="Enter Ticket Description..." v-model="form.description"></textarea>
+                <textarea id="description" class="form-control rounded border-secondary-subtle p-3" placeholder="Enter Ticket Description..." v-model="form.description" rows="5"></textarea>
               </div>
             </div>
-
+            
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
                 <div class="d-flex flex-row gap-3">
-                  <div class="flex-grow-1">
+                  <div class="flex-grow-1 w-50">
                     <label for="service" class="fw-semibold">Service</label>
                     <select id="service" class="form-select rounded border-secondary-subtle" placeholder="Select Service..." v-model="form.service">
                       <option disabled>Select Service</option>
@@ -68,7 +53,7 @@
                       <option value="Software Troubleshoot">Software Troubleshoot</option>
                     </select>
                   </div>
-                  <div class="flex-grow-1">
+                  <div class="flex-grow-1 w-50">
                     <label for="technician" class="fw-semibold">Technicians</label>
                     <select id="technician" class="form-select rounded border-secondary-subtle" placeholder="Assign Technician..." v-model.number="form.technician">
                       <option disabled>Assign Technician</option>
@@ -113,9 +98,19 @@ const form = useForm({
   technician: null,
 })
 
-const create = () => form.post(route('admin.tickets.store'), { preserveScroll: false, preserveState: false })
+const create = () => {
+  if (form.rs_no && !/^\d+$/.test(form.rs_no)) {
+    form.errors.rs_no = 'Requisition Slip Number should contain only numeric characters.';
+    return;
+  }
+
+  form.post(route('admin.tickets.store'), { preserveScroll: false, preserveState: false });
+}
 </script>
   
-<style>
+<style scoped>
+.error-message {
+  color: red;
+}
 </style>
   

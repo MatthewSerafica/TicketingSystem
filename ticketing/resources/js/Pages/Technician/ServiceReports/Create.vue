@@ -35,6 +35,7 @@
               <div class="col-md-4">
                 <label for="ticketNumber" class="form-label">Ticket Number:</label>
                 <input type="text" class="form-control" id="ticketNumber" v-model="form.ticket_number" required>
+                <span v-if="form.errors.ticket_number" class="error-message">{{ form.errors.ticket_number }}</span>
               </div>
             </div>
 
@@ -87,7 +88,7 @@
               </div>
               <div class="col-md-4">
                 <label for="remarks" class="form-label">Remarks</label>
-                <input type="text" class="form-control" id="remarks" v-model="remarks">
+                <input type="text" class="form-control" id="remarks" v-model="form.remarks">
               </div>
             </div>
 
@@ -136,20 +137,27 @@ const form = useForm({
   recommendation: '',
   date_done: '',
   time_done: '',
-  remarks:''
+  remarks:'',
 });
 
 
 const create = async () => {
-    const is_validserviceid = await validate_service_id(form.service_id);
+    if (!/^\d+$/.test(form.ticket_number)) {
+        form.errors.ticket_number = 'Ticket number should contain only numeric characters.';
+        return;
+    }
 
-    if (!is_validserviceid) {
-        form.errors.service_id = 'Invalid or duplicate service id';
+    const is_valid_service_id = await validate_service_id(form.service_id);
+
+    if (!is_valid_service_id) {
+        form.errors.service_id = 'Invalid or duplicate service ID';
         return;
     }
 
     form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false });
 }
+
+
 
 const validate_service_id = async (service_id) => {
     const service_id_regex = /^\d{4}$/;

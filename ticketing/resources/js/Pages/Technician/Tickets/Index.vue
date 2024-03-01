@@ -48,7 +48,9 @@
               <td class="text-start">{{ formatDate(ticket.created_at) }}</td>
               <td class="text-start"><span class="fw-medium">{{ ticket.employee.user.name }}</span><br><small>{{
                 ticket.employee.department }} - {{ ticket.employee.office }}</small></td>
-              <td class="text-start text-truncate" style="max-width: 80px;">{{ ticket.description }}</td>
+  <td class="text-start text-truncate ticket-description" style="max-width: 80px;" :title="ticket.description">
+    {{ ticket.description }}
+  </td>
               <td class="text-start">{{ ticket.service ? ticket.service : 'Unassigned' }}</td>
 
               <td class="text-start" style="max-width: 20px;" @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
@@ -295,4 +297,11 @@ const formatDate = (date) => {
 .custom-rounded-table {
   border-radius: 10px;
 }
+
+.ticket-description {
+  position: relative;
+  cursor: default;
+}
+
+
 </style>

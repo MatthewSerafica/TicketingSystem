@@ -38,7 +38,7 @@
             <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number">
               <td class="text-center py-3">{{ ticket.ticket_number }}</td>
               <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
-              <td class="text-center py-3">{{ ticket.issue }}</td>
+              <td class="text-center py-3 cursor" :title="ticket.issue" >{{ ticket.issue }}</td>
               <td class="text-center py-3">{{ ticket.technician ? ticket.technician.user.name : 'Unassigned' }}</td>
               <td class="text-center py-3"><span :class="getBadgeColor(ticket.status)" class="p-3">{{ ticket.status }}</span></td>
               <td class="text-center py-3">{{ ticket.rs_no ? ticket.rs_no : 'Unavailable' }}</td>
@@ -173,5 +173,9 @@ const getBadgeColor = (status) => {
 }
 .btn-options {
   width: 100px;
+}
+
+.cursor{
+  cursor: default;
 }
 </style>

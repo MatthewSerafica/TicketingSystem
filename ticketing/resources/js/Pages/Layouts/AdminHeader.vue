@@ -3,11 +3,8 @@
         <nav class="navbar navbar-expand-lg shadow-sm header-color">
             <div class="container-fluid gap-3">
                 <div class="d-flex gap-2 col-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
-                        class="bi bi-brilliance mt-2" viewBox="0 0 16 16">
-                        <path
-                            d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16M1 8a7 7 0 0 0 7 7 3.5 3.5 0 1 0 0-7 3.5 3.5 0 1 1 0-7 7 7 0 0 0-7 7" />
-                    </svg>
+                    <Logo></Logo>
+
                     <a class="navbar-brand text-white" href="/admin">TMDD Ticketing System</a>
                 </div>
 
@@ -139,6 +136,7 @@ import { Link, usePage } from "@inertiajs/vue3";
 import axios from 'axios';
 import { computed, ref, defineProps, reactive, onMounted } from 'vue';
 import moment from "moment";
+import Logo from '@/Components/Logo.vue';
 
 const props = defineProps({});
 const activeLink = ref('');

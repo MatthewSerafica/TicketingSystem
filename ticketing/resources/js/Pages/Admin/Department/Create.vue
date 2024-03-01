@@ -14,7 +14,7 @@
           <div class="d-flex flex-row gap-5 justify-content-center mb-4">
             <div class="d-flex flex-column flex-shrink-0 w-25">
               <label for="issue" class="fw-semibold">Department</label>
-              <input id="issue" class="form-control h-100 rounded border-secondary-subtle" type="text" placeholder="Enter Department Abbreviation..." v-model="form.department" />
+              <input id="issue" class="form-control h-100 rounded border-secondary-subtle" type="text" placeholder="Enter Department Abbreviation..." v-model="form.department" required/>
             </div>
             
           </div>
