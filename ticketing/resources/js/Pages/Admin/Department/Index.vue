@@ -14,7 +14,7 @@
         :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
       </Toast>
     </div>
-    
+
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
@@ -22,7 +22,7 @@
           <p class="fs-5"> Manage All Departments</p>
 
           <Link :href="route('admin.department.create')">
-            <Button :name="'Add Department'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
+          <Button :name="'Add New Department'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-4"></Button>
           </Link>
 
         </div>
@@ -49,14 +49,15 @@
 
               <td class="text-center py-4">{{ department.id }}</td>
               <td class="text-center" style="max-width: 60px;"
-                @dblclick="startEditing(department.id, department.department)">
+                @click="startEditing(department.id, department.department)">
                 <span v-if="selectedDepartmentId !== department.id">{{ department.department }}</span>
                 <input v-model="editedDepartment[department.id]" v-if="selectedDepartmentId === department.id"
-                  @keyup.enter="saveDepartment(department.id)" @blur="saveDepartment(department.id)">
+                  @keyup.enter="saveDepartment(department.id)" @blur="saveDepartment(department.id)"
+                  class="w-50 rounded border border-secondary-subtle text-center">
               </td>
               <td class="text-center">{{ formatDate(department.created_at) }}</td>
               <td class="text-center">{{ formatDate(department.updated_at) }}</td>
-              <td><Button :name="'Delete'" :color="'danger'" @click="showModal">Delete</Button></td>
+              <td><button type="button" as="button" class="btn btn-danger" @click="showDelete(department)">Delete</button></td>
             </tr>
           </tbody>
         </table>
@@ -66,11 +67,12 @@
         </div>
       </div>
     </div>
+    <Delete v-if="isShowDelete" :department="selectedDepartmentId" @closeDelete="closeDelete"/>
   </div>
-  <DeleteModal v-if="isShowModal" />
 </template>
+
 <script setup>
-import DeleteModal from "@/Components/DeleteModal.vue";
+import Delete from "@/Components/DeleteModal.vue";
 import Pagination from "@/Components/Pagination.vue";
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link, useForm, usePage } from "@inertiajs/vue3";
@@ -103,11 +105,6 @@ const props = defineProps({
   departments: Object,
 });
 
-const search = ref('');
-
-const formatDate = (date) => {
-  return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
-};
 
 //Start of Update Functions 
 let editedDepartment = reactive({});
@@ -120,36 +117,36 @@ const startEditing = (departmentId, departmentName) => {
   }
 };
 
-const saveDepartment = async (departmentId) => {
+const saveDepartment = (departmentId) => {
   if (departmentId && editedDepartment[departmentId] !== null) {
     const form = useForm({
       department: editedDepartment[departmentId],
     });
-    await form.put(route('admin.department.update', { department_id: departmentId }), {
-      _method: 'put',
-      department: editedDepartment[departmentId],
-    });
+    form.put(route('admin.department.update', { department_id: departmentId }));
     selectedDepartmentId.value = null;
   }
 };
+//End of Update Functions
 
-const selectedDepartmentForDeletion = ref(null);
-const isShowModal = ref(false);
+const isShowDelete = ref(false);
 
-function closeModal() {
-  isShowModal.value = false
+function closeDelete() {
+  if(isShowDelete.value) {
+    selectedDepartmentId.value = null
+    isShowDelete.value = false;
+  }
 }
 
-function showModal() {
-  console.log(isShowModal.value)
-  isShowModal.value = true;
+function showDelete(department) {
+  if(!isShowDelete.value) {
+    selectedDepartmentId.value = department;
+    isShowDelete.value = true;
+  }
 }
 
-const deleteDepartment = async () => {
-  isDeleteModalVisible.value = false; // Close the delete modal
-  selectedDepartmentForDeletion.value = null; // Reset selected department ID
+const formatDate = (date) => {
+  return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
 };
-
 </script>
 
 <style scoped></style>

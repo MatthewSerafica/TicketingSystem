@@ -29,9 +29,6 @@
             placeholder="Search Offices..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
-
-
-
       <div class="w-75">
         <table class="table table-striped border border-secondary-subtle">
           <thead>
@@ -54,7 +51,7 @@
               </td>
               <td class="text-center">{{ formatDate(office.created_at) }}</td>
               <td class="text-center">{{ formatDate(office.updated_at) }}</td>
-              <td><Button :name="'Delete'" :color="'danger'"  @click="showDeleteModal(office.id)"></Button></td>
+              <td><button type="button" as="button" class="btn btn-danger" @click="showDelete(office)">Delete</button></td>
             </tr>
           </tbody>
         </table>
@@ -63,19 +60,21 @@
           <br>
         </div>
       </div>
-
+      <Delete v-if="isShowDelete" :office="selectedOfficeId" @closeDelete="closeDelete"/>
     </div>
   </div>
 </template>
+
 <script setup>
-import pagination from "@/Components/Pagination.vue";
-import Header from "@/Pages/Layouts/AdminHeader.vue";
-import moment from "moment";
-import { Link, useForm, usePage } from "@inertiajs/vue3";
-import { ref, reactive, watchEffect } from 'vue';
-import Toast from '@/Components/Toast.vue';
-import Alpine from 'alpinejs';
 import Button from '@/Components/Button.vue';
+import Delete from "@/Components/DeleteModal.vue";
+import pagination from "@/Components/Pagination.vue";
+import Toast from '@/Components/Toast.vue';
+import Header from "@/Pages/Layouts/AdminHeader.vue";
+import { Link, useForm, usePage } from "@inertiajs/vue3";
+import Alpine from 'alpinejs';
+import moment from "moment";
+import { reactive, ref, watchEffect } from 'vue';
 
 Alpine.start()
 
@@ -110,9 +109,6 @@ const formatDate = (date) => {
 let editedOffice = reactive({});
 let selectedOfficeId = ref(null);
 
-let selectedRow = ref(null);
-
-
 const startEditing = (officeId, officeName) => {
   selectedOfficeId.value = officeId;
   if (!editedOffice[officeId]) {
@@ -121,20 +117,31 @@ const startEditing = (officeId, officeName) => {
 };
 
 // Method to save the edited office name
-const saveOffice = async (officeId) => {
+const saveOffice = (officeId) => {
   if (officeId && editedOffice[officeId] !== null) {
     const form = useForm({
       office: editedOffice[officeId],
     });
-    await form.put(route('admin.office.update', { office_id: officeId }), {
-      _method: 'put',
-      office: editedOffice[officeId],
-    });
+    form.put(route('admin.office.update', { office_id: officeId }));
     selectedOfficeId.value = null;
   }
 };
 
+const isShowDelete = ref(false);
 
+function closeDelete() {
+  if(isShowDelete.value) {
+    selectedOfficeId.value = null
+    isShowDelete.value = false;
+  }
+}
+
+function showDelete(office) {
+  if(!isShowDelete.value) {
+    selectedOfficeId.value = office;
+    isShowDelete.value = true;
+  }
+}
 
 
 

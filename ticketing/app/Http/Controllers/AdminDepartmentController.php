@@ -54,4 +54,13 @@ class AdminDepartmentController extends Controller
         return redirect()->back()->with('success', 'Department Updated!')->with('message', $old_department . ' is updated to ' . $request->department);
     }
 
+    public function destroy($id)
+    {
+        $department = Department::findOrFail($id);
+        $name = $department->department;
+        $department->delete();
+
+        return redirect()->back()->with('success', 'Department Deleted!')->with('message', $name . ' has been deleted from the departments');
+    }
+
 }
