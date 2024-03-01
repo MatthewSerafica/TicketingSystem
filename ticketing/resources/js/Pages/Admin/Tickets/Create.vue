@@ -10,25 +10,47 @@
           </div>
 
           <div class="create-ticket">
-            
+
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
                 <div class="d-flex flex-row gap-3">
                   <div class="flex-grow-1 w-50">
                     <label for="rs_no" class="fw-semibold">Requisition Slip No.</label>
-                    <input id="rs_no" class="form-control rounded border-secondary-subtle" type="text" placeholder="Enter RS No..." v-model="form.rs_no" />
+                    <input id="rs_no" class="form-control rounded border-secondary-subtle" type="text"
+                      placeholder="Enter RS No..." v-model="form.rs_no" />
                     <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
                   </div>
+
                   <div class="flex-grow-1 w-50">
                     <label for="issue" class="fw-semibold">Title</label>
-                    <input id="issue" class="form-control rounded border-secondary-subtle" type="text" placeholder="Enter Ticket Title..." v-model="form.issue" />
+                    <input id="issue" class="form-control rounded border-secondary-subtle" type="text"
+                      placeholder="Enter Ticket Title..." v-model="form.issue" />
                   </div>
-                  <div class="flex-grow-1 w-50">
-                    <label for="service" class="fw-semibold">Employee</label>
-                    <select id="service" class="form-select rounded border-secondary-subtle" placeholder="Assign Technician..." v-model.number="form.employee">
-                      <option disabled>Assign Employee</option>
-                      <option v-for="employee in employees" :value="employee.employee_id">{{ employee.user.name }} | {{ employee.department }}-{{ employee.office }}</option>
-                    </select>
+
+                  <div class="flex-grow-1 w-50 d-flex flex-column">
+                    <label for="employee" class="fw-semibold">Employee</label>
+                    <div class="btn-group" @click.stop>
+                      <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ selectedEmployee ? selectedEmployee : 'Select a client...' }}
+                      </button>
+                      <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li class="px-2">
+                          <input id="employee-search" class="form-control border-secondary-subtle" type="text"
+                            placeholder="Search Employee..." v-model="search"/>
+                        </li>
+                        <li v-if="employees" v-for="employee in employees" class="btn dropdown-item"
+                          @click="selectEmployee(employee)">
+                          <span class="fw-semibold">{{ employee.user.name }}</span>
+                          <br> <small>{{ employee.department }}-{{ employee.office }}</small>
+                        </li>
+                        <li v-else-if="!employees">No results found...</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -37,7 +59,8 @@
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
                 <label for="description" class="fw-semibold">Description</label>
-                <textarea id="description" class="form-control rounded border-secondary-subtle p-3" placeholder="Enter Ticket Description..." v-model="form.description" rows="5"></textarea>
+                <textarea id="description" class="form-control rounded border-secondary-subtle p-3"
+                  placeholder="Enter Ticket Description..." v-model="form.description" rows="5"></textarea>
               </div>
             </div>
 
@@ -46,7 +69,8 @@
                 <div class="d-flex flex-row gap-3">
                   <div class="flex-grow-1 w-50">
                     <label for="service" class="fw-semibold">Service</label>
-                    <select id="service" class="form-select rounded border-secondary-subtle" placeholder="Select Service..." v-model="form.service">
+                    <select id="service" class="form-select rounded border-secondary-subtle"
+                      placeholder="Select Service..." v-model="form.service">
                       <option disabled>Select Service</option>
                       <option value="Network Troubleshoot">Network Troubleshoot</option>
                       <option value="Hardware Repair">Hardware Repair</option>
@@ -55,9 +79,11 @@
                   </div>
                   <div class="flex-grow-1 w-50">
                     <label for="technician" class="fw-semibold">Technicians</label>
-                    <select id="technician" class="form-select rounded border-secondary-subtle" placeholder="Assign Technician..." v-model.number="form.technician">
+                    <select id="technician" class="form-select rounded border-secondary-subtle"
+                      placeholder="Assign Technician..." v-model.number="form.technician">
                       <option disabled>Assign Technician</option>
-                      <option v-for="technician in technicians" :value="technician.technician_id">{{ technician.user.name }}</option>
+                      <option v-for="technician in technicians" :value="technician.technician_id">{{ technician.user.name
+                      }}</option>
                     </select>
                   </div>
                 </div>
@@ -80,14 +106,64 @@
 </template>
   
 <script setup>
-import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link, useForm } from "@inertiajs/vue3";
 import Button from '@/Components/Button.vue';
+import Header from "@/Pages/Layouts/AdminHeader.vue";
+import { Link, router, useForm } from "@inertiajs/vue3";
+import { ref, watch } from "vue";
 
 const props = defineProps({
   technicians: Object,
   employees: Object,
+  filters: Object,
 })
+
+let selectedEmployee = ref('');
+let search = ref(props.filters.search);
+let sortColumn = ref("ticket_number");
+let sortDirection = ref("asc");
+let timeoutId = null;
+
+const fetchData = () => {
+  router.get(
+    route('admin.tickets.create', {
+      search: search.value,
+      sort: sortColumn.value,
+      direction: sortDirection.value,
+    },
+      {
+        preserveState: true,
+        replace: true,
+        preserveScroll: true,
+      }
+    )
+  )
+}
+const resetSorting = () => {
+  console.log("Reset Sorting");
+  sortColumn.value = "employee_id"
+  sortDirection.value = "asc"
+}
+
+const debouncedFetchData = () => {
+  if (timeoutId) {
+    clearTimeout(timeoutId)
+  }
+  timeoutId = setTimeout(() => {
+    fetchData()
+  }, 500)
+}
+
+watch(search, () => {
+  if (!search.value) {
+    resetSorting()
+  }
+  debouncedFetchData();
+})
+
+const selectEmployee = (employee) => {
+  selectedEmployee.value = employee.user.name;
+  form.employee = employee.employee_id;
+}
 
 const form = useForm({
   rs_no: null,

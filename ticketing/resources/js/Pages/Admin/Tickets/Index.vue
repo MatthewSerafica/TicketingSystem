@@ -33,14 +33,18 @@
               @click="filterTickets('resolved')"></Button>
           </div>
         </div>
-        <div class="input-group mt-3 mb-4">
+        <div class="input-group mt-3">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
           <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
             placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
       <!--Data Table-->
-      <div class="table-responsive">
+      <div class="">
+        <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2">
+          <Pagination :links="tickets.links" :key="'tickets'" />
+          <br>
+        </div>
         <table class="table table-hover shadow custom-rounded-table" style="max-width: 110rem;">
           <thead>
             <tr class="text-start">
@@ -214,10 +218,6 @@
           </tbody>
         </table>
         <!--Pagination-->
-        <div v-if="tickets.data.length" class="flex justify-center w-full mt-6">
-          <Pagination :links="tickets.links" :key="'tickets'" />
-          <br>
-        </div>
       </div>
     </div>
   </div>
@@ -508,5 +508,15 @@ const validateNumericInput = (inputValue, propName) => {
   cursor: default;
 }
 
-
+.ticket-description:hover::after {
+  content: attr(data-hover-text);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: pink;
+  color: red;
+  padding: 5px;
+  border-radius: 5px;
+  z-index: 9999;
+}
 </style>

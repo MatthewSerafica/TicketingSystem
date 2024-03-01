@@ -71,13 +71,28 @@ class AdminTicketController extends Controller
     }
 
 
-    public function create()
+    public function create(Request $request)
     {
         $technicians = Technician::with('user')->get();
-        $employees = Employee::with('user')->get();
+        $searchQuery = $request->input('search');
+
+        $employees = Employee::with('user')
+            ->when($searchQuery, function ($query) use ($searchQuery) {
+                $query->where(function ($subquery) use ($searchQuery) {
+                    $subquery->whereHas('user', function ($nameQuery) use ($searchQuery) {
+                        $nameQuery->where('name', 'like', '%' . $searchQuery . '%');
+                    })
+                        ->orWhere('department', 'like', '%' . $searchQuery . '%')
+                        ->orWhere('office', 'like', '%' . $searchQuery . '%');
+                });
+            })
+            ->get();
+
+        $filter = $request->only(['search']);
         return inertia('Admin/Tickets/Create', [
             'technicians' => $technicians,
             'employees' => $employees,
+            'filters' => $filter,
         ]);
     }
 
