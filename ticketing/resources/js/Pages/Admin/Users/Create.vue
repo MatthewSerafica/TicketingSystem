@@ -20,11 +20,6 @@
                         </select>
                     </div>
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 1561b008bb26db3a4eab50d2558acf928acde4ed
                     <div class="d-flex flex-row gap-3 justify-content-center">
                         <div class="col-md-9">
                             <div class="d-flex flex-column">
@@ -33,7 +28,7 @@
                                     placeholder="First and Last Name..." v-model="form.name" required />
                             </div>
                         </div>
-                        </div>
+                        
                         <div class="col-md-9">
                         <div class="d-flex flex-column">
                             <label for="email" class="fw-semibold">Email</label>
@@ -111,7 +106,7 @@
                         </div>
                     </div>
                 </div>
-
+                
             </form>
         </div>
     </div>
