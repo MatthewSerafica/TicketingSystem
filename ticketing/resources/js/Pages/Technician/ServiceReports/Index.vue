@@ -18,11 +18,11 @@
         </div>
       </div>
 
-    <div class="table-container mt-4">
-      <table class="table table-striped border border-secondary-subtle">
+    <div class="w-75">
+      <table class="table table-hover shadow custom-rounded-table">
         <thead>
           <tr class="text-center">
-            <th>Service No</th>
+            <th class="text-center">Service No</th>
             <th>Date Started</th>
             <th>Time Started</th>
             <th>Ticket No</th>
@@ -38,20 +38,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="service_report in service_reports" :key="service_report.service_id" class="text-center">
-              <td class="text-center py-3">{{ service_report.service_id }}</td>
-              <td class="text-center py-3">{{ moment(service_report.date_started).format("YYYY-MM-DD") }}</td>
-              <td class="text-center py-3">{{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</td>
-              <td class="text-center py-3">{{ service_report.ticket_number }}</td>
-              <td class="text-center py-3">{{ service_report.technician_name }}</td>
-              <td class="text-center py-3">{{ service_report.requesting_office }}</td>
-              <td class="text-center py-3">{{ service_report.equipment_no }}</td>
-              <td class="text-center py-3">{{ service_report.issue }}</td>
-              <td class="text-center py-3">{{ service_report.action }}</td>
-              <td class="text-center py-3">{{ service_report.recommendation }}</td>
-              <td class="text-center py-3">{{ moment(service_report.date_done).format("YYYY-MM-DD") }}</td>
-              <td class="text-center py-3">{{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}</td>
-              <td class="text-center py-3">{{ service_report.remarks }} </td>
+          <tr v-for="service_report in service_reports" :key="service_report.service_id" class="align-middle">
+              <td class="text-center">{{ service_report.service_id }}</td>
+              <td class="text-start">{{ moment(service_report.date_started).format("YYYY-MM-DD") }}</td>
+              <td class="text-start">{{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</td>
+              <td class="text-start">{{ service_report.ticket_number }}</td>
+              <td class="text-start">{{ service_report.technician_name }}</td>
+              <td class="text-start">{{ service_report.requesting_office }}</td>
+              <td class="text-start">{{ service_report.equipment_no }}</td>
+              <td class="text-start">{{ service_report.issue }}</td>
+              <td class="text-start">{{ service_report.action }}</td>
+              <td class="text-start">{{ service_report.recommendation }}</td>
+              <td class="text-start">{{ moment(service_report.date_done).format("YYYY-MM-DD") }}</td>
+              <td class="text-start">{{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}</td>
+              <td class="text-start">{{ service_report.remarks }} </td>
             </tr>
         </tbody>
       </table>
@@ -137,9 +137,6 @@ watch(search, () => {
   border-radius: 5px;
 }
 
-.container {
-  padding: 20px;
-}
 
 h1 {
   font-size: 36px;
@@ -184,31 +181,6 @@ p {
 .table-container {
   margin-top: 20px;
   overflow-x: auto;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-.table th,
-.table td {
-  padding: 12px;
-  text-align: center;
-}
-
-.table th {
-  background-color: #ffffff;
-  color: #000000;
-}
-
-.table tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-.table tbody tr:hover {
-  background-color: #e0e0e0;
 }
 
 .btn-tickets {
