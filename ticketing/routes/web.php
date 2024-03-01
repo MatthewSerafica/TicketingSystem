@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminOfficeController;
 use App\Http\Controllers\AdminNotificationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeNotificationController;
+use App\Http\Controllers\TechnicianNotificationController;
 use App\Http\Controllers\EmployeeTicketController;
 use App\Http\Controllers\TechnicianDashboardController;
 use App\Http\Controllers\TechnicianServiceController;
@@ -76,10 +77,13 @@ Route::middleware(['web'])->group(function () {
         Route::get('/employee', [EmployeeTicketController::class, 'index'])->name('employee');
             Route::get('/employee/change', [EmployeeTicketController::class, 'password'])->name('employee.change');
             Route::post('/employee/change-password/{user_id}', [EmployeeTicketController::class, 'changePassword'])->name('employee.change-password');
+        
         Route::get('/employee/create', [EmployeeTicketController::class, 'create'])->name('employee.create');
             Route::post('/employee/create/store', [EmployeeTicketController::class, 'store'])->name('employee.store');
+        
         Route::get('/employee/notifications', [EmployeeNotificationController::class, 'index'])->name('employee.notifications');
             Route::post('/employee/notifications/seen', [EmployeeNotificationController::class, 'update'])->name('employee.notifications.seen');
+        
         Route::put('/employee/tickets/update-status/{ticket_id}', [EmployeeTicketController::class, 'status'])->name('employee.tickets.update.status');
     });
 
@@ -98,5 +102,8 @@ Route::middleware(['web'])->group(function () {
             Route::get('/technician/service-report/create', [TechnicianServiceController::class, 'create'])->name('technician.service-report.create');
             Route::post('/technician/service-report/create/store', [TechnicianServiceController::class, 'store'])->name('technician.service-report.store');
             Route::get('/check-service-id/{serviceId}', [TechnicianServiceController::class, 'check_service_id']);
+
+        Route::get('/technician/notifications', [TechnicianNotificationController::class, 'index'])->name('technician.notifications');
+            Route::post('/technician/notifications/seen', [TechnicianNotificationController::class, 'update'])->name('technician.notifications.seen');
     });
 });

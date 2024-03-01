@@ -8,6 +8,7 @@ use App\Models\ServiceReport;
 use App\Models\Technician;
 use App\Models\Ticket;
 use App\Notifications\UpdateTicketStatus;
+use App\Notifications\UpdateTicketTechnician;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -82,7 +83,7 @@ class AdminTicketController extends Controller
             'employee' => 'required',
             'issue' => 'required',
             'service' => 'required',
-            'technician' => 'required',
+            'technician' => 'nullable',
             'rr_no' => 'nullable|numeric',
             'rs_no' => 'nullable|numeric',
             'ms_no' => 'nullable|numeric',
@@ -197,6 +198,10 @@ class AdminTicketController extends Controller
         $ticket->technician = $request->technician_id;
         $ticket->save();
 
+        $technician->user->notify(
+            new UpdateTicketTechnician($ticket)
+        );
+
         return redirect()->back()->with('success', 'Technician Update!')->with('message', 'Technician ' . $technician->user->name . ' is now assigned to Ticket #' . $ticket->ticket_number);
     }
 
@@ -209,7 +214,7 @@ class AdminTicketController extends Controller
 
         $ticket = Ticket::where('ticket_number', $ticket_id)->first();
         $employee = Employee::where('employee_id', $ticket->employee)->with('user')->first();
-        $technician = Technician::where('technician_id', $ticket->technician)->first();
+        $technician = Technician::where('technician_id', $ticket->technician)->with('user')->first();
 
         $ticket->status = $request->status;
         if ($ticket->status == 'Resolved' && $request->old_status != 'Resolved') {
