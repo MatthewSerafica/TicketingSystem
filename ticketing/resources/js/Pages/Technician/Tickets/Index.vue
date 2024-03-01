@@ -8,14 +8,15 @@
           <h1 class="fw-bold">View All Tickets</h1>
           <p class="fs-5">Manage and Track all TMDD tickets</p>
           <Link :href="route('technician.tickets.create')">
-            <Button :name="'Create New Ticket'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
+          <Button :name="'Create New Ticket'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
           </Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
-            <Button :name="'All'" :color="'secondary'" class="btn-options" @click="handleAllButtonClick"></Button>
-            <Button :name="'New'" :color="'secondary'" class="btn-options" @click="handleNewButtonClick"></Button>
-            <Button :name="'Pending'" :color="'secondary'" class="btn-options" @click="handlePendingButtonClick"></Button>
+            <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
+            <Button :name="'New'" :color="'secondary'" class="btn-options" @click="filterTickets('new')"></Button>
+            <Button :name="'Pending'" :color="'secondary'" class="btn-options" @click="filterTickets('pending')"></Button>
+            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options" @click="filterTickets('ongoing')"></Button>
             <Button :name="'Resolved'" :color="'secondary'" class="btn-options"
-              @click="handleResolvedButtonClick"></Button>
+              @click="filterTickets('resolved')"></Button>
           </div>
         </div>
 
@@ -41,7 +42,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number" class="align-middle">
+            <tr v-for="ticket in tickets.data" :key="ticket.ticket_number" class="align-middle">
               <td class="text-center">{{ ticket.ticket_number }}</td>
               <td class="text-start">{{ formatDate(ticket.created_at) }}</td>
               <td class="text-start"><span class="fw-medium">{{ ticket.employee.user.name }}</span><br><small>{{
@@ -83,7 +84,7 @@
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
 import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 import moment from "moment";
-import { ref, watch, onMounted, reactive } from "vue";
+import { ref, watch, onMounted, reactive, nextTick } from "vue";
 import Button from '@/Components/Button.vue'
 
 
@@ -93,25 +94,22 @@ const props = defineProps({
   filters: Object,
 });
 
-const selectedStatus = ref('all');
-const filteredTickets = ref(props.tickets);
 
 let search = ref(props.filters.search);
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
 let timeoutId = null;
-const tickets = ref(props.tickets);
 
 
 
-const fetchData = () => {
+const fetchData = (type) => {
   router.get(
     route('technician.tickets'),
     {
       search: search.value,
       sort: sortColumn.value,
       direction: sortDirection.value,
-      status: selectedStatus.value,
+      filterTickets: type,
     },
     {
       preserveState: true,
@@ -120,37 +118,11 @@ const fetchData = () => {
   )
 }
 
-const handleAllButtonClick = () => {
-  console.log("Handle All Button Click");
-  selectedStatus.value = 'all';
-  // Filter tickets to include both "Pending" and "New" statuses
-  filteredTickets.value = tickets.value;
-};
-
-const handleNewButtonClick = () => {
-  console.log("Handle New Button Click");
-  selectedStatus.value = 'new';
-  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'New');
-};
-
-const handleResolvedButtonClick = () => {
-  console.log("Handle Resolved Button Click");
-  selectedStatus.value = 'resolved';
-  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'Resolved');
-};
-
-const handlePendingButtonClick = () => {
-  console.log("Handle Pending Button Click");
-  selectedStatus.value = 'pending';
-  filteredTickets.value = tickets.value.filter(ticket => ticket.status === 'Pending');
-};
-
 const resetSorting = () => {
   console.log("Reset Sorting");
   sortColumn.value = "ticket_number"
   sortDirection.value = "asc"
 }
-
 
 const debouncedFetchData = () => {
   if (timeoutId) {
@@ -168,13 +140,53 @@ watch(search, () => {
   debouncedFetchData();
 })
 
-const formatDate = (date) => {
-  return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
-};
 
-onMounted(() => {
-  handleAllButtonClick();
-});
+const filter = reactive({
+  all: true,
+  new: false,
+  resolved: false,
+  pending: false,
+  ongoing: false,
+})
+
+const filterTickets = async (type) => {
+  console.log("Before filter change:", filter);
+  if (type === "all") {
+    filter.all = true;
+    filter.new = false;
+    filter.resolved = false;
+    filter.pending = false;
+    filter.ongoing = false;
+  } else if (type === "new") {
+    filter.all = false;
+    filter.new = true;
+    filter.resolved = false;
+    filter.pending = false;
+    filter.ongoing = false;
+  } else if (type === "resolved") {
+    filter.all = false;
+    filter.new = false;
+    filter.resolved = true;
+    filter.pending = false;
+    filter.ongoing = false;
+  } else if (type === "pending") {
+    filter.all = false;
+    filter.new = false;
+    filter.resolved = false;
+    filter.pending = true;
+    filter.ongoing = false;
+  } else if (type === "ongoing") {
+    filter.all = false;
+    filter.new = false;
+    filter.resolved = false;
+    filter.pending = false;
+    filter.ongoing = true;
+  }
+  await fetchData(type);
+
+  await nextTick();
+  console.log("After filter change:", filter);
+}
 
 const getButtonClass = (status) => {
   switch (status.toLowerCase()) {
@@ -189,18 +201,19 @@ const getButtonClass = (status) => {
   }
 };
 
-const updateStatus = (ticket_id, status) => {
-  const { props } = usePage();
-  const updatedTickets = props.tickets.map(ticket => {
-    if (ticket.ticket_number === ticket_id) {
-      return { ...ticket, status: status };
+const updateStatus = (ticket_id, status, old_status, srNo) => {
+  if (status === 'Resolved') {
+    if (!srNo) {
+      page.props.flash.error = 'Status Update Error'
+      page.props.flash.error_message = 'Please enter a Service Request Number!'
+      return;
     }
-    return ticket;
-  });
-  filteredTickets.value = updatedTickets;
+  }
+
   const form = useForm({
     ticket_id: ticket_id,
-    status: status
+    status: status,
+    old_status: old_status,
   });
 
   form.put(route('technician.tickets.update.status', { ticket_id: ticket_id }));
@@ -224,10 +237,13 @@ const updateSR = async (srNo, ticket_id) => {
 
     await form.put(route('technician.tickets.update.sr', { ticket_id: ticket_id }));
 
-    // Reset the state
     selectedSRInput.value = null;
     editedSR[srNo] = '';
   }
+};
+
+const formatDate = (date) => {
+  return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
 };
 </script>
 

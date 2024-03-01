@@ -1,92 +1,109 @@
 <template>
   <div>
     <Header></Header>
-    <form @submit.prevent="create" class="container">
-      <div class="form-container1">
-        <h2 class="text-center">SERVICE REPORT FORM</h2>
+    <div class="mt-2 pt-5">
+      <form @submit.prevent="create">
+        <br />
+        <div class="container">
+          <div class="title-container text-center">
+            <h1>SERVICE REPORT FORM</h1>
+          </div>    
 
-        <div class="input-group mb-3">
-          <span class="input-group-text">SR-A:</span>
-          <input type="text" class="form-control" id="service_id" v-model="form.service_id" required>
-          <span v-if="form.errors.service_id" class="error-message">{{ form.errors.service_id }}</span>
-        </div>
+          <div class="create-report">
 
-        <div class="row mb-3">
-          <div class="col">
-            <label for="dateStarted" class="form-label">Date Started:</label>
-            <input type="date" class="form-control" id="dateStarted" v-model="form.date_started" required>
-          </div>
+            
+            <div class="row justify-content-center mb-4">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <span class="input-group-text">SR-A:</span>
+                  <input type="text" class="form-control" id="service_id" v-model="form.service_id" required>
+                </div>
+                <span v-if="form.errors.service_id" class="error-message">{{ form.errors.service_id }}</span>
+              </div>
+            </div>
 
-          <div class="col">
-            <label for="timeStarted" class="form-label">Time Started:</label>
-            <input type="time" class="form-control" id="timeStarted" v-model="form.time_started" required>
-          </div>
+            
+            <div class="row mb-4">
+              <div class="col-md-4">
+                <label for="dateStarted" class="form-label">Date Started:</label>
+                <input type="date" class="form-control" id="dateStarted" v-model="form.date_started" required>
+              </div>
+              <div class="col-md-4">
+                <label for="timeStarted" class="form-label">Time Started:</label>
+                <input type="time" class="form-control" id="timeStarted" v-model="form.time_started" required>
+              </div>
+              <div class="col-md-4">
+                <label for="ticketNumber" class="form-label">Ticket Number:</label>
+                <input type="text" class="form-control" id="ticketNumber" v-model="form.ticket_number" required>
+              </div>
+            </div>
 
-          <div class="col">
-            <label for="ticketNumber" class="form-label">Ticket Number:</label>
-            <input type="text" class="form-control" id="ticketNumber" v-model="form.ticket_number" required>
-          </div>
-        </div>
+            
+            <div class="row mb-4">
+              <div class="col-md-4">
+                <label for="technicianName" class="form-label">Technician Name:</label>
+                <input type="text" class="form-control" id="technicianName" v-model="form.technician_name">
+              </div>
+              <div class="col-md-4">
+                <label for="requestingOffice" class="form-label">Requesting Office:</label>
+                <input type="text" class="form-control" id="requestingOffice" v-model="form.requesting_office">
+              </div>
+              <div class="col-md-4">
+                <label for="equipment_no" class="form-label">Equipment, Property Tag/Serial No.:</label>
+                <input type="text" class="form-control" id="equipment_no" v-model="form.equipment_no">
+              </div>
+            </div>
 
-        
-        <div class="col">
-          <label for="technicianName" class="form-label">Technician Name:</label>
-          <input type="text" class="form-control" id="technicianName" v-model="form.technician_name">
-  
-          <label for="requestingOffice" class="form-label">Requesting Office:</label>
-          <input type="text" class="form-control" id="requestingOffice" v-model="form.requesting_office">
-  
-          <label for="equipment_no" class="form-label">Equipment, Property Tag/Serial No.:</label>
-          <input type="text" class="form-control" id="equipment_no" v-model="form.equipment_no">
-          
-          <div class="row mb-3">
-            <div class="col">
-              <label for="problemEncountered" class="form-label">Problem Encountered:</label>
-              <select id="problemEncountered" v-model="form.issue" class="form-control long-input1 custom-select">
-                <option value="">Select an option</option>
-                <option value="No Internet">No Internet</option>
-                <option value="Software Installation">Software Installation</option>
-            <option value="Printer Problem">Printer Problem</option>
-          </select>
-          </div>
-          
-          <div class="col">
-          <label for="action" class="form-label">Action Taken:</label>
-          <input type="text" class="form-control" id="action" v-model="form.action">
-          </div>
-          </div>
+           
+            <div class="row mb-4">
+              <div class="col-md-4">
+                <label for="problemEncountered" class="form-label">Problem Encountered:</label>
+                <select id="problemEncountered" v-model="form.issue" class="form-control">
+                  <option value="">Select an option</option>
+                  <option value="No Internet">No Internet</option>
+                  <option value="Software Installation">Software Installation</option>
+                  <option value="Printer Problem">Printer Problem</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label for="action" class="form-label">Action Taken:</label>
+                <input type="text" class="form-control" id="action" v-model="form.action">
+              </div>
+              <div class="col-md-4">
+                <label for="recommendation" class="form-label">Recommendation:</label>
+                <input type="text" class="form-control" id="recommendation" v-model="form.recommendation">
+              </div>
+            </div>
 
-          <label for="recommendation" class="form-label">Recommendation:</label>
-          <input type="text" class="form-control" id="recommendation" v-model="form.recommendation">
-        </div>
+            
+            <div class="row mb-4">
+              <div class="col-md-4">
+                <label for="dateDone" class="form-label">Date Done:</label>
+                <input type="date" class="form-control" id="dateDone" v-model="form.date_done" :min="minDate">
+              </div>
+              <div class="col-md-4">
+                <label for="timeDone" class="form-label">Time Done:</label>
+                <input type="time" class="form-control" id="timeDone" v-model="form.time_done">
+              </div>
+              <div class="col-md-4">
+                <label for="remarks" class="form-label">Remarks</label>
+                <input type="text" class="form-control" id="remarks" v-model="remarks">
+              </div>
+            </div>
 
-        <div class="row mb-3">
-          <div class="col">
-            <label for="dateDone" class="form-label">Date Done:</label>
-            <input type="date" class="form-control" id="dateDone" v-model="form.date_done" :min="minDate">
-          </div>
-
-          <div class="col">
-            <label for="timeDone" class="form-label">Time Done:</label>
-            <input type="time" class="form-control" id="timeDone" v-model="form.time_done">
-          </div>
-        </div>
-        
-        <div class="mb-3">
-          <label for="remarks" class="form-label">Remarks</label>
-          <input type="text" class="form-control" id="remarks" v-model="remarks">
-        </div>
-
-        <div class="row justify-content-center">
-          <div class="col-md-6">
-            <div class="d-flex justify-content-center gap-2">
-              <Button :name="'Submit'" :color="'primary'" ></Button>
-              <Link :href="'/technician/service-report'" class="btn btn-outline-primary">Cancel</Link>
+            
+            <div class="row justify-content-end">
+              <div class="col-md-4">
+                <div class="d-flex justify-content-end gap-2">
+                  <Button :name="'Submit'" :color="'primary'"></Button>
+                  <Link :href="'/technician/service-report'" class="btn btn-outline-primary">Cancel</Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -123,12 +140,6 @@ const form = useForm({
 });
 
 
-/* const create = () => {
-    form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false });
-} */
-
-
-
 const create = async () => {
     const is_validserviceid = await validate_service_id(form.service_id);
 
@@ -141,7 +152,7 @@ const create = async () => {
 }
 
 const validate_service_id = async (service_id) => {
-    const service_id_regex = /^SR-B \d{4}$/;
+    const service_id_regex = /^\d{4}$/;
 
     if (!service_id_regex.test(service_id)) {
         console.error('Invalid service_id format');
@@ -158,23 +169,20 @@ const validate_service_id = async (service_id) => {
 
     return true;
 }
+
 </script>
 
 <style scoped>
-.form-container1 {
-  border-radius: 10px; 
-  background-color: white; 
-  padding: 20px; 
-}
-
-.form-container1 h2 {
-  margin-bottom: 15px; 
-}
 
 .error-message {
   color: red;
 }
 
+.input-group {
+  width: 100%;
+}
 
-
+.form-control {
+  width: 100%;
+}
 </style>

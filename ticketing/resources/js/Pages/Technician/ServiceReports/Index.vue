@@ -7,7 +7,7 @@
       <h1 class="fw-bold">View All Service Reports</h1>
       <p class="fs-5">Manage and Track all TMDD Service Reports</p>
       <Link :href="route('technician.service-report.create')">
-      <Button :name="'Create New Ticket'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
+      <Button :name="'Create Service Report'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
       </Link>
     </div>
 

@@ -54,4 +54,13 @@ class AdminOfficeController extends Controller
         return redirect()->back()->with('success', 'Office Updated!')->with('message', $old_office . ' is updated to ' . $request->office);
     }
 
+    public function destroy($id)
+    {
+        $office = Office::findOrFail($id);
+        $name = $office->office;
+        $office->delete();
+
+        return redirect()->back()->with('success', 'Office Deleted!')->with('message', $name . ' has been deleted from offices');
+    }
+
 }

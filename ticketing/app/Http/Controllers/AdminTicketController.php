@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 
 class AdminTicketController extends Controller
 {
-
     public function index(Request $request)
     {
         $tickets = Ticket::query()
@@ -32,6 +31,9 @@ class AdminTicketController extends Controller
                     })
                     ->orWhereHas('employee', function ($subquery) use ($search) {
                         $subquery->where('department', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('employee', function ($subquery) use ($search) {
+                        $subquery->where('office', 'like', '%' . $search . '%');
                     })
                     ->orWhereHas('technician.user', function ($subquery) use ($search) {
                         $subquery->where('name', 'like', '%' . $search . '%');
@@ -51,7 +53,10 @@ class AdminTicketController extends Controller
             })
             ->whereYear('created_at', Carbon::now()->year)
             ->whereMonth('created_at', Carbon::now()->month)
-            ->orderBy('ticket_number')
+            ->orderBy(
+                $request->input('sort', 'ticket_number'),
+                $request->input('direction', 'asc')
+            )
             ->paginate(10);
 
         $filter = $request->only(['search']);
@@ -86,32 +91,11 @@ class AdminTicketController extends Controller
             'technician' => 'nullable',
             'rr_no' => 'nullable|numeric',
             'rs_no' => 'nullable|numeric',
-            'ms_no' => 'nullable|numeric',
-            'sr_no' => 'nullable|numeric',
         ]);
-
-
-        if ($request->filled('rr_no') && is_numeric($request->rr_no)) {
-            $ticketData['rr_no'] = $request->rr_no;
-        } elseif ($request->filled('rr_no') && !is_numeric($request->rr_no)) {
-            return redirect()->back()->with('error', 'RR number must be numeric.');
-        }
-
-        if ($request->filled('ms_no')) {
-            if (!is_numeric($request->ms_no)) {
-                return redirect()->back()->with('error', 'MS number must be numeric.');
-            }
-        }
 
         if ($request->filled('rs_no')) {
             if (!is_numeric($request->rs_no)) {
                 return redirect()->back()->with('error', 'RS number must be numeric.');
-            }
-        }
-
-        if ($request->filled('sr_no')) {
-            if (!is_numeric($request->sr_no)) {
-                return redirect()->back()->with('error', 'SR number must be numeric.');
             }
         }
 
@@ -129,11 +113,6 @@ class AdminTicketController extends Controller
             'service' => $request->service,
             'status' => 'Pending',
         ];
-
-        // Check if rr_no is filled and numeric before adding to ticketData
-        if ($request->filled('rr_no') && is_numeric($request->rr_no)) {
-            $ticketData['rr_no'] = $request->rr_no;
-        }
 
         Ticket::create($ticketData);
         $employee->update(['made_ticket' => $employee->made_ticket + 1]);

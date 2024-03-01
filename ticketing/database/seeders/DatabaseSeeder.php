@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 [
                 'name' => 'Lovely Osngal',
-                'email' => 'lovelyosngal@slu.edu.com',
+                'email' => 'lovelyosngal@slu.edu.ph',
                 'password' => '123456',
                 'user_type' => 'technician',
                 ],
@@ -107,7 +107,7 @@ class DatabaseSeeder extends Seeder
 
         $service_reports = [
             [
-                'service_id' => 'SR-B 0001',
+                'service_id' => '0001',
                 'date_started' => '2022-02-22',
                 'time_started' => '08:00:00',
                 'ticket_number' => 1,

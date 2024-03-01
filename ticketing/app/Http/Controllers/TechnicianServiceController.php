@@ -36,7 +36,7 @@ class TechnicianServiceController extends Controller
     public function create()
     {
         $latest_report = ServiceReport::orderBy('created_at', 'desc')->first();
-        $new_service_id = $latest_report ? $this->incrementServiceId($latest_report->service_id) : 'SR-B 0001';
+        $new_service_id = $latest_report ? $this->incrementServiceId($latest_report->service_id) : '0001';
         $technicians = Technician::all();
         return inertia('Technician/ServiceReports/Create', [
             'technicians' => $technicians,
@@ -46,13 +46,17 @@ class TechnicianServiceController extends Controller
 
     private function incrementServiceId($currentServiceId)
     {
-        $numericPart = (int)substr($currentServiceId, 5);
+        $numericPart = (int)$currentServiceId;
         $newNumericPart = $numericPart + 1;
         $newNumericPartFormatted = sprintf('%04d', $newNumericPart);
-        $newServiceId = 'SR-B ' . $newNumericPartFormatted;
-        return $newServiceId;
+        return $newNumericPartFormatted;
     }
 
+    public function check_service_id(Request $request, $service_id)
+    {
+        $exists = ServiceReport::where('service_id', $service_id)->exists();
+        return response()->json(['exists' => $exists]);
+    }
 
 
 
@@ -95,11 +99,5 @@ class TechnicianServiceController extends Controller
         return redirect()->to('/technician/service-report')->with('success', 'Report Created');
     }
 
-    public function check_service_id(Request $request, $service_id)
-    {
-        // Check if the service_id already exists in the database
-        $exists = ServiceReport::where('service_id', $service_id)->exists();
 
-        return response()->json(['exists' => $exists]);
-    }
 }

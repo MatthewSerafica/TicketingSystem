@@ -44,8 +44,15 @@
         <table class="table table-hover shadow custom-rounded-table" style="max-width: 110rem;">
           <thead>
             <tr class="text-start">
-              <th class="text-center text-muted">Ticket No</th>
-              <th class="text-muted">Date Issued</th>
+              <th class="text-start text-muted" @click="handleSort('ticket_number')">
+                Ticket No
+                <i :class="{
+                  'bi bi-caret-up-fill': sortColumn === 'ticket_number' && sortDirection === 'asc',
+                  'bi bi-caret-down-fill': sortColumn === 'ticket_number' && sortDirection === 'desc',
+                  'bi bi-caret-down-fill text-muted': sortColumn !== 'ticket_number'
+                }"></i>
+              </th>
+              <th class="text-muted">Date</th>
               <th class="text-center text-muted">RR No</th>
               <th class="text-center text-muted">MS No</th>
               <th class="text-center text-muted">RS No</th>
@@ -60,7 +67,7 @@
               <th class="text-center text-muted">Status</th>
             </tr>
           </thead>
-          <tbody class="">
+          <tbody>
             <tr v-for="ticket in tickets.data" :key="ticket.ticket_number" class="align-middle">
               <td class="text-center">{{ ticket.ticket_number }}</td>
               <td class="text-start">{{ formatDate(ticket.created_at) }}</td>
@@ -276,10 +283,11 @@ const fetchData = (type) => {
     }
   )
   filter.all = type === "all";
-  filter.employee = type === "employee";
-  filter.technician = type === "technician";
+  filter.new = type === "new";
+  filter.pending = type === "pending";
+  filter.pending = type === "ongoing";
+  filter.pending = type === "resolved";
 }
-
 
 const resetSorting = () => {
   console.log("Reset Sorting");
@@ -353,6 +361,18 @@ const filterTickets = async (type) => {
 }
 // Filter end
 
+// Sort start
+const handleSort = (column) => {
+  if (sortColumn.value === column) {
+    sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
+  } else {
+    sortColumn.value = column;
+    sortDirection.value = "asc";
+  }
+  fetchData();
+};
+// Sort end
+
 // Table update start
 const updateService = (ticket_id, service) => {
   const form = useForm({
@@ -403,6 +423,10 @@ const showInput = (data, id, type) => {
 const updateData = async (data, id, updateField, type) => {
   console.log(selectedInput.value, editData[data], updateField)
   if (selectedInput.value === type) {
+
+    if (!validateNumericInput(editData[data], updateField)) {
+      return;
+    }
     const form = useForm({
       [updateField]: editData[data],
     });
@@ -411,6 +435,8 @@ const updateData = async (data, id, updateField, type) => {
 
     selectedInput.value = null;
     editData[data] = '';
+
+
   }
 };
 
