@@ -191,7 +191,7 @@ p {
   transform: scale(1.1);
 }
 
-.btn-options {
-  width: 100px;
+.cursor{
+  cursor: default;
 }
 </style>
