@@ -276,10 +276,11 @@ const fetchData = (type) => {
     }
   )
   filter.all = type === "all";
-  filter.employee = type === "employee";
-  filter.technician = type === "technician";
+  filter.new = type === "new";
+  filter.pending = type === "pending";
+  filter.pending = type === "ongoing";
+  filter.pending = type === "resolved";
 }
-
 
 const resetSorting = () => {
   console.log("Reset Sorting");

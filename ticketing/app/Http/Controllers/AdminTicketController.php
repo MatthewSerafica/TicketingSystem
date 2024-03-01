@@ -32,6 +32,9 @@ class AdminTicketController extends Controller
                     ->orWhereHas('employee', function ($subquery) use ($search) {
                         $subquery->where('department', 'like', '%' . $search . '%');
                     })
+                    ->orWhereHas('employee', function ($subquery) use ($search) {
+                        $subquery->where('office', 'like', '%' . $search . '%');
+                    })
                     ->orWhereHas('technician.user', function ($subquery) use ($search) {
                         $subquery->where('name', 'like', '%' . $search . '%');
                     });
