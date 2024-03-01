@@ -111,7 +111,7 @@ class DatabaseSeeder extends Seeder
                 'date_started' => '2022-02-22',
                 'time_started' => '08:00:00',
                 'ticket_number' => 1,
-                'technician_name' => 'Matthew Serafica ',
+                'technician' => '1',
                 'requesting_office' => 'IT Department',
                 'equipment_no' => 'E123',
                 'issue' => 'Network connectivity problem',

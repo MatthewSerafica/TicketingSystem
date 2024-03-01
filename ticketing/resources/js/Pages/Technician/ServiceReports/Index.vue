@@ -43,7 +43,7 @@
               <td class="text-start">{{ moment(service_report.date_started).format("YYYY-MM-DD") }}</td>
               <td class="text-start">{{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</td>
               <td class="text-start">{{ service_report.ticket_number }}</td>
-              <td class="text-start">{{ service_report.technician_name }}</td>
+              <td class="text-start">{{ service_report.technician.user.name }}</td>
               <td class="text-start">{{ service_report.requesting_office }}</td>
               <td class="text-start">{{ service_report.equipment_no }}</td>
               <td class="text-start">{{ service_report.issue }}</td>
