@@ -47,8 +47,8 @@
               <td class="text-center py-3">{{ service_report.requesting_office }}</td>
               <td class="text-center py-3">{{ service_report.equipment_no }}</td>
               <td class="text-center py-3">{{ service_report.issue }}</td>
-              <td class="text-center py-3">{{ service_report.action }}</td>
-              <td class="text-center py-3">{{ service_report.recommendation }}</td>
+              <td class="text-center py-3 cursor"  :title="service_report.action"  >{{ service_report.action }}</td>
+              <td class="text-center py-3 cursor" :title="service_report.recommendation" >{{ service_report.recommendation }}</td>
               <td class="text-center py-3">{{ moment(service_report.date_done).format("YYYY-MM-DD") }}</td>
               <td class="text-center py-3">{{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}</td>
               <td class="text-center py-3">{{ service_report.remarks }} </td>
@@ -219,7 +219,7 @@ p {
   transform: scale(1.1);
 }
 
-.btn-options {
-  width: 100px;
+.cursor{
+  cursor: default;
 }
 </style>

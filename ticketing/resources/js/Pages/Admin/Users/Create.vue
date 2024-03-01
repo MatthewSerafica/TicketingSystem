@@ -19,9 +19,7 @@
                             <option value="technician">Technician</option>
                         </select>
                     </div>
-                    
 
-                    
                     <div class="d-flex flex-row gap-3 justify-content-center">
                         <div class="col-md-9">
                         <div class="d-flex flex-column">
@@ -35,7 +33,7 @@
                             <label for="email" class="fw-semibold">Email</label>
                             <input id="email" class="form-control h-100 rounded border-secondary-subtle" type="email"
                                 placeholder="Enter Email..." v-model="form.email" />
-                                <div v-if="form.errors.email">{{ form.errors.email }}</div>
+                                <div v-if="form.errors.email&& form.errors.email.length > 0" class="text-danger">{{ form.errors.email[0] }}</div>
                         </div>
                         </div>
                     </div>
