@@ -88,7 +88,7 @@
               </div>
               <div class="col-md-4">
                 <label for="remarks" class="form-label">Remarks</label>
-                <input type="text" class="form-control" id="remarks" v-model="remarks">
+                <input type="text" class="form-control" id="remarks" v-model="form.remarks">
               </div>
             </div>
 
@@ -137,7 +137,7 @@ const form = useForm({
   recommendation: '',
   date_done: '',
   time_done: '',
-  remarks:''
+  remarks:'',
 });
 
 
