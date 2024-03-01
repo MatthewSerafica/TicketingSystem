@@ -23,8 +23,7 @@
 
                   <div class="flex-grow-1 w-50">
                     <label for="issue" class="fw-semibold">Title</label>
-                    <input id="issue" class="form-control rounded border-secondary-subtle" type="text"
-                      placeholder="Enter Ticket Title..." v-model="form.issue" />
+                    <input id="issue" class="form-control rounded border-secondary-subtle" type="text" placeholder="Enter Ticket Title..." v-model="form.issue" required/>
                   </div>
 
                   <div class="flex-grow-1 w-50 d-flex flex-column">
@@ -55,7 +54,7 @@
                 </div>
               </div>
             </div>
-
+           
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
                 <label for="description" class="fw-semibold">Description</label>
@@ -63,7 +62,7 @@
                   placeholder="Enter Ticket Description..." v-model="form.description" rows="5"></textarea>
               </div>
             </div>
-
+            
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
                 <div class="d-flex flex-row gap-3">

@@ -39,6 +39,7 @@
               <th>SR No</th>
               <th>Date Resolved</th>
               <th>Status</th>
+              <th>Remarks</th>
             </tr>
           </thead>
           <tbody>
@@ -51,13 +52,15 @@
     {{ ticket.description }}
   </td>
               <td class="text-start">{{ ticket.service ? ticket.service : 'Unassigned' }}</td>
-              <td class="text-start" style="max-width: 20px;" @click="showSRInput(ticket.sr_no, ticket.ticket_number)">
-                <span v-if="!selectedSRInput || selectedSRInput !== ticket.sr_no">{{ ticket.sr_no }}</span>
-                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedSRInput === ticket.sr_no"
-                  v-model="editedSR[ticket.sr_no]" @blur="updateSR(ticket.sr_no, ticket.ticket_number)"
-                  @keyup.enter="updateSR(ticket.sr_no, ticket.ticket_number)"
-                  class="w-100 rounded border border-secondary-subtle text-start">
+
+              <td class="text-start" style="max-width: 20px;" @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
+                <span v-if="!selectedInput || selectedInput !== ticket.sr_no">{{ ticket.sr_no }}</span>
+                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'sr'"
+                  v-model="editData[ticket.sr_no]" @blur="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no', 'sr')"
+                  @keyup.enter="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no')"
+                  class="w-100 rounded border border-secondary-subtle text-center">
               </td>
+              
               <td class="text-start">{{ ticket.resolved_at ? formatDate(ticket.resolved_at) : 'Not yet resolved' }}</td>
               <td class="text-start">
                 <div class="btn-group">
@@ -74,6 +77,17 @@
                   </ul>
                 </div>
               </td>
+              <td class="text-start text-break" style="max-width: 120px;"
+                @click="showInput(ticket.remarks, ticket.ticket_number, 'remarks')">
+                <span v-if="!selectedInput || selectedInput !== 'remarks' || selectedRow !== ticket.ticket_number">
+                  {{ ticket.remarks }}
+                </span>
+                <textarea v-if="selectedRow === ticket.ticket_number && selectedInput === 'remarks'"
+                  v-model="editData[ticket.remarks]"
+                  @blur="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
+                  @keyup.enter="updateData(ticket.remarks, ticket.ticket_number, 'remarks')"
+                  class="w-100 rounded border border-secondary-subtle text-center"> </textarea>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -89,7 +103,7 @@ import moment from "moment";
 import { ref, watch, onMounted, reactive, nextTick } from "vue";
 import Button from '@/Components/Button.vue'
 
-
+const page=usePage();
 const props = defineProps({
   tickets: Object,
   technicians: Object,
@@ -221,27 +235,44 @@ const updateStatus = (ticket_id, status, old_status, srNo) => {
   form.put(route('technician.tickets.update.status', { ticket_id: ticket_id }));
 }
 
-let selectedSRInput = ref(null);
+let selectedInput = ref(null);
 let selectedRow = ref(null);
-let editedSR = reactive({});
+let editData = reactive({});
 
-const showSRInput = (srNo, ticketNumber) => {
-  selectedSRInput.value = srNo;
-  selectedRow.value = ticketNumber;
-  editedSR[srNo] = srNo ? srNo : '';
+const showInput = (data, id, type) => {
+  selectedInput.value = type;
+  selectedRow.value = id;
+  editData[data] = data ? data : '';
+  console.log('Selected Input', selectedInput.value, 'Edit Data', editData[data], 'Selected Row',selectedRow.value);
 }
 
-const updateSR = async (srNo, ticket_id) => {
-  if (selectedSRInput.value === srNo) {
+
+const updateData = async (data, id, updateField, type) => {
+  console.log(selectedInput.value, editData[data], updateField)
+  if (selectedInput.value === type) {
+
+    if (!validateNumericInput(editData[data], updateField)) {
+      return;
+    }
     const form = useForm({
-      sr_no: editedSR[srNo],
+      [updateField]: editData[data],
     });
 
-    await form.put(route('technician.tickets.update.sr', { ticket_id: ticket_id }));
+    await form.put(route('technician.tickets.update', { ticket_id: id, field: updateField }));
 
-    selectedSRInput.value = null;
-    editedSR[srNo] = '';
+    selectedInput.value = null;
+    editData[data] = '';
+
+
   }
+};
+const validateNumericInput = (inputValue, propName) => {
+  const isValid = /^\d+$/.test(inputValue);
+  if (!isValid) {
+    page.props.flash.error = `Invalid ${propName} number`;
+    return false;
+  }
+  return true;
 };
 
 const formatDate = (date) => {

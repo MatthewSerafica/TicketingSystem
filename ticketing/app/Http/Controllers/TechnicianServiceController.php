@@ -12,8 +12,11 @@ class TechnicianServiceController extends Controller
 {
     public function index(Request $request)
     {   
+        $user_id = auth()->id();
+        $technicians = Technician::where('user_id', $user_id)->first();
+
         $service_report = ServiceReport::query() 
-            -> with('technician.user')
+            ->with('technician.user')
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where('service_id', 'like', '%' . $search . '%')
@@ -67,7 +70,7 @@ class TechnicianServiceController extends Controller
             'date_started' => 'required',
             'time_started' => 'required',
             'ticket_number' => 'required',
-            'technician_name' => 'required',
+            'technician' => 'required',
             'requesting_office' => 'required',
             'equipment_no' => 'required',
             'issue' => 'required',
@@ -78,12 +81,14 @@ class TechnicianServiceController extends Controller
             'remarks' => 'nullable',
         ]);
 
+        $technician = Technician::where('user_id', $request->technician)->firstOrFail();
+
         $serviceData = [
             'service_id' => $request -> service_id,
             'date_started' => $request -> date_started,
             'time_started' => $request -> time_started,
             'ticket_number' => $request -> ticket_number,
-            'technician_name' => $request -> technician_name,
+            'technician' => $technician->technician_id,
             'requesting_office' => $request -> requesting_office,
             'equipment_no' => $request -> equipment_no,
             'issue' => $request -> issue,
