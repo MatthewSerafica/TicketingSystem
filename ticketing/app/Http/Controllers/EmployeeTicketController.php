@@ -64,18 +64,6 @@ class EmployeeTicketController extends Controller
         return redirect()->to('/employee')->with('success', 'Ticket Created');
     }
 
-    public function status(Request $request, $ticket_id)
-    {
-        $request->validate([
-            'status' => 'required',
-        ]);
-
-        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
-
-        $ticket->status = $request->status;
-        $ticket->save();
-    }
-
     public function password()
     {
         $user = Auth::user();

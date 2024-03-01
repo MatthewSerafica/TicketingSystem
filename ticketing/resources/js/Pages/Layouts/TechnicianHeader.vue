@@ -15,7 +15,6 @@
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
             </button>
-            
             <div class="collapse navbar-collapse gap-5  " id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item" :class="{ 'active': activeLink === 'dashboard' }">
@@ -31,10 +30,12 @@
       
             <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
                 <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationBar"
-                    aria-controls="notificationBar">
-                    <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
-                    <span class="text-light bg-danger position-absolute top-0 end-0 rounded-pill badge" id="count"
-                        style="font-size: small; padding: 2px 5px 2px 5px;"></span>
+                            aria-controls="notificationBar" @click="fetchNotifications">
+                        <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
+                        <span v-if="notificationCount" class="position-relative">
+                        <span class="position-absolute translate-middle badge rounded-pill bg-danger"
+                                      style="font-size: small; top: -5px; right: -5px; padding: 2px 5px 2px 5px;">{{ notificationCount }}</span>
+                    </span>
                 </button>
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
@@ -64,19 +65,31 @@
         </div>
     </nav>
     <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationBar" aria-labelledby="notificationBarLabel">
+
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="notificationBarLabel">Notifications</h5>
             <button type="button" class="btn-close text reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
             <div class="container mt-4">
-                <div class="card mt-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Notification Title</h5>
-                        <p class="card-text">Ticket# has been given to you.</p>
-                        <small class="card-text fst-italic text-muted"> {{ notificationDateTime() }}</small>
+                <div class="card mt-3" v-for="notification in notifications.slice(0, 9)" :key="notification.notification.id">
+                    <div class="card-body" v-if="notification.notification.type === 'App\\Notifications\\UpdateTicketTechnician'">
+                            <h5 class="card-title">You have been assigned Ticket #{{ notification.notification.data.ticket_number }}</h5>
+                            <p class="card-text">Issue: {{ notification.notification.data.issue }}.</p>
+                            <p class="card-text">Description: {{ notification.notification.data.description }}.</p>
+                            <p class="card-text">Service Type: {{ notification.notification.data.service }}.</p>
+                            <p class="card-text">Client Details: {{ notification.name }} | {{ notification.department }} - {{
+                                        notification.office }}.</p>
+                            <small class="card-text fst-italic text-muted"> {{ notificationDateTime() }}</small>
+                        </div>
+                        <div class="card-body" v-if="notification.notification.type === 'App\\Notifications\\UpdateTicketStatus'">
+                            <h5 class="card-title">Ticket #{{ notification.notification.data.ticket_number }} Status Update</h5>
+                            <p class="card-text">Ticket #{{ notification.notification.data.ticket_number }} has been updated to <span
+                                    class="p-2" :class="handleBadge(notification.notification.data.status)">{{
+                                        notification.notification.data.status }}</span></p>
+                            <small class="card-text fst-italic text-muted"> {{ notificationDateTime() }}</small>
+                        </div>
                     </div>
-                </div>  
             </div>    
         </div>
     </div>
@@ -85,7 +98,9 @@
 
 <script setup>
 import { Link, usePage } from "@inertiajs/vue3";
+import axios from "axios";
 import { computed, ref, defineProps, onMounted } from 'vue';
+import moment from "moment";
 
 const props = defineProps({});
 const activeLink = ref('');
@@ -116,6 +131,41 @@ function notificationDateTime(){
     const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
     return currentDateTime.toLocaleDateString('en-US', options).replace(/\//g, '-');
 }
+
+const notificationCount = computed(
+    () => Math.min(page.props.user.notificationCount, 9)
+)
+const notifications = ref([]);
+
+
+
+const fetchNotifications = async () => {
+    try {
+        const response = await axios.get(route('technician.notifications'))
+        notifications.value = response.data.notifications
+        console.log(response.data.notifications);
+        await axios.post(route('technician.notifications.seen'))
+        page.props.user.notificationCount = 0;
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+const handleBadge = (status) => {
+    switch (status.toLowerCase()) {
+        case 'new':
+            return 'badge text-bg-danger';
+        case 'pending':
+            return 'badge text-bg-warning';
+        case 'ongoing':
+            return 'badge text-bg-primary';
+        case 'resolved':
+            return 'badge text-bg-success';
+        default:
+            return 'badge text-bg-secondary';
+    }
+}
+
 </script>
 
 

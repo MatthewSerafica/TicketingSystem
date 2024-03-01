@@ -23,13 +23,17 @@
             <Button :name="'Add Office'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
           </Link>
         </div>
-        <div class="input-group mt-3 mb-4">
+        <div class="input-group mt-3">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
           <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
             placeholder="Search Offices..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
       <div class="w-75">
+        <div v-if="offices.data.length" class="d-flex justify-content-end mb-2">
+          <pagination :links="offices.links" :key="'offices'" />
+          <br>
+        </div>
         <table class="table table-striped border border-secondary-subtle">
           <thead>
             <tr class="text-start">
@@ -55,10 +59,6 @@
             </tr>
           </tbody>
         </table>
-        <div v-if="offices.data.length" class="flex justify-center w-full mt-6">
-          <pagination :links="offices.links" :key="'offices'" />
-          <br>
-        </div>
       </div>
       <Delete v-if="isShowDelete" :office="selectedOfficeId" @closeDelete="closeDelete"/>
     </div>
