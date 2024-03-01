@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 [
                 'name' => 'Lovely Osngal',
-                'email' => 'lovelyosngal@slu.edu.com',
+                'email' => 'lovelyosngal@slu.edu.ph',
                 'password' => '123456',
                 'user_type' => 'technician',
                 ],
