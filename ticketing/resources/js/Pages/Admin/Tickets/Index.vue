@@ -222,6 +222,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import Button from '@/Components/Button.vue';
 import Pagination from '@/Components/Pagination.vue';

@@ -22,27 +22,11 @@
                     <label for="issue" class="fw-semibold">Title</label>
                     <input id="issue" class="form-control rounded border-secondary-subtle" type="text" placeholder="Enter Ticket Title..." v-model="form.issue" />
                   </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row justify-content-center mb-4">
-              <div class="col-md-8">
-                <div class="d-flex flex-row gap-3">
-                  <div class="flex-grow-1 w-50">
-                    <label for="department" class="fw-semibold">Department/Office</label>
-                    <select id="department" class="form-select rounded border-secondary-subtle" placeholder="Select Department..." v-model="form.department">
-                      <option disabled>Select Department</option>
-                      <option>Finance Department</option>
-                      <option>Registrar</option>
-                      <option>Help Desk</option>
-                    </select>
-                  </div>
                   <div class="flex-grow-1 w-50">
                     <label for="service" class="fw-semibold">Employee</label>
                     <select id="service" class="form-select rounded border-secondary-subtle" placeholder="Assign Technician..." v-model.number="form.employee">
                       <option disabled>Assign Employee</option>
-                      <option v-for="employee in employees" :value="employee.employee_id">{{ employee.user.name }}</option>
+                      <option v-for="employee in employees" :value="employee.employee_id">{{ employee.user.name }} | {{ employee.department }}-{{ employee.office }}</option>
                     </select>
                   </div>
                 </div>
