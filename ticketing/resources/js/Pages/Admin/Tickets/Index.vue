@@ -40,8 +40,9 @@
         </div>
       </div>
       <!--Data Table-->
-      <div class="table-responsive">
-        <table class="table table-hover shadow custom-rounded-table" style="max-width: 110rem;">
+      <div class="container table-responsive">
+      <div class="">
+        <table class="table table-hover shadow custom-rounded-table">
           <thead>
             <tr class="text-start">
               <th class="text-start text-muted" @click="handleSort('ticket_number')">
@@ -71,7 +72,7 @@
             <tr v-for="ticket in tickets.data" :key="ticket.ticket_number" class="align-middle">
               <td class="text-center">{{ ticket.ticket_number }}</td>
               <td class="text-start">{{ formatDate(ticket.created_at) }}</td>
-              <td class="text-center" style="max-width: 60px;"
+              <td class="text-center" 
                 @click="showInput(ticket.rr_no, ticket.ticket_number, 'rr')">
                 <span v-if="!selectedInput || selectedInput !== 'rr' || selectedRow !== ticket.ticket_number">{{
                   ticket.rr_no }}</span>
@@ -80,7 +81,7 @@
                   @keyup.enter="updateData(ticket.rr_no, ticket.ticket_number, 'rr_no')"
                   class="w-100 rounded border border-secondary-subtle text-center">
               </td>
-              <td class="text-center" style="max-width: 60px;"
+              <td class="text-center" 
                 @click="showInput(ticket.ms_no, ticket.ticket_number, 'ms')">
                 <span v-if="!selectedInput || selectedInput !== 'ms' || selectedRow !== ticket.ticket_number">{{
                   ticket.ms_no }}</span>
@@ -89,7 +90,7 @@
                   @keyup.enter="updateData(ticket.ms_no, ticket.ticket_number, 'ms_no')"
                   class="w-100 rounded border border-secondary-subtle text-center">
               </td>
-              <td class="text-center" style="max-width: 60px;"
+              <td class="text-center" 
                 @click="showInput(ticket.rs_no, ticket.ticket_number, 'rs')">
                 <span v-if="!selectedInput || selectedInput !== 'rs' || selectedRow !== ticket.ticket_number">{{
                   ticket.rs_no }}</span>
@@ -110,7 +111,7 @@
 
               <td class="text-start">
                 <div class="btn-group">
-                  <button type="button" class="btn text-start" style="width: 12rem;">{{ ticket.service ? ticket.service :
+                  <button type="button" class="btn text-start" >{{ ticket.service ? ticket.service :
                     'Unassigned' }}</button>
                   <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
                     aria-expanded="false" data-bs-reference="parent">
@@ -218,6 +219,7 @@
           <Pagination :links="tickets.links" :key="'tickets'" />
           <br>
         </div>
+      </div>
       </div>
     </div>
   </div>
