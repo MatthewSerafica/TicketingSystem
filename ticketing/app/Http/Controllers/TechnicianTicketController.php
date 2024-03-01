@@ -119,15 +119,26 @@ class TechnicianTicketController extends Controller
         $ticket->save();
     }
 
-    public function sr(Request $request, $ticket_id)
+    public function update(Request $request, $field, $id)
     {
         $request->validate([
-            'sr_no' => 'nullable',
+            $field => 'nullable',
         ]);
 
-        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+        $ticket = Ticket::where('ticket_number', $id)->first();
+        
+        $ticket->$field = $request->$field;
+        
+        
+        if ($ticket->sr_no === null){
+            // lol tinamad na akong ayusin yung if statement kaya ganto nalang
+        } else {
+            $ticket->resolved_at = now();
+            $ticket->status = 'Resolved';
+        }
 
-        $ticket->sr_no = $request->sr_no;
         $ticket->save();
     }
+
+
 }
