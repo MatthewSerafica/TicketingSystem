@@ -19,6 +19,10 @@ class Technician extends Model
         return $this->hasMany(Employee::class, 'technician_id', 'technician');
     }
 
+    public function serviceReport() {
+        return $this->hasMany(ServiceReport::class, 'technician_id', 'technician');
+    }
+
     protected $fillable = [
         'technician_id',
         'user_id',

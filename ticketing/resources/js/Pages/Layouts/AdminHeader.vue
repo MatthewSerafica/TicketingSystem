@@ -23,8 +23,14 @@
                             <a class="nav-link tickets text-light" href="/admin/tickets"
                                 @click="setActiveLink('tickets')">Tickets</a>
                         </li>
-                        <li class="nav-item" :class="{ 'active': activeLink === 'reports' }">
-                            <a class="nav-link reports text-light" href="#" @click="setActiveLink('reports')">Reports</a>
+                        <li class="nav-item dropdown reports" :class="{ 'active': activeLink === 'reports' }">
+                            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownReports" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Reports
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownReports">
+                                <li><a class="dropdown-item" href="/admin/reports/service-report">Service Reports</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item dropdown settings" :class="{ 'active': activeLink === 'settings' }">
                             <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button"
@@ -234,5 +240,9 @@ onMounted(() => {
 
 .nav-item.settings .nav-link::after {
     content: none;
+}
+
+.dropdown-toggle::after {
+    display: none !important;
 }
 </style>

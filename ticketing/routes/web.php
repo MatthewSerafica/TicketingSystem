@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminUsersController;
 use App\Http\Controllers\AdminDepartmentController;
 use App\Http\Controllers\AdminOfficeController;
 use App\Http\Controllers\AdminNotificationController;
+use App\Http\Controllers\AdminServiceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeNotificationController;
 use App\Http\Controllers\TechnicianNotificationController;
@@ -49,6 +50,11 @@ Route::middleware(['web'])->group(function () {
         Route::put('/admin/users/{user_id}/{field}', [AdminUsersController::class, 'update'])->name('admin.users.update');
         Route::put('/admin/users/employee/{user_id}/{field}', [AdminUsersController::class, 'employee'])->name('admin.users.update.employee');
         Route::put('/admin/users/technician/{user_id}/{field}', [AdminUsersController::class, 'technician'])->name('admin.users.update.technician');
+
+        Route::get('/admin/reports/service-report', [AdminServiceController::class, 'index'])->name('admin.reports.service-reports');
+        Route::get('/admin/reports/service-report/create', [AdminServiceController::class, 'create'])->name('admin.reports.service-report.create');
+        Route::post('/admin/reports/service-report/create/store', [AdminServiceController::class, 'store'])->name('admin.reports.service-report.store');
+        Route::get('/check-service-id/{serviceId}', [AdminServiceController::class, 'check_service_id']);    
 
         Route::get('/admin/department', [AdminDepartmentController::class, 'index'])->name('admin.department');
         Route::get('/admin/department/create', [AdminDepartmentController::class, 'create'])->name('admin.department.create');
