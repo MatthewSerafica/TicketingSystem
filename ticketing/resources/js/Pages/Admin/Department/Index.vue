@@ -20,11 +20,9 @@
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Departments</h1>
           <p class="fs-5"> Manage All Departments</p>
-
           <Link :href="route('admin.department.create')">
-          <Button :name="'Add New Department'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-4"></Button>
+            <Button :name="'Add New Department'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-4"></Button>
           </Link>
-
         </div>
         <div class="input-group mt-3">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
@@ -50,7 +48,6 @@
           </thead>
           <tbody class="">
             <tr v-for="department in departments.data" :key="department.id">
-
               <td class="text-center py-4">{{ department.id }}</td>
               <td class="text-center" style="max-width: 60px;"
                 @click="startEditing(department.id, department.department)">
@@ -78,7 +75,7 @@ import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link, useForm, usePage } from "@inertiajs/vue3";
 import Alpine from 'alpinejs';
 import moment from "moment";
-import { reactive, ref, watchEffect } from 'vue';
+import { reactive, ref, watchEffect, defineProps } from 'vue';
 import Toast from '@/Components/Toast.vue';
 import Button from '@/Components/Button.vue';
 
@@ -105,8 +102,7 @@ const props = defineProps({
   departments: Object,
 });
 
-
-//Start of Update Functions 
+// Start of Update Functions
 let editedDepartment = reactive({});
 let selectedDepartmentId = ref(null);
 
@@ -126,19 +122,19 @@ const saveDepartment = (departmentId) => {
     selectedDepartmentId.value = null;
   }
 };
-//End of Update Functions
+// End of Update Functions
 
 const isShowDelete = ref(false);
 
 function closeDelete() {
-  if(isShowDelete.value) {
+  if (isShowDelete.value) {
     selectedDepartmentId.value = null
     isShowDelete.value = false;
   }
 }
 
 function showDelete(department) {
-  if(!isShowDelete.value) {
+  if (!isShowDelete.value) {
     selectedDepartmentId.value = department;
     isShowDelete.value = true;
   }
@@ -149,4 +145,79 @@ const formatDate = (date) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+
+.table-responsive {
+  overflow-x: auto; 
+}
+
+.btn-tickets {
+  transition: all 0.2s;
+}
+
+.btn-tickets:hover {
+  transform: scale(1.1);
+}
+
+.btn-options {
+  width: 100px;
+}
+
+.custom-rounded-table {
+  border-radius: 10px;
+}
+
+
+.ticket-description {
+  position: relative;
+  cursor: default;
+}
+
+.ticket-description:hover::after {
+  content: attr(data-hover-text);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: pink;
+  color: red;
+  padding: 5px;
+  border-radius: 5px;
+  z-index: 9999;
+}
+
+@media (max-width: 768px) {
+  .custom-rounded-table {
+    font-size: 12px;
+  }
+  .table-responsive {
+    overflow-x: auto; 
+  }
+  
+  .btn-options {
+    width: 80px; 
+  }
+
+  .custom-rounded-table th,
+  .custom-rounded-table td {
+    white-space: nowrap; 
+  }
+}
+
+@media (max-width: 576px) {
+  
+  .custom-rounded-table {
+    font-size: 10px; 
+  }
+  
+  .btn-options {
+    width: 60px; 
+}
+
+custom-rounded-table th,
+  .custom-rounded-table td {
+    display: block; 
+    width: 100%; 
+    text-align: left; 
+  }
+}
+</style>
