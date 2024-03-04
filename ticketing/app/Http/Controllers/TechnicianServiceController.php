@@ -20,6 +20,13 @@ class TechnicianServiceController extends Controller
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where('service_id', 'like', '%' . $search . '%')
+                ->orWhere('ticket_number', 'like', '%' . $search . '%')
+                ->orWhere('requesting_office', 'like', '%' . $search . '%')
+                ->orWhere('equipment_no', 'like', '%' . $search . '%')
+                ->orWhere('issue', 'like', '%' . $search . '%')
+                ->orWhere('action', 'like', '%' . $search . '%')
+                ->orWhere('recommendation', 'like', '%' . $search . '%')
+                ->orWhere('remarks', 'like', '%' . $search . '%')
                 ->orWhereHas('technician.user', function ($subquery) use ($search) {
                     $subquery->where('name', 'like', '%' . $search . '%');
                 });
