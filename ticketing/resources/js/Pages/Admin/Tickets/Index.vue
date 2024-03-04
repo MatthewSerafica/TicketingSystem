@@ -41,7 +41,7 @@
       </div>
 
       <!--Data Table-->
-      <div class="container">
+      <div class="table-responsive">
         <div class="">
           <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2">
             <Pagination :links="tickets.links" :key="'tickets'" />
@@ -490,6 +490,11 @@ const validateNumericInput = (inputValue, propName) => {
 </script>
 
 <style scoped>
+
+.table-responsive {
+  overflow-x: auto; 
+}
+
 .btn-tickets {
   transition: all 0.2s;
 }
@@ -522,5 +527,41 @@ const validateNumericInput = (inputValue, propName) => {
   padding: 5px;
   border-radius: 5px;
   z-index: 9999;
+}
+
+@media (max-width: 768px) {
+  .custom-rounded-table {
+    font-size: 12px;
+  }
+  .table-responsive {
+    overflow-x: auto; 
+  }
+  
+  .btn-options {
+    width: 80px; 
+  }
+
+  .custom-rounded-table th,
+  .custom-rounded-table td {
+    white-space: nowrap; 
+  }
+}
+
+@media (max-width: 576px) {
+  
+  .custom-rounded-table {
+    font-size: 10px; 
+  }
+  
+  .btn-options {
+    width: 60px; 
+}
+
+custom-rounded-table th,
+  .custom-rounded-table td {
+    display: block; 
+    width: 100%; 
+    text-align: left; 
+  }
 }
 </style>
