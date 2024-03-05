@@ -7,11 +7,11 @@
         <div class="container">
           <div class="title-container text-center">
             <h1>SERVICE REPORT FORM</h1>
-          </div>    
+          </div>
 
           <div class="create-report">
 
-            
+
             <div class="row justify-content-center mb-4">
               <div class="col-md-6">
                 <div class="input-group">
@@ -21,8 +21,6 @@
                 <span v-if="form.errors.service_id" class="error-message">{{ form.errors.service_id }}</span>
               </div>
             </div>
-
-            
             <div class="row mb-4">
               <div class="col-md-4">
                 <label for="dateStarted" class="form-label">Date Started:</label>
@@ -34,16 +32,21 @@
               </div>
               <div class="col-md-4">
                 <label for="ticketNumber" class="form-label">Ticket Number:</label>
-                <input type="text" class="form-control" id="ticketNumber" v-model="form.ticket_number" required>
-                <span v-if="form.errors.ticket_number" class="error-message">{{ form.errors.ticket_number }}</span>
+                <select class="form-select" id="ticketNumber" v-model="form.ticket_number" required>
+                  <option disabled>Assign ticket</option>
+                  <option v-for="ticket in tickets" :value="ticket.ticket_number">{{ ticket.ticket_number }}</option>
+                </select>
               </div>
             </div>
-
-            
             <div class="row mb-4">
               <div class="col-md-4">
-                <label for="technicianName" class="form-label">Technician Name:</label>
-                <input type="text" class="form-control" id="technicianName" v-model="form.technician_name" readonly>
+                <label for="technician" class="form-label">Technicians:</label>
+                <select id="technician" class="form-select rounded border-secondary-subtle"
+                  placeholder="Assign Technician..." v-model.number="form.technician">
+                  <option disabled>Assign Technician</option>
+                  <option v-for="technician in technicians" :value="technician.technician_id">{{ technician.user.name }}
+                  </option>
+                </select>
               </div>
               <div class="col-md-4">
                 <label for="requestingOffice" class="form-label">Requesting Office:</label>
@@ -54,29 +57,23 @@
                 <input type="text" class="form-control" id="equipment_no" v-model="form.equipment_no">
               </div>
             </div>
-
-           
             <div class="row mb-4">
               <div class="col-md-4">
                 <label for="problemEncountered" class="form-label">Problem Encountered:</label>
-                <select id="problemEncountered" v-model="form.issue" class="form-control">
-                  <option value="">Select an option</option>
-                  <option value="No Internet">No Internet</option>
-                  <option value="Software Installation">Software Installation</option>
-                  <option value="Printer Problem">Printer Problem</option>
-                </select>
+                <input type="text" id="problemEncountered" v-model="form.issue" class="form-control">
               </div>
               <div class="col-md-4">
                 <label for="action" class="form-label">Action Taken:</label>
-                <input type="text" class="form-control" id="action" v-model="form.action">
+                <select class="form-select" id="action" v-model="form.action">
+                  <option disabled>Assign action taken</option>
+                  <option v-for="service in services" :value="service.service">{{ service.service }}</option>
+                </select>
               </div>
               <div class="col-md-4">
                 <label for="recommendation" class="form-label">Recommendation:</label>
                 <input type="text" class="form-control" id="recommendation" v-model="form.recommendation">
               </div>
             </div>
-
-            
             <div class="row mb-4">
               <div class="col-md-4">
                 <label for="dateDone" class="form-label">Date Done:</label>
@@ -91,8 +88,6 @@
                 <input type="text" class="form-control" id="remarks" v-model="form.remarks">
               </div>
             </div>
-
-            
             <div class="row justify-content-end">
               <div class="col-md-4">
                 <div class="d-flex justify-content-end gap-2">
@@ -109,80 +104,90 @@
 </template>
 
 <script setup>
-import Header from '@/Pages/Layouts/AdminHeader.vue'
-import { Link, router, useForm, usePage } from '@inertiajs/vue3';
 import Button from '@/Components/Button.vue';
+import Header from '@/Pages/Layouts/AdminHeader.vue';
+import { Link, useForm } from '@inertiajs/vue3';
+import { ref, watch } from "vue";
 
 const props = defineProps({
   technicians: Object,
   new_service_id: String,
   service_report: Object,
+  services: Object,
+  tickets: Object,
 })
 
 const today = new Date();
-const minDate = today.toISOString().split('T')[0]; 
-
-const page = usePage();
+const minDate = today.toISOString().split('T')[0];
 
 const form = useForm({
   service_id: props.new_service_id,
-  date_started: '',
-  time_started: '',
-  ticket_number: '',
-  technician_name: null,
+  date_started: null,
+  time_started: null,
+  ticket_number: null,
   technician: null,
-  requesting_office: '',
-  equipment_no: '',
-  issue: '',
-  action: '',
-  recommendation: '',
-  date_done: '',
-  time_done: '',
-  remarks:'',
+  requesting_office: null,
+  equipment_no: null,
+  issue: null,
+  action: null,
+  recommendation: null,
+  date_done: null,
+  time_done: null,
+  remarks: null,
 });
 
 
 const create = async () => {
-    if (!/^\d+$/.test(form.ticket_number)) {
-        form.errors.ticket_number = 'Ticket number should contain only numeric characters.';
-        return;
-    }
+  if (!/^\d+$/.test(form.ticket_number)) {
+    form.errors.ticket_number = 'Ticket number should contain only numeric characters.';
+    return;
+  }
 
-    const is_valid_service_id = await validate_service_id(form.service_id);
+  const is_valid_service_id = await validate_service_id(form.service_id);
 
-    if (!is_valid_service_id) {
-        form.errors.service_id = 'Invalid or duplicate service ID';
-        return;
-    }
+  if (!is_valid_service_id) {
+    form.errors.service_id = 'Invalid or duplicate service ID';
+    return;
+  }
 
-    form.post(route('admin.reports.service-report.store'), { preserveScroll: false, preserveState: false });
+  form.post(route('admin.reports.service-report.store'), { preserveScroll: false, preserveState: false });
 }
 
 
 
 const validate_service_id = async (service_id) => {
-    const service_id_regex = /^\d{4}$/;
+  const service_id_regex = /^\d{4}$/;
 
-    if (!service_id_regex.test(service_id)) {
-        console.error('Invalid service_id format');
-        return false;
-    }
+  if (!service_id_regex.test(service_id)) {
+    console.error('Invalid service_id format');
+    return false;
+  }
 
-    const response = await fetch(`/check-service-id/${service_id}`);
-    const data = await response.json();
+  const response = await fetch(`/admin/check-service-id/${service_id}`);
+  const data = await response.json();
 
-    if (data.exists) {
-        console.error('Service id already exists');
-        return false;
-    }
+  if (data.exists) {
+    console.error('Service id already exists');
+    return false;
+  }
 
-    return true;
+  return true;
 }
+
+watch(() => form.ticket_number, async (newValue) => {
+  const selectedTicket = props.tickets.find(ticket => ticket.ticket_number === newValue);
+
+  if (selectedTicket) {
+    form.action = selectedTicket.service;
+    form.issue = selectedTicket.description;
+    form.requesting_office = selectedTicket.employee.department + ' - ' + selectedTicket.employee.office;
+    form.technician = selectedTicket.technician.technician_id;
+  }
+})
 
 </script>
 
 <style scoped>
-
 .error-message {
   color: red;
 }

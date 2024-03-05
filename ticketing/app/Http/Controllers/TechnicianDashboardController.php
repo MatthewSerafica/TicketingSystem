@@ -14,10 +14,14 @@ use Illuminate\Http\Request;
 
 class TechnicianDashboardController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $user = Auth::user();
         $technician = Technician::where('user_id', $user->id)->firstOrFail();
-        $tickets = Ticket::where('technician', $technician->technician_id)->with('employee.user', 'technician.user')->whereDate('created_at',today())->orderByDesc('created_at')->take(3)->get();
+        $tickets = Ticket::where('technician1', $technician->technician_id)
+            ->orWhere('technician2', $technician->technician_id)
+            ->orWhere('technician3', $technician->technician_id)
+            ->with('employee.user', 'technician1.user', 'technician2.user', 'technician3.user')->whereDate('created_at', today())->orderByDesc('created_at')->take(3)->get();
         return inertia('Technician/Dashboard/Index', [
             'tickets' => $tickets,
         ]);
@@ -54,7 +58,6 @@ class TechnicianDashboardController extends Controller
             if (session('error') === null) {
                 return redirect()->route('technician')->with('success', 'Password changed successfully');
             }
-
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         } catch (ValidationException $e) {

@@ -5,8 +5,9 @@
     <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
       <Toast
         x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
-        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showSuccessToast"
-        :success="page.props.flash.success" :message="page.props.flash.message" @close="handleClose">
+        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
+        v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
+        @close="handleClose">
       </Toast>
 
       <Toast
@@ -27,8 +28,10 @@
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
             <Button :name="'New'" :color="'secondary'" class="btn-options" @click="filterTickets('new')"></Button>
-            <Button :name="'Pending'" :color="'secondary'" class="btn-options" @click="filterTickets('pending')"></Button>
-            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options" @click="filterTickets('ongoing')"></Button>
+            <Button :name="'Pending'" :color="'secondary'" class="btn-options"
+              @click="filterTickets('pending')"></Button>
+            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options"
+              @click="filterTickets('ongoing')"></Button>
             <Button :name="'Resolved'" :color="'secondary'" class="btn-options"
               @click="filterTickets('resolved')"></Button>
           </div>
@@ -52,11 +55,8 @@
               <tr class="text-start">
                 <th class="text-start text-muted" @click="handleSort('ticket_number')">
                   Ticket No
-                  <i :class="{
-                    'bi bi-caret-up-fill': sortColumn === 'ticket_number' && sortDirection === 'asc',
-                    'bi bi-caret-down-fill': sortColumn === 'ticket_number' && sortDirection === 'desc',
-                    'bi bi-caret-down-fill text-muted': sortColumn !== 'ticket_number'
-                  }"></i>
+                  <i
+                    :class="{ 'bi bi-caret-up-fill': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-caret-down-fill': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-caret-down-fill text-muted': sortColumn !== 'ticket_number' }"></i>
                 </th>
                 <th class="text-muted">Date</th>
                 <th class="text-center text-muted">RR No</th>
@@ -78,46 +78,53 @@
                 <td class="text-center">{{ ticket.ticket_number }}</td>
                 <td class="text-start">{{ formatDate(ticket.created_at) }}</td>
                 <td class="text-center" style="max-width: 60px;"
-                @click="showInput(ticket.rr_no, ticket.ticket_number, 'rr')">
-                  <span v-if="!selectedInput || selectedInput !== 'rr' || selectedRow !== ticket.ticket_number">{{
-                    ticket.rr_no }}</span>
+                  @click="showInput(ticket.rr_no, ticket.ticket_number, 'rr')">
+                  <span v-if="!selectedInput || selectedInput !== 'rr' || selectedRow !== ticket.ticket_number">
+                    {{ ticket.rr_no }}
+                  </span>
                   <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'rr'"
-                    v-model="editData[ticket.rr_no]" @blur="updateData(ticket.rr_no, ticket.ticket_number, 'rr_no', 'rr')"
-                    @keyup.enter="updateData(ticket.rr_no, ticket.ticket_number, 'rr_no')"
+                    v-model="editData[ticket.rr_no]"
+                    @blur="updateData(ticket.rr_no, ticket.ticket_number, 'rr_no', 'rr')"
+                    @keyup.enter="updateData(ticket.rr_no, ticket.ticket_number, 'rr_no', 'rr')"
                     class="w-100 rounded border border-secondary-subtle text-center">
                 </td>
                 <td class="text-center" style="max-width: 60px;"
-                @click="showInput(ticket.ms_no, ticket.ticket_number, 'ms')">
-                  <span v-if="!selectedInput || selectedInput !== 'ms' || selectedRow !== ticket.ticket_number">{{
-                    ticket.ms_no }}</span>
+                  @click="showInput(ticket.ms_no, ticket.ticket_number, 'ms')">
+                  <span v-if="!selectedInput || selectedInput !== 'ms' || selectedRow !== ticket.ticket_number">
+                    {{ ticket.ms_no }}
+                  </span>
                   <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'ms'"
-                    v-model="editData[ticket.ms_no]" @blur="updateData(ticket.ms_no, ticket.ticket_number, 'ms_no', 'ms')"
-                    @keyup.enter="updateData(ticket.ms_no, ticket.ticket_number, 'ms_no')"
+                    v-model="editData[ticket.ms_no]"
+                    @blur="updateData(ticket.ms_no, ticket.ticket_number, 'ms_no', 'ms')"
+                    @keyup.enter="updateData(ticket.ms_no, ticket.ticket_number, 'ms_no', 'ms')"
                     class="w-100 rounded border border-secondary-subtle text-center">
                 </td>
                 <td class="text-center" style="max-width: 60px;"
-                @click="showInput(ticket.rs_no, ticket.ticket_number, 'rs')">
-                  <span v-if="!selectedInput || selectedInput !== 'rs' || selectedRow !== ticket.ticket_number">{{
-                    ticket.rs_no }}</span>
+                  @click="showInput(ticket.rs_no, ticket.ticket_number, 'rs')">
+                  <span v-if="!selectedInput || selectedInput !== 'rs' || selectedRow !== ticket.ticket_number">
+                    {{ ticket.rs_no }}
+                  </span>
                   <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'rs'"
-                    v-model="editData[ticket.rs_no]" @blur="updateData(ticket.rs_no, ticket.ticket_number, 'rs_no', 'rs')"
-                    @keyup.enter="updateData(ticket.rs_no, ticket.ticket_number, 'rs_no')"
+                    v-model="editData[ticket.rs_no]"
+                    @blur="updateData(ticket.rs_no, ticket.ticket_number, 'rs_no', 'rs')"
+                    @keyup.enter="updateData(ticket.rs_no, ticket.ticket_number, 'rs_no', 'rs')"
                     class="w-100 rounded border border-secondary-subtle text-center">
                 </td>
-                <td class="text-start"><span class="fw-medium">{{ ticket.employee.user.name }}</span><br><small>{{
-                  ticket.employee.department }} - {{ ticket.employee.office }}</small></td>
-
+                <td class="text-start"><span class="fw-medium">
+                    {{ ticket.employee.user.name }}</span><br>
+                  <small>{{ ticket.employee.department }} - {{ ticket.employee.office }}</small>
+                </td>
                 <td class="text-start text-truncate ticket-description" style="max-width: 130px;"
                   data-hover-text="{{ ticket.description }}">
                   <span class="d-inline-block" tabindex="0" :title="ticket.description">
                     {{ ticket.description }}
                   </span>
                 </td>
-
                 <td class="text-start">
                   <div class="btn-group">
-                    <button type="button" class="btn text-start">{{ ticket.service ? ticket.service :
-                      'Unassigned' }}</button>
+                    <button type="button" class="btn text-start">
+                      {{ ticket.service ? ticket.service : 'Unassigned' }}
+                    </button>
                     <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
                       aria-expanded="false" data-bs-reference="parent">
                       <span class="visually-hidden">Toggle Dropdown</span>
@@ -133,8 +140,9 @@
                 <td class="text-start">
                   <div class="btn-group">
                     <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center"
-                      style="width: 5rem;">{{
-                        ticket.complexity ? ticket.complexity : 'N/A' }}</button>
+                      style="width: 5rem;">
+                      {{ ticket.complexity ? ticket.complexity : 'N/A' }}
+                    </button>
                     <button type="button" :class="getComplexityClass(ticket.complexity)"
                       class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
                       data-bs-reference="parent">
@@ -143,41 +151,110 @@
                     <ul class="dropdown-menu">
                       <li @click="updateComplexity(ticket.ticket_number, 'Simple')" class="btn dropdown-item">Simple
                       </li>
-                      <li @click="updateComplexity(ticket.ticket_number, 'Complex')" class="btn dropdown-item">
-                        Complex</li>
-                    </ul>
-                  </div>
-                </td>
-                <td class="text-start">
-                  <div class="btn-group">
-                    <button type="button" class="btn text-start" style="width: 10rem;">{{ ticket.technician ?
-                      ticket.technician.user.name :
-                      'Unassigned' }}</button>
-                    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
-                      aria-expanded="false" data-bs-reference="parent">
-                      <span class="visually-hidden">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li class="dropdown-item disabled">Select a technician</li>
-                      <li v-for="technician in technicians" class="btn dropdown-item"
-                        @click="showInput(technician.technician_id, ticket.ticket_number), updateData(technician.technician_id, ticket.ticket_number, 'technician_id')">
-                        {{ technician.user.name }}
+                      <li @click="updateComplexity(ticket.ticket_number, 'Complex')" class="btn dropdown-item">Complex
                       </li>
                     </ul>
                   </div>
                 </td>
+                <td class="text-start">
+                  <div class="d-flex flex-column align-items-center">
+                    <div v-if="ticket.technician1 || (selectedRow === ticket.ticket_number && more1)"
+                      class="btn-group d-flex justify-content-center align-items-center">
+                      <button type="button" class="btn text-start" style="width: 10rem;">
+                        {{ ticket.technician1 ? ticket.technician1.user.name : 'Unassigned' }}
+                      </button>
+                      <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
+                        aria-expanded="false" data-bs-reference="parent">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li class="dropdown-item disabled">Select a technician</li>
+                        <li class="btn dropdown-item"
+                          @click="showInput(null, ticket.ticket_number, 'technician1'), updateData(null, ticket.ticket_number, 'technician_id', 'technician1')">
+                          Unassign</li>
+                        <li v-for="technician in technicians" class="btn dropdown-item"
+                          @click="showInput(technician.technician_id, ticket.ticket_number, 'technician1'), updateData(technician.technician_id, ticket.ticket_number, 'technician_id', 'technician1')">
+                          {{ technician.user.name }}
+                        </li>
+                      </ul>
+                      <button v-if="!ticket.technician1" type="button"
+                        class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-6 text-danger"
+                        style="width: 1em; height: 1.5em;"
+                        @click="removeMore(ticket.ticket_number, 'more1', 'false')"><i
+                          class="bi bi-dash-circle"></i></button>
+                    </div>
+                    <div v-if="ticket.technician2 || (selectedRow === ticket.ticket_number && more2)"
+                      class="btn-group d-flex justify-content-center align-items-center">
+                      <button type="button" class="btn text-start" style="width: 10rem;">
+                        {{ ticket.technician2 ? ticket.technician2.user.name : 'Unassigned' }}
+                      </button>
+                      <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
+                        aria-expanded="false" data-bs-reference="parent">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li class="dropdown-item disabled">Select a technician</li>
+                        <li class="btn dropdown-item"
+                          @click="showInput(null, ticket.ticket_number, 'technician2'), updateData(null, ticket.ticket_number, 'technician_id', 'technician2')">
+                          Unassign</li>
+                        <li v-for="technician in technicians" class="btn dropdown-item"
+                          @click="showInput(technician.technician_id, ticket.ticket_number, 'technician2'), updateData(technician.technician_id, ticket.ticket_number, 'technician_id', 'technician2')">
+                          {{ technician.user.name }}
+                        </li>
+                      </ul>
+                      <button v-if="!ticket.technician2" type="button"
+                        class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-6 text-danger"
+                        style="width: 1em; height: 1.5em;"
+                        @click="removeMore(ticket.ticket_number, 'more2', 'false')"><i
+                          class="bi bi-dash-circle"></i></button>
+                    </div>
+                    <div v-if="ticket.technician3 || (selectedRow === ticket.ticket_number && more3)"
+                      class="btn-group d-flex justify-content-center align-items-center">
+                      <button type="button" class="btn text-start" style="width: 10rem;">
+                        {{ ticket.technician3 ? ticket.technician3.user.name : 'Unassigned' }}
+                      </button>
+                      <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
+                        aria-expanded="false" data-bs-reference="parent">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li class="dropdown-item disabled">Select a technician</li>
+                        <li class="btn dropdown-item"
+                          @click="showInput(null, ticket.ticket_number, 'technician3'), updateData(null, ticket.ticket_number, 'technician_id', 'technician3')">
+                          Unassign</li>
+                        <li v-for="technician in technicians" class="btn dropdown-item"
+                          @click="showInput(technician.technician_id, ticket.ticket_number, 'technician3'), updateData(technician.technician_id, ticket.ticket_number, 'technician_id', 'technician3')">
+                          {{ technician.user.name }}
+                        </li>
+                      </ul>
+                      <button v-if="!ticket.technician3" type="button"
+                        class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-6 text-danger"
+                        style="width: 1em; height: 1.5em;" @click="removeMore(ticket.ticket_number, 'more3', 'false')">
+                        <i class="bi bi-dash-circle"></i>
+                      </button>
+                    </div>
+                    <div v-if="show" class="">
+                      <button class="btn align-items-center justify-content-center d-flex text-primary fs-5"
+                        style="height:1.5em;" @click="addMore(ticket.ticket_number)">
+                        <i class="bi bi-plus-circle-fill"></i>
+                      </button>
+                    </div>
+                  </div>
+                </td>
                 <td class="text-center" style="max-width: 60px;"
                   @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
-                  <span v-if="!selectedInput || selectedInput !== 'sr' || selectedRow !== ticket.ticket_number">{{
-                    ticket.sr_no }}</span>
+                  <span v-if="!selectedInput || selectedInput !== 'sr' || selectedRow !== ticket.ticket_number">
+                    {{ ticket.sr_no }}
+                  </span>
                   <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'sr'"
-                    v-model="editData[ticket.sr_no]" @blur="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no', 'sr')"
+                    v-model="editData[ticket.sr_no]"
+                    @blur="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no', 'sr')"
                     @keyup.enter="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no')"
                     class="w-100 rounded border border-secondary-subtle text-center">
                 </td>
-                <td class="text-start">{{ isNaN(new Date(formatDate(ticket.resolved_at)))
-                  ? 'Not yet resolved'
-                  : formatDate(ticket.resolved_at) }}
+                <td class="text-start">
+                  {{ isNaN(new Date(formatDate(ticket.resolved_at))) ? 'Not yet resolved' :
+          formatDate(ticket.resolved_at) }}
                 </td>
                 <td class="text-start text-break" style="max-width: 120px;"
                   @click="showInput(ticket.remarks, ticket.ticket_number, 'remarks')">
@@ -188,13 +265,14 @@
                     v-model="editData[ticket.remarks]"
                     @blur="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
                     @keyup.enter="updateData(ticket.remarks, ticket.ticket_number, 'remarks')"
-                    class="w-100 rounded border border-secondary-subtle text-center"> </textarea>
+                    class="w-100 rounded border border-secondary-subtle text-center"></textarea>
                 </td>
                 <td class="text-start">
                   <div class="btn-group">
                     <button type="button" :class="getButtonClass(ticket.status)" class="text-center"
-                      style="width: 5rem;">{{
-                        ticket.status }}</button>
+                      style="width: 5rem;">
+                      {{ ticket.status }}
+                    </button>
                     <button type="button" :class="getButtonClass(ticket.status)"
                       class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
                       data-bs-reference="parent">
@@ -206,21 +284,22 @@
                       </li>
                       <li @click="updateStatus(ticket.ticket_number, 'Pending', ticket.status, ticket.sr_no)"
                         class="btn dropdown-item">
-                        Pending</li>
+                        Pending
+                      </li>
                       <li @click="updateStatus(ticket.ticket_number, 'Ongoing', ticket.status, ticket.sr_no)"
                         class="btn dropdown-item">
-                        Ongoing</li>
+                        Ongoing
+                      </li>
                       <li @click="updateStatus(ticket.ticket_number, 'Resolved', ticket.status, ticket.sr_no)"
                         class="btn dropdown-item">
-                        Resolved</li>
-
+                        Resolved
+                      </li>
                     </ul>
                   </div>
                 </td>
               </tr>
             </tbody>
           </table>
-          <!--Pagination-->
         </div>
       </div>
     </div>
@@ -426,14 +505,15 @@ const showInput = (data, id, type) => {
 }
 
 const updateData = async (data, id, updateField, type) => {
-  console.log(selectedInput.value, editData[data], updateField)
+  console.log(selectedInput.value, type, editData[data], updateField)
   if (selectedInput.value === type) {
 
-    if (!validateNumericInput(editData[data], updateField)) {
+    /* if (!validateNumericInput(editData[data], updateField)) {
       return;
-    }
+    } */
     const form = useForm({
       [updateField]: editData[data],
+      type: type,
     });
 
     await form.put(route('admin.tickets.update', { ticket_id: id, field: updateField }));
@@ -444,6 +524,47 @@ const updateData = async (data, id, updateField, type) => {
 
   }
 };
+
+let more1 = ref(false);
+let more2 = ref(false);
+let more3 = ref(false);
+let show = ref(true);
+
+const addMore = (id) => {
+  selectedRow.value = id;
+  if (!more1.value) {
+    console.log('more1')
+    more1.value = true;
+  } else if (!more2.value) {
+    console.log('more2')
+    more2.value = true;
+  } else if (!more3.value) {
+    console.log('more3')
+    more3.value = true;
+    show.value = false;
+  }
+}
+
+const removeMore = (id, more, status) => {
+  if (more === 'more1') {
+    more1.value = false;
+    if (more2 && more3) {
+      show.value = true;
+    }
+  }
+  else if (more === 'more2') {
+    more2.value = false;
+    if (more1 && more2) {
+      show.value = true;
+    }
+  }
+  else if (more === 'more3') {
+    more3.value = false;
+    if (more2 && more1) {
+      show.value = true;
+    }
+  }
+}
 
 // Table update end
 
@@ -490,9 +611,8 @@ const validateNumericInput = (inputValue, propName) => {
 </script>
 
 <style scoped>
-
 .table-responsive {
-  overflow-x: auto; 
+  overflow-x: auto;
 }
 
 .btn-tickets {
@@ -533,17 +653,18 @@ const validateNumericInput = (inputValue, propName) => {
   .custom-rounded-table {
     font-size: 12px;
   }
+
   .table-responsive {
-    overflow-x: auto; 
+    overflow-x: auto;
   }
-  
+
   .btn-options {
-    width: 80px; 
+    width: 80px;
   }
 
   .custom-rounded-table th,
   .custom-rounded-table td {
-    white-space: nowrap; 
+    white-space: nowrap;
   }
 }
 

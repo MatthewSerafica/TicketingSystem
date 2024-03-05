@@ -16,8 +16,10 @@ class TechnicianTicketController extends Controller
         $technician = Technician::where('user_id', $user_id)->first();
 
         $tickets = Ticket::query()
-            ->with('employee.user', 'technician.user')
-            ->where('technician', $technician->technician_id)
+            ->with('employee.user', 'technician1.user', 'technician2.user', 'technician3.user')
+            ->where('technician1', $technician->technician_id)
+            ->orWhere('technician2', $technician->technician_id)
+            ->orWhere('technician3', $technician->technician_id)
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where(function ($subquery) use ($search) {

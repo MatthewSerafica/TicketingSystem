@@ -23,7 +23,8 @@
 
                   <div class="flex-grow-1 w-50">
                     <label for="issue" class="fw-semibold">Title</label>
-                    <input id="issue" class="form-control rounded border-secondary-subtle" type="text" placeholder="Enter Ticket Title..." v-model="form.issue" required/>
+                    <input id="issue" class="form-control rounded border-secondary-subtle" type="text"
+                      placeholder="Enter Ticket Title..." v-model="form.issue" required />
                   </div>
 
                   <div class="flex-grow-1 w-50 d-flex flex-column">
@@ -54,7 +55,7 @@
                 </div>
               </div>
             </div>
-           
+
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
                 <label for="description" class="fw-semibold">Description</label>
@@ -62,7 +63,7 @@
                   placeholder="Enter Ticket Description..." v-model="form.description" rows="5"></textarea>
               </div>
             </div>
-            
+
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
                 <div class="d-flex flex-row gap-3">
@@ -81,8 +82,7 @@
                     <select id="technician" class="form-select rounded border-secondary-subtle"
                       placeholder="Assign Technician..." v-model.number="form.technician">
                       <option disabled>Assign Technician</option>
-                      <option v-for="technician in technicians" :value="technician.technician_id">{{ technician.user.name
-                      }}</option>
+                      <option v-for="technician in technicians" :value="technician.technician_id">{{ technician.user.name}}</option>
                     </select>
                   </div>
                 </div>
@@ -103,7 +103,7 @@
     </div>
   </div>
 </template>
-  
+
 <script setup>
 import Button from '@/Components/Button.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
@@ -185,10 +185,9 @@ const create = () => {
   form.post(route('admin.tickets.store'), { preserveScroll: false, preserveState: false });
 }
 </script>
-  
+
 <style scoped>
 .error-message {
   color: red;
 }
 </style>
-  
