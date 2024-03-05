@@ -130,13 +130,11 @@ class TechnicianTicketController extends Controller
         $ticket->$field = $request->$field;
         
         
-        if ($ticket->sr_no === null){
-            // lol tinamad na akong ayusin yung if statement kaya ganto nalang
-        } else {
+        if ($ticket->sr_no !== null) {
+            // If the SR number is present, update the resolved_at and status
             $ticket->resolved_at = now();
             $ticket->status = 'Resolved';
         }
-
         $ticket->save();
     }
 
