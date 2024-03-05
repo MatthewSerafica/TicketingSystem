@@ -18,7 +18,7 @@
           </div>
         </div>
   
-        <div class="w-100" table-container>
+        <div class="w-80" table-container>
       <table class="table table-hover shadow custom-rounded-table">
         <thead>
           <tr class="text-center text-nowrap">
