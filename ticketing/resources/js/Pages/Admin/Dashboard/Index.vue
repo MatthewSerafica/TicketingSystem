@@ -59,6 +59,7 @@ import { Link } from '@inertiajs/vue3';
 import moment from "moment";
 import Bar from "@/Pages/Admin/Dashboard/Charts/Bar.vue"
 import Doughnut from "@/Pages/Admin/Dashboard/Charts/Doughnut.vue"
+import { ref, watch } from 'vue';
 
 const props = defineProps({
     tickets: Object,
@@ -67,6 +68,14 @@ const props = defineProps({
 const formatDate = (date) => {
     return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
 };
+
+const myData = ref(null);
+
+watch(myData, (newValue, oldValue) => {
+  // Perform actions based on data changes
+  console.log('Data changed:', newValue);
+});
+
 </script>
 
 <style>

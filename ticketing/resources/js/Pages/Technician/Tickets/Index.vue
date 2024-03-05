@@ -63,20 +63,25 @@
               
               <td class="text-start">{{ ticket.resolved_at ? formatDate(ticket.resolved_at) : 'Not yet resolved' }}</td>
               <td class="text-start">
-                <div class="btn-group">
-                  <button type="button" :class="getButtonClass(ticket.status)" class="text-center" style="width: 5rem;">{{
-                    ticket.status }}</button>
-                  <button type="button" :class="getButtonClass(ticket.status)"
-                    class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
-                    data-bs-reference="parent">
-                    <span class="visually-hidden">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li @click="updateStatus(ticket.ticket_number, 'Pending')" class="btn dropdown-item">Pending</li>
-                    <li @click="updateStatus(ticket.ticket_number, 'Ongoing')" class="btn dropdown-item">Ongoing</li>
-                  </ul>
-                </div>
-              </td>
+                  <div class="btn-group" v-if="ticket.status !== 'Resolved'">
+                    <button type="button" :class="getButtonClass(ticket.status)" class="text-center" style="width: 5rem;">{{
+                      ticket.status }}</button>
+                    <button type="button" :class="getButtonClass(ticket.status)"
+                      class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
+                      data-bs-reference="parent">
+                      <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li @click="updateStatus(ticket.ticket_number, 'Pending')" class="btn dropdown-item">Pending</li>
+                      <li @click="updateStatus(ticket.ticket_number, 'Ongoing')" class="btn dropdown-item">Ongoing</li>
+                    </ul>
+                  </div>
+                  <div v-else>
+                    <button type="button" :class="getButtonClass(ticket.status)" class="text-center" disabled>{{
+                      ticket.status }}</button>
+                  </div>
+                </td>
+
               <td class="text-start text-break" style="max-width: 120px;"
                 @click="showInput(ticket.remarks, ticket.ticket_number, 'remarks')">
                 <span v-if="!selectedInput || selectedInput !== 'remarks' || selectedRow !== ticket.ticket_number">
