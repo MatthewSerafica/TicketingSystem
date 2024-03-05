@@ -11,7 +11,9 @@
                 <div class="card-subtitle ps-2 text-secondary row date">Status</div>
                 <div class="card-subtitle ps-2 pb-3 row other">{{ status }}</div>
                 <div class="card-subtitle ps-2 text-secondary row date">Assigned to</div>
-                <div class="card-subtitle ps-2 pb-3 row other">{{ technician }}</div>
+                <div class="card-subtitle ps-2 row other">{{ technician1 }}</div>
+                <div class="card-subtitle ps-2 row other">{{ technician2 }}</div>
+                <div class="card-subtitle ps-2 row other">{{ technician3 }}</div>
             </div>
         </div>
     </div>
@@ -24,7 +26,9 @@ const props = defineProps({
     employee: String,
     department: String,
     status: String,
-    technician: String,
+    technician1: String,
+    technician2: String,
+    technician3: String,
     date: String,
 })
 </script>

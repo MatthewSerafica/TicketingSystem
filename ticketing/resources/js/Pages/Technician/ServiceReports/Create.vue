@@ -168,7 +168,7 @@ const validate_service_id = async (service_id) => {
         return false;
     }
 
-    const response = await fetch(`/check-service-id/${service_id}`);
+    const response = await fetch(`/technician/check-service-id/${service_id}`);
     const data = await response.json();
 
     if (data.exists) {

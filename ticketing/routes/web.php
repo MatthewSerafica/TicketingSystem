@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminDepartmentController;
 use App\Http\Controllers\AdminOfficeController;
 use App\Http\Controllers\AdminNotificationController;
 use App\Http\Controllers\AdminServiceController;
+use App\Http\Controllers\AdminServiceReportController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeNotificationController;
 use App\Http\Controllers\TechnicianNotificationController;
@@ -38,7 +39,6 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/tickets/create', [AdminTicketController::class, 'create'])->name('admin.tickets.create');
         Route::post('/admin/tickets/create/store', [AdminTicketController::class, 'store'])->name('admin.tickets.store');
         Route::put('/admin/tickets/update-status/{ticket_id}', [AdminTicketController::class, 'status'])->name('admin.tickets.update.status');
-        Route::put('/admin/tickets/update-technician/{ticket_id}', [AdminTicketController::class, 'technician'])->name('admin.tickets.update.technician');
         Route::put('/admin/tickets/update-service/{ticket_id}', [AdminTicketController::class, 'service'])->name('admin.tickets.update.service');
         Route::put('/admin/tickets/update/{field}/{ticket_id}', [AdminTicketController::class, 'update'])->name('admin.tickets.update');
         Route::put('/admin/tickets/update-complexity/{ticket_id}', [AdminTicketController::class, 'complexity'])->name('admin.tickets.update.complexity');
@@ -51,10 +51,10 @@ Route::middleware(['web'])->group(function () {
         Route::put('/admin/users/employee/{user_id}/{field}', [AdminUsersController::class, 'employee'])->name('admin.users.update.employee');
         Route::put('/admin/users/technician/{user_id}/{field}', [AdminUsersController::class, 'technician'])->name('admin.users.update.technician');
 
-        Route::get('/admin/reports/service-report', [AdminServiceController::class, 'index'])->name('admin.reports.service-reports');
-        Route::get('/admin/reports/service-report/create', [AdminServiceController::class, 'create'])->name('admin.reports.service-report.create');
-        Route::post('/admin/reports/service-report/create/store', [AdminServiceController::class, 'store'])->name('admin.reports.service-report.store');
-        Route::get('/check-service-id/{serviceId}', [AdminServiceController::class, 'check_service_id']);    
+        Route::get('/admin/reports/service-report', [AdminServiceReportController::class, 'index'])->name('admin.reports.service-reports');
+        Route::get('/admin/reports/service-report/create', [AdminServiceReportController::class, 'create'])->name('admin.reports.service-report.create');
+        Route::post('/admin/reports/service-report/create/store', [AdminServiceReportController::class, 'store'])->name('admin.reports.service-report.store');
+        Route::get('/admin/check-service-id/{serviceId}', [AdminServiceReportController::class, 'check_service_id']);    
 
         Route::get('/admin/department', [AdminDepartmentController::class, 'index'])->name('admin.department');
         Route::get('/admin/department/create', [AdminDepartmentController::class, 'create'])->name('admin.department.create');
@@ -100,7 +100,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/technician/service-report', [TechnicianServiceController::class, 'index'])->name('technician.service-reports');
             Route::get('/technician/service-report/create', [TechnicianServiceController::class, 'create'])->name('technician.service-report.create');
             Route::post('/technician/service-report/create/store', [TechnicianServiceController::class, 'store'])->name('technician.service-report.store');
-            Route::get('/check-service-id/{serviceId}', [TechnicianServiceController::class, 'check_service_id']);
+            Route::get('/technician/check-service-id/{serviceId}', [TechnicianServiceController::class, 'check_service_id']);
 
         Route::get('/technician/notifications', [TechnicianNotificationController::class, 'index'])->name('technician.notifications');
             Route::post('/technician/notifications/seen', [TechnicianNotificationController::class, 'update'])->name('technician.notifications.seen');

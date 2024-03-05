@@ -9,9 +9,12 @@
           <Link :href="route('employee.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket</Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options" @click="handleAllButtonClick"></button>
-            <Button :name="'Pending'" :color="'secondary'" class="btn-options" @click="handlePendingButtonClick"></button>
-            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options" @click="handleOngoingButtonClick"></button>
-            <Button :name="'Resolved'" :color="'secondary'" class="btn-options" @click="handleResolvedButtonClick"></button>
+            <Button :name="'Pending'" :color="'secondary'" class="btn-options"
+              @click="handlePendingButtonClick"></button>
+            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options"
+              @click="handleOngoingButtonClick"></button>
+            <Button :name="'Resolved'" :color="'secondary'" class="btn-options"
+              @click="handleResolvedButtonClick"></button>
           </div>
         </div>
         <div class="input-group mt-3 mb-4">
@@ -38,9 +41,16 @@
             <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number">
               <td class="text-center py-3">{{ ticket.ticket_number }}</td>
               <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
-              <td class="text-center py-3 cursor" :title="ticket.issue" >{{ ticket.issue }}</td>
-              <td class="text-center py-3">{{ ticket.technician ? ticket.technician.user.name : 'Unassigned' }}</td>
-              <td class="text-center py-3"><span :class="getBadgeColor(ticket.status)" class="p-3">{{ ticket.status }}</span></td>
+              <td class="text-center py-3 cursor" :title="ticket.issue">{{ ticket.issue }}</td>
+              <td class="text-center py-3">
+                <div class="d-flex flex-column">
+                  <span>{{ ticket.technician1 ? ticket.technician1.user.name : 'Unassigned' }}</span>
+                  <span>{{ ticket.technician2 ? ticket.technician2.user.name : '' }}</span>
+                  <span>{{ ticket.technician3 ? ticket.technician3.user.name : '' }}</span>
+                </div>
+              </td>
+              <td class="text-center py-3"><span :class="getBadgeColor(ticket.status)" class="p-3">{{ ticket.status
+                  }}</span></td>
               <td class="text-center py-3">{{ ticket.rs_no ? ticket.rs_no : 'Unavailable' }}</td>
               <td class="text-center py-3">{{ ticket.resolved_at ? ticket.resolved_at : 'Unresolved' }}</td>
             </tr>
@@ -52,11 +62,11 @@
 </template>
 
 <script setup>
+import Button from '@/Components/Button.vue';
 import Header from "@/Pages/Layouts/EmployeeHeader.vue";
-import { Link, router, useForm, usePage } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import moment from "moment";
-import { ref, watch, onMounted } from "vue";
-import Button from '@/Components/Button.vue'
+import { onMounted, ref, watch } from "vue";
 
 const props = defineProps({
   tickets: Object,
@@ -155,7 +165,7 @@ const getBadgeColor = (status) => {
       return 'badge  text-bg-success';
     default:
       return 'btn btn-secondary';
-  } 
+  }
 };
 
 </script>
@@ -163,7 +173,6 @@ const getBadgeColor = (status) => {
 
 
 <style scoped>
-
 .btn-tickets {
   transition: all 0.2s;
 }
@@ -171,11 +180,12 @@ const getBadgeColor = (status) => {
 .btn-tickets:hover {
   transform: scale(1.1);
 }
+
 .btn-options {
   width: 100px;
 }
 
-.cursor{
+.cursor {
   cursor: default;
 }
 </style>

@@ -27,7 +27,7 @@
           </div>
 
           <!-- Button container -->
-          <div class="container">
+          <div class="container mt-3">
             <div class="row justify-content-end">
               <div class="col-md-6">
                 <div class="d-flex gap-2">

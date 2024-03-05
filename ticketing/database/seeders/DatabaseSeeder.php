@@ -86,7 +86,7 @@ class DatabaseSeeder extends Seeder
             $tickets = [
                 [
                 'employee' => '1',
-                'technician' => '1',
+                'technician1' => '1',
                 'issue' => 'Hardware Issue',
                 'service' => 'Hardware Repair',
                 'description' => 'broken monitor',
@@ -94,6 +94,15 @@ class DatabaseSeeder extends Seeder
                 ],
                 [
                 'employee' => '2',
+                'issue' => 'Network Issue',
+                'description' => 'No internet connection',
+                'status' => 'New',
+                'service' => 'Software Troubleshoot',
+                ],
+                [
+                'employee' => '2',
+                'technician1' => '1',
+                'technician2' => '2',
                 'issue' => 'Network Issue',
                 'description' => 'No internet connection',
                 'status' => 'New',

@@ -22,7 +22,9 @@
               <Card class="text-truncate" :no="ticket.ticket_number" :issue="ticket.issue"
                 :employee="ticket.employee.user.name" :department="ticket.employee.department"
                 :date="formatDate(ticket.created_at)" :status="ticket.status"
-                :technician="ticket.technician ? ticket.technician.user.name : 'Unassigned'">
+                :technician1="ticket.technician1 ? ticket.technician1.user.name : 'Unassigned'"
+                :technician2="ticket.technician2 ? ticket.technician2.user.name : ''"
+                :technician3="ticket.technician3 ? ticket.technician3.user.name : ''">
               </Card>
               </Link>
             </div>
