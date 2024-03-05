@@ -22,7 +22,7 @@
       </div>
 
       <div class="w-75">
-        <table class="table table-striped border border-secondary-subtle">
+        <table class="table table-hover shadow custom-rounded-table">
           <thead>
             <tr class="text-start">
               <th class="text-center">Ticket No</th>

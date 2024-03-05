@@ -28,7 +28,7 @@
 
                   <div class="flex-grow-1 w-50 d-flex flex-column">
                     <label for="employee" class="fw-semibold">Employee</label>
-                    <div class="btn-group" @click.stop>
+                    <div class="btn-group">
                       <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         {{ selectedEmployee ? selectedEmployee : 'Select a client...' }}
@@ -37,10 +37,10 @@
                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                         <span class="visually-hidden">Toggle Dropdown</span>
                       </button>
-                      <ul class="dropdown-menu">
+                      <ul id="employeeDropdown" class="dropdown-menu" :class="{ 'show': search }">
                         <li class="px-2">
                           <input id="employee-search" class="form-control border-secondary-subtle" type="text"
-                            placeholder="Search Employee..." v-model="search"/>
+                            placeholder="Search Employee..." v-model="search" @click.stop=""/>
                         </li>
                         <li v-if="employees" v-for="employee in employees" class="btn dropdown-item"
                           @click="selectEmployee(employee)">
@@ -153,15 +153,18 @@ const debouncedFetchData = () => {
 }
 
 watch(search, () => {
-  if (!search.value) {
-    resetSorting()
+  if (search.value === '') {
+    resetSorting();
   }
   debouncedFetchData();
 })
 
+
 const selectEmployee = (employee) => {
   selectedEmployee.value = employee.user.name;
   form.employee = employee.employee_id;
+
+  document.getElementById('employeeDropdown').classList.remove('show');
 }
 
 const form = useForm({
