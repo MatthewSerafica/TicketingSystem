@@ -2,7 +2,7 @@
   <div>
     <Header></Header>
     <!--Toast Render-->
-    <div class="position-absolute end-0">
+    <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
       <Toast
         x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
         x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showSuccessToast"
@@ -41,7 +41,7 @@
       </div>
 
       <!--Data Table-->
-      <div class="table-responsive">
+      <div class="table-responsive" style="padding: 0 30px;">
         <div class="">
           <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2">
             <Pagination :links="tickets.links" :key="'tickets'" />
@@ -548,20 +548,24 @@ const validateNumericInput = (inputValue, propName) => {
 }
 
 @media (max-width: 576px) {
-  
   .custom-rounded-table {
-    font-size: 10px; 
+    font-size: 10px;
   }
-  
-  .btn-options {
-    width: 60px; 
-}
 
-custom-rounded-table th,
+  .btn-options {
+    width: 60px;
+  }
+
+  .table-responsive {
+    padding: 0 10px; /* Add padding to the table container */
+    overflow-x: auto; 
+  }
+
+  .custom-rounded-table th,
   .custom-rounded-table td {
-    display: block; 
-    width: 100%; 
-    text-align: left; 
+    display: block;
+    width: 100%;
+    text-align: left;
   }
 }
 </style>
