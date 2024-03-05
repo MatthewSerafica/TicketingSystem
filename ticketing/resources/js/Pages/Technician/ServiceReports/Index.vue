@@ -45,7 +45,7 @@
               <td class="text-center">{{ service_report.ticket_number }}</td>
               <td class="text-start">{{ service_report.technician.user.name }}</td>
               <td class="text-start">{{ service_report.requesting_office }}</td>
-              <td class="text-start">{{ service_report.equipment_no }}</td>
+              <td class="text-center">{{ service_report.equipment_no }}</td>
               <td class="text-start cursor" :title="service_report.issue">{{ service_report.issue }}</td>
               <td class="text-start cursor" :title="service_report.action">{{ service_report.action }}</td>
               <td class="text-start cursor" :title="service_report.recommendation">{{ service_report.recommendation }}</td>
