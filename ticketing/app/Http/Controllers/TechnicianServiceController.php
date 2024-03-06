@@ -47,6 +47,9 @@ class TechnicianServiceController extends Controller
     {
         $latest_report = ServiceReport::orderBy('created_at', 'desc')->first();
         $new_service_id = $latest_report ? $this->incrementServiceId($latest_report->service_id) : '0001';
+
+        $ticket = Ticket::where('sr_no', $latest_report->sr_no)->first(); 
+   
         $technicians = Technician::all();
         return inertia('Technician/ServiceReports/Create', [
             'technicians' => $technicians,

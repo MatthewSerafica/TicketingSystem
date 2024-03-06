@@ -133,9 +133,9 @@ class TechnicianTicketController extends Controller
         if ($ticket->sr_no !== null) {
             // If the SR number is present, update the resolved_at and status
             $ticket->resolved_at = now();
-            $ticket->status = 'Resolved';
         }
         $ticket->save();
+        return redirect()->to('/technician/service-report/create');
     }
 
 
