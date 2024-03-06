@@ -26,6 +26,9 @@ class AdminTicketController extends Controller
                     ->orWhere('ms_no', 'like', '%' . $search . '%')
                     ->orWhere('rs_no', 'like', '%' . $search . '%')
                     ->orWhere('sr_no', 'like', '%' . $search . '%')
+                    ->orWhere('service', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%')
+                    ->orWhere('remarks', 'like', '%' . $search . '%')
                     ->orWhereHas('employee.user', function ($subquery) use ($search) {
                         $subquery->where('name', 'like', '%' . $search . '%');
                     })
@@ -35,7 +38,13 @@ class AdminTicketController extends Controller
                     ->orWhereHas('employee', function ($subquery) use ($search) {
                         $subquery->where('office', 'like', '%' . $search . '%');
                     })
-                    ->orWhereHas('technician.user', function ($subquery) use ($search) {
+                    ->orWhereHas('technician1.user', function ($subquery) use ($search) {
+                        $subquery->where('name', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('technician2.user', function ($subquery) use ($search) {
+                        $subquery->where('name', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('technician2.user', function ($subquery) use ($search) {
                         $subquery->where('name', 'like', '%' . $search . '%');
                     });
             })
@@ -222,6 +231,7 @@ class AdminTicketController extends Controller
         }
     }
 
+    // status update
     public function status(Request $request, $ticket_id)
     {
         $request->validate([
@@ -229,39 +239,51 @@ class AdminTicketController extends Controller
             'old_status' => 'required',
         ]);
 
-        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
-        $employee = Employee::where('employee_id', $ticket->employee)->with('user')->first();
-        $technician = Technician::where('technician_id', $ticket->technician)->with('user')->first();
+        $ticket = Ticket::where('ticket_number', $ticket_id)->firstOrFail();
+        $employee = Employee::find($ticket->employee);
+        $technicians = Technician::whereIn('technician_id', [$ticket->technician1, $ticket->technician2, $ticket->technician3])->get();
 
         $ticket->status = $request->status;
+
         if ($ticket->status == 'Resolved' && $request->old_status != 'Resolved') {
-            if ($employee->made_ticket > 0) {
-                $ticket->resolved_at = now();
-                $employee->update(['made_ticket' => $employee->made_ticket - 1]);
-                $technician->update(['tickets_resolved' => $technician->tickets_resolved + 1]);
-            } else {
-                $ticket->resolved_at = now();
-                $employee->update(['made_ticket' => 0]);
-                $technician->update(['tickets_resolved' => $technician->tickets_resolved + 1]);
-            }
-        } else if ($request->old_status == 'Resolved' && $ticket->status != 'Resolved') {
-            $ticket->resolved_at = null;
-            $employee->update(['made_ticket' => $employee->made_ticket + 1]);
-            if ($technician->tickets_resolved > 0) {
-                $technician->update(['tickets_resolved' => $technician->tickets_resolved - 1]);
-            } else {
-                $technician->update(['tickets_resolved' => 0]);
-            }
+            $this->resolveTicket($ticket, $employee, $technicians);
+        } elseif ($request->old_status == 'Resolved' && $ticket->status != 'Resolved') {
+            $this->revertResolution($ticket, $employee, $technicians);
         } else {
             $ticket->resolved_at = null;
         }
-        $employee->user->notify(
-            new UpdateTicketStatus($ticket)
-        );
+
+        $employee->user->notify(new UpdateTicketStatus($ticket));
         $ticket->save();
 
-        return redirect()->back()->with('success', 'Status Update!')->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now ' . $request->status);
+        return redirect()->back()
+            ->with('success', 'Status Update!')
+            ->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now ' . $request->status);
     }
+
+    private function resolveTicket($ticket, $employee, $technicians)
+    {
+        $ticket->resolved_at = now();
+        $employee->update(['made_ticket' => max(0, $employee->made_ticket - 1)]);
+
+        foreach ($technicians as $technician) {
+            $technician->update(['tickets_resolved' => $technician->tickets_resolved + 1]);
+        }
+    }
+
+    private function revertResolution($ticket, $employee, $technicians)
+    {
+        $ticket->resolved_at = null;
+        $employee->update(['made_ticket' => $employee->made_ticket + 1]);
+
+        $totalResolved = $technicians->sum('tickets_resolved');
+        $decrementValue = ($totalResolved > 0) ? 1 : 0;
+
+        foreach ($technicians as $technician) {
+            $technician->update(['tickets_resolved' => max(0, $technician->tickets_resolved - $decrementValue)]);
+        }
+    }
+    //status update end
 
     public function service(Request $request, $ticket_id)
     {
