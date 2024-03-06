@@ -533,30 +533,29 @@ let show = ref(true);
 
 const addMore = (id, tech1, tech2, tech3) => {
   selectedRow.value = id;
-
   if (!more1.value) {
     more1.value = true;
+    if (tech1) {
+      more1.value = true;
+      more2.value = true;
+    }
   } else if (!more2.value) {
     more2.value = true;
+    if (tech2) {
+      more2.value = true;
+      more3.value = true;
+      show.value = false;
+    }
+    if (tech3) {
+      show.value = false;
+    }
   } else if (!more3.value) {
     more3.value = true;
-    show.value = false;
-  }
-
-  // Check if additional technicians are already assigned
-  if (tech1 && tech2) {
-    more1.value = true;
-    more2.value = true;
-  } else if (tech2 && tech3) {
-    more2.value = true;
-    more3.value = true;
-  } else if (tech3 && tech1) {
-    more3.value = true;
-    more1.value = true;
-  }
-
-  // Check if all three additional technicians are assigned
-  if (tech1 && tech2 && tech3) {
+    if (tech3) {
+      more3.value = true;
+      more1.value = true;
+      show.value = false;
+    }
     show.value = false;
   }
 }
