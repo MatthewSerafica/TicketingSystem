@@ -18,11 +18,11 @@
         </div>
       </div>
 
-    <div class="w-80" table-container>
+    <div class="table-responsive w-75">
       <table class="table table-hover shadow custom-rounded-table">
         <thead>
-          <tr class="text-center text-nowrap">
-            <th class="text-start text-nowrap">Service No</th>
+          <tr class="text-center">
+            <th class="text-start">Service No</th>
             <th>Date Started</th>
             <th>Time Started</th>
             <th>Ticket No</th>
@@ -128,59 +128,7 @@ const formatDate = (date) => {
 </script>
 
 <style scoped>
-.search {
-  margin: 10px 0;
-  display: flex;
-  justify-content: center;
-}
 
-.search input {
-  width: 50%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-
-h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
-}
-
-p {
-  font-size: 16px;
-  margin-bottom: 20px;
-}
-
-.d-flex {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.btnn {
-  width: 150px;
-  height: 50px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.btnn {
-  background-color: #aca9b6;
-  color: #fff;
-}
-
-
-.btnn:hover {
-  background-color: #898989;
-}
-
-.large-btn {
-  margin: 10px;
-  color: #000000;
-}
 
 .table-container {
   margin-top: 20px;
