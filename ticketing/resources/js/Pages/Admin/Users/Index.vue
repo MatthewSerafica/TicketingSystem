@@ -34,8 +34,8 @@
                 <div>
                   <form @submit.prevent="uploadCsv" enctype="multipart/form-data">
                     <div class="d-flex flex-column justify-content-center align-items-start">
-                      <label for="file" class=" fw-semibold">Upload File</label>
-                      <input type="file" id="file" @change="handleFileUpload" class="" accept=".csv">
+                      <label for="file" class="form-label fw-semibold">Upload File</label>
+                      <input type="file" id="file" @change="handleFileUpload" class="form-control" accept=".csv">
                     </div>
                     <div class="d-flex flex-row gap-2 justify-content-end mt-3">
                       <button type="submit" class="btn btn-primary">
