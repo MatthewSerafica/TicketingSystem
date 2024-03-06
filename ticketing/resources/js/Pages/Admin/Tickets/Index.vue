@@ -54,7 +54,7 @@
             <thead>
               <tr class="text-start">
                 <th class="text-start text-muted" @click="handleSort('ticket_number')">
-                  Ticket No
+                  No
                   <i
                     :class="{ 'bi bi-caret-up-fill': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-caret-down-fill': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-caret-down-fill text-muted': sortColumn !== 'ticket_number' }"></i>
                 </th>
@@ -65,7 +65,7 @@
                 <th class="text-muted">Client</th>
                 <th class="text-muted">Request</th>
                 <th class="text-muted">Service</th>
-                <th class="text-center text-muted">Complexity</th>
+                <th class="text-start text-muted">Complexity</th>
                 <th class="text-muted">Technician</th>
                 <th class="text-center text-muted">SR No</th>
                 <th class="text-muted">Date Resolved</th>
@@ -80,7 +80,7 @@
                 <td class="text-center" style="max-width: 60px;"
                   @click="showInput(ticket.rr_no, ticket.ticket_number, 'rr')">
                   <span v-if="!selectedInput || selectedInput !== 'rr' || selectedRow !== ticket.ticket_number">
-                    {{ ticket.rr_no }}
+                    {{ ticket.rr_no ? ticket.rr_no : 'N/A' }}
                   </span>
                   <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'rr'"
                     v-model="editData[ticket.rr_no]"
@@ -91,7 +91,7 @@
                 <td class="text-center" style="max-width: 60px;"
                   @click="showInput(ticket.ms_no, ticket.ticket_number, 'ms')">
                   <span v-if="!selectedInput || selectedInput !== 'ms' || selectedRow !== ticket.ticket_number">
-                    {{ ticket.ms_no }}
+                    {{ ticket.ms_no ? ticket.ms_no : 'N/A'}}
                   </span>
                   <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'ms'"
                     v-model="editData[ticket.ms_no]"
@@ -102,7 +102,7 @@
                 <td class="text-center" style="max-width: 60px;"
                   @click="showInput(ticket.rs_no, ticket.ticket_number, 'rs')">
                   <span v-if="!selectedInput || selectedInput !== 'rs' || selectedRow !== ticket.ticket_number">
-                    {{ ticket.rs_no }}
+                    {{ ticket.rs_no ? ticket.rs_no : 'N/A'}}
                   </span>
                   <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'rs'"
                     v-model="editData[ticket.rs_no]"
@@ -244,7 +244,7 @@
                 <td class="text-center" style="max-width: 60px;"
                   @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
                   <span v-if="!selectedInput || selectedInput !== 'sr' || selectedRow !== ticket.ticket_number">
-                    {{ ticket.sr_no }}
+                    {{ ticket.sr_no ? ticket.sr_no : 'N/A'}}
                   </span>
                   <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'sr'"
                     v-model="editData[ticket.sr_no]"
@@ -259,7 +259,7 @@
                 <td class="text-start text-break" style="max-width: 120px;"
                   @click="showInput(ticket.remarks, ticket.ticket_number, 'remarks')">
                   <span v-if="!selectedInput || selectedInput !== 'remarks' || selectedRow !== ticket.ticket_number">
-                    {{ ticket.remarks }}
+                    {{ ticket.remarks ? ticket.remarks : 'N/A' }}
                   </span>
                   <textarea v-if="selectedRow === ticket.ticket_number && selectedInput === 'remarks'"
                     v-model="editData[ticket.remarks]"

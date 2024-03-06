@@ -46,6 +46,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/users', [AdminUsersController::class, 'index'])->name('admin.users');
         Route::get('/admin/users/create', [AdminUsersController::class, 'create'])->name('admin.users.create');
         Route::post('/admin/users/create/store', [AdminUsersController::class, 'store'])->name('admin.users.store');
+        Route::post('/admin/users/bulk', [AdminUsersController::class, 'bulk'])->name('admin.users.bulk');
         Route::get('/admin/users/show/{user_id}', [AdminUsersController::class, 'show'])->name('admin.users.show');
         Route::put('/admin/users/{user_id}/{field}', [AdminUsersController::class, 'update'])->name('admin.users.update');
         Route::put('/admin/users/employee/{user_id}/{field}', [AdminUsersController::class, 'employee'])->name('admin.users.update.employee');

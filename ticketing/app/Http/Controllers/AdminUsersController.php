@@ -240,4 +240,82 @@ class AdminUsersController extends Controller
         }
     }
 
+    public function bulk(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:csv,txt'],
+        ]);
+
+        $path = $request->file('file')->getRealPath();
+        $file = fopen($path, 'r');
+
+        fgetcsv($file);
+
+        try {
+            $employees = [];
+            $technicians = [];
+            $chunkSize = 1000;
+            DB::beginTransaction();
+
+            while (($line = fgetcsv($file)) !== false) {
+                $hashed_default_password = Hash::make('user!test');
+
+                $user = User::create([
+                    'name' => $line[0],
+                    'email' => $line[1],
+                    'user_type' => $line[2],
+                    'password' => $hashed_default_password
+                ]);
+
+                if ($line[2] == 'employee') {
+                    $employees[] = [
+                        'user_id' => $user->id,
+                        'department' => $line[3],
+                        'office' => $line[4],
+                    ];
+                    if (count($employees) >= $chunkSize) {
+                        $this->insertChunk($employees);
+                        $employees = [];
+                    }
+                } else if ($line[2] == 'technician') {
+                    $technicians[] = [
+                        'user_id' => $user->id,
+                        'assigned_department' => $line[5],
+                    ];
+                    if (count($technicians) >= $chunkSize) {
+                        $this->insertChunkt($technicians);
+                    }
+                }
+            }
+            $this->insertChunk($employees);
+            $this->insertChunkt($technicians);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'An error occurred while creating the records. Some fields are maybe empty or invalid.');
+        }
+        return redirect()->to(route('admin.users'))->with('success', 'Users added successfully');
+    }
+
+    private function insertChunk($employees)
+    {
+        Employee::insert($employees);
+        $userIds = User::whereIn('id', array_column($employees, 'user_id'))->pluck('id', 'id')->toArray();
+
+        $employees = array_map(function ($employee) use ($userIds) {
+            $employee['user_id'] = $userIds[$employee['user_id']];
+            return $employee;
+        }, $employees);
+    }
+
+    private function insertChunkt($technicians)
+    {
+        Technician::insert($technicians);
+        $userIds = User::whereIn('id', array_column($technicians, 'user_id'))->pluck('id', 'id')->toArray();
+
+        $technicians = array_map(function ($technician) use ($userIds) {
+            $technician['user_id'] = $userIds[$technician['user_id']];
+            return $technician;
+        }, $technicians);
+    }
 }

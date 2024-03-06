@@ -206,6 +206,9 @@ class AdminTicketController extends Controller
         }
 
         $ticket->$type = $request->technician_id;
+        if ($ticket->status == 'New' && $request->technician_id) {
+            $ticket->status = 'Pending';
+        }
         $ticket->save();
 
         if ($technician) {
@@ -260,36 +263,6 @@ class AdminTicketController extends Controller
         return redirect()->back()->with('success', 'Status Update!')->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now ' . $request->status);
     }
 
-    public function technician(Request $request, $ticket_id)
-    {
-        $request->validate([
-            'technician_id' => 'required',
-        ]);
-
-        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
-        $technician = Technician::findOrFail($request->technician_id);
-        $old = Technician::findOrFail($ticket->technician_id);
-
-        if ($old) {
-            if ($old->tickets_assigned > 0) {
-                $old->tickets_assigned = $old->tickets_assigned - 1;
-                $technician->tickets_assigned = $technician->tickets_assigned + 1;
-            } else {
-                $old->tickets_assigned = 0;
-                $technician->tickets_assigned = $technician->tickets_assigned + 1;
-            }
-        } else {
-            $technician->tickets_assigned = $technician->tickets_assigned + 1;
-        }
-
-        $ticket->technician = $request->technician_id;
-        if ($ticket->status == 'New') {
-            $ticket->status = 'Pending';
-        }
-        $ticket->save();
-        return redirect()->back()->with('success', 'Technician Update!')->with('message', $technician->user->name . ' is now assigned to Ticket #' . $ticket->ticket_number);
-    }
-
     public function service(Request $request, $ticket_id)
     {
         $request->validate([
@@ -328,6 +301,9 @@ class AdminTicketController extends Controller
         $ticket = Ticket::where('ticket_number', $ticket_id)->first();
 
         $ticket->complexity = $request->complexity;
+        if ($ticket->status == 'New') {
+            $ticket->status = 'Pending';
+        }
         $ticket->save();
         return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now set as ' . $request->complexity);
     }
