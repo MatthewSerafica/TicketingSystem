@@ -91,7 +91,7 @@
                 <td class="text-center" style="max-width: 60px;"
                   @click="showInput(ticket.ms_no, ticket.ticket_number, 'ms')">
                   <span v-if="!selectedInput || selectedInput !== 'ms' || selectedRow !== ticket.ticket_number">
-                    {{ ticket.ms_no ? ticket.ms_no : 'N/A'}}
+                    {{ ticket.ms_no ? ticket.ms_no : 'N/A' }}
                   </span>
                   <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'ms'"
                     v-model="editData[ticket.ms_no]"
@@ -102,7 +102,7 @@
                 <td class="text-center" style="max-width: 60px;"
                   @click="showInput(ticket.rs_no, ticket.ticket_number, 'rs')">
                   <span v-if="!selectedInput || selectedInput !== 'rs' || selectedRow !== ticket.ticket_number">
-                    {{ ticket.rs_no ? ticket.rs_no : 'N/A'}}
+                    {{ ticket.rs_no ? ticket.rs_no : 'N/A' }}
                   </span>
                   <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'rs'"
                     v-model="editData[ticket.rs_no]"
@@ -235,7 +235,8 @@
                     </div>
                     <div v-if="show" class="">
                       <button class="btn align-items-center justify-content-center d-flex text-primary fs-5"
-                        style="height:1.5em;" @click="addMore(ticket.ticket_number)">
+                        style="height:1.5em;"
+                        @click="addMore(ticket.ticket_number, ticket.technician1, ticket.technician2, ticket.technician3)">
                         <i class="bi bi-plus-circle-fill"></i>
                       </button>
                     </div>
@@ -244,7 +245,7 @@
                 <td class="text-center" style="max-width: 60px;"
                   @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
                   <span v-if="!selectedInput || selectedInput !== 'sr' || selectedRow !== ticket.ticket_number">
-                    {{ ticket.sr_no ? ticket.sr_no : 'N/A'}}
+                    {{ ticket.sr_no ? ticket.sr_no : 'N/A' }}
                   </span>
                   <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'sr'"
                     v-model="editData[ticket.sr_no]"
@@ -530,17 +531,32 @@ let more2 = ref(false);
 let more3 = ref(false);
 let show = ref(true);
 
-const addMore = (id) => {
+const addMore = (id, tech1, tech2, tech3) => {
   selectedRow.value = id;
+
   if (!more1.value) {
-    console.log('more1')
     more1.value = true;
   } else if (!more2.value) {
-    console.log('more2')
     more2.value = true;
   } else if (!more3.value) {
-    console.log('more3')
     more3.value = true;
+    show.value = false;
+  }
+
+  // Check if additional technicians are already assigned
+  if (tech1 && tech2) {
+    more1.value = true;
+    more2.value = true;
+  } else if (tech2 && tech3) {
+    more2.value = true;
+    more3.value = true;
+  } else if (tech3 && tech1) {
+    more3.value = true;
+    more1.value = true;
+  }
+
+  // Check if all three additional technicians are assigned
+  if (tech1 && tech2 && tech3) {
     show.value = false;
   }
 }
@@ -678,8 +694,9 @@ const validateNumericInput = (inputValue, propName) => {
   }
 
   .table-responsive {
-    padding: 0 10px; /* Add padding to the table container */
-    overflow-x: auto; 
+    padding: 0 10px;
+    /* Add padding to the table container */
+    overflow-x: auto;
   }
 
   .custom-rounded-table th,
