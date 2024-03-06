@@ -18,11 +18,11 @@
         </div>
       </div>
 
-    <div class="w-75">
+    <div class="table-responsive w-75">
       <table class="table table-hover shadow custom-rounded-table">
         <thead>
           <tr class="text-center">
-            <th class="text-center">Service No</th>
+            <th class="text-start">Service No</th>
             <th>Date Started</th>
             <th>Time Started</th>
             <th>Ticket No</th>
@@ -40,16 +40,16 @@
         <tbody>
           <tr v-for="service_report in service_reports" :key="service_report.service_id" class="align-middle">
               <td class="text-center">{{ service_report.service_id }}</td>
-              <td class="text-start">{{ moment(service_report.date_started).format("YYYY-MM-DD") }}</td>
+              <td class="text-start">{{ formatDate(service_report.date_started) }}</td>
               <td class="text-start">{{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</td>
-              <td class="text-start">{{ service_report.ticket_number }}</td>
+              <td class="text-center">{{ service_report.ticket_number }}</td>
               <td class="text-start">{{ service_report.technician.user.name }}</td>
               <td class="text-start">{{ service_report.requesting_office }}</td>
-              <td class="text-start">{{ service_report.equipment_no }}</td>
+              <td class="text-center">{{ service_report.equipment_no }}</td>
               <td class="text-start cursor" :title="service_report.issue">{{ service_report.issue }}</td>
               <td class="text-start cursor" :title="service_report.action">{{ service_report.action }}</td>
               <td class="text-start cursor" :title="service_report.recommendation">{{ service_report.recommendation }}</td>
-              <td class="text-start">{{ moment(service_report.date_done).format("YYYY-MM-DD") }}</td>
+              <td class="text-start">{{ formatDate(service_report.date_done) }}</td>
               <td class="text-start">{{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}</td>
               <td class="text-start">{{ service_report.remarks }} </td>
             </tr>
@@ -121,62 +121,14 @@ watch(search, () => {
   debouncedFetchData();
 })
 
+const formatDate = (date) => {
+  return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
+};
+
 </script>
 
 <style scoped>
-.search {
-  margin: 10px 0;
-  display: flex;
-  justify-content: center;
-}
 
-.search input {
-  width: 50%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-
-h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
-}
-
-p {
-  font-size: 16px;
-  margin-bottom: 20px;
-}
-
-.d-flex {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.btnn {
-  width: 150px;
-  height: 50px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.btnn {
-  background-color: #aca9b6;
-  color: #fff;
-}
-
-
-.btnn:hover {
-  background-color: #898989;
-}
-
-.large-btn {
-  margin: 10px;
-  color: #000000;
-}
 
 .table-container {
   margin-top: 20px;
@@ -193,5 +145,9 @@ p {
 
 .cursor{
   cursor: default;
+}
+
+.table-container{
+  overflow-x: auto;
 }
 </style>

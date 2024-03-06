@@ -16,8 +16,12 @@ class TechnicianTicketController extends Controller
         $technician = Technician::where('user_id', $user_id)->first();
 
         $tickets = Ticket::query()
-            ->with('employee.user', 'technician.user')
-            ->where('technician', $technician->technician_id)
+            ->with('employee.user', 'technician1.user', 'technician2.user', 'technician3.user')
+            ->where(function ($query) use ($technician, $request) {
+                $query->where('technician1', $technician->technician_id)
+                    ->orWhere('technician3', $technician->technician_id)
+                    ->orWhere('technician2', $technician->technician_id);
+            })
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where(function ($subquery) use ($search) {
@@ -32,9 +36,6 @@ class TechnicianTicketController extends Controller
                         })
                         ->orWhereHas('employee', function ($subquery) use ($search) {
                             $subquery->where('office', 'like', '%' . $search . '%');
-                        })
-                        ->orWhereHas('technician.user', function ($subquery) use ($search) {
-                            $subquery->where('name', 'like', '%' . $search . '%');
                         });
                 });
             })
@@ -126,10 +127,10 @@ class TechnicianTicketController extends Controller
         ]);
 
         $ticket = Ticket::where('ticket_number', $id)->first();
-        
+
         $ticket->$field = $request->$field;
-        
-        
+
+
         if ($ticket->sr_no !== null) {
             // If the SR number is present, update the resolved_at and status
             $ticket->resolved_at = now();
@@ -137,6 +138,4 @@ class TechnicianTicketController extends Controller
         $ticket->save();
         return redirect()->to('/technician/service-report/create');
     }
-
-
 }

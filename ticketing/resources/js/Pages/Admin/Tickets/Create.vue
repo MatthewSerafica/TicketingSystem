@@ -23,12 +23,13 @@
 
                   <div class="flex-grow-1 w-50">
                     <label for="issue" class="fw-semibold">Title</label>
-                    <input id="issue" class="form-control rounded border-secondary-subtle" type="text" placeholder="Enter Ticket Title..." v-model="form.issue" required/>
+                    <input id="issue" class="form-control rounded border-secondary-subtle" type="text"
+                      placeholder="Enter Ticket Title..." v-model="form.issue" required />
                   </div>
 
                   <div class="flex-grow-1 w-50 d-flex flex-column">
                     <label for="employee" class="fw-semibold">Employee</label>
-                    <div class="btn-group" @click.stop>
+                    <div class="btn-group">
                       <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         {{ selectedEmployee ? selectedEmployee : 'Select a client...' }}
@@ -37,10 +38,10 @@
                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                         <span class="visually-hidden">Toggle Dropdown</span>
                       </button>
-                      <ul class="dropdown-menu">
+                      <ul id="employeeDropdown" class="dropdown-menu" :class="{ 'show': search }">
                         <li class="px-2">
                           <input id="employee-search" class="form-control border-secondary-subtle" type="text"
-                            placeholder="Search Employee..." v-model="search"/>
+                            placeholder="Search Employee..." v-model="search" @click.stop=""/>
                         </li>
                         <li v-if="employees" v-for="employee in employees" class="btn dropdown-item"
                           @click="selectEmployee(employee)">
@@ -54,7 +55,7 @@
                 </div>
               </div>
             </div>
-           
+
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
                 <label for="description" class="fw-semibold">Description</label>
@@ -62,7 +63,7 @@
                   placeholder="Enter Ticket Description..." v-model="form.description" rows="5"></textarea>
               </div>
             </div>
-            
+
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
                 <div class="d-flex flex-row gap-3">
@@ -81,8 +82,7 @@
                     <select id="technician" class="form-select rounded border-secondary-subtle"
                       placeholder="Assign Technician..." v-model.number="form.technician">
                       <option disabled>Assign Technician</option>
-                      <option v-for="technician in technicians" :value="technician.technician_id">{{ technician.user.name
-                      }}</option>
+                      <option v-for="technician in technicians" :value="technician.technician_id">{{ technician.user.name}}</option>
                     </select>
                   </div>
                 </div>
@@ -103,7 +103,7 @@
     </div>
   </div>
 </template>
-  
+
 <script setup>
 import Button from '@/Components/Button.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
@@ -153,15 +153,18 @@ const debouncedFetchData = () => {
 }
 
 watch(search, () => {
-  if (!search.value) {
-    resetSorting()
+  if (search.value === '') {
+    resetSorting();
   }
   debouncedFetchData();
 })
 
+
 const selectEmployee = (employee) => {
   selectedEmployee.value = employee.user.name;
   form.employee = employee.employee_id;
+
+  document.getElementById('employeeDropdown').classList.remove('show');
 }
 
 const form = useForm({
@@ -182,10 +185,9 @@ const create = () => {
   form.post(route('admin.tickets.store'), { preserveScroll: false, preserveState: false });
 }
 </script>
-  
+
 <style scoped>
 .error-message {
   color: red;
 }
 </style>
-  

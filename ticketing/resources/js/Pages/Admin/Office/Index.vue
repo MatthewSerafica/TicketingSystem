@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <div class="table-responsive">
+      <div class="w-75">
         <div v-if="offices.data.length" class="d-flex justify-content-end mb-2">
           <pagination :links="offices.links" :key="'offices'" />
           <br>
@@ -39,7 +39,7 @@
           <thead>
             <tr class="text-start">
               <th class="text-center">Office ID</th>
-              <th>Offices</th>
+              <th style="width: 40%;">Offices</th>
               <th class="text-center">Date Created</th>
               <th class="text-center">Date Updated</th>
               <th>Delete Option</th>

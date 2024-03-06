@@ -31,10 +31,7 @@ class TechnicianServiceController extends Controller
                     $subquery->where('name', 'like', '%' . $search . '%');
                 });
             })
-        
-            ->whereYear('created_at', Carbon::now()->year)
-            ->whereMonth('created_at', Carbon::now()->month)
-            ->orderBy('ticket_number')
+            ->orderBy('service_id')
             ->get();
         $technicians = Technician::with('user')->get();
         return inertia('Technician/ServiceReports/Index', [

@@ -22,7 +22,7 @@ class EmployeeTicketController extends Controller
     {
         $user = Auth::user();
         $employee = Employee::where('user_id', $user->id)->firstOrFail();
-        $ticket = Ticket::where('employee', $employee->employee_id)->with('employee.user', 'technician.user')->get();
+        $ticket = Ticket::where('employee', $employee->employee_id)->with('employee.user', 'technician1.user', 'technician2.user', 'technician3.user')->get();
         return inertia('Employee/Index', [
             'tickets' => $ticket,
         ]);
