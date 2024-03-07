@@ -17,7 +17,7 @@
       </Toast>
     </div>
     <!--Main Content-->
-    <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
+    <div class="d-flex justify-content-center flex-column align-content-center align-items-center main-content">
       <!--CTAs and Search-->
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
@@ -28,9 +28,12 @@
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
             <Button :name="'New'" :color="'secondary'" class="btn-options" @click="filterTickets('new')"></Button>
-            <Button :name="'Pending'" :color="'secondary'" class="btn-options" @click="filterTickets('pending')"></Button>
-            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options" @click="filterTickets('ongoing')"></Button>
-            <Button :name="'Resolved'" :color="'secondary'" class="btn-options" @click="filterTickets('resolved')"></Button>
+            <Button :name="'Pending'" :color="'secondary'" class="btn-options"
+              @click="filterTickets('pending')"></Button>
+            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options"
+              @click="filterTickets('ongoing')"></Button>
+            <Button :name="'Resolved'" :color="'secondary'" class="btn-options"
+              @click="filterTickets('resolved')"></Button>
           </div>
         </div>
         <div class="input-group mt-3">
@@ -41,12 +44,12 @@
       </div>
 
       <!--Data Table-->
-      <div class="table-responsive rounded shadow pt-2 px-2 mt-3">
+      <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2 mt-3 pagination">
+        <Pagination :links="tickets.links" :key="'tickets'" />
+        <br>
+      </div>
+      <div class="table-responsive rounded shadow pt-2 px-2">
         <div class="">
-          <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2">
-            <Pagination :links="tickets.links" :key="'tickets'" />
-            <br>
-          </div>
           <table class="table table-hover custom-rounded-table">
             <thead>
               <tr class="text-start">
@@ -624,7 +627,12 @@ const validateNumericInput = (inputValue, propName) => {
 
 <style scoped>
 .table-responsive {
+  width: 90%;
   overflow-x: auto;
+}
+
+.pagination {
+  width: 90%;
 }
 
 .btn-tickets {
@@ -661,13 +669,67 @@ const validateNumericInput = (inputValue, propName) => {
   z-index: 9999;
 }
 
-@media only screen and (max-width: 768px) {
+@media (max-width: 1440px) {
   .custom-rounded-table {
     font-size: 12px;
   }
 
   .table-responsive {
-    width: 50rem;
+    width: 85rem;
+    overflow-x: auto;
+  }
+
+  .pagination {
+    width: 85rem;
+  }
+
+  .btn-options {
+    padding: 6px 0;
+    width: 80px;
+  }
+
+  .custom-rounded-table th,
+  .custom-rounded-table td {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 1024px) {
+  .custom-rounded-table {
+    font-size: 12px;
+  }
+
+  .table-responsive {
+    width: 60rem;
+    overflow-x: auto;
+  }
+
+  .pagination {
+    width: 60rem;
+  }
+
+  .btn-options {
+    padding: 6px 0;
+    width: 80px;
+  }
+
+  .custom-rounded-table th,
+  .custom-rounded-table td {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-rounded-table {
+    font-size: 12px;
+  }
+
+  .pagination {
+    width: 40rem;
+  }
+
+  .table-responsive {
+    width: 40rem;
     overflow-x: auto;
   }
 
@@ -681,13 +743,21 @@ const validateNumericInput = (inputValue, propName) => {
   }
 }
 
-@media only screen and (max-width: 1024px) {
+@media (max-width: 425px) {
+
+  .main-content {
+    margin-left: 12rem;
+  }
   .custom-rounded-table {
     font-size: 12px;
   }
 
+  .pagination {
+    width: 35rem;
+  }
+
   .table-responsive {
-    width: 10rem;
+    width: 35rem;
     overflow-x: auto;
   }
 
@@ -700,68 +770,17 @@ const validateNumericInput = (inputValue, propName) => {
     white-space: nowrap;
   }
 }
+@media (max-width: 375px) {
 
-@media only screen and (max-width: 1440px) {
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-
-  .table-responsive {
-    width: 80rem;
-    overflow-x: auto;
-  }
-
-  .btn-options {
-    padding: 8px 0px;
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-  }
-}
-@media only screen and (max-width: 1625px) {
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-
-  .table-responsive {
-    width: 100rem;
-    overflow-x: auto;
-  }
-
-  .btn-options {
-    padding: 8px 0px;
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
+  .main-content {
+    margin-left: 13rem;
   }
 }
 
-@media only screen and (max-width: 576px) {
-  .custom-rounded-table {
-    font-size: 10px;
-  }
+@media (max-width: 325px) {
 
-  .btn-options {
-    width: 60px;
-  }
-
-  .table-responsive {
-    padding: 0 10px;
-    /* Add padding to the table container */
-    overflow-x: auto;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    display: block;
-    width: 100%;
-    text-align: left;
+  .main-content {
+    margin-left: 15rem;
   }
 }
 </style>
