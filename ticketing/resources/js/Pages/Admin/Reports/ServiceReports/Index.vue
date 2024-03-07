@@ -1,6 +1,21 @@
 <template>
   <div>
     <Header></Header>
+    
+    <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
+      <Toast
+        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
+        v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
+        @close="handleClose">
+      </Toast>
+
+      <Toast
+        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showErrorToast"
+        :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
+      </Toast>
+    </div>
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
@@ -11,13 +26,17 @@
             class="btn btn-tickets btn-primary py-2 px-5"></Button>
           </Link>
         </div>
-        <div class="input-group mt-3 mb-4">
+        <div class="input-group mt-3">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
           <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
             placeholder="Search Report..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
 
+      <div v-if="service_reports.data.length" class="d-flex justify-content-end mb-2 pagination">
+        <Pagination :links="service_reports.links" :key="'service_reports'" />
+        <br>
+      </div>
       <div class="table-responsive" style="padding: 0 30px;">
         <table class="table table-hover shadow custom-rounded-table">
           <thead>
@@ -38,7 +57,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="service_report in service_reports" :key="service_report.service_id" class="align-middle">
+            <tr v-for="service_report in service_reports.data" :key="service_report.service_id" class="align-middle">
               <td class="text-center">{{ service_report.service_id }}</td>
               <td class="text-start">{{ moment(service_report.date_started).format("MMM DD, YYYY") }}</td>
               <td class="text-start">{{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</td>
@@ -64,25 +83,47 @@
 
 <script setup>
 import Button from '@/Components/Button.vue';
+import Pagination from '@/Components/Pagination.vue';
+import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link, router } from "@inertiajs/vue3";
+import { Link, router, usePage } from "@inertiajs/vue3";
+import Alpine from 'alpinejs';
 import moment from "moment";
-import { ref, watch } from "vue";
+import { ref, watch, watchEffect } from "vue";
+
+Alpine.start()
+
+const page = usePage();
+
+let showSuccessToast = ref(false);
+let showErrorToast = ref(false);
+
+watchEffect(() => {
+  showSuccessToast.value = !!page.props.flash.success;
+  showErrorToast.value = !!page.props.flash.error;
+})
+
+const handleClose = () => {
+  page.props.flash.success = null;
+  page.props.flash.error = null;
+  showSuccessToast.value = false;
+  showErrorToast.value = false;
+}
 
 const props = defineProps({
   service_reports: Object,
-  //filters: Object,
+  filters: Object,
 
 })
 
-let search = ref(props.search);
+let search = ref(props.filters.search);
 let sortColumn = ref("service_id");
 let sortDirection = ref("asc");
 let timeoutId = null;
 
 const fetchData = () => {
   router.get(
-    route('admin.service-reports'),
+    route('admin.reports.service-reports'),
     {
       search: search.value,
       sort: sortColumn.value,
@@ -95,7 +136,6 @@ const fetchData = () => {
   )
 
 }
-
 
 const resetSorting = () => {
   console.log("Reset Sorting");
@@ -141,6 +181,10 @@ watch(search, () => {
 
 .cursor {
   cursor: default;
+}
+
+.pagination {
+  width: 88%;
 }
 
 @media only screen and (max-width: 768px) {

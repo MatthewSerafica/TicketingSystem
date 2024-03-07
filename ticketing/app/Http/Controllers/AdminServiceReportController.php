@@ -12,9 +12,25 @@ class AdminServiceReportController extends Controller
 {
     public function index(Request $request)
     {
-        $service_reports = ServiceReport::with('technician.user')->get();
+        $service_reports = ServiceReport::query()
+            ->with('technician.user')
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = $request->input('search');
+                $query->where('service_id', 'like', '%' . $search . '%')
+                ->orWhere('ticket_number', 'like', '%' . $search . '%')
+                ->orWhere('requesting_office', 'like', '%' . $search . '%')
+                ->orWhere('equipment_no', 'like', '%' . $search . '%')
+                ->orWhere('issue', 'like', '%' . $search . '%')
+                ->orWhereHas('technician.user', function ($subquery) use ($search) {
+                    $subquery->where('name', 'like', '%' . $search . '%');
+                });
+            })
+            ->paginate(10);
+
+        $filters = $request->only(['search']);
         return inertia('Admin/Reports/ServiceReports/Index', [
             'service_reports' => $service_reports,
+            'filters' => $filters,
         ]);
     }
 
