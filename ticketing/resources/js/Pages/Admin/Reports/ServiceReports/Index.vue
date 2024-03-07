@@ -18,17 +18,17 @@
         </div>
       </div>
 
-      <div class="table-responsive w-75">
+      <div class="table-responsive" style="padding: 0 30px;">
         <table class="table table-hover shadow custom-rounded-table">
           <thead>
-            <tr class="text-center">
-              <th class="text-center">Service No</th>
-              <th>Date Started</th>
+            <tr class="text-start">
+              <th class="text-center">No.</th>
+              <th>Date</th>
               <th>Time Started</th>
-              <th>Ticket No</th>
-              <th>Technician Name</th>
-              <th>Requesting Office</th>
-              <th>Equipment No</th>
+              <th class="text-center">Ticket No</th>
+              <th>Technician</th>
+              <th>Office</th>
+              <th class="text-center">Equipment No</th>
               <th>Issue</th>
               <th>Action</th>
               <th>Recommendation</th>
@@ -40,17 +40,17 @@
           <tbody>
             <tr v-for="service_report in service_reports" :key="service_report.service_id" class="align-middle">
               <td class="text-center">{{ service_report.service_id }}</td>
-              <td class="text-start">{{ moment(service_report.date_started).format("YYYY-MM-DD") }}</td>
+              <td class="text-start">{{ moment(service_report.date_started).format("MMM DD, YYYY") }}</td>
               <td class="text-start">{{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</td>
-              <td class="text-start">{{ service_report.ticket_number }}</td>
+              <td class="text-center">{{ service_report.ticket_number }}</td>
               <td class="text-start">{{ service_report.technician.user.name }}</td>
               <td class="text-start">{{ service_report.requesting_office }}</td>
-              <td class="text-start">{{ service_report.equipment_no }}</td>
-              <td class="text-start cursor" :title="service_report.issue">{{ service_report.issue }}</td>
-              <td class="text-start cursor" :title="service_report.action">{{ service_report.action }}</td>
-              <td class="text-start cursor" :title="service_report.recommendation">{{ service_report.recommendation }}
+              <td class="text-center">{{ service_report.equipment_no }}</td>
+              <td class="text-start cursor text-truncate" :title="service_report.issue" style="max-width: 10rem;">{{ service_report.issue }}</td>
+              <td class="text-start cursor text-truncate" :title="service_report.action" style="max-width: 10rem;">{{ service_report.action }}</td>
+              <td class="text-start cursor text-truncate" :title="service_report.recommendation" style="max-width: 10rem;">{{ service_report.recommendation }}
               </td>
-              <td class="text-start">{{ moment(service_report.date_done).format("YYYY-MM-DD") }}</td>
+              <td class="text-start">{{ moment(service_report.date_done).format("MMM DD, YYYY") }}</td>
               <td class="text-start">{{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}</td>
               <td class="text-start">{{ service_report.remarks }} </td>
             </tr>
@@ -126,8 +126,8 @@ watch(search, () => {
   border-radius: 10px;
 }
 
-.table-container {
-  margin-top: 20px;
+.table-responsive {
+  width: 110rem;
   overflow-x: auto;
 }
 
@@ -141,5 +141,87 @@ watch(search, () => {
 
 .cursor {
   cursor: default;
+}
+
+@media only screen and (max-width: 768px) {
+  .custom-rounded-table {
+    font-size: 12px;
+  }
+
+  .table-responsive {
+    width: 50rem;
+    overflow-x: auto;
+  }
+
+  .btn-options {
+    width: 80px;
+  }
+
+  .custom-rounded-table th,
+  .custom-rounded-table td {
+    white-space: nowrap;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .custom-rounded-table {
+    font-size: 12px;
+  }
+
+  .table-responsive {
+    width: 60rem;
+    overflow-x: auto;
+  }
+
+  .btn-options {
+    width: 80px;
+  }
+
+  .custom-rounded-table th,
+  .custom-rounded-table td {
+    white-space: nowrap;
+  }
+}
+
+@media only screen and (max-width: 1440px) {
+  .custom-rounded-table {
+    font-size: 12px;
+  }
+
+  .table-responsive {
+    width: 85rem;
+    overflow-x: auto;
+  }
+
+  .btn-options {
+    width: 80px;
+  }
+
+  .custom-rounded-table th,
+  .custom-rounded-table td {
+    white-space: nowrap;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .custom-rounded-table {
+    font-size: 10px;
+  }
+
+  .btn-options {
+    width: 60px;
+  }
+
+  .table-responsive {
+    width: 50rem;
+    overflow-x: auto;
+  }
+
+  .custom-rounded-table th,
+  .custom-rounded-table td {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
 }
 </style>
