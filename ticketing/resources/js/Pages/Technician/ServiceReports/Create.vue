@@ -171,10 +171,10 @@ const validate_service_id = async (service_id) => {
     const response = await fetch(`/technician/check-service-id/${service_id}`);
     const data = await response.json();
 
-    if (data.exists) {
+/*     if (data.exists) {
         console.error('Service id already exists');
         return false;
-    }
+    } */
 
     return true;
 }
