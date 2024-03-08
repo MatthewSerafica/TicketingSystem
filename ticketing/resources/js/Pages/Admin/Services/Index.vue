@@ -96,7 +96,7 @@
   }
   
   const props = defineProps({
-    Services: Object,
+    services: Object,
   });
   
   const search = ref('');
