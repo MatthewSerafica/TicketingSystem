@@ -14,22 +14,23 @@ return new class extends Migration
         Schema::create('service_reports', function (Blueprint $table) {
             $table->id();
             $table->string('service_id')->unique();
-            $table->date('date_started');
-            $table->time('time_started');
-            $table->unsignedBigInteger('ticket_number');
+            $table->date('date_started')->nullable();
+            $table->time('time_started')->nullable();
+            $table->unsignedBigInteger('ticket_number')->nullable();
             $table->foreign('ticket_number')->references('ticket_number')->on('tickets');
-            $table->unsignedBigInteger('technician');
+            $table->unsignedBigInteger('technician')->nullable();
             $table->foreign('technician')->references('technician_id')->on('technicians')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('requesting_office'); 
-            $table->string('equipment_no');
-            $table->string('issue');
-            $table->string('action');
-            $table->string('recommendation');
-            $table->date('date_done');
-            $table->time('time_done'); 
+            $table->string('requesting_office')->nullable();
+            $table->string('equipment_no')->nullable();
+            $table->string('issue')->nullable();
+            $table->string('action')->nullable();
+            $table->string('recommendation')->nullable();
+            $table->date('date_done')->nullable();
+            $table->time('time_done')->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();
         });
+        
     }
 
     /**

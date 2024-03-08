@@ -42,6 +42,7 @@
                                 <li><a class="dropdown-item" href="/admin/users">Users</a></li>
                                 <li><a class="dropdown-item" href="/admin/department">Departments</a></li>
                                 <li><a class="dropdown-item" href="/admin/office">Offices</a></li>
+                                <li><a class="dropdown-item" href="/admin/services">Services</a></li>
                             </ul>
                         </li>
                     </ul>

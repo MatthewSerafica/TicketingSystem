@@ -69,6 +69,12 @@ Route::middleware(['web'])->group(function () {
         Route::put('/admin/office/update/{office_id}', [AdminOfficeController::class, 'update'])->name('admin.office.update');
         Route::delete('/admin/office/delete/{office_id}', [AdminOfficeController::class, 'destroy'])->name('admin.office.delete');
 
+        Route::get('/admin/services', [AdminServiceController::class, 'index'])->name('admin.services');
+        Route::get('/admin/services/create', [AdminServiceController::class, 'create'])->name('admin.services.create');
+        Route::post('/admin/services/create/store', [AdminServiceController::class, 'store'])->name('admin.services.store');
+        Route::put('/admin/services/update/{service_id}', [AdminServiceController::class, 'update'])->name('admin.services.update');
+        Route::delete('/admin/services/delete/{service_id}', [AdminServiceController::class, 'destroy'])->name('admin.services.delete');
+
         Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications');
         Route::post('/admin/notifications/seen', [AdminNotificationController::class, 'update'])->name('admin.notifications.seen');
 
