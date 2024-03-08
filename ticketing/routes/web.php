@@ -106,6 +106,7 @@ Route::middleware(['web'])->group(function () {
 
         Route::get('/technician/service-report', [TechnicianServiceController::class, 'index'])->name('technician.service-reports');
             Route::get('/technician/service-report/create', [TechnicianServiceController::class, 'create'])->name('technician.service-report.create');
+            Route::get('/technician/service-report/update', [TechnicianServiceController::class, 'update'])->name('technician.service-report.update');
             Route::post('/technician/service-report/create/store', [TechnicianServiceController::class, 'store'])->name('technician.service-report.store');
             Route::get('/technician/check-service-id/{serviceId}', [TechnicianServiceController::class, 'check_service_id']);
 

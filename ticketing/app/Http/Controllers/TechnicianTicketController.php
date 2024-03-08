@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\Technician;
 use App\Models\Ticket;
+use App\Models\ServiceReport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -125,17 +126,37 @@ class TechnicianTicketController extends Controller
         $request->validate([
             $field => 'nullable',
         ]);
-
+    
         $ticket = Ticket::where('ticket_number', $id)->first();
-
+    
         $ticket->$field = $request->$field;
-
-
-        if ($ticket->sr_no !== null) {
-            // If the SR number is present, update the resolved_at and status
-            $ticket->resolved_at = now();
+    
+        // If the SR number is present in the request, update it in the tickets table
+        if ($field === 'sr_no') {
+            $ticket->save(); // Save the ticket first to ensure synchronization with the service_report table
+            $serviceReport = ServiceReport::where('ticket_number', $ticket->ticket_number)->first();
+            if ($serviceReport) {
+                $serviceReport->service_id = $ticket->$field;
+                $serviceReport->save();
+            } else {
+                // If no service report exists, create a new one with the updated SR number
+                $serviceData = [
+                    'service_id' => $ticket->$field,
+                    'ticket_number' => $ticket->ticket_number,
+                ];
+                ServiceReport::create($serviceData);
+            }
         }
+    
+        // Check if the SR number is present, and update resolved_at and status accordingly
+        if ($ticket->sr_no !== null) {
+            $ticket->resolved_at = now();
+            $ticket->status = 'Resolved';
+        }
+    
         $ticket->save();
         return redirect()->to('/technician/service-report/create');
     }
+    
+    
 }
