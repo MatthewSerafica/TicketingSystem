@@ -217,6 +217,8 @@ const getButtonClass = (status) => {
       return 'btn btn-warning';
     case 'resolved':
       return 'btn btn-success';
+    case 'ongoing':
+      return 'btn btn-primary';
     default:
       return 'btn btn-secondary';
   }

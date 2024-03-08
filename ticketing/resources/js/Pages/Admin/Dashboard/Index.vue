@@ -199,7 +199,7 @@ watch(myData, (newValue, oldValue) => {
     }
 
     .bar {
-        width: 40rem;
+        width: 30rem;
     }
 
 }
@@ -238,7 +238,7 @@ watch(myData, (newValue, oldValue) => {
     }
 
     .bar {
-        width: 40rem
+        width: 30rem
     }
 
 }
@@ -277,7 +277,7 @@ watch(myData, (newValue, oldValue) => {
     }
 
     .bar {
-        width: 40rem
+        width: 30rem
     }
 
 }

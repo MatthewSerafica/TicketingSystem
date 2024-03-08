@@ -6,6 +6,7 @@ use App\Models\Employee;
 use App\Models\Technician;
 use App\Models\Ticket;
 use App\Models\ServiceReport;
+use App\Notifications\UpdateTicketStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -116,9 +117,16 @@ class TechnicianTicketController extends Controller
         ]);
 
         $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+        $employee = Employee::find($ticket->employee);
 
         $ticket->status = $request->status;
         $ticket->save();
+        
+        $employee->user->notify(new UpdateTicketStatus($ticket));
+        
+        return redirect()->back()
+            ->with('success', 'Status Update!')
+            ->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now ' . $request->status);
     }
 
     public function update(Request $request, $field, $id)

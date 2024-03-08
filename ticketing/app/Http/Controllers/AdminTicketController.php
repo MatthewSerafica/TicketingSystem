@@ -7,6 +7,7 @@ use App\Models\Service;
 use App\Models\ServiceReport;
 use App\Models\Technician;
 use App\Models\Ticket;
+use App\Notifications\TicketMade;
 use App\Notifications\UpdateTicketStatus;
 use App\Notifications\UpdateTicketTechnician;
 use Carbon\Carbon;
@@ -131,7 +132,7 @@ class AdminTicketController extends Controller
         $ticketData = [
             'rs_no' => $request->rs_no,
             'employee' => $request->employee,
-            'technician' => $request->technician,
+            'technician1' => $request->technician,
             'issue' => $request->issue,
             'description' => $request->description,
             'service' => $request->service,
@@ -140,6 +141,9 @@ class AdminTicketController extends Controller
 
         $ticket = Ticket::create($ticketData);
         $employee->update(['made_ticket' => $employee->made_ticket + 1]);
+        $employee->user->notify(
+            new TicketMade($ticket)
+        );
         if ($request->technician) {
             $technician = Technician::where('technician_id', $request->technician)->firstOrFail();
             $technician->user->notify(
@@ -147,7 +151,7 @@ class AdminTicketController extends Controller
             );
         }
 
-        return redirect()->to('/admin/tickets')->with('success', 'Ticket Created');
+        return redirect()->to('/admin/tickets')->with('success', 'Ticket Created')->with('message', 'Technician ' . $technician->user->name . ' is notified!');
     }
 
     public function update(Request $request, $field, $id)

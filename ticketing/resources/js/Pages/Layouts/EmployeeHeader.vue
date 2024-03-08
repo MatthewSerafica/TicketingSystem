@@ -13,8 +13,9 @@
                 </div>
 
                 <!-- Hamburger Menu Button -->
-                <button class="navbar-toggler order-lg-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler order-lg-1" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -22,12 +23,14 @@
                 <div class="collapse navbar-collapse order-lg-3" id="navbarNav">
                     <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
                         <!-- Notification Bell -->
-                        <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationBar"
-                            aria-controls="notificationBar" @click="fetchNotifications">
+                        <button class="btn p-2" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#notificationBar" aria-controls="notificationBar"
+                            @click="fetchNotifications">
                             <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
                             <span v-if="notificationCount" class="position-relative">
                                 <span class="position-absolute translate-middle badge rounded-pill bg-danger"
-                                      style="font-size: small; top: -5px; right: -5px; padding: 2px 5px 2px 5px;">{{ notificationCount }}</span>
+                                    style="font-size: small; top: -5px; right: -5px; padding: 2px 5px 2px 5px;">{{
+                        notificationCount }}</span>
                             </span>
                         </button>
 
@@ -39,8 +42,8 @@
                                 d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
                         </svg>
                         <div class="dropdown-center">
-                            <a class="text-decoration-none dropdown-toggle text-white" type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
+                            <a class="text-decoration-none dropdown-toggle text-white" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ page.props.user.name }}
                             </a>
                             <ul class="dropdown-menu">
@@ -62,7 +65,8 @@
         <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationBar" aria-labelledby="notificationBarLabel">
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title" id="notificationBarLabel">Notifications</h5>
-                <button type="button" class="btn-close text reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <button type="button" class="btn-close text reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
                 <div class="container mt-4">
@@ -70,10 +74,23 @@
                         <div class="card-body" v-if="notification.type === 'App\\Notifications\\UpdateTicketStatus'">
                             <h5 class="card-title">Ticket Update</h5>
                             <p class="card-text">Your Ticket #{{ notification.data.ticket_number }} for {{
-                                notification.data.service }} with the {{ notification.data.issue }} is now <span
+                        notification.data.service }} with the {{ notification.data.issue }} is now <span
                                     class="p-2" :class="handleBadge(notification.data.status)">{{
-                                        notification.data.status }}</span>.</p>
+                        notification.data.status }}</span>.</p>
                             <small class="card-text fst-italic text-muted"> {{ notificationDateTime() }}</small>
+                        </div>
+                        <div class="card-body" v-if="notification.type === 'App\\Notifications\\TicketMade'">
+                            <h5 class="card-title">Ticket Made</h5>
+                            <div class="d-flex flex-row">
+                                <div class="d-flex flex-column">
+                                    <h5 class="card-title fw-bold">{{ notification.data.issue }}
+                                    </h5>
+                                    <p class="card-text">{{ notification.data.description }}</p>
+                                </div>
+                            </div>
+                            <small class="card-text fst-italic text-muted">{{
+                        formatDate(notification.created_at) }} /
+                                {{ formatTime(notification.created_at) }}</small>
                         </div>
                     </div>
                 </div>
@@ -86,6 +103,7 @@
 import { Link, usePage } from "@inertiajs/vue3";
 import axios from "axios";
 import { computed, ref } from "vue";
+import moment from "moment";
 
 const page = usePage();
 
@@ -128,9 +146,18 @@ const handleBadge = (status) => {
     }
 }
 
+const formatDate = (date) => {
+    return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
+};
+
+const formatTime = (time) => {
+    return moment(time, 'HH:mm:ss').format('hh:mm A');
+}
+
 </script>
 
 <style>
 .header-color {
     background-color: #063970;
-}</style>
+}
+</style>
