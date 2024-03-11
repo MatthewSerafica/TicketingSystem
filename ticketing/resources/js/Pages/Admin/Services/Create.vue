@@ -43,11 +43,11 @@
   import Button from '@/Components/Button.vue';
   
   const props = defineProps({
-    services: Object,
+    service: Object,
   })
   
   const form = useForm({
-    services: null,
+    service: null,
   })
   
   const create = () => form.post(route('admin.services.store'), { preserveScroll: false, preserveState: false })
