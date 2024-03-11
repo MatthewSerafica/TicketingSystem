@@ -10,7 +10,7 @@
                         <Button :name="'Create'" :color="'primary'" class="btn-width shadow"></Button>
                         </Link>
                         <Link class="text-decoration-none" :href="route('admin.tickets')">
-                        <Button :name="'View All'" :color="'secondary'" class="btn-width shadow"></Button>
+                        <Button :name="'View All'" :color="'outline-primary'" class="btn-width shadow"></Button>
                         </Link>
                     </div>
                 </div>

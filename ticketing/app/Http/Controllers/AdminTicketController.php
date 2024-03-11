@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Service;
-use App\Models\ServiceReport;
 use App\Models\Technician;
 use App\Models\Ticket;
 use App\Notifications\TicketMade;
@@ -45,7 +44,7 @@ class AdminTicketController extends Controller
                     ->orWhereHas('technician2.user', function ($subquery) use ($search) {
                         $subquery->where('name', 'like', '%' . $search . '%');
                     })
-                    ->orWhereHas('technician2.user', function ($subquery) use ($search) {
+                    ->orWhereHas('technician3.user', function ($subquery) use ($search) {
                         $subquery->where('name', 'like', '%' . $search . '%');
                     });
             })
@@ -84,6 +83,7 @@ class AdminTicketController extends Controller
     public function create(Request $request)
     {
         $technicians = Technician::with('user')->get();
+        $services = Service::all();
         $searchQuery = $request->input('search');
 
         $employees = Employee::with('user')
@@ -102,6 +102,7 @@ class AdminTicketController extends Controller
         return inertia('Admin/Tickets/Create', [
             'technicians' => $technicians,
             'employees' => $employees,
+            'services' => $services,
             'filters' => $filter,
         ]);
     }
@@ -113,7 +114,9 @@ class AdminTicketController extends Controller
             'employee' => 'required',
             'issue' => 'required',
             'service' => 'required',
-            'technician' => 'nullable',
+            'technician1' => 'nullable',
+            'technician2' => 'nullable',
+            'technician3' => 'nullable',
             'rr_no' => 'nullable|numeric',
             'rs_no' => 'nullable|numeric',
         ]);
@@ -132,7 +135,9 @@ class AdminTicketController extends Controller
         $ticketData = [
             'rs_no' => $request->rs_no,
             'employee' => $request->employee,
-            'technician1' => $request->technician,
+            'technician1' => $request->technician1,
+            'technician2' => $request->technician2,
+            'technician3' => $request->technician3,
             'issue' => $request->issue,
             'description' => $request->description,
             'service' => $request->service,
@@ -144,14 +149,20 @@ class AdminTicketController extends Controller
         $employee->user->notify(
             new TicketMade($ticket)
         );
-        if ($request->technician) {
-            $technician = Technician::where('technician_id', $request->technician)->firstOrFail();
-            $technician->user->notify(
-                new UpdateTicketTechnician($ticket)
-            );
+
+        foreach ([$request->technician1, $request->technician2, $request->technician3] as $technicianId) {
+            if ($technicianId) {
+                $this->sendTechnicianNotification($technicianId, $ticket);
+            }
         }
 
-        return redirect()->to('/admin/tickets')->with('success', 'Ticket Created')->with('message', 'Technician ' . $technician->user->name . ' is notified!');
+        return redirect()->to('/admin/tickets')->with('success', 'Ticket Created')->with('message', 'All assigned technicians are notified.');
+    }
+
+    protected function sendTechnicianNotification($technicianId, $ticket)
+    {
+        $technician = Technician::where('technician_id', $technicianId)->firstOrFail();
+        $technician->user->notify(new UpdateTicketTechnician($ticket));
     }
 
     public function update(Request $request, $field, $id)
