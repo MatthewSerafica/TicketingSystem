@@ -161,79 +161,79 @@
                     <div v-if="ticket.technician1 || (selectedRow === ticket.ticket_number && more1)"
                       class="btn-group d-flex justify-content-center align-items-center">
                       <button type="button" class="btn text-start" style="width: 10rem;">
-                        {{ ticket.technician1 ? ticket.technician1.user.name : 'Unassigned' }}
+                        {{ ticket.technician1 ? ticket.technician1.user.name : 'Select a Technician' }}
                       </button>
                       <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
                         aria-expanded="false" data-bs-reference="parent">
                         <span class="visually-hidden">Toggle Dropdown</span>
                       </button>
-                      <ul class="dropdown-menu">
-                        <li class="dropdown-item disabled">Select a technician</li>
-                        <li class="btn dropdown-item"
+                      <ul class="dropdown-menu py-0" style="max-height: 250px; overflow-y: auto;">
+                        <li class="btn dropdown-item border"
                           @click="showInput(null, ticket.ticket_number, 'technician1'), updateData(null, ticket.ticket_number, 'technician_id', 'technician1')">
-                          Unassign</li>
-                        <li v-for="technician in technicians" class="btn dropdown-item"
+                          <span class="fw-semibold">Unassign</span>
+                        </li>
+                        <li v-for="technician in technicians" class="btn dropdown-item border"
                           @click="showInput(technician.technician_id, ticket.ticket_number, 'technician1'), updateData(technician.technician_id, ticket.ticket_number, 'technician_id', 'technician1')">
-                          {{ technician.user.name }}
+                          <span class="fw-semibold">{{ technician.user.name }}</span>
+                          <br> <small>{{ technician.assigned_department }}</small>
                         </li>
                       </ul>
                       <button v-if="!ticket.technician1" type="button"
                         class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-6 text-danger"
-                        style="width: 1em; height: 1.5em;"
-                        @click="removeMore(ticket.ticket_number, 'more1', 'false')"><i
-                          class="bi bi-dash-circle"></i></button>
+                        style="width: 1em; height: 1.5em;" @click="removeMore('more1')"><i
+                          class="bi bi-dash-circle"></i>
+                      </button>
                     </div>
                     <div v-if="ticket.technician2 || (selectedRow === ticket.ticket_number && more2)"
                       class="btn-group d-flex justify-content-center align-items-center">
                       <button type="button" class="btn text-start" style="width: 10rem;">
-                        {{ ticket.technician2 ? ticket.technician2.user.name : 'Unassigned' }}
+                        {{ ticket.technician2 ? ticket.technician2.user.name : 'Select a Technician' }}
                       </button>
                       <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
                         aria-expanded="false" data-bs-reference="parent">
                         <span class="visually-hidden">Toggle Dropdown</span>
                       </button>
-                      <ul class="dropdown-menu">
-                        <li class="dropdown-item disabled">Select a technician</li>
-                        <li class="btn dropdown-item"
+                      <ul class="dropdown-menu" style="max-height: 250px; overflow-y: auto;">
+                        <li class="btn dropdown-item bbrder"
                           @click="showInput(null, ticket.ticket_number, 'technician2'), updateData(null, ticket.ticket_number, 'technician_id', 'technician2')">
                           Unassign</li>
-                        <li v-for="technician in technicians" class="btn dropdown-item"
+                        <li v-for="technician in technicians" class="btn dropdown-item border"
                           @click="showInput(technician.technician_id, ticket.ticket_number, 'technician2'), updateData(technician.technician_id, ticket.ticket_number, 'technician_id', 'technician2')">
-                          {{ technician.user.name }}
+                          <span class="fw-semibold">{{ technician.user.name }}</span>
+                          <br> <small>{{ technician.assigned_department }}</small>
                         </li>
                       </ul>
                       <button v-if="!ticket.technician2" type="button"
                         class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-6 text-danger"
-                        style="width: 1em; height: 1.5em;"
-                        @click="removeMore(ticket.ticket_number, 'more2', 'false')"><i
+                        style="width: 1em; height: 1.5em;" @click="removeMore('more2')"><i
                           class="bi bi-dash-circle"></i></button>
                     </div>
                     <div v-if="ticket.technician3 || (selectedRow === ticket.ticket_number && more3)"
                       class="btn-group d-flex justify-content-center align-items-center">
                       <button type="button" class="btn text-start" style="width: 10rem;">
-                        {{ ticket.technician3 ? ticket.technician3.user.name : 'Unassigned' }}
+                        {{ ticket.technician3 ? ticket.technician3.user.name : 'Select a Technician' }}
                       </button>
                       <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
                         aria-expanded="false" data-bs-reference="parent">
                         <span class="visually-hidden">Toggle Dropdown</span>
                       </button>
-                      <ul class="dropdown-menu">
-                        <li class="dropdown-item disabled">Select a technician</li>
-                        <li class="btn dropdown-item"
+                      <ul class="dropdown-menu" style="max-height: 250px; overflow-y: auto;">
+                        <li class="btn dropdown-item border"
                           @click="showInput(null, ticket.ticket_number, 'technician3'), updateData(null, ticket.ticket_number, 'technician_id', 'technician3')">
                           Unassign</li>
-                        <li v-for="technician in technicians" class="btn dropdown-item"
+                        <li v-for="technician in technicians" class="btn dropdown-item border"
                           @click="showInput(technician.technician_id, ticket.ticket_number, 'technician3'), updateData(technician.technician_id, ticket.ticket_number, 'technician_id', 'technician3')">
-                          {{ technician.user.name }}
+                          <span class="fw-semibold">{{ technician.user.name }}</span>
+                          <br> <small>{{ technician.assigned_department }}</small>
                         </li>
                       </ul>
                       <button v-if="!ticket.technician3" type="button"
                         class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-6 text-danger"
-                        style="width: 1em; height: 1.5em;" @click="removeMore(ticket.ticket_number, 'more3', 'false')">
+                        style="width: 1em; height: 1.5em;" @click="removeMore('more3')">
                         <i class="bi bi-dash-circle"></i>
                       </button>
                     </div>
-                    <div v-if="show" class="">
+                    <div v-if="show || !(selectedRow === ticket.ticket_number)" class="">
                       <button class="btn align-items-center justify-content-center d-flex text-primary fs-5"
                         style="height:1.5em;"
                         @click="addMore(ticket.ticket_number, ticket.technician1, ticket.technician2, ticket.technician3)">
@@ -505,13 +505,14 @@ const showInput = (data, id, type) => {
   console.log(selectedInput.value, editData[data], selectedRow.value);
 }
 
+
 const updateData = async (data, id, updateField, type) => {
   console.log(selectedInput.value, type, editData[data], updateField)
   if (selectedInput.value === type) {
 
-    /* if (!validateNumericInput(editData[data], updateField)) {
+    if (!validateNumericInput(editData[data], updateField)) {
       return;
-    } */
+    } 
     const form = useForm({
       [updateField]: editData[data],
       type: type,
@@ -526,41 +527,49 @@ const updateData = async (data, id, updateField, type) => {
   }
 };
 
+
 let more1 = ref(false);
 let more2 = ref(false);
 let more3 = ref(false);
 let show = ref(true);
 
 const addMore = (id, tech1, tech2, tech3) => {
+  console.log(tech1, tech2, tech3)
   selectedRow.value = id;
-  if (!more1.value) {
+  if (more1.value === false) {
     more1.value = true;
     if (tech1) {
       more1.value = true;
       more2.value = true;
     }
-  } else if (!more2.value) {
+    if (tech2 && tech1) {
+      more1.value = true;
+      more2.value = true;
+      more3.value = true;
+      show.value = false;
+    }
+  } else if (more2.value === false) {
+    console.log("2")
     more2.value = true;
     if (tech2) {
       more2.value = true;
       more3.value = true;
       show.value = false;
     }
-    if (tech3) {
-      show.value = false;
-    }
-  } else if (!more3.value) {
+  } else if (more3.value === false) {
+    console.log("3")
     more3.value = true;
-    if (tech3) {
-      more3.value = true;
+    show.value = false;
+    if (tech2) {
       more1.value = true;
+      more2.value = true;
       show.value = false;
     }
-    show.value = false;
   }
+  console.log(more1.value, more2.value, more3.value);
 }
 
-const removeMore = (id, more, status) => {
+const removeMore = (more) => {
   if (more === 'more1') {
     more1.value = false;
     if (more2 && more3) {
@@ -615,13 +624,15 @@ const getComplexityClass = (complexity) => {
 };
 
 const validateNumericInput = (inputValue, propName) => {
-  const isValid = /^\d+$/.test(inputValue);
-  if (!isValid) {
+  const isValid = inputValue === '' || /^\d+$/.test(inputValue);
+  if (!isValid && inputValue !== '') { 
     page.props.flash.error = `Invalid ${propName} number`;
     return false;
   }
   return true;
 };
+;
+
 
 </script>
 
@@ -737,6 +748,7 @@ const validateNumericInput = (inputValue, propName) => {
   .main-content {
     margin-left: 12rem;
   }
+
   .custom-rounded-table {
     font-size: 12px;
   }
@@ -759,6 +771,7 @@ const validateNumericInput = (inputValue, propName) => {
     white-space: nowrap;
   }
 }
+
 @media (max-width: 375px) {
 
   .main-content {

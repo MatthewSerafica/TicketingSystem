@@ -1,5 +1,5 @@
 <template>
-    <button :class="[handleColor(color), handleSize(width, height)]" type="submit">{{ name }}</button>
+    <button :class="[handleColor(color), handleSize(width, height)]" class="btn" type="submit">{{ name }}</button>
   </template>
   
   <script setup>
@@ -13,7 +13,7 @@
   });
   
   const handleColor = (color) => {
-    return color ? `btn btn-${color}` : 'btn';
+    return color ? `btn-${color}` : 'btn';
   }
   
   const handleSize = (width, height) => {

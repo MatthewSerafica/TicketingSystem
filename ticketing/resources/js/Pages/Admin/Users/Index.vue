@@ -25,7 +25,7 @@
               class="btn btn-tickets btn-primary w-50 d-flex justify-content-center align-items-center">
             Create User
             </Link>
-            <Button :name="'Import'" :color="'info'" :width="'50'" @click="showModal"></Button>
+            <Button :name="'Import'" :color="'outline-primary'" :width="'50'" @click="showModal"></Button>
             <div v-if="isShowModal" class="custom-modal">
               <div class="modal-content d-flex flex-column">
                 <div class="d-flex flex-row justify-content-end">

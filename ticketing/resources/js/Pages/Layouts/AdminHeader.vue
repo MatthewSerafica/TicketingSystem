@@ -29,7 +29,11 @@
                                 Reports
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownReports">
-                                <li><a class="dropdown-item" href="/admin/reports/service-report">Service Reports</a>
+                                <li>
+                                    <a class="dropdown-item" href="/admin/reports/service-report">Service Reports</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/admin/reports/generate-report">Generate Reports</a>
                                 </li>
                             </ul>
                         </li>

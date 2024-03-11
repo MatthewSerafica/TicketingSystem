@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminTicketController;
 use App\Http\Controllers\AdminUsersController;
 use App\Http\Controllers\AdminDepartmentController;
+use App\Http\Controllers\AdminGenerateReportController;
 use App\Http\Controllers\AdminOfficeController;
 use App\Http\Controllers\AdminNotificationController;
 use App\Http\Controllers\AdminServiceController;
@@ -55,7 +56,10 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/reports/service-report', [AdminServiceReportController::class, 'index'])->name('admin.reports.service-reports');
         Route::get('/admin/reports/service-report/create', [AdminServiceReportController::class, 'create'])->name('admin.reports.service-report.create');
         Route::post('/admin/reports/service-report/create/store', [AdminServiceReportController::class, 'store'])->name('admin.reports.service-report.store');
-        Route::get('/admin/check-service-id/{serviceId}', [AdminServiceReportController::class, 'check_service_id']);    
+        Route::get('/admin/check-service-id/{serviceId}', [AdminServiceReportController::class, 'check_service_id']);
+
+        Route::get('/admin/reports/generate-report', [AdminGenerateReportController::class, 'index'])->name('admin.reports.generate-report');
+        
 
         Route::get('/admin/department', [AdminDepartmentController::class, 'index'])->name('admin.department');
         Route::get('/admin/department/create', [AdminDepartmentController::class, 'create'])->name('admin.department.create');
