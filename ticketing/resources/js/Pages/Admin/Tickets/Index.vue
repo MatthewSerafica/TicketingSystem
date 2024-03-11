@@ -505,13 +505,14 @@ const showInput = (data, id, type) => {
   console.log(selectedInput.value, editData[data], selectedRow.value);
 }
 
+
 const updateData = async (data, id, updateField, type) => {
   console.log(selectedInput.value, type, editData[data], updateField)
   if (selectedInput.value === type) {
 
-    /* if (!validateNumericInput(editData[data], updateField)) {
+    if (!validateNumericInput(editData[data], updateField)) {
       return;
-    } */
+    } 
     const form = useForm({
       [updateField]: editData[data],
       type: type,
@@ -525,6 +526,7 @@ const updateData = async (data, id, updateField, type) => {
 
   }
 };
+
 
 let more1 = ref(false);
 let more2 = ref(false);
@@ -622,13 +624,15 @@ const getComplexityClass = (complexity) => {
 };
 
 const validateNumericInput = (inputValue, propName) => {
-  const isValid = /^\d+$/.test(inputValue);
-  if (!isValid) {
+  const isValid = inputValue === '' || /^\d+$/.test(inputValue);
+  if (!isValid && inputValue !== '') { 
     page.props.flash.error = `Invalid ${propName} number`;
     return false;
   }
   return true;
 };
+;
+
 
 </script>
 
@@ -664,22 +668,11 @@ const validateNumericInput = (inputValue, propName) => {
   cursor: default;
 }
 
-.ticket-description:hover::after {
-  content: attr(data-hover-text);
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: pink;
-  color: red;
-  padding: 5px;
-  border-radius: 5px;
-  z-index: 9999;
-}
-
 @media (max-width: 1440px) {
   .custom-rounded-table {
     font-size: 12px;
   }
+
 
   .table-responsive {
     width: 85rem;
@@ -707,12 +700,12 @@ const validateNumericInput = (inputValue, propName) => {
   }
 
   .table-responsive {
-    width: 60rem;
+    width: 55rem;
     overflow-x: auto;
   }
 
   .pagination {
-    width: 60rem;
+    width: 55rem;
   }
 
   .btn-options {

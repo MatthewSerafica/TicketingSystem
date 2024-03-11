@@ -195,7 +195,12 @@ class AdminTicketController extends Controller
 
         $input = $fieldMappings[$field] ?? $field;
 
+    if (!$request->$field) {
+        return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', $input . ' is now removed from Ticket #' . $ticket->ticket_number);
+    } else {
         return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', $input . ' ' . $request->$field . ' is now assigned to Ticket #' . $ticket->ticket_number);
+    }
+        
     }
 
     private function updateTechnician(Request $request, $ticket)

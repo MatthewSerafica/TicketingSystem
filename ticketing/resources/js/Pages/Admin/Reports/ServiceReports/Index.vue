@@ -36,10 +36,10 @@
         <Pagination :links="service_reports.links" :key="'service_reports'" />
         <br>
       </div>
-      <div class="table-responsive">
-        <table class="table table-hover shadow custom-rounded-table">
+      <div class="table-responsive px-3 rounded shadow pt-2 px-2">
+        <table class="table table-hover custom-rounded-table">
           <thead>
-            <tr class="text-start">
+            <tr class="text-start text-muted">
               <th class="text-center">No.</th>
               <th>Date</th>
               <th>Time Started</th>
@@ -170,7 +170,7 @@ watch(search, () => {
 }
 
 .table-responsive {
-  width: 110rem;
+  width: 90%;
   overflow-x: auto;
 }
 
@@ -190,6 +190,7 @@ watch(search, () => {
   width: 88%;
 }
 
+
 @media (max-width: 1440px) {
   .custom-rounded-table {
     font-size: 12px;
@@ -200,7 +201,7 @@ watch(search, () => {
   }
 
   .table-responsive {
-    width: 70rem;
+    max-width: 100%;
     overflow-x: auto;
   }
 
@@ -219,6 +220,12 @@ watch(search, () => {
 }
 
 @media (max-width: 1024px) {
+
+  .table-responsive {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
   .custom-rounded-table {
     font-size: 12px;
   }
@@ -248,7 +255,7 @@ watch(search, () => {
   }
 
   .table-responsive {
-    width: 40rem;
+    max-width: 100%;
     overflow-x: auto;
   }
   .pagination {
@@ -316,7 +323,7 @@ watch(search, () => {
   }
 
   .table-responsive {
-    width: 25rem;
+    max-width: 100%;
     overflow-x: auto;
   }
   .pagination {

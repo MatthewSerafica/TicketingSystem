@@ -31,7 +31,7 @@ class AdminServiceController extends Controller
         ]);
 
 
-        $servieData = [
+        $serviceData = [
             'service' => $request->service,
         ];
 
