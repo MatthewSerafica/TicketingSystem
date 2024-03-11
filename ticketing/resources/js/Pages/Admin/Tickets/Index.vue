@@ -506,12 +506,13 @@ const showInput = (data, id, type) => {
 }
 
 const updateData = async (data, id, updateField, type) => {
-  console.log(selectedInput.value, type, editData[data], updateField)
-  if (selectedInput.value === type) {
+  console.log(selectedInput.value, type, editData[data], updateField);
 
-    /* if (!validateNumericInput(editData[data], updateField)) {
+  if (selectedInput.value === type) {
+    if (!validateNumericInput(editData[data], updateField)) {
       return;
-    } */
+    }
+
     const form = useForm({
       [updateField]: editData[data],
       type: type,
@@ -520,11 +521,34 @@ const updateData = async (data, id, updateField, type) => {
     await form.put(route('admin.tickets.update', { ticket_id: id, field: updateField }));
 
     selectedInput.value = null;
-    editData[data] = '';
 
+    // Check if the edited value is empty or null, then clear the field in editData
+    if (editData[data] === '' || editData[data] === null) {
+      delete editData[data];
 
+      // Check if the field corresponds to rr, rs, ms, or sr numbers
+      if (updateField === 'rr_no' || updateField === 'rs_no' || updateField === 'ms_no' || updateField === 'sr_no') {
+        // Hide the success toast if the field is emptied
+        showSuccessToast.value = false;
+      }
+    }
+
+    if (Object.keys(editData).length === 0) { // If editData is empty after update, hide the success toast
+      showSuccessToast.value = false;
+    }
+
+    // Reset the editData object to an empty object after the update
+    editData = {};
   }
 };
+
+
+
+
+
+
+
+
 
 let more1 = ref(false);
 let more2 = ref(false);
@@ -615,13 +639,16 @@ const getComplexityClass = (complexity) => {
 };
 
 const validateNumericInput = (inputValue, propName) => {
-  const isValid = /^\d+$/.test(inputValue);
-  if (!isValid) {
+  // Check if the input value is not empty and consists of digits
+  const isValid = inputValue === '' || /^\d+$/.test(inputValue);
+  if (!isValid && inputValue !== '') { // Only show error message if input is not empty
     page.props.flash.error = `Invalid ${propName} number`;
     return false;
   }
   return true;
 };
+;
+
 
 </script>
 
