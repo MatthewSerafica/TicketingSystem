@@ -36,7 +36,7 @@
         <Pagination :links="service_reports.links" :key="'service_reports'" />
         <br>
       </div>
-      <div class="table-responsive rounded shadow pt-2 px-2">
+      <div class="table-responsive px-3 rounded shadow pt-2 px-2">
         <table class="table table-hover custom-rounded-table">
           <thead>
             <tr class="text-start text-muted">
@@ -169,10 +169,10 @@ watch(search, () => {
   border-radius: 10px;
 }
 
-/*.table-responsive {
-  width: 110rem;
+.table-responsive {
+  width: 90%;
   overflow-x: auto;
-}*/
+}
 
 .btn-tickets {
   transition: all 0.2s;
@@ -190,21 +190,6 @@ watch(search, () => {
   width: 88%;
 }
 
-
-@media (max-width: 991.98px) {
-  .table-responsive {
-    overflow-x: auto;
-    width: 100%;
-    -webkit-overflow-scrolling: touch;
-    border-radius: 4px;
-  }
-}
-
-@media (min-width: 992px) {
-  .table-responsive {
-    overflow-y: hidden;
-  }
-}
 
 @media (max-width: 1440px) {
   .custom-rounded-table {
