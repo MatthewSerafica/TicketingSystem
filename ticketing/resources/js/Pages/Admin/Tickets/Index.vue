@@ -505,14 +505,14 @@ const showInput = (data, id, type) => {
   console.log(selectedInput.value, editData[data], selectedRow.value);
 }
 
-const updateData = async (data, id, updateField, type) => {
-  console.log(selectedInput.value, type, editData[data], updateField);
 
+const updateData = async (data, id, updateField, type) => {
+  console.log(selectedInput.value, type, editData[data], updateField)
   if (selectedInput.value === type) {
+
     if (!validateNumericInput(editData[data], updateField)) {
       return;
-    }
-
+    } 
     const form = useForm({
       [updateField]: editData[data],
       type: type,
@@ -521,33 +521,11 @@ const updateData = async (data, id, updateField, type) => {
     await form.put(route('admin.tickets.update', { ticket_id: id, field: updateField }));
 
     selectedInput.value = null;
+    editData[data] = '';
 
-    // Check if the edited value is empty or null, then clear the field in editData
-    if (editData[data] === '' || editData[data] === null) {
-      delete editData[data];
 
-      // Check if the field corresponds to rr, rs, ms, or sr numbers
-      if (updateField === 'rr_no' || updateField === 'rs_no' || updateField === 'ms_no' || updateField === 'sr_no') {
-        // Hide the success toast if the field is emptied
-        showSuccessToast.value = false;
-      }
-    }
-
-    if (Object.keys(editData).length === 0) { // If editData is empty after update, hide the success toast
-      showSuccessToast.value = false;
-    }
-
-    // Reset the editData object to an empty object after the update
-    editData = {};
   }
 };
-
-
-
-
-
-
-
 
 
 let more1 = ref(false);
