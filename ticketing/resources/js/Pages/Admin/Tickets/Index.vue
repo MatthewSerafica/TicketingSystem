@@ -657,22 +657,11 @@ const validateNumericInput = (inputValue, propName) => {
   cursor: default;
 }
 
-.ticket-description:hover::after {
-  content: attr(data-hover-text);
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: pink;
-  color: red;
-  padding: 5px;
-  border-radius: 5px;
-  z-index: 9999;
-}
-
 @media (max-width: 1440px) {
   .custom-rounded-table {
     font-size: 12px;
   }
+
 
   .table-responsive {
     width: 85rem;
@@ -700,12 +689,12 @@ const validateNumericInput = (inputValue, propName) => {
   }
 
   .table-responsive {
-    width: 60rem;
+    width: 55rem;
     overflow-x: auto;
   }
 
   .pagination {
-    width: 60rem;
+    width: 55rem;
   }
 
   .btn-options {
