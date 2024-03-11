@@ -617,9 +617,8 @@ const getComplexityClass = (complexity) => {
 };
 
 const validateNumericInput = (inputValue, propName) => {
-  // Check if the input value is not empty and consists of digits
   const isValid = inputValue === '' || /^\d+$/.test(inputValue);
-  if (!isValid && inputValue !== '') { // Only show error message if input is not empty
+  if (!isValid && inputValue !== '') { 
     page.props.flash.error = `Invalid ${propName} number`;
     return false;
   }
