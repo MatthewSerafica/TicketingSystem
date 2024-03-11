@@ -67,8 +67,8 @@ class AdminUsersController extends Controller
         DB::beginTransaction();
         $request->validate([
             'user_type' => 'required',
-            'name' => ['required', 'regex:/^\S+(?: \S+)+$/'],
-            'email' => ['required', Rule::unique('users')],
+            'name' => 'required',
+            'email' => 'required',
             'password' => 'required',
             'department' => 'nullable',
             'office' => 'nullable',
@@ -76,14 +76,8 @@ class AdminUsersController extends Controller
         ]);
 
         try {
-            $nameParts = explode(' ', $request->name, 2);
-            $firstName = $nameParts[0];
-            $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
-
             $user = User::create([
                 'name' => $request->name,
-                'first_name' => $firstName,
-                'last_name' => $lastName,
                 'user_type' => $request->user_type,
                 'email' => $request->email,
                 'password' => $request->password,

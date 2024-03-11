@@ -114,7 +114,7 @@
 
 <script setup>
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link, useForm } from "@inertiajs/vue3";
+import { Link, router, useForm } from "@inertiajs/vue3";
 import Button from '@/Components/Button.vue';
 import { defineProps, ref, watch } from 'vue';
 
@@ -170,13 +170,13 @@ watch(() => form.email, async (newValue) => {
             return;
         }
 
-        const response = await fetch(`/check-email?email=${newValue}`);
+        /* const response = await router.get(route(`/check-email`, {{}}));
         const data = await response.json();
         if (data.exists) {
             form.errors.email = ['This email is already in use.'];
         } else {
             form.errors.email = [];
-        }
+        } */
     } catch (error) {
         console.error('Error checking email uniqueness:', error);
     }
