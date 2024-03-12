@@ -21,6 +21,8 @@
           @click="closeDelete" class="btn btn-danger">Delete</Link>
         <Link v-if="office" method="delete" type="button" as="button" :href="route('admin.office.delete', { id: office.id })"
           @click="closeDelete" class="btn btn-danger">Delete</Link>
+        <Link v-if="service" method="delete" type="button" as="button" :href="route('admin.services.delete', { id: service.id })"
+          @click="closeDelete" class="btn btn-danger">Delete</Link>
         <button @click="closeDelete" type="button" as="button" class="btn btn-secondary">Cancel</button>
       </div>
     </div>
@@ -40,6 +42,7 @@ const closeDelete = () => {
 const props = defineProps({
   department: Object,
   office: Object,
+  service: Object,
 })
 
 </script>

@@ -47,7 +47,7 @@ class AdminServiceController extends Controller
         ]);
 
         $service = Service::findOrFail($service_id);
-        $old_servie = $service->service;
+        $old_service = $service->service;
         $service->service = $request->service;
         $service->save();
 
