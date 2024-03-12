@@ -18,6 +18,10 @@ class Employee extends Model
         return $this->hasMany(Employee::class, 'employee_id', 'employee');
     }
     
+    public function archivedTickets() {
+        return $this->hasMany(Employee::class, 'employee_id', 'employee');
+    }
+    
     protected $fillable = [
         'employee_id',
         'user_id',

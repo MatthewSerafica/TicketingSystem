@@ -273,6 +273,7 @@ const updateData = async (data, id, updateField, type) => {
 
   }
 };
+
 const validateNumericInput = (inputValue, propName) => {
   const isValid = /^\d+$/.test(inputValue);
   if (!isValid) {

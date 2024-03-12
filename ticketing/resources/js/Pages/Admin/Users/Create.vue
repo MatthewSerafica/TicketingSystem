@@ -1,6 +1,22 @@
 <template>
     <div>
         <Header></Header>
+        <!--Toast Render-->
+        <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
+            <Toast
+                x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+                x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
+                v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
+                @close="handleClose">
+            </Toast>
+
+            <Toast
+                x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+                x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
+                v-if="showErrorToast" :error="page.props.flash.error" :error_message="page.props.flash.error_message"
+                @close="handleClose">
+            </Toast>
+        </div>
         <div class="mt-2 pt-5">
             <form @submit.prevent="create">
                 <br />
@@ -28,22 +44,23 @@
                                     placeholder="First and Last Name..." v-model="form.name" required />
                             </div>
                         </div>
-                        
+
                         <div class="col-md-9">
-                        <div class="d-flex flex-column">
-                            <label for="email" class="fw-semibold">Email</label>
-                            <input id="email" class="form-control h-100 rounded border-secondary-subtle" type="email"
-                                placeholder="Enter Email..." v-model="form.email" />
-                                <div v-if="form.errors.email&& form.errors.email.length > 0" class="text-danger">{{ form.errors.email[0] }}</div>
-                        </div>
+                            <div class="d-flex flex-column">
+                                <label for="email" class="fw-semibold">Email</label>
+                                <input id="email" class="form-control h-100 rounded border-secondary-subtle"
+                                    type="email" placeholder="Enter Email..." v-model="form.email" />
+                                <div v-if="form.errors.email && form.errors.email.length > 0" class="text-danger">{{
+                    form.errors.email[0] }}</div>
+                            </div>
                         </div>
                     </div>
                     <div class="d-flex flex-row gap-3 justify-content-center">
                         <div class="col-md-9">
                             <div class="d-flex flex-column">
                                 <label for="password" class="fw-semibold">Password</label>
-                                <input id="password" class="form-control rounded border-secondary-subtle" type="password"
-                                    placeholder="Enter Password..." v-model="form.password" required />
+                                <input id="password" class="form-control rounded border-secondary-subtle"
+                                    type="password" placeholder="Enter Password..." v-model="form.password" required />
                             </div>
                         </div>
                         <div class="col-md-9">
@@ -62,7 +79,7 @@
                                     placeholder="Select Department..." v-model="form.department">
                                     <option disabled>Select Department</option>
                                     <option v-for="department in departments" :value="department.department">{{
-                                        department.department }}
+                    department.department }}
                                     </option>
                                 </select>
                             </div>
@@ -74,13 +91,14 @@
                                     placeholder="Select Department..." v-model="form.office">
                                     <option disabled>Select Office</option>
                                     <option v-for="office in offices" :value="office.office">{{
-                                        office.office }}
+                    office.office }}
                                     </option>
                                 </select>
                             </div>
                         </div>
                     </div>
-                    <div v-if="form.user_type === 'technician'" class="d-flex flex-row gap-3 justify-content-center w-25">
+                    <div v-if="form.user_type === 'technician'"
+                        class="d-flex flex-row gap-3 justify-content-center w-25">
                         <div class="col-md-10">
                             <div class="d-flex flex-column">
                                 <label for="assigned" class="fw-semibold">Assign a Department</label>
@@ -106,7 +124,7 @@
                         </div>
                     </div>
                 </div>
-                
+
             </form>
         </div>
     </div>
@@ -114,9 +132,32 @@
 
 <script setup>
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link, router, useForm } from "@inertiajs/vue3";
+import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 import Button from '@/Components/Button.vue';
-import { defineProps, ref, watch } from 'vue';
+import { defineProps, ref, watch, watchEffect } from 'vue';
+import Toast from '@/Components/Toast.vue';
+import Alpine from 'alpinejs';
+
+// Toast Start
+Alpine.start()
+
+const page = usePage();
+
+let showSuccessToast = ref(false);
+let showErrorToast = ref(false);
+
+watchEffect(() => {
+    showSuccessToast.value = !!page.props.flash.success;
+    showErrorToast.value = !!page.props.flash.error;
+})
+
+const handleClose = () => {
+    page.props.flash.success = null;
+    page.props.flash.error = null;
+    showSuccessToast.value = false;
+    showErrorToast.value = false;
+}
+// Toast End
 
 const props = defineProps({
     departments: Object,

@@ -19,36 +19,43 @@
         </div>
         <!--Main Content-->
         <div class="d-flex justify-content-center flex-column align-content-center align-items-center main-content">
-        </div>
-        <!--CTAs and Search-->
-        <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
-            <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-                <h1 class="fw-bold">Generate Reports</h1>
-            </div>
+            <!--CTAs and Search-->
+            <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
+                <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+                    <h1 class="fw-bold">Generate Reports</h1>
+                </div>
 
-            <div class="table-responsive rounded shadow pt-2 px-2 w-75">
-                <div class="">
-                    <table class="table table-hover custom-rounded-table">
-                        <thead>
-                            <tr class="text-start">
-                                <th class="text-start text-muted" @click="handleSort('ticket_number')">
-                                    No
-                                </th>
-                                <th class="text-muted">Month/Year</th>
-                                <th class="text-center text-muted">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="align-middle">
-                                <td class="text-start">1</td>
-                                <td class="text-start fw-bold">February 2024</td>
-                                <td class="text-center d-flex gap-2 justify-content-center align-items-center">
-                                    <Button :name="'Download'" :color="'primary'"></Button>
-                                    <Button :name="'Print'" :color="'outline-primary'"></Button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="table-responsive rounded shadow pt-2 px-2" style="width: 50rem;">
+                    <div class="">
+                        <table class="table table-hover custom-rounded-table">
+                            <thead>
+                                <tr class="text-start">
+                                    <th class="text-start text-muted" @click="handleSort('ticket_number')">
+                                        No
+                                    </th>
+                                    <th class="text-muted">Month/Year</th>
+                                    <th class="text-center text-muted">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(monthYear, index) in monthsAndYears" :key="index" class="align-middle">
+                                    <td class="text-start">{{ index + 1 }}</td>
+                                    <td class="text-start fw-bold">
+                                        <div>
+                                            {{ formatMonthYear(monthYear.month, monthYear.year) }}
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex gap-2 justify-content-center align-items-center">
+                                            <Button :name="'Download'" :color="'primary'"
+                                                @click="download(monthYear.month, monthYear.year)"></Button>
+                                            <Button :name="'Print'" :color="'outline-primary'"></Button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -64,4 +71,43 @@ import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 import Alpine from 'alpinejs';
 import moment from "moment";
 import { nextTick, reactive, ref, watch, watchEffect } from "vue";
+
+const props = defineProps({
+    monthsAndYears: Object,
+    tickets: Object,
+})
+
+const formatMonthYear = (month, year) => {
+    const formattedDate = moment(`${year}-${month}`, 'YYYY-MM').format('MMMM YYYY');
+    return formattedDate;
+};
+
+function download(month, year) {
+    const data = props.tickets.filter(ticket => {
+        const ticketDate = moment(ticket.created_at, 'YYYY-MM-DD'); // Assuming there's a 'date' property in your ticket object
+        return ticketDate.month() + 1 === month && ticketDate.year() === year;
+    });
+    const csvContent = convertToCSV(data)
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', `export_data_${year}_${month}.csv`)
+    link.click()
+}
+
+function convertToCSV(data) {
+    // Exclude the 'id' column from headers
+    const headers = Object.keys(data[0]).filter(header => header !== 'id');
+
+    const rows = data.map(obj => headers.map(header => {
+        const value = obj[header];
+        // Check if the value is a string and contains commas, wrap it in double quotes
+        return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
+    }));
+
+    const headerRow = headers.join(',');
+    const csvRows = [headerRow, ...rows.map(row => row.join(','))];
+    return csvRows.join('\n');
+}
 </script>

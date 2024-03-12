@@ -36,7 +36,7 @@ class AdminUsersController extends Controller
             ->when($request->filled('filterUsers'), function ($query) use ($request) {
                 $userFilter = $request->input('filterUsers');
                 if ($userFilter === 'employee') {
-                    $query->where('user_type', 'like', '%' . $userFilter . '%');
+                    $query->where('user_type', 'like', '%' . $userFilter . '%');/*  */
                 } elseif ($userFilter === 'technician') {
                     $query->where('user_type', 'like', '%' . $userFilter . '%');
                 }
@@ -100,9 +100,9 @@ class AdminUsersController extends Controller
         } catch (QueryException $e) {
             DB::rollback();
             if ($e->errorInfo[1] === 1062) {
-                return redirect()->back()->withInput()->withErrors(['email' => 'The email has already been taken.']);
+                return redirect()->back()->with('error', 'Error!')->with('message', 'Email already exists!');
             }
-            return redirect()->back()->withInput()->withErrors(['error' => 'An error occurred while creating the user.']);
+            return redirect()->back()->with('error', 'Error!')->with('message', 'An error occured while creating the user!');
         }
     }
 

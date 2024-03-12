@@ -59,7 +59,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/check-service-id/{serviceId}', [AdminServiceReportController::class, 'check_service_id']);
 
         Route::get('/admin/reports/generate-report', [AdminGenerateReportController::class, 'index'])->name('admin.reports.generate-report');
-        
+        Route::get('/admin/reports/generate-report/{year}/{month}/download', [AdminGenerateReportController::class, 'download'])->name('admin.reports.generate-report.download');
 
         Route::get('/admin/department', [AdminDepartmentController::class, 'index'])->name('admin.department');
         Route::get('/admin/department/create', [AdminDepartmentController::class, 'create'])->name('admin.department.create');
