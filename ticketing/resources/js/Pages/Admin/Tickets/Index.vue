@@ -627,6 +627,7 @@ const validateNumericInput = (inputValue, propName) => {
   const isValid = inputValue === '' || /^\d+$/.test(inputValue);
   if (!isValid && inputValue !== '') { 
     page.props.flash.error = `Invalid ${propName} number`;
+    page.props.flash.message = `Please input numeric values only`;
     return false;
   }
   return true;

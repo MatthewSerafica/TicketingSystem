@@ -68,7 +68,7 @@ class AdminUsersController extends Controller
         $request->validate([
             'user_type' => 'required',
             'name' => 'required',
-            'email' => 'required',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'department' => 'nullable',
             'office' => 'nullable',
@@ -100,9 +100,9 @@ class AdminUsersController extends Controller
         } catch (QueryException $e) {
             DB::rollback();
             if ($e->errorInfo[1] === 1062) {
-                return redirect()->back()->withInput()->withErrors(['email' => 'The email has already been taken.']);
+                return redirect()->back()->withInput()->with(['error', 'Email is existing']);
             }
-            return redirect()->back()->withInput()->withErrors(['error' => 'An error occurred while creating the user.']);
+            return redirect()->back()->withInput()->with(['error' => 'An error occurred while creating the user.']);
         }
     }
 

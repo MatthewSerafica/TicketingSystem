@@ -169,9 +169,9 @@ const determineActiveLink = () => {
     const currentPath = window.location.pathname;
     if (currentPath.includes('tickets')) {
         setActiveLink('tickets');
-    } else if (currentPath.includes('reports')) {
+    } else if (currentPath.includes('service-report') || currentPath.includes('generate-report')) {
         setActiveLink('reports');
-    } else if (currentPath.includes('users') || currentPath.includes('department') || currentPath.includes('office')) {
+    } else if (currentPath.includes('users') || currentPath.includes('department') || currentPath.includes('office') || currentPath.includes('services')) {
         setActiveLink('settings');
 
     } else {

@@ -25,7 +25,7 @@
           <div class="row justify-content-end">
             <div class="col-md-6">
               <div class="d-flex gap-2">
-                <Button :name="'Submit'" :color="'primary'" class="submit-btn"></button>
+                <Button :name="'Add'" :color="'primary'" class="submit-btn"></button>
                 <Link :href="`/admin/department`" class=" btn btn-outline-primary">Cancel</Link>
               </div>
             </div>
