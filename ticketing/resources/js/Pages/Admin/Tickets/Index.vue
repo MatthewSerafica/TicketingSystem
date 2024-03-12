@@ -624,6 +624,9 @@ const getComplexityClass = (complexity) => {
 };
 
 const validateNumericInput = (inputValue, propName) => {
+  if (propName === 'remarks') {
+    return true; 
+  }
   const isValid = inputValue === '' || /^\d+$/.test(inputValue);
   if (!isValid && inputValue !== '') { 
     page.props.flash.error = `Invalid ${propName} number`;
@@ -632,7 +635,6 @@ const validateNumericInput = (inputValue, propName) => {
   }
   return true;
 };
-;
 
 
 </script>
