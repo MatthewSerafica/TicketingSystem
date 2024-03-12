@@ -42,17 +42,17 @@
                                 <label for="name" class="fw-semibold">Name</label>
                                 <input id="name" class="form-control rounded border-secondary-subtle" type="text"
                                     placeholder="First and Last Name..." v-model="form.name" required />
+                                    
                             </div>
                         </div>
 
                         <div class="col-md-9">
-                            <div class="d-flex flex-column">
-                                <label for="email" class="fw-semibold">Email</label>
-                                <input id="email" class="form-control h-100 rounded border-secondary-subtle"
-                                    type="email" placeholder="Enter Email..." v-model="form.email" />
-                                <div v-if="form.errors.email && form.errors.email.length > 0" class="text-danger">{{
-                    form.errors.email[0] }}</div>
-                            </div>
+                        <div class="d-flex flex-column">
+                            <label for="email" class="fw-semibold">Email</label>
+                            <input id="email" class="form-control h-100 rounded border-secondary-subtle" type="email"
+                                placeholder="Enter Email..." v-model="form.email" required />
+                                <div v-if="form.errors.email && form.errors.email.length > 0" class="text-danger">{{ form.errors.email[0] }}</div>
+                        </div>
                         </div>
                     </div>
                     <div class="d-flex flex-row gap-3 justify-content-center">
@@ -63,6 +63,7 @@
                                     type="password" placeholder="Enter Password..." v-model="form.password" required />
                             </div>
                         </div>
+                        
                         <div class="col-md-9">
                             <div class="d-flex flex-column">
                                 <label for="conf" class="fw-semibold">Confirm Password</label>
@@ -71,6 +72,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <div v-if="form.errors.conf && form.errors.conf.length > 0" class="text-danger p-0">{{ form.errors.conf[0] }}</div>
                     <div v-if="form.user_type === 'employee'" class="d-flex flex-row gap-3 justify-content-center">
                         <div class="col-md-6">
                             <div class="d-flex flex-column">
@@ -177,7 +180,12 @@ const form = useForm({
 
 const create = async () => {
     if (form.password !== form.conf) {
-        alert("Passwords don't match!");
+        form.errors.conf = ["Passwords don't match!"];
+        return;
+    }
+
+    if (!form.email.endsWith('slu.edu.ph')) {
+        form.errors.email = ['Email must end with slu.edu.ph'];
         return;
     }
 
@@ -188,38 +196,4 @@ const create = async () => {
     }
 };
 
-
-watch(() => form.name, (newValue) => {
-    const trimmedValue = newValue.trim();
-    const spaceIndex = trimmedValue.indexOf(' ');
-    if (spaceIndex !== -1) {
-        const firstName = trimmedValue.substring(0, spaceIndex);
-        const lastName = trimmedValue.substring(spaceIndex + 1);
-        form.firstName = firstName;
-        form.lastName = lastName;
-    } else {
-        form.firstName = '';
-        form.lastName = '';
-    }
-});
-
-
-watch(() => form.email, async (newValue) => {
-    try {
-        if (!newValue.endsWith("@slu.edu.ph")) {
-            form.errors.email = ['Email must end with "@slu.edu.ph"'];
-            return;
-        }
-
-        /* const response = await router.get(route(`/check-email`, {{}}));
-        const data = await response.json();
-        if (data.exists) {
-            form.errors.email = ['This email is already in use.'];
-        } else {
-            form.errors.email = [];
-        } */
-    } catch (error) {
-        console.error('Error checking email uniqueness:', error);
-    }
-});
 </script>

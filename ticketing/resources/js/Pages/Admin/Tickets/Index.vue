@@ -265,8 +265,9 @@
                   <textarea v-if="selectedRow === ticket.ticket_number && selectedInput === 'remarks'"
                     v-model="editData[ticket.remarks]"
                     @blur="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
-                    @keyup.enter="updateData(ticket.remarks, ticket.ticket_number, 'remarks')"
+                    @keyup.enter="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
                     class="w-100 rounded border border-secondary-subtle text-center"></textarea>
+
                 </td>
                 <td class="text-start">
                   <div class="btn-group">
@@ -624,14 +625,17 @@ const getComplexityClass = (complexity) => {
 };
 
 const validateNumericInput = (inputValue, propName) => {
+  if (propName === 'remarks') {
+    return true; 
+  }
   const isValid = inputValue === '' || /^\d+$/.test(inputValue);
   if (!isValid && inputValue !== '') { 
     page.props.flash.error = `Invalid ${propName} number`;
+    page.props.flash.message = `Please input numeric values only`;
     return false;
   }
   return true;
 };
-;
 
 
 </script>
