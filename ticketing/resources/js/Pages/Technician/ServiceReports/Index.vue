@@ -11,13 +11,17 @@
       </Link>
     </div>
 
-    <div class="input-group mt-3 mb-4">
+    <div class="input-group mt-3">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
           <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
-            placeholder="Search Department..." aria-label="searchIcon" aria-describedby="searchIcon" />
+            placeholder="Search Report..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
 
+      <div v-if="service_reports.data.length" class="d-flex justify-content-end mb-2 pagination">
+        <Pagination :links="service_reports.links" :key="'service_reports'" />
+        <br>
+      </div>
     <div class="table-responsive w-75 rounded shadow">
       <table class="table table-hover custom-rounded-table">
         <thead>
@@ -38,7 +42,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="service_report in service_reports" :key="service_report.service_id" class="align-middle">
+          <tr v-for="service_report in service_reports.data" :key="service_report.service_id" class="align-middle">
               <td class="text-center">{{ service_report.service_id }}</td>
               <td class="text-start">{{ formatDate(service_report.date_started) }}</td>
               <td class="text-start">{{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</td>
@@ -63,26 +67,25 @@
 
 <script setup>
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
-import { Link, router, useForm } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import moment from "moment";
-import { nextTick, reactive, ref, watch, onMounted } from "vue";
+import { ref, watch} from "vue";
 import Button from '@/Components/Button.vue'
 
 const props = defineProps({
   service_report: Object,
-  technicians: Object,
-  //filters: Object,
+  filters: Object,
 
 })
 
 const service_reports = ref(props.service_report);
 
-let search = ref(props.search);
+let search = ref(props.filters.search);
 let sortColumn = ref("service_id");
 let sortDirection = ref("asc");
 let timeoutId = null;
 
-const fetchData = (type) => {
+const fetchData = () => {
   router.get(
     route('technician.service-reports'),
     {
