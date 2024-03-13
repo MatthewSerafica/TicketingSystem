@@ -88,82 +88,49 @@
                       </ul>
                     </div>
                   </div>
-                  <div class="flex-grow-1 w-50 d-flex flex-column justify-content-center align-items-center">
-                    <div class="d-flex flex-column technician">
-                      <label for="employee" class="fw-semibold">Technician</label>
-                      <div class="btn-group">
-                        <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
-                          data-bs-toggle="dropdown" aria-expanded="false">
-                          {{ selectedTechnician1 ? selectedTechnician1 : 'Assign a technician...' }}
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
-                          data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                          <span class="visually-hidden">Toggle Dropdown</span>
-                        </button>
-                        <ul id="technicianDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                          <li v-if="technicians" v-for="technician in technicians" class="btn dropdown-item"
-                            @click="selectTechnician1(technician)" style="width: 400px;">
-                            <span class="fw-semibold">{{ technician.user.name }}</span>
-                            <br> <small>{{ technician.assigned_department }}</small>
-                          </li>
-                          <li v-else-if="!technicians">No results found...</li>
-                        </ul>
+                  <div class="w-50 d-flex flex-column justify-content-start align-items-start">
+                    <label for="" class="fw-semibold">Technicians</label>
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-2 w-100">
+                      <div v-for="(dropdown, index) in techniciansData" :key="index">
+                        {{ dropdown }}
+                        <div class="flex-grow-1 w-100 d-flex flex-row gap-2">
+                          <div class="btn-group">
+                            <button type="button"
+                              class="btn btn-outline-secondary text-start text-secondary-emphasis w-100"
+                              data-bs-toggle="dropdown" aria-expanded="false">
+                              {{ dropdown.selectedTechnician ? dropdown.selectedTechnician : 'Assign a technician...'
+                              }}
+                            </button>
+                            <button type="button"
+                              class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                              data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                              <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                              <li v-for="technician in technicians" :key="technician.technician_id"
+                                class="btn dropdown-item" @click="selectTechnician(technician, index)">
+                                <span class="fw-semibold">{{ technician.user.name }}</span>
+                                <br>
+                                <small>{{ technician.assigned_department }}</small>
+                              </li>
+                              <li v-if="!technicians || technicians.length === 0">No technicians available</li>
+                            </ul>
+                          </div>
+                          <button type="button"
+                            class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-6 text-danger"
+                            @click="removeDropdown(index)">
+                            <i class="bi bi-dash-circle"></i>
+                          </button>
+                        </div>
                       </div>
-                      <div v-if="form.technician2 || more2"
-                        class="btn-group mt-2 d-flex justify-content-center align-items-center technicians">
-                        <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-100"
-                          data-bs-toggle="dropdown" aria-expanded="false">
-                          {{ selectedTechnician2 ? selectedTechnician2 : 'Assign a technician...' }}
-                        </button>
-                        <button type="button"
-                          class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split droppy"
-                          data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                          <span class="visually-hidden">Toggle Dropdown</span>
-                        </button>
-                        <ul id="technicianDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                          <li v-if="technicians" v-for="technician in technicians" class="btn dropdown-item"
-                            @click="selectTechnician2(technician)" style="width: 400px;">
-                            <span class="fw-semibold">{{ technician.user.name }}</span>
-                            <br> <small>{{ technician.assigned_department }}</small>
-                          </li>
-                          <li v-else-if="!technicians">No results found...</li>
-                        </ul>
-                        <button v-if="!form.technician2" type="button" as="button"
-                          class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-6 text-danger ms-1"
-                          style="width: 1em; height: 1.5em;" @click="removeMore('more2')"><i
-                            class="bi bi-dash-circle"></i>
+                      <div v-if="show">
+                        <button type="button" as="button"
+                          class="btn align-items-center justify-content-center d-flex text-primary fs-5 gap-3"
+                          style="height:1.5em;" @click="addDropdown">
+                          <i class="bi bi-plus-circle-fill"></i>
+                          <span v-if="showLabel">Assign Technician</span>
                         </button>
                       </div>
-                      <div v-if="form.technician3 || more3"
-                        class="btn-group mt-2 d-flex justify-content-center align-items-center technicians">
-                        <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-100"
-                          data-bs-toggle="dropdown" aria-expanded="false">
-                          {{ selectedTechnician3 ? selectedTechnician3 : 'Assign a technician...' }}
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split droppy"
-                          data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                          <span class="visually-hidden">Toggle Dropdown</span>
-                        </button>
-                        <ul id="technicianDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                          <li v-if="technicians" v-for="technician in technicians" class="btn dropdown-item"
-                            @click="selectTechnician3(technician)" style="width: 400px;">
-                            <span class="fw-semibold">{{ technician.user.name }}</span>
-                            <br> <small>{{ technician.assigned_department }}</small>
-                          </li>
-                          <li v-else-if="!technicians">No results found...</li>
-                        </ul>
-                        <button v-if="!form.technician3" type="button" as="button"
-                          class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-6 text-danger ms-1"
-                          style="width: 1em; height: 1.5em;" @click="removeMore('more3')"><i
-                            class="bi bi-dash-circle"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div v-if="show">
-                      <button type="button" as="button" class="btn align-items-center justify-content-center d-flex text-primary fs-5"
-                        style="height:1.5em;" @click="addMore(form.technician1, form.technician2, form.technician3)">
-                        <i class="bi bi-plus-circle-fill"></i>
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -198,9 +165,6 @@ const props = defineProps({
   services: Object,
 })
 
-let tech1 = ref('');
-let tech2 = ref('');
-let tech3 = ref('');
 let selectedEmployee = ref('');
 let selectedTechnician1 = ref('');
 let selectedTechnician2 = ref('');
@@ -209,6 +173,34 @@ let search = ref(props.filters.search);
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
 let timeoutId = null;
+let techniciansData = ref([]);
+let showLabel = ref(true);
+
+const addDropdown = () => {
+  techniciansData.value.push({
+    selectedTechnician: ref(''),
+    technicianId: null,
+  })
+}
+
+const removeDropdown = (index) => {
+  techniciansData.value.splice(index, 1)
+}
+
+const selectTechnician = (technician, index) => {
+  console.log(technician, index)
+
+  console.log(techniciansData.value[index])
+
+  // Update selectedTechnician value
+  techniciansData.value[index].selectedTechnician = technician.user.name;
+  techniciansData.value[index].technicianId = technician.technician_id;
+
+  console.log("test: " + techniciansData.value[index].selectedTechnician, techniciansData.value[index].technicianId)
+
+  // Store the selected technicianId in the form.technicians array
+  form.technicians.push(technician.technician_id);
+};
 
 const fetchData = () => {
   router.get(
@@ -335,6 +327,7 @@ const form = useForm({
   technician1: null,
   technician2: null,
   technician3: null,
+  technicians: [],
 })
 
 const create = () => {
@@ -373,6 +366,7 @@ const create = () => {
     width: 4.1rem;
   }
 }
+
 @media (max-width: 768px) {
   .technicians {
     width: 16rem;
@@ -382,6 +376,7 @@ const create = () => {
     width: 3.4rem;
   }
 }
+
 @media (max-width: 768px) {
   .technicians {
     width: 16rem;
@@ -398,7 +393,7 @@ const create = () => {
   }
 
   .technician {
-    width:8rem;
+    width: 8rem;
   }
 
   .droppy {

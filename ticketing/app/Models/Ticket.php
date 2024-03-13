@@ -31,9 +31,9 @@ class Ticket extends Model
         return $this->belongsTo(Technician::class, 'technician3', 'technician_id');
     }
 
-    public function assigned(): BelongsTo
+    public function assigned()
     {
-        return $this->belongsTo(TicketsAssigned::class, 'ticket_number', 'ticket_number');
+        return $this->hasMany(AssignedTickets::class, 'ticket_number', 'ticket_number');
     }
 
     protected $fillable = [
