@@ -15,8 +15,13 @@ class Technician extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function assigned(): BelongsTo
+    {
+        return $this->belongsTo(TicketsAssigned::class, 'technician');
+    }
+
     public function tickets() {
-        return $this->hasMany(Employee::class, 'technician_id', 'technician');
+        return $this->hasMany(Ticket::class, 'technician_id', 'technician');
     }
 
     public function serviceReport() {
