@@ -24,6 +24,10 @@
         </div>
       </div>
 
+      <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2 mt-3 pagination">
+        <Pagination :links="tickets.links" :key="'tickets'" />
+        <br>
+      </div>
       <div class="w-75">
         <table class="table table-hover shadow custom-rounded-table">
           <thead>
@@ -38,7 +42,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number">
+            <tr v-for="ticket in tickets.data" :key="ticket.ticket_number">
               <td class="text-center py-3">{{ ticket.ticket_number }}</td>
               <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
               <td class="text-center py-3 cursor" :title="ticket.issue">{{ ticket.issue }}</td>
@@ -67,6 +71,7 @@ import Header from "@/Pages/Layouts/EmployeeHeader.vue";
 import { Link, router } from "@inertiajs/vue3";
 import moment from "moment";
 import { onMounted, ref, watch } from "vue";
+import Pagination from '@/Components/Pagination.vue';
 
 const props = defineProps({
   tickets: Object,
@@ -188,4 +193,12 @@ const getBadgeColor = (status) => {
 .cursor {
   cursor: default;
 }
+
+.pagination {
+  width: 90%;
+}
+
+.pagination {
+    width: 85rem;
+  }
 </style>

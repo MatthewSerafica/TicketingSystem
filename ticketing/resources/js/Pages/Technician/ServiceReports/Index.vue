@@ -17,7 +17,12 @@
             placeholder="Search Department..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
+    
 
+      <div v-if="service_report.data.length" class="d-flex justify-content-end mb-2 mt-3 pagination">
+        <Pagination :links="service_reports.links" :key="'service_report'" />
+        <br>
+      </div>
     <div class="table-responsive w-75 rounded shadow">
       <table class="table table-hover custom-rounded-table">
         <thead>
@@ -38,7 +43,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="service_report in service_reports" :key="service_report.service_id" class="align-middle">
+          <tr v-for="service_report in service_reports.data" :key="service_report.service_id" class="align-middle">
               <td class="text-center">{{ service_report.service_id }}</td>
               <td class="text-start">{{ formatDate(service_report.date_started) }}</td>
               <td class="text-start">{{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</td>
@@ -67,6 +72,7 @@ import { Link, router, useForm } from "@inertiajs/vue3";
 import moment from "moment";
 import { nextTick, reactive, ref, watch, onMounted } from "vue";
 import Button from '@/Components/Button.vue'
+import Pagination from '@/Components/Pagination.vue';
 
 const props = defineProps({
   service_report: Object,
@@ -150,4 +156,12 @@ const formatDate = (date) => {
 .table-container{
   overflow-x: auto;
 }
+
+.pagination {
+  width: 90%;
+}
+
+.pagination {
+    width: 85rem;
+  }
 </style>
