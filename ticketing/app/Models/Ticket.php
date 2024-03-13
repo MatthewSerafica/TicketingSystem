@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ticket extends Model
 {
@@ -19,13 +20,20 @@ class Ticket extends Model
     {
         return $this->belongsTo(Technician::class, 'technician1', 'technician_id');
     }
+
     public function technician2(): BelongsTo
     {
         return $this->belongsTo(Technician::class, 'technician2', 'technician_id');
     }
+
     public function technician3(): BelongsTo
     {
         return $this->belongsTo(Technician::class, 'technician3', 'technician_id');
+    }
+
+    public function assigned(): BelongsTo
+    {
+        return $this->belongsTo(TicketsAssigned::class, 'ticket_number', 'ticket_number');
     }
 
     protected $fillable = [

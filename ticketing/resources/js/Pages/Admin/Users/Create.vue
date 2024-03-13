@@ -73,6 +73,7 @@
                     </div>
 
                     <div v-if="form.errors.conf && form.errors.conf.length > 0" class="text-danger p-0">{{ form.errors.conf[0] }}</div>
+                    <div v-if="form.errors.password && form.errors.password.length > 0" class="text-danger">{{ form.errors.password[0] }}</div>
                     <div v-if="form.user_type === 'employee'" class="d-flex flex-row gap-3 justify-content-center">
                         <div class="col-md-6">
                             <div class="d-flex flex-column">
@@ -181,6 +182,12 @@ const create = async () => {
     if (form.password !== form.conf) {
         form.errors.conf = ["Passwords don't match!"];
         return;
+    }
+
+    if (form.password.length < 8) {
+        form.errors.password = ["Password must be at least 8 characters long"];
+        return;
+
     }
 
     if (!form.email.endsWith('slu.edu.ph')) {
