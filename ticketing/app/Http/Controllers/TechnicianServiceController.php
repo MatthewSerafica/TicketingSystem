@@ -13,10 +13,11 @@ class TechnicianServiceController extends Controller
     public function index(Request $request)
     {   
         $user_id = auth()->id();
-        $technicians = Technician::where('user_id', $user_id)->first();
+        $technician = Technician::where('user_id', $user_id)->first();
 
         $service_report = ServiceReport::query() 
             ->with('technician.user')
+            ->where('technician', $technician->technician_id)
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where('service_id', 'like', '%' . $search . '%')
@@ -36,7 +37,7 @@ class TechnicianServiceController extends Controller
         $technicians = Technician::with('user')->get();
         return inertia('Technician/ServiceReports/Index', [
             'service_report' => $service_report,
-            'technicians' => $technicians,
+            'filters' => $filters,
         ]);
     }
     

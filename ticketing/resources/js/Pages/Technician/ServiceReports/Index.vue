@@ -11,10 +11,10 @@
       </Link>
     </div>
 
-    <div class="input-group mt-3 mb-4">
+    <div class="input-group mt-3">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
           <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
-            placeholder="Search Department..." aria-label="searchIcon" aria-describedby="searchIcon" />
+            placeholder="Search Report..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
     
@@ -68,27 +68,26 @@
 
 <script setup>
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
-import { Link, router, useForm } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import moment from "moment";
-import { nextTick, reactive, ref, watch, onMounted } from "vue";
+import { ref, watch} from "vue";
 import Button from '@/Components/Button.vue'
 import Pagination from '@/Components/Pagination.vue';
 
 const props = defineProps({
   service_report: Object,
-  technicians: Object,
-  //filters: Object,
+  filters: Object,
 
 })
 
 const service_reports = ref(props.service_report);
 
-let search = ref(props.search);
+let search = ref(props.filters.search);
 let sortColumn = ref("service_id");
 let sortDirection = ref("asc");
 let timeoutId = null;
 
-const fetchData = (type) => {
+const fetchData = () => {
   router.get(
     route('technician.service-reports'),
     {
