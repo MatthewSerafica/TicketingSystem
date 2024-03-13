@@ -42,7 +42,6 @@
             placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
-
       <!--Data Table-->
       <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2 mt-3 pagination">
         <Pagination :links="tickets.links" :key="'tickets'" />
@@ -157,7 +156,7 @@
                   </div>
                 </td>
                 <td class="text-start">
-                  <div class="d-flex flex-column align-items-center">
+                  <!-- <div class="d-flex flex-column align-items-center">
                     <div v-if="ticket.technician1 || (selectedRow === ticket.ticket_number && more1)"
                       class="btn-group d-flex justify-content-center align-items-center">
                       <button type="button" class="btn text-start" style="width: 10rem;">
@@ -240,7 +239,34 @@
                         <i class="bi bi-plus-circle-fill"></i>
                       </button>
                     </div>
+                  </div> -->
+                  <div v-for="(assignedTech, index) in ticket.assigned" :key="index">
+                    <div v-for="(tech, techIndex) in assignedTech.technician" :key="techIndex">
+                      <div class="btn-group">
+                        <button type="button" class="btn text-start" style="width: 10rem;">
+                          {{ tech.user.name }}
+                        </button>
+                        <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
+                          data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                          <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" style="max-height: 250px; overflow-y: auto;">
+                          <li class="btn dropdown-item border" @click="removeTechnician(ticket, assignedTech, tech)">
+                            <span class="fw-semibold">Remove</span>
+                          </li>
+                          <li v-for="technician in technicians" class="btn dropdown-item border"
+                            @click="assignTechnician(ticket, assignedTech, technician)">
+                            <span class="fw-semibold">{{ technician.user.name }}</span>
+                            <br> <small>{{ technician.assigned_department }}</small>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
+                  <button class="btn align-items-center justify-content-center d-flex text-primary fs-5"
+                    style="height:1.5em;" @click="addDropdown(ticket)">
+                    <i class="bi bi-plus-circle-fill"></i>
+                  </button>
                 </td>
                 <td class="text-center" style="max-width: 60px;"
                   @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
@@ -267,7 +293,6 @@
                     @blur="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
                     @keyup.enter="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
                     class="w-100 rounded border border-secondary-subtle text-center"></textarea>
-
                 </td>
                 <td class="text-start">
                   <div class="btn-group">
@@ -513,7 +538,7 @@ const updateData = async (data, id, updateField, type) => {
 
     if (!validateNumericInput(editData[data], updateField)) {
       return;
-    } 
+    }
     const form = useForm({
       [updateField]: editData[data],
       type: type,
@@ -528,6 +553,23 @@ const updateData = async (data, id, updateField, type) => {
   }
 };
 
+const addDropdown = (ticket) => {
+  const newTechnician = {
+    technician: null // Initialize with null or any default value
+  };
+  ticket.assigned.push(newTechnician);
+};
+
+// Remove technician dropdown
+const removeTechnician = (ticket, assignedTech, tech) => {
+  const index = ticket.assigned.indexOf(assignedTech);
+  ticket.assigned.splice(index, 1);
+};
+
+// Assign technician to ticket
+const assignTechnician = (ticket, assignedTech, technician) => {
+  assignedTech.technician = technician;
+};
 
 let more1 = ref(false);
 let more2 = ref(false);
@@ -626,10 +668,10 @@ const getComplexityClass = (complexity) => {
 
 const validateNumericInput = (inputValue, propName) => {
   if (propName === 'remarks') {
-    return true; 
+    return true;
   }
   const isValid = inputValue === '' || /^\d+$/.test(inputValue);
-  if (!isValid && inputValue !== '') { 
+  if (!isValid && inputValue !== '') {
     page.props.flash.error = `Invalid ${propName} number`;
     page.props.flash.message = `Please input numeric values only`;
     return false;
@@ -695,6 +737,7 @@ const validateNumericInput = (inputValue, propName) => {
   .custom-rounded-table th,
   .custom-rounded-table td {
     white-space: nowrap;
+    font-size: 16px;
   }
 }
 
@@ -720,6 +763,7 @@ const validateNumericInput = (inputValue, propName) => {
   .custom-rounded-table th,
   .custom-rounded-table td {
     white-space: nowrap;
+    font-size: 16px;
   }
 }
 
@@ -744,6 +788,7 @@ const validateNumericInput = (inputValue, propName) => {
   .custom-rounded-table th,
   .custom-rounded-table td {
     white-space: nowrap;
+    font-size: 16px;
   }
 }
 
@@ -773,6 +818,8 @@ const validateNumericInput = (inputValue, propName) => {
   .custom-rounded-table th,
   .custom-rounded-table td {
     white-space: nowrap;
+    font-size: 16px;
+
   }
 }
 

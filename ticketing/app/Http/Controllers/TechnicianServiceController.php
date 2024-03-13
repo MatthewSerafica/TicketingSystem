@@ -32,8 +32,9 @@ class TechnicianServiceController extends Controller
                     $subquery->where('name', 'like', '%' . $search . '%');
                 });
             })
+            ->orderBy('service_id')
             ->paginate(10);
-            
+        $technicians = Technician::with('user')->get();
         $filters = $request->only(['search']);
         return inertia('Technician/ServiceReports/Index', [
             'service_report' => $service_report,
