@@ -32,8 +32,7 @@
                             <span v-if="form.errors.password" class="text-danger">{{ form.errors.password }}</span>
                         </div>
 
-                         <!-- Remember Me-->
-                        q
+                         
                         <Button :name="'Login'" :color="'primary'" :width="'100'" :height="'50'"></Button>
                     </form>
                     </div>
