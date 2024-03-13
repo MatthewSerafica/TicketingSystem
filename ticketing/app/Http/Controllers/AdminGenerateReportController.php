@@ -24,4 +24,17 @@ class AdminGenerateReportController extends Controller
             'tickets' => $tickets,
         ]);
     }
+
+    public function print($year, $month)
+    {
+        $tickets = ArchivedTicket::select('*')
+            ->whereYear('created_at', '=', $year)
+            ->whereMonth('created_at', '=', $month)
+            ->orderByDesc('created_at')
+            ->get();
+
+        return inertia('Admin/Reports/GenerateReports/Print', [
+            'tickets' => $tickets,
+        ]);
+    }
 }
