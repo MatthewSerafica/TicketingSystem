@@ -15,7 +15,7 @@ class TechnicianTicketController extends Controller
     public function index(Request $request)
     {
         $user_id = auth()->id();
-        $technician = Technician::where('user_id', $user_id)->first();
+        $technician = Technician::where('user_id', $user_id)->with('user')->first();
 
         $tickets = Ticket::query()
             ->with('employee.user', 'technician1.user', 'technician2.user', 'technician3.user')

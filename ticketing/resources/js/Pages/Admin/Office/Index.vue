@@ -20,7 +20,7 @@
           <h1 class="fw-bold">View All Offices</h1>
           <p class="fs-5">Manage All Offices</p>
           <Link :href="route('admin.office.create')">
-            <Button :name="'Add Office'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
+            <Button :name="'Add New Office'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
           </Link>
         </div>
         <div class="input-group mt-3">
