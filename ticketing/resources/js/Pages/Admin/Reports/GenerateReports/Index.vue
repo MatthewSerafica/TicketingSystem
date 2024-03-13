@@ -49,7 +49,10 @@
                                         <div class="d-flex gap-2 justify-content-center align-items-center">
                                             <Button :name="'Download'" :color="'primary'"
                                                 @click="download(monthYear.month, monthYear.year)"></Button>
-                                            <Button :name="'Print'" :color="'outline-primary'"></Button>
+                                            <Link class="btn btn-outline-primary"
+                                                :href="route('admin.reports.generate-report.print', { year: monthYear.year, month: monthYear.month })">
+                                            Print
+                                            </Link>
                                         </div>
                                     </td>
                                 </tr>

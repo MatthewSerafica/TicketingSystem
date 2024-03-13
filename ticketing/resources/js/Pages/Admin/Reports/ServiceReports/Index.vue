@@ -36,7 +36,7 @@
         <Pagination :links="service_reports.links" :key="'service_reports'" />
         <br>
       </div>
-      <div class="table-responsive px-3 rounded shadow pt-2 px-2">
+      <div class="table-responsive rounded shadow pt-2 px-2">
         <table class="table table-hover custom-rounded-table">
           <thead>
             <tr class="text-start text-muted">

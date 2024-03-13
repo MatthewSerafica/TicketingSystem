@@ -18,8 +18,8 @@
         </div>
       </div>
 
-    <div class="table-responsive w-75">
-      <table class="table table-hover shadow custom-rounded-table">
+    <div class="table-responsive w-75 rounded shadow">
+      <table class="table table-hover custom-rounded-table">
         <thead>
           <tr class="text-center">
             <th class="text-start">Service No</th>
