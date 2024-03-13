@@ -20,7 +20,7 @@
             <h1 class="fw-bold">View All Services</h1>
             <p class="fs-5">Manage All Services</p>
             <Link :href="route('admin.services.create')">
-              <Button :name="'Add Service'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
+              <Button :name="'Add New Service'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
             </Link>
           </div>
           <div class="input-group mt-3">

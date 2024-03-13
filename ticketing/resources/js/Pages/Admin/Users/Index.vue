@@ -51,7 +51,7 @@
             <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterUsers('all')"></Button>
             <Button :name="'Employees'" :color="'secondary'" class="btn-options"
               @click="filterUsers('employee')"></Button>
-            <Button :name="'Technician'" :color="'secondary'" class="btn-options"
+            <Button :name="'Technicians'" :color="'secondary'" class="btn-options"
               @click="filterUsers('technician')"></Button>
           </div>
           <!-- Add buttons for filtering if needed -->
