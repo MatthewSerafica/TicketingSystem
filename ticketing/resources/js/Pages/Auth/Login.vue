@@ -33,19 +33,7 @@
                         </div>
 
                          <!-- Remember Me-->
-                        <div class="row mb-4">
-                            <div class="col d-flex justify-content-center">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="rememberMeCheckbox">
-                                    <label class="form-check-label" for="rememberMeCheckbox">Remember me</label>
-                                </div>
-                            </div>
-
-                            <div class="col">
-                                <!-- Checkbox -->
-                                <a href="#!">Forgot password?</a>
-                            </div>
-                        </div>
+                        q
                         <Button :name="'Login'" :color="'primary'" :width="'100'" :height="'50'"></Button>
                     </form>
                     </div>
