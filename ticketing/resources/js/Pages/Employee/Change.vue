@@ -29,7 +29,7 @@
               <input id="confirmPassword" class="form-control h-100 rounded border-secondary-subtle" type="password"
                 v-model="form.confirmPassword" />
             </div>
-            <div v-if="!isFormValid" class="text-warning">Passwords do not match</div>
+            <div v-if="!isFormValid && form.confirmPassword && form.newPassword" class="text-warning">Passwords do not match</div>
           </div>
 
           <div class="container">
