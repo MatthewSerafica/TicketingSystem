@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssignedTickets;
 use App\Models\Employee;
 use App\Models\Service;
 use App\Models\Technician;
 use App\Models\Ticket;
+use App\Models\TicketsAssigned;
 use App\Notifications\TicketMade;
 use App\Notifications\UpdateTicketStatus;
 use App\Notifications\UpdateTicketTechnician;
@@ -17,7 +19,7 @@ class AdminTicketController extends Controller
     public function index(Request $request)
     {
         $tickets = Ticket::query()
-            ->with('employee.user', 'technician1.user', 'technician2.user', 'technician3.user')
+            ->with('employee.user', 'assigned.technician.user')
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where('ticket_number', 'like', '%' . $search . '%')
@@ -39,12 +41,6 @@ class AdminTicketController extends Controller
                         $subquery->where('office', 'like', '%' . $search . '%');
                     })
                     ->orWhereHas('technician1.user', function ($subquery) use ($search) {
-                        $subquery->where('name', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('technician2.user', function ($subquery) use ($search) {
-                        $subquery->where('name', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('technician3.user', function ($subquery) use ($search) {
                         $subquery->where('name', 'like', '%' . $search . '%');
                     });
             })
@@ -145,6 +141,19 @@ class AdminTicketController extends Controller
         ];
 
         $ticket = Ticket::create($ticketData);
+
+
+        $assignedTechnicians = $request->technicians;
+
+        foreach ($assignedTechnicians as $technicianId) {
+            AssignedTickets::create([
+                'ticket_number' => $ticket->ticket_number,
+                'technician' => $technicianId,
+            ]);
+
+            $this->sendTechnicianNotification($technicianId, $ticket);
+        }
+
         $employee->update(['made_ticket' => $employee->made_ticket + 1]);
         $employee->user->notify(
             new TicketMade($ticket)
@@ -195,12 +204,11 @@ class AdminTicketController extends Controller
 
         $input = $fieldMappings[$field] ?? $field;
 
-    if (!$request->$field) {
-        return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', $input . ' is now removed from Ticket #' . $ticket->ticket_number);
-    } else {
-        return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', $input . ' ' . $request->$field . ' is now assigned to Ticket #' . $ticket->ticket_number);
-    }
-        
+        if (!$request->$field) {
+            return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', $input . ' is now removed from Ticket #' . $ticket->ticket_number);
+        } else {
+            return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', $input . ' ' . $request->$field . ' is now assigned to Ticket #' . $ticket->ticket_number);
+        }
     }
 
     private function updateTechnician(Request $request, $ticket)

@@ -38,7 +38,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="ticket in filteredTickets" :key="ticket.ticket_number">
+            <tr v-for="ticket in tickets" :key="ticket.ticket_number">
               <td class="text-center py-3">{{ ticket.ticket_number }}</td>
               <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
               <td class="text-center py-3 cursor" :title="ticket.issue">{{ ticket.issue }}</td>
