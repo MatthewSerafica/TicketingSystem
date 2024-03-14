@@ -165,9 +165,6 @@ const props = defineProps({
 })
 
 let selectedEmployee = ref('');
-let selectedTechnician1 = ref('');
-let selectedTechnician2 = ref('');
-let selectedTechnician3 = ref('');
 let search = ref(props.filters.search);
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
@@ -187,15 +184,9 @@ const removeDropdown = (index) => {
 }
 
 const selectTechnician = (technician, index) => {
-  console.log(technician, index)
-
-  console.log(techniciansData.value[index])
-
-  // Update selectedTechnician value
   techniciansData.value[index].selectedTechnician = technician.user.name;
   techniciansData.value[index].technicianId = technician.technician_id;
 
-  console.log("test: " + techniciansData.value[index].selectedTechnician, techniciansData.value[index].technicianId)
 
   // Store the selected technicianId in the form.technicians array
   form.technicians.push(technician.technician_id);
@@ -245,77 +236,13 @@ const selectEmployee = (employee) => {
 
   document.getElementById('employeeDropdown').classList.remove('show');
 }
-const selectTechnician1 = (technician) => {
-  selectedTechnician1.value = technician.user.name;
-  form.technician1 = technician.technician_id;
-
-  document.getElementById('technicianDropdown').classList.remove('show');
-}
-const selectTechnician2 = (technician) => {
-  selectedTechnician2.value = technician.user.name;
-  form.technician2 = technician.technician_id;
-
-  document.getElementById('technicianDropdown').classList.remove('show');
-}
-const selectTechnician3 = (technician) => {
-  selectedTechnician3.value = technician.user.name;
-  form.technician3 = technician.technician_id;
-
-  document.getElementById('technicianDropdown').classList.remove('show');
-}
 const selectService = (service) => {
   form.service = service.service;
 
   document.getElementById('technicianDropdown').classList.remove('show');
 }
 
-let more1 = ref(false);
-let more2 = ref(false);
-let more3 = ref(false);
 let show = ref(true);
-
-const addMore = (tech1, tech2, tech3) => {
-  if (!more2.value) {
-    more2.value = true;
-    if (tech2) {
-      more2.value = true;
-      more3.value = true;
-      show.value = false;
-    }
-    if (tech3) {
-      show.value = false;
-    }
-  } else if (!more3.value) {
-    more3.value = true;
-    if (tech3) {
-      more3.value = true;
-      more1.value = true;
-      show.value = false;
-    }
-    show.value = false;
-  }
-}
-
-const removeMore = (more) => {
-  if (more === 'more1') {
-    more1.value = false;
-    if (more2 && more3) {
-      show.value = true;
-    }
-  }
-  else if (more === 'more2') {
-    more2.value = false;
-    if (more1 && more2) {
-      show.value = true;
-    }
-  }
-  else if (more === 'more3') {
-    more3.value = false;
-    if (more2 && more1) {
-      show.value = true;
-    }
-  }
-}
 
 const form = useForm({
   rs_no: null,

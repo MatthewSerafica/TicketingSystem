@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header></Header>
+    <Header class="sticky-top" style="z-index: 110;"></Header>
     <!--Toast Render-->
     <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
       <Toast
@@ -158,36 +158,37 @@
                 </td>
                 <td class="text-start">
                   <div class="d-flex flex-column justify-content-center align-items-center">
-                    <div v-for="(assigned, index) in ticket.assigned" :key="index">
+                    <div v-for="(assignedTech, index) in ticket.assigned" :key="index">
                       <div class="btn-group">
-                        <button type="button" class="btn text-start" style="width: 10rem;">
-                          <div v-if="assigned.technician" v-for="(tech, techIndex) in assigned.technician"
-                            :key="techIndex">
-                            {{ tech.user ? tech.user.name : 'Select a Technician' }}
-                          </div>
-                        </button>
-                        <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
-                          data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                        <button type="button"
+                          class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
+                          aria-expanded="false" data-bs-reference="parent">
                           <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
+                        <div class="d-flex flex-row justify-content-center align-items-center"
+                          v-for="(tech, techIndex) in assignedTech.technician" :key="techIndex">
+                          <button type="button" class="btn text-start" style="width: 10rem;"
+                            @click="toggleTechnicianCTAs">
+                            {{ tech.user.name }}
+                          </button>
+                          <button v-if="technicianCTAs"
+                            class="btn align-items-center justify-content-center d-flex text-danger fs-5"
+                            style="height:1.5em;" @click="removeTechnician(ticket, index, tech.technician_id)"><i
+                              class="bi bi-dash-circle-fill"></i></button>
+                        </div>
                         <ul class="dropdown-menu" style="max-height: 250px; overflow-y: auto;">
-                          <li class="btn dropdown-item border" @click="removeTechnician(ticket, index, techIndex)">
-                            Unassign
-                          </li>
-                          <li v-for="technician in technicians" :key="technician.technician_id"
-                            class="btn dropdown-item border" @click="assignTechnician(ticket, index, technician)">
+                          <li v-for="technician in technicians" class="btn dropdown-item border"
+                            @click="assignTechnician(ticket, index, technician)">
                             <span class="fw-semibold">{{ technician.user.name }}</span>
                             <br> <small>{{ technician.assigned_department }}</small>
                           </li>
                         </ul>
                       </div>
                     </div>
-                    <div class="">
-                      <button class="btn align-items-center justify-content-center d-flex text-primary fs-5"
-                        style="height:1.5em;" @click="showInput('', ticket.ticket_number, 'technician'), addTechnician(ticket)">
-                        <i class="bi bi-plus-circle-fill"></i>
-                      </button>
-                    </div>
+                    <button v-if="technicianCTAs" class="btn align-items-center justify-content-center d-flex text-primary fs-5"
+                      style="height:1.5em;" @click="addDropdown(ticket)">
+                      <i class="bi bi-plus-circle-fill"></i>
+                    </button>
                   </div>
                 </td>
                 <td class="text-center" style="max-width: 60px;"
@@ -456,68 +457,103 @@ const showInput = (data, id, type) => {
 
 
 const updateData = async (data, id, updateField, type) => {
-  console.log(selectedInput.value, type, editData[data], updateField)
-  if (selectedInput.value === type) {
-
-    if (!validateNumericInput(editData[data], updateField)) {
-      return;
-    }
-    console.log('start')
-    const form = useForm({
-      [updateField]: editData[data],
-      ticket_number: id,
-    });
-    console.log('finished')
-
-    await form.put(route('admin.tickets.update', { ticket_id: id, field: updateField }));
-    console.log('finished')
-    selectedInput.value = null;
-    editData[data] = '';
-
-
+  console.log(editData[data])
+  if (selectedInput.value !== type) {
+    return;
   }
+
+  if (!validateNumericInput(editData[data], updateField)) {
+    return;
+  }
+
+  const formData = {
+    [updateField]: editData[data],
+    ticket_number: id,
+  };
+
+  console.log('start');
+  try {
+    // Assuming useForm and form.put return promises
+    const form = useForm(formData);
+    await form.put(route('admin.tickets.update', { ticket_id: id, field: updateField }));
+    console.log('finished updating data');
+  } catch (error) {
+    console.error('Error updating data:', error);
+  }
+
+  selectedInput.value = null;
+  editData[data] = '';
 };
 
-const addTechnician = (ticket) => {
-  if (!ticket.assigned) {
-    ticket.assigned = [];
+const removeData = async (data, id) => {
+  console.log('start remove')
+  try {
+    const form = useForm({
+      ticket_number: id,
+      technician: data,
+    })
+    await form.delete(route('admin.tickets.remove.technician'))
+  } catch (error) {
+    console.error('Error removing data:', error)
   }
+}
+
+const replaceTechnician = async (id, technician, old) => {
+  try {
+    const form = useForm({
+      ticket_number: id,
+      technician: technician,
+      old: old,
+    })
+    await form.put(route('admin.tickets.replace.technician'))
+  } catch (error) {
+    console.error('Error replacing data:', error);
+  }
+}
+
+const addDropdown = (ticket) => {
   ticket.assigned.push({
     ticket_number: null,
-    technician: ref(''),
-  });
+    technician: [],
+  })
   console.log(ticket.assigned)
-};
+}
 
-const removeTechnician = (ticket, assignedIndex, techIndex) => {
-  ticket.assigned[assignedIndex].technician.splice(techIndex, 1);
-};
+const removeTechnician = async (ticket, assignedIndex, techId) => {
+  console.log(techId)
+  ticket.assigned[assignedIndex].technician.splice(techId, 1)
+  removeData(techId, ticket.ticket_number)
+}
 
 const assignTechnician = async (ticket, assignedIndex, technician) => {
   // Check if there are already assigned technicians
-  console.log(assignedIndex)
   if (ticket.assigned[assignedIndex].technician && ticket.assigned[assignedIndex].technician.length > 0) {
-    // If there are existing technicians, replace the first one with the new technician
-    const old = ticket.assigned[assignedIndex]
-    console.log(old)
-    ticket.assigned[assignedIndex].technician.splice(0, 1, technician);
+    const old = ticket.assigned[assignedIndex].technician[0].technician_id
+    await replaceTechnician(ticket.ticket_number, technician.technician_id, old)
   } else {
-    if (!Array.isArray(ticket.assigned[assignedIndex].technician)) {
-      // If it's not an array, initialize it as an empty array
-      ticket.assigned[assignedIndex].technician = [];
-    }
     // If there are no existing technicians, simply push the new technician
-    ticket.assigned[assignedIndex].technician.push(technician);
+    ticket.assigned[assignedIndex].technician.splice(0, 1, technician);
+    await showInput(ticket.assigned[assignedIndex].technician[0].technician_id, ticket.ticket_number, 'technician')
+    await updateData(ticket.assigned[assignedIndex].technician[0].technician_id, ticket.ticket_number, 'technician', 'technician');
   }
-  console.log('')
-  console.log(ticket.assigned[assignedIndex].technician[0].technician_id)
-
-  await showInput(ticket.assigned[assignedIndex].technician[0].technician_id, ticket.ticket_number, 'technician')
-  await updateData(ticket.assigned[assignedIndex].technician[0].technician_id, ticket.ticket_number, 'technician', 'technician')
 };
+
 // Table update end
 
 // Styling and formatting
+let technicianCTAs = ref(false);
+
+// Function to toggle the visibility of CTAs for a specific row
+const toggleTechnicianCTAs = () => {
+  // Toggle the visibility of CTAs for the clicked row
+  if (technicianCTAs.value) {
+    technicianCTAs.value = false;
+  } else {
+    technicianCTAs.value = true;
+  }
+  console.log(technicianCTAs.value)
+};
+
 const formatDate = (date) => {
   return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
 };

@@ -236,8 +236,8 @@ class AdminTicketController extends Controller
             $technician->user->notify(
                 new UpdateTicketTechnician($ticket)
             );
-            return redirect()->back()->with('success', 'Technician Update!')->with('message', 'Technician ' . $technician->user->name . ' is now assigned to Ticket #' . $ticket->ticket_number);
         }
+        return redirect()->back()->with('success', 'Technician Update!')->with('message', 'Technician ' . $technician->user->name . ' is now assigned to Ticket #' . $ticket->ticket_number);
     }
 
     // status update
@@ -337,5 +337,36 @@ class AdminTicketController extends Controller
         }
         $ticket->save();
         return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now set as ' . $request->complexity);
+    }
+
+    public function replace(Request $request)
+    {
+        $request->validate([
+            'ticket_number' => 'required',
+            'technician' => 'required',
+            'old' => 'required',
+        ]);
+
+        $assigned = AssignedTickets::where(['ticket_number' => $request->ticket_number, 'technician' => $request->old])->first();
+
+        $assigned->technician = $request->technician;
+        $assigned->save();
+
+        return redirect()->back()->with('success', 'Ticket Updated!')->with('message', 'Technician has been replaced!');
+    }
+
+    public function remove(Request $request)
+    {
+        $request->validate([
+            'ticket_number' => 'required',
+            'technician' => 'required',
+        ]);
+
+        $assigned = AssignedTickets::where(['ticket_number' => $request->ticket_number, 'technician' => $request->technician])->first();
+
+        if ($assigned) {
+            $assigned->delete();
+            return redirect()->back()->with('success', 'Technician removed!')->with('message', 'Technician successfully removed from Ticket #' . $request->ticket_number);
+        }
     }
 }
