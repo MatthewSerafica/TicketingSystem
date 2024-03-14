@@ -32,11 +32,16 @@
                 <label for="timeStarted" class="form-label">Time Started:</label>
                 <input type="time" class="form-control" id="timeStarted" v-model="form.time_started" required>
               </div>
+
               <div class="col-md-4">
                 <label for="ticketNumber" class="form-label">Ticket Number:</label>
-                <input type="text" class="form-control" id="ticketNumber" v-model="form.ticket_number" required>
+                <select class="form-select" id="ticketNumber" v-model="form.ticket_number" required>
+                  <option value="">Select a ticket number</option>
+                  <option v-for="ticket in tickets" :value="ticket.ticket_number">{{ ticket.ticket_number }}</option>
+                </select>
                 <span v-if="form.errors.ticket_number" class="error-message">{{ form.errors.ticket_number }}</span>
               </div>
+
             </div>
 
             
@@ -59,12 +64,7 @@
             <div class="row mb-4">
               <div class="col-md-4">
                 <label for="problemEncountered" class="form-label">Problem Encountered:</label>
-                <select id="problemEncountered" v-model="form.issue" class="form-control">
-                  <option value="">Select an option</option>
-                  <option value="No Internet">No Internet</option>
-                  <option value="Software Installation">Software Installation</option>
-                  <option value="Printer Problem">Printer Problem</option>
-                </select>
+                <input type="text" class="form-control" id="problemEncountered" v-model="form.problemEncountered">
               </div>
               <div class="col-md-4">
                 <label for="action" class="form-label">Action Taken:</label>
@@ -111,12 +111,14 @@
 <script setup>
 import Header from '@/Pages/Layouts/TechnicianHeader.vue'
 import { Link, router, useForm, usePage } from '@inertiajs/vue3';
-import Button from '@/Components/Button.vue'
+import Button from '@/Components/Button.vue';
+import { ref, watch, computed } from "vue";
 
 const props = defineProps({
   technicians: Object,
   new_service_id: String,
   service_report: Object,
+  tickets: Object,
 })
 
 const today = new Date();
@@ -141,6 +143,9 @@ const form = useForm({
   remarks:'',
 });
 
+const filteredTickets = computed(() => {
+  return props.tickets.filter(ticket => ticket.technician_id === form.technician);
+});
 
 const create = async () => {
     if (!/^\d+$/.test(form.ticket_number)) {
@@ -178,6 +183,15 @@ const validate_service_id = async (service_id) => {
 
     return true;
 }
+
+watch(() => form.ticket_number, async (newValue) => {
+  const selectedTicket = props.tickets.find(ticket => ticket.ticket_number === newValue);
+
+  if (selectedTicket) {
+    form.problemEncountered = selectedTicket.description;
+    form.requesting_office = selectedTicket.employee.department + ' - ' + selectedTicket.employee.office;
+  }
+})
 
 </script>
 

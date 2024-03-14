@@ -619,6 +619,7 @@ const validateNumericInput = (inputValue, propName) => {
   .custom-rounded-table th,
   .custom-rounded-table td {
     white-space: nowrap;
+    font-size: 16px;
   }
 }
 
@@ -644,6 +645,7 @@ const validateNumericInput = (inputValue, propName) => {
   .custom-rounded-table th,
   .custom-rounded-table td {
     white-space: nowrap;
+    font-size: 16px;
   }
 }
 
@@ -668,6 +670,7 @@ const validateNumericInput = (inputValue, propName) => {
   .custom-rounded-table th,
   .custom-rounded-table td {
     white-space: nowrap;
+    font-size: 16px;
   }
 }
 
@@ -697,6 +700,8 @@ const validateNumericInput = (inputValue, propName) => {
   .custom-rounded-table th,
   .custom-rounded-table td {
     white-space: nowrap;
+    font-size: 16px;
+
   }
 }
 
