@@ -32,13 +32,13 @@
         <table class="table table-hover shadow custom-rounded-table">
           <thead>
             <tr class="text-start">
-              <th class="text-center">Ticket No</th>
-              <th class="text-center">Date Created</th>
-              <th class="text-center">Issue</th>
-              <th class="text-center">Technician</th>
-              <th class="text-center">Status</th>
-              <th class="text-center">Service Report No.</th>
-              <th class="text-center">Date Resolved</th>
+              <th class="text-center text-muted">Ticket No</th>
+              <th class="text-center text-muted">Date Created</th>
+              <th class="text-center text-muted">Issue</th>
+              <th class="text-center text-muted">Technician</th>
+              <th class="text-center text-muted">Status</th>
+              <th class="text-center text-muted">Service Report No.</th>
+              <th class="text-center text-muted">Date Resolved</th>
             </tr>
           </thead>
           <tbody>
