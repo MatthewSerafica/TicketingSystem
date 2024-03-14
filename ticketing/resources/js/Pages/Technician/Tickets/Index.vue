@@ -42,7 +42,6 @@
             placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
-
       <!--Data Table-->
       <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2 mt-3 pagination">
         <Pagination :links="tickets.links" :key="'tickets'" />
@@ -64,6 +63,7 @@
                 <th class="text-muted">Service</th>
                 <th class="text-start text-muted">Complexity</th>
                 <th class="text-muted">Technician</th>
+                <th class="text-muted">Service Report</th>
                 <th class="text-muted">Date Resolved</th>
                 <th class="text-muted">Remarks</th>
                 <th class="text-center text-muted">Status</th>
@@ -99,7 +99,15 @@
                   </span>
                 </td>
 
-                <td class="text-start">{{ ticket.technician1.user.name }} <br> {{ ticket.technician2.user.name }} <br> {{ ticket.technician ? ticket.technician3.user.name : '' }}</td>
+                <td class="text-start"><!-- {{  ticket.technician1 ?  ticket.technician1.user.name: '' }} <br> {{  ticket.technician1 ? ticket.technician2.user.name: '' }} <br> {{ ticket.technician3 ? ticket.technician3.user.name : '' }} --></td>
+
+                <td class="text-start" style="max-width: 20px;" @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
+                <span v-if="!selectedInput || selectedInput !== ticket.sr_no">{{ ticket.sr_no }}</span>
+                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'sr'"
+                  v-model="editData[ticket.sr_no]" @blur="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no', 'sr')"
+                  @keyup.enter="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no')"
+                  class="w-100 rounded border border-secondary-subtle text-center">
+              </td>
 
                 <td class="text-start">
                   {{ isNaN(new Date(formatDate(ticket.resolved_at))) ? 'Not yet resolved' :

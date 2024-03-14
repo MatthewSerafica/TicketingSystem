@@ -81,8 +81,50 @@ class TechnicianServiceController extends Controller
 
     public function check_service_id(Request $request, $service_id)
     {
-        $exists = ServiceReport::where('service_id', $service_id)->exists();
-        return response()->json(['exists' => $exists]);
+        $service_id = $request->service_id;
+
+        // Check if a ServiceReport with the given service_id exists
+        $existingServiceReport = ServiceReport::where('service_id', $service_id)->first();
+
+        // If a ServiceReport with the given service_id exists, update it
+        if ($existingServiceReport) {
+            $existingServiceReport->update([
+                'date_started' => $request->date_started,
+                'time_started' => $request->time_started,
+                'ticket_number' => $request->ticket_number,
+                'technician' => $request->technician,
+                'requesting_office' => $request->requesting_office,
+                'equipment_no' => $request->equipment_no,
+                'issue' => $request->issue,
+                'action' => $request->action,
+                'recommendation' => $request->recommendation,
+                'date_done' => $request->date_done,
+                'time_done' => $request->time_done,
+                'remarks' => $request->remarks,
+            ]);
+        } else {
+            // Create a new ServiceReport if the service_id does not exist
+            $technician = Technician::where('user_id', $request->technician)->firstOrFail();
+
+            $serviceData = [
+                'service_id' => $service_id,
+                'date_started' => $request->date_started,
+                'time_started' => $request->time_started,
+                'ticket_number' => $request->ticket_number,
+                'technician' => $technician->technician_id,
+                'requesting_office' => $request->requesting_office,
+                'equipment_no' => $request->equipment_no,
+                'issue' => $request->issue,
+                'action' => $request->action,
+                'recommendation' => $request->recommendation,
+                'date_done' => $request->date_done,
+                'time_done' => $request->time_done,
+                'remarks' => $request->remarks,
+            ];
+
+            ServiceReport::create($serviceData);
+        }
+
     }
 
 
