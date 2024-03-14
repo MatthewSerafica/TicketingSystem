@@ -163,13 +163,13 @@ const getBadgeColor = (status) => {
     case 'new':
       return 'badge text-bg-danger';
     case 'pending':
-      return 'badge  text-bg-warning';
+      return 'badge text-bg-warning';
     case 'ongoing':
-      return 'badge  text-bg-primary';
+      return 'badge text-bg-primary';
     case 'resolved':
-      return 'badge  text-bg-success';
+      return 'badge text-bg-success';
     default:
-      return 'btn btn-secondary';
+      return 'badge badge-secondary';
   }
 };
 
@@ -200,5 +200,5 @@ const getBadgeColor = (status) => {
 
 .pagination {
     width: 85rem;
-  }
+  }  
 </style>
