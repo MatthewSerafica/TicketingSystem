@@ -92,7 +92,6 @@
                     <label for="" class="fw-semibold">Technicians</label>
                     <div class="d-flex flex-column justify-content-center align-items-center gap-2 w-100">
                       <div v-for="(dropdown, index) in techniciansData" :key="index">
-                        {{ dropdown }}
                         <div class="flex-grow-1 w-100 d-flex flex-row gap-2">
                           <div class="btn-group">
                             <button type="button"
