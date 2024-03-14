@@ -28,8 +28,8 @@
         <Pagination :links="tickets.links" :key="'tickets'" />
         <br>
       </div>
-      <div class="w-75">
-        <table class="table table-hover shadow custom-rounded-table">
+      <div class="rounded shadow w-75 mb-5">
+        <table class="table table-hover custom-rounded-table">
           <thead>
             <tr class="text-start">
               <th class="text-center text-muted">Ticket No</th>

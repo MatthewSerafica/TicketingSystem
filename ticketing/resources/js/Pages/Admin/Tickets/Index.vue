@@ -48,7 +48,7 @@
         <Pagination :links="tickets.links" :key="'tickets'" />
         <br>
       </div>
-      <div class="table-responsive rounded shadow pt-2 px-2">
+      <div class="table-responsive rounded shadow pt-2 px-2 mb-3">
         <div class="">
           <table class="table table-hover custom-rounded-table">
             <thead>
@@ -568,10 +568,12 @@ const validateNumericInput = (inputValue, propName) => {
 .table-responsive {
   width: 90%;
   overflow-x: auto;
+ 
 }
 
 .pagination {
   width: 90%;
+ 
 }
 
 .btn-tickets {
