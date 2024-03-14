@@ -182,7 +182,7 @@ class AdminTicketController extends Controller
 
         $ticket = Ticket::where('ticket_number', $id)->first();
 
-        if ($field === 'technician_id') {
+        if ($field === 'technician') {
             return $this->updateTechnician($request, $ticket);
         } else {
             return $this->updateField($request, $field, $ticket);
@@ -214,48 +214,29 @@ class AdminTicketController extends Controller
     private function updateTechnician(Request $request, $ticket)
     {
         $request->validate([
-            'technician_id' => 'nullable',
-            'type' => 'nullable',
+            'technician' => 'required',
+            'ticket_number' => 'required',
         ]);
-        $type = $request->type;
 
-        $technician = Technician::find($request->technician_id);
-        $old = Technician::find($ticket->$type);
-
-        if ($old) {
-            if ($old->tickets_assigned > 0) {
-                if ($technician) {
-                    $old->update(['tickets_assigned' => $old->tickets_assigned - 1]);
-                    $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
-                } else {
-                    $old->update(['tickets_assigned' => $old->tickets_assigned - 1]);
-                }
-            } else {
-                if ($technician) {
-                    $old->update(['tickets_assigned' => 0]);
-                    $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
-                } else {
-                    $old->update(['tickets_assigned' => 0]);
-                }
-            }
-        } else {
-            $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
-        }
-
-        $ticket->$type = $request->technician_id;
         if ($ticket->status == 'New' && $request->technician_id) {
             $ticket->status = 'Pending';
         }
         $ticket->save();
+
+        $assign = [
+            'ticket_number' => $request->ticket_number,
+            'technician' => $request->technician,
+        ];
+
+        AssignedTickets::create($assign);
+
+        $technician = Technician::find($request->technician);
 
         if ($technician) {
             $technician->user->notify(
                 new UpdateTicketTechnician($ticket)
             );
             return redirect()->back()->with('success', 'Technician Update!')->with('message', 'Technician ' . $technician->user->name . ' is now assigned to Ticket #' . $ticket->ticket_number);
-        } else {
-
-            return redirect()->back()->with('success', 'Technician Update!')->with('message', 'Technician ' . $old->user->name . ' has been unassigned from Ticket #' . $ticket->ticket_number);
         }
     }
 

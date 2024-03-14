@@ -97,7 +97,7 @@ class TechnicianTicketController extends Controller
         $ticketData = [
             'rs_no' => $request->rs_no,
             'employee' => $request->employee,
-            'technician' => $technician->technician_id,
+            'technician1' => $technician->technician_id,
             'issue' => $request->issue,
             'description' => $request->description,
             'service' => $request->service,

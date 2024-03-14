@@ -42,6 +42,7 @@
             placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
+
       <!--Data Table-->
       <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2 mt-3 pagination">
         <Pagination :links="tickets.links" :key="'tickets'" />
@@ -156,117 +157,38 @@
                   </div>
                 </td>
                 <td class="text-start">
-                  <!-- <div class="d-flex flex-column align-items-center">
-                    <div v-if="ticket.technician1 || (selectedRow === ticket.ticket_number && more1)"
-                      class="btn-group d-flex justify-content-center align-items-center">
-                      <button type="button" class="btn text-start" style="width: 10rem;">
-                        {{ ticket.technician1 ? ticket.technician1.user.name : 'Select a Technician' }}
-                      </button>
-                      <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
-                        aria-expanded="false" data-bs-reference="parent">
-                        <span class="visually-hidden">Toggle Dropdown</span>
-                      </button>
-                      <ul class="dropdown-menu py-0" style="max-height: 250px; overflow-y: auto;">
-                        <li class="btn dropdown-item border"
-                          @click="showInput(null, ticket.ticket_number, 'technician1'), updateData(null, ticket.ticket_number, 'technician_id', 'technician1')">
-                          <span class="fw-semibold">Unassign</span>
-                        </li>
-                        <li v-for="technician in technicians" class="btn dropdown-item border"
-                          @click="showInput(technician.technician_id, ticket.ticket_number, 'technician1'), updateData(technician.technician_id, ticket.ticket_number, 'technician_id', 'technician1')">
-                          <span class="fw-semibold">{{ technician.user.name }}</span>
-                          <br> <small>{{ technician.assigned_department }}</small>
-                        </li>
-                      </ul>
-                      <button v-if="!ticket.technician1" type="button"
-                        class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-6 text-danger"
-                        style="width: 1em; height: 1.5em;" @click="removeMore('more1')"><i
-                          class="bi bi-dash-circle"></i>
-                      </button>
-                    </div>
-                    <div v-if="ticket.technician2 || (selectedRow === ticket.ticket_number && more2)"
-                      class="btn-group d-flex justify-content-center align-items-center">
-                      <button type="button" class="btn text-start" style="width: 10rem;">
-                        {{ ticket.technician2 ? ticket.technician2.user.name : 'Select a Technician' }}
-                      </button>
-                      <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
-                        aria-expanded="false" data-bs-reference="parent">
-                        <span class="visually-hidden">Toggle Dropdown</span>
-                      </button>
-                      <ul class="dropdown-menu" style="max-height: 250px; overflow-y: auto;">
-                        <li class="btn dropdown-item bbrder"
-                          @click="showInput(null, ticket.ticket_number, 'technician2'), updateData(null, ticket.ticket_number, 'technician_id', 'technician2')">
-                          Unassign</li>
-                        <li v-for="technician in technicians" class="btn dropdown-item border"
-                          @click="showInput(technician.technician_id, ticket.ticket_number, 'technician2'), updateData(technician.technician_id, ticket.ticket_number, 'technician_id', 'technician2')">
-                          <span class="fw-semibold">{{ technician.user.name }}</span>
-                          <br> <small>{{ technician.assigned_department }}</small>
-                        </li>
-                      </ul>
-                      <button v-if="!ticket.technician2" type="button"
-                        class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-6 text-danger"
-                        style="width: 1em; height: 1.5em;" @click="removeMore('more2')"><i
-                          class="bi bi-dash-circle"></i></button>
-                    </div>
-                    <div v-if="ticket.technician3 || (selectedRow === ticket.ticket_number && more3)"
-                      class="btn-group d-flex justify-content-center align-items-center">
-                      <button type="button" class="btn text-start" style="width: 10rem;">
-                        {{ ticket.technician3 ? ticket.technician3.user.name : 'Select a Technician' }}
-                      </button>
-                      <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
-                        aria-expanded="false" data-bs-reference="parent">
-                        <span class="visually-hidden">Toggle Dropdown</span>
-                      </button>
-                      <ul class="dropdown-menu" style="max-height: 250px; overflow-y: auto;">
-                        <li class="btn dropdown-item border"
-                          @click="showInput(null, ticket.ticket_number, 'technician3'), updateData(null, ticket.ticket_number, 'technician_id', 'technician3')">
-                          Unassign</li>
-                        <li v-for="technician in technicians" class="btn dropdown-item border"
-                          @click="showInput(technician.technician_id, ticket.ticket_number, 'technician3'), updateData(technician.technician_id, ticket.ticket_number, 'technician_id', 'technician3')">
-                          <span class="fw-semibold">{{ technician.user.name }}</span>
-                          <br> <small>{{ technician.assigned_department }}</small>
-                        </li>
-                      </ul>
-                      <button v-if="!ticket.technician3" type="button"
-                        class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-6 text-danger"
-                        style="width: 1em; height: 1.5em;" @click="removeMore('more3')">
-                        <i class="bi bi-dash-circle"></i>
-                      </button>
-                    </div>
-                    <div v-if="show || !(selectedRow === ticket.ticket_number)" class="">
-                      <button class="btn align-items-center justify-content-center d-flex text-primary fs-5"
-                        style="height:1.5em;"
-                        @click="addMore(ticket.ticket_number, ticket.technician1, ticket.technician2, ticket.technician3)">
-                        <i class="bi bi-plus-circle-fill"></i>
-                      </button>
-                    </div>
-                  </div> -->
-                  <div v-for="(assignedTech, index) in ticket.assigned" :key="index">
-                    <div v-for="(tech, techIndex) in assignedTech.technician" :key="techIndex">
+                  <div class="d-flex flex-column justify-content-center align-items-center">
+                    <div v-for="(assigned, index) in ticket.assigned" :key="index">
                       <div class="btn-group">
                         <button type="button" class="btn text-start" style="width: 10rem;">
-                          {{ tech.user.name }}
+                          <div v-if="assigned.technician" v-for="(tech, techIndex) in assigned.technician"
+                            :key="techIndex">
+                            {{ tech.user ? tech.user.name : 'Select a Technician' }}
+                          </div>
                         </button>
                         <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
                           data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                           <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu" style="max-height: 250px; overflow-y: auto;">
-                          <li class="btn dropdown-item border" @click="removeTechnician(ticket, assignedTech, tech)">
-                            <span class="fw-semibold">Remove</span>
+                          <li class="btn dropdown-item border" @click="removeTechnician(ticket, index, techIndex)">
+                            Unassign
                           </li>
-                          <li v-for="technician in technicians" class="btn dropdown-item border"
-                            @click="assignTechnician(ticket, assignedTech, technician)">
+                          <li v-for="technician in technicians" :key="technician.technician_id"
+                            class="btn dropdown-item border" @click="assignTechnician(ticket, index, technician)">
                             <span class="fw-semibold">{{ technician.user.name }}</span>
                             <br> <small>{{ technician.assigned_department }}</small>
                           </li>
                         </ul>
                       </div>
                     </div>
+                    <div class="">
+                      <button class="btn align-items-center justify-content-center d-flex text-primary fs-5"
+                        style="height:1.5em;" @click="showInput('', ticket.ticket_number, 'technician'), addTechnician(ticket)">
+                        <i class="bi bi-plus-circle-fill"></i>
+                      </button>
+                    </div>
                   </div>
-                  <button class="btn align-items-center justify-content-center d-flex text-primary fs-5"
-                    style="height:1.5em;" @click="addDropdown(ticket)">
-                    <i class="bi bi-plus-circle-fill"></i>
-                  </button>
                 </td>
                 <td class="text-center" style="max-width: 60px;"
                   @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
@@ -293,6 +215,7 @@
                     @blur="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
                     @keyup.enter="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
                     class="w-100 rounded border border-secondary-subtle text-center"></textarea>
+
                 </td>
                 <td class="text-start">
                   <div class="btn-group">
@@ -539,13 +462,15 @@ const updateData = async (data, id, updateField, type) => {
     if (!validateNumericInput(editData[data], updateField)) {
       return;
     }
+    console.log('start')
     const form = useForm({
       [updateField]: editData[data],
-      type: type,
+      ticket_number: id,
     });
+    console.log('finished')
 
     await form.put(route('admin.tickets.update', { ticket_id: id, field: updateField }));
-
+    console.log('finished')
     selectedInput.value = null;
     editData[data] = '';
 
@@ -553,86 +478,43 @@ const updateData = async (data, id, updateField, type) => {
   }
 };
 
-const addDropdown = (ticket) => {
-  const newTechnician = {
-    technician: null // Initialize with null or any default value
-  };
-  ticket.assigned.push(newTechnician);
+const addTechnician = (ticket) => {
+  if (!ticket.assigned) {
+    ticket.assigned = [];
+  }
+  ticket.assigned.push({
+    ticket_number: null,
+    technician: ref(''),
+  });
+  console.log(ticket.assigned)
 };
 
-// Remove technician dropdown
-const removeTechnician = (ticket, assignedTech, tech) => {
-  const index = ticket.assigned.indexOf(assignedTech);
-  ticket.assigned.splice(index, 1);
+const removeTechnician = (ticket, assignedIndex, techIndex) => {
+  ticket.assigned[assignedIndex].technician.splice(techIndex, 1);
 };
 
-// Assign technician to ticket
-const assignTechnician = (ticket, assignedTech, technician) => {
-  assignedTech.technician = technician;
+const assignTechnician = async (ticket, assignedIndex, technician) => {
+  // Check if there are already assigned technicians
+  console.log(assignedIndex)
+  if (ticket.assigned[assignedIndex].technician && ticket.assigned[assignedIndex].technician.length > 0) {
+    // If there are existing technicians, replace the first one with the new technician
+    const old = ticket.assigned[assignedIndex]
+    console.log(old)
+    ticket.assigned[assignedIndex].technician.splice(0, 1, technician);
+  } else {
+    if (!Array.isArray(ticket.assigned[assignedIndex].technician)) {
+      // If it's not an array, initialize it as an empty array
+      ticket.assigned[assignedIndex].technician = [];
+    }
+    // If there are no existing technicians, simply push the new technician
+    ticket.assigned[assignedIndex].technician.push(technician);
+  }
+  console.log('')
+  console.log(ticket.assigned[assignedIndex].technician[0].technician_id)
+
+  await showInput(ticket.assigned[assignedIndex].technician[0].technician_id, ticket.ticket_number, 'technician')
+  await updateData(ticket.assigned[assignedIndex].technician[0].technician_id, ticket.ticket_number, 'technician', 'technician')
 };
-
-let more1 = ref(false);
-let more2 = ref(false);
-let more3 = ref(false);
-let show = ref(true);
-
-const addMore = (id, tech1, tech2, tech3) => {
-  console.log(tech1, tech2, tech3)
-  selectedRow.value = id;
-  if (more1.value === false) {
-    more1.value = true;
-    if (tech1) {
-      more1.value = true;
-      more2.value = true;
-    }
-    if (tech2 && tech1) {
-      more1.value = true;
-      more2.value = true;
-      more3.value = true;
-      show.value = false;
-    }
-  } else if (more2.value === false) {
-    console.log("2")
-    more2.value = true;
-    if (tech2) {
-      more2.value = true;
-      more3.value = true;
-      show.value = false;
-    }
-  } else if (more3.value === false) {
-    console.log("3")
-    more3.value = true;
-    show.value = false;
-    if (tech2) {
-      more1.value = true;
-      more2.value = true;
-      show.value = false;
-    }
-  }
-  console.log(more1.value, more2.value, more3.value);
-}
-
-const removeMore = (more) => {
-  if (more === 'more1') {
-    more1.value = false;
-    if (more2 && more3) {
-      show.value = true;
-    }
-  }
-  else if (more === 'more2') {
-    more2.value = false;
-    if (more1 && more2) {
-      show.value = true;
-    }
-  }
-  else if (more === 'more3') {
-    more3.value = false;
-    if (more2 && more1) {
-      show.value = true;
-    }
-  }
-}
-
 // Table update end
 
 // Styling and formatting

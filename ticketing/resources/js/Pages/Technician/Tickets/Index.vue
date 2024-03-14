@@ -23,7 +23,8 @@
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Tickets</h1>
           <p class="fs-5"> Manage and track all TMDD tickets</p>
-          <Link :href="route('technician.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket
+          <Link :href="route('technician.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New
+          Ticket
           </Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
@@ -73,7 +74,6 @@
               <tr v-for="ticket in tickets.data" :key="ticket.ticket_number" class="align-middle">
                 <td class="text-center">{{ ticket.ticket_number }}</td>
                 <td class="text-start">{{ formatDate(ticket.created_at) }}</td>
-               
                 <td class="text-start"><span class="fw-medium">
                     {{ ticket.employee.user.name }}</span><br>
                   <small>{{ ticket.employee.department }} - {{ ticket.employee.office }}</small>
@@ -99,7 +99,9 @@
                   </span>
                 </td>
 
-                <td class="text-start">{{ ticket.technician1.user.name }} <br> {{ ticket.technician2.user.name }} <br> {{ ticket.technician ? ticket.technician3.user.name : '' }}</td>
+                <td class="text-start">{{ ticket.technician1 ? ticket.technician1.user.name : '' }} <br> {{
+          ticket.technician2 ? ticket.technician2.user.name : '' }} <br> {{ ticket.technician3 ?
+          ticket.technician3.user.name : '' }}</td>
 
                 <td class="text-start">
                   {{ isNaN(new Date(formatDate(ticket.resolved_at))) ? 'Not yet resolved' :
@@ -361,7 +363,7 @@ const updateData = async (data, id, updateField, type) => {
 
     if (!validateNumericInput(editData[data], updateField)) {
       return;
-    } 
+    }
     const form = useForm({
       [updateField]: editData[data],
       type: type,
@@ -474,10 +476,10 @@ const getComplexityClass = (complexity) => {
 
 const validateNumericInput = (inputValue, propName) => {
   if (propName === 'remarks') {
-    return true; 
+    return true;
   }
   const isValid = inputValue === '' || /^\d+$/.test(inputValue);
-  if (!isValid && inputValue !== '') { 
+  if (!isValid && inputValue !== '') {
     page.props.flash.error = `Invalid ${propName} number`;
     page.props.flash.message = `Please input numeric values only`;
     return false;
