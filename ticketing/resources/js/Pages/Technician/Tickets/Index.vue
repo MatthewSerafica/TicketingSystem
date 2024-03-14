@@ -48,7 +48,7 @@
         <Pagination :links="tickets.links" :key="'tickets'" />
         <br>
       </div>
-      <div class="table-responsive rounded shadow pt-2 px-2">
+      <div class="table-responsive rounded shadow pt-2 px-2 mb-5">
         <div class="">
           <table class="table table-hover custom-rounded-table">
             <thead>

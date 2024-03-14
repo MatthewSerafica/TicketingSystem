@@ -9,7 +9,7 @@ class AdminOfficeController extends Controller
 {
     public function index(Request $request)
     {
-        $offices = Office::paginate(8);
+        $offices = Office::paginate(10);
         return inertia('Admin/Office/Index', [
             'offices' => $offices,
         ]);

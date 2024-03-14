@@ -39,11 +39,11 @@
         <table class="table table-hover shadow custom-rounded-table">
           <thead>
             <tr class="text-start">
-              <th class="text-center"> Department ID</th>
-              <th class="text-center">Department</th>
-              <th class="text-center">Date Created</th>
-              <th class="text-center">Date Updated</th>
-              <th>Delete Option</th>
+              <th class="text-center text-muted"> Department ID</th>
+              <th class="text-center text-muted">Department</th>
+              <th class="text-center text-muted">Date Created</th>
+              <th class="text-center text-muted">Date Updated</th>
+              <th class="text-muted">Delete Option</th>
             </tr>
           </thead>
           <tbody class="">

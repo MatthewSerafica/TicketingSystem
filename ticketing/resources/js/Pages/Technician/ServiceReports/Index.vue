@@ -27,19 +27,19 @@
       <table class="table table-hover custom-rounded-table">
         <thead>
           <tr class="text-center">
-            <th class="text-start">Service No</th>
-            <th>Date Started</th>
-            <th>Time Started</th>
-            <th>Ticket No</th>
-            <th>Technician Name</th>
-            <th>Requesting Office</th>
-            <th>Equipment No</th>
-            <th>Issue</th>
-            <th>Action</th>
-            <th>Recommendation</th>
-            <th>Date Done</th>
-            <th>Time Done</th>
-            <th>Remarks</th>
+            <th class="text-start text-muted">Service No</th>
+            <th class="text-muted">Date Started</th>
+            <th class="text-muted">Time Started</th>
+            <th class="text-muted">Ticket No</th>
+            <th class="text-muted">Technician Name</th>
+            <th class="text-muted">Requesting Office</th>
+            <th class="text-muted">Equipment No</th>
+            <th class="text-muted">Issue</th>
+            <th class="text-muted">Action</th>
+            <th class="text-muted">Recommendation</th>
+            <th class="text-muted">Date Done</th>
+            <th class="text-muted">Time Done</th>
+            <th class="text-muted">Remarks</th>
           </tr>
         </thead>
         <tbody>

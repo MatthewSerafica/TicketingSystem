@@ -28,17 +28,17 @@
         <Pagination :links="tickets.links" :key="'tickets'" />
         <br>
       </div>
-      <div class="w-75">
-        <table class="table table-hover shadow custom-rounded-table">
+      <div class="rounded shadow w-75 mb-5">
+        <table class="table table-hover custom-rounded-table">
           <thead>
             <tr class="text-start">
-              <th class="text-center">Ticket No</th>
-              <th class="text-center">Date Created</th>
-              <th class="text-center">Issue</th>
-              <th class="text-center">Technician</th>
-              <th class="text-center">Status</th>
-              <th class="text-center">Service Report No.</th>
-              <th class="text-center">Date Resolved</th>
+              <th class="text-center text-muted">Ticket No</th>
+              <th class="text-center text-muted">Date Created</th>
+              <th class="text-center text-muted">Issue</th>
+              <th class="text-center text-muted">Technician</th>
+              <th class="text-center text-muted">Status</th>
+              <th class="text-center text-muted">Service Report No.</th>
+              <th class="text-center text-muted">Date Resolved</th>
             </tr>
           </thead>
           <tbody>
@@ -163,13 +163,13 @@ const getBadgeColor = (status) => {
     case 'new':
       return 'badge text-bg-danger';
     case 'pending':
-      return 'badge  text-bg-warning';
+      return 'badge text-bg-warning';
     case 'ongoing':
-      return 'badge  text-bg-primary';
+      return 'badge text-bg-primary';
     case 'resolved':
-      return 'badge  text-bg-success';
+      return 'badge text-bg-success';
     default:
-      return 'btn btn-secondary';
+      return 'badge badge-secondary';
   }
 };
 
@@ -200,5 +200,5 @@ const getBadgeColor = (status) => {
 
 .pagination {
     width: 85rem;
-  }
+  }  
 </style>
