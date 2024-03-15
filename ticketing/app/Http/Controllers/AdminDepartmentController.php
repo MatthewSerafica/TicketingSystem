@@ -9,7 +9,7 @@ class AdminDepartmentController extends Controller
 {
     public function index(Request $request)
     {
-        $departments = Department::paginate(8);
+        $departments = Department::paginate(10);
         return inertia('Admin/Department/Index', [
             'departments' => $departments,
         ]);

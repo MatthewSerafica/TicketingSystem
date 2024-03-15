@@ -9,7 +9,7 @@ class AdminServiceController extends Controller
 {
     public function index(Request $request)
     {
-        $services = Service::paginate(8);
+        $services = Service::paginate(10);
         return inertia('Admin/Services/Index', [
             'services' => $services,
         ]);

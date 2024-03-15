@@ -17,7 +17,7 @@ class Technician extends Model
 
     public function assigned(): BelongsTo
     {
-        return $this->belongsTo(TicketsAssigned::class, 'technician');
+        return $this->belongsTo(AssignedTickets::class, 'technician');
     }
 
     public function tickets() {

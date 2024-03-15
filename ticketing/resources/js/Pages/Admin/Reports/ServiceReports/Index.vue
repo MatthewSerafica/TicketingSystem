@@ -40,19 +40,19 @@
         <table class="table table-hover custom-rounded-table">
           <thead>
             <tr class="text-start text-muted">
-              <th class="text-center">No.</th>
-              <th>Date</th>
-              <th>Time Started</th>
-              <th class="text-center">Ticket No</th>
-              <th>Technician</th>
-              <th>Office</th>
-              <th class="text-center">Equipment No</th>
-              <th>Issue</th>
-              <th>Action</th>
-              <th>Recommendation</th>
-              <th>Date Done</th>
-              <th>Time Done</th>
-              <th>Remarks</th>
+              <th class="text-center text-muted">No.</th>
+              <th class="text-muted">Date</th>
+              <th class="text-muted">Time Started</th>
+              <th class="text-center text-muted">Ticket No</th>
+              <th class="text-muted">Technician</th>
+              <th class="text-muted">Office</th>
+              <th class="text-center text-muted">Equipment No</th>
+              <th class="text-muted">Issue</th>
+              <th class="text-muted">Action</th>
+              <th class="text-muted">Recommendation</th>
+              <th class="text-muted">Date Done</th>
+              <th class="text-muted">Time Done</th>
+              <th class="text-muted">Remarks</th>
             </tr>
           </thead>
           <tbody>

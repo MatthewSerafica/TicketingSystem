@@ -28,35 +28,35 @@
         <Pagination :links="tickets.links" :key="'tickets'" />
         <br>
       </div>
-      <div class="w-75">
-        <table class="table table-hover shadow custom-rounded-table">
+      <div class="rounded shadow w-75 mb-5">
+        <table class="table table-hover custom-rounded-table">
           <thead>
             <tr class="text-start">
-              <th class="text-center">Ticket No</th>
-              <th class="text-center">Date Created</th>
-              <th class="text-center">Issue</th>
-              <th class="text-center">Technician</th>
-              <th class="text-center">Status</th>
-              <th class="text-center">Service Report No.</th>
-              <th class="text-center">Date Resolved</th>
+              <th class="text-center text-muted">Ticket No</th>
+              <th class="text-center text-muted">Date Created</th>
+              <th class="text-center text-muted">Issue</th>
+              <th class="text-center text-muted">Technician</th>
+              <th class="text-center text-muted">Status</th>
+              <th class="text-center text-muted">SR No.</th>
+              <th class="text-center text-muted">Date Resolved</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="ticket in tickets.data" :key="ticket.ticket_number">
-              <td class="text-center py-3">{{ ticket.ticket_number }}</td>
-              <td class="text-center py-3">{{ formatDate(ticket.created_at) }}</td>
-              <td class="text-center py-3 cursor" :title="ticket.issue">{{ ticket.issue }}</td>
-              <td class="text-center py-3">
-                <div class="d-flex flex-column">
-                  <span>{{ ticket.technician1 ? ticket.technician1.user.name : 'Unassigned' }}</span>
-                  <span>{{ ticket.technician2 ? ticket.technician2.user.name : '' }}</span>
-                  <span>{{ ticket.technician3 ? ticket.technician3.user.name : '' }}</span>
+            <tr v-for="ticket in tickets.data" :key="ticket.ticket_number" class="align-middle">
+              <td class="text-center">{{ ticket.ticket_number }}</td>
+              <td class="text-center">{{ formatDate(ticket.created_at) }}</td>
+              <td class="text-center cursor" :title="ticket.issue">{{ ticket.issue }}</td>
+              <td class="text-center">
+                <div v-for="(assignedTech, index) in ticket.assigned" :key="index">
+                  <div v-for="(tech, techIndex) in assignedTech.technician" :key="techIndex">
+                    <span>{{ tech.user.name }}</span>
+                  </div>
                 </div>
               </td>
-              <td class="text-center py-3"><span :class="getBadgeColor(ticket.status)" class="p-3">{{ ticket.status
+              <td class="text-center"><span :class="getBadgeColor(ticket.status)" class="p-3">{{ ticket.status
                   }}</span></td>
-              <td class="text-center py-3">{{ ticket.rs_no ? ticket.rs_no : 'Unavailable' }}</td>
-              <td class="text-center py-3">{{ ticket.resolved_at ? ticket.resolved_at : 'Unresolved' }}</td>
+              <td class="text-center">{{ ticket.sr_no ? ticket.sr_no : 'Unavailable' }}</td>
+              <td class="text-center">{{ ticket.resolved_at ? ticket.resolved_at : 'Unresolved' }}</td>
             </tr>
           </tbody>
         </table>
@@ -163,13 +163,13 @@ const getBadgeColor = (status) => {
     case 'new':
       return 'badge text-bg-danger';
     case 'pending':
-      return 'badge  text-bg-warning';
+      return 'badge text-bg-warning';
     case 'ongoing':
-      return 'badge  text-bg-primary';
+      return 'badge text-bg-primary';
     case 'resolved':
-      return 'badge  text-bg-success';
+      return 'badge text-bg-success';
     default:
-      return 'btn btn-secondary';
+      return 'badge badge-secondary';
   }
 };
 
@@ -199,6 +199,6 @@ const getBadgeColor = (status) => {
 }
 
 .pagination {
-    width: 85rem;
-  }
+  width: 85rem;
+}
 </style>
