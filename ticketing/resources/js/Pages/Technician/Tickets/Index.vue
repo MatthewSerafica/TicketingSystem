@@ -64,7 +64,7 @@
                 <th class="text-muted">Service</th>
                 <th class="text-start text-muted">Complexity</th>
                 <th class="text-muted">Technician</th>
-                <th class="text-muted">Service Report</th>
+                <th class="text-muted">SR No.</th>
                 <th class="text-muted">Date Resolved</th>
                 <th class="text-muted">Remarks</th>
                 <th class="text-center text-muted">Status</th>
@@ -94,20 +94,29 @@
 
                 <td class="text-start text-truncate ticket-description" style="max-width: 130px;"
                   data-hover-text="{{ ticket.complexity }}">
-                  <span class="d-inline-block" tabindex="0" :title="ticket.complexity">
-                    {{ ticket.complexity }}
-                  </span>
+                  <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center"
+                    style="width: 5rem;">
+                    {{ ticket.complexity ? ticket.complexity : 'N/A' }}
+                  </button>
                 </td>
 
-                <td class="text-start"><!-- {{  ticket.technician1 ?  ticket.technician1.user.name: '' }} <br> {{  ticket.technician1 ? ticket.technician2.user.name: '' }} <br> {{ ticket.technician3 ? ticket.technician3.user.name : '' }} --></td>
+                <td class="text-start">
+                  <div v-for="(assignedTech, index) in ticket.assigned" :key="index">
+                    <div v-for="(tech, techIndex) in assignedTech.technician" :key="techIndex">
+                      <span>{{ tech.user.name }}</span>
+                    </div>
+                  </div>
+                </td>
 
-                <td class="text-start" style="max-width: 20px;" @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
-                <span v-if="!selectedInput || selectedInput !== ticket.sr_no">{{ ticket.sr_no }}</span>
-                <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'sr'"
-                  v-model="editData[ticket.sr_no]" @blur="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no', 'sr')"
-                  @keyup.enter="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no')"
-                  class="w-100 rounded border border-secondary-subtle text-center">
-              </td>
+                <td class="text-center" style="max-width: 20px;"
+                  @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
+                  <span v-if="!selectedInput || selectedInput !== ticket.sr_no">{{ ticket.sr_no }}</span>
+                  <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'sr'"
+                    v-model="editData[ticket.sr_no]"
+                    @blur="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no', 'sr')"
+                    @keyup.enter="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no')"
+                    class="w-100 rounded border border-secondary-subtle text-center">
+                </td>
 
                 <td class="text-start">
                   {{ isNaN(new Date(formatDate(ticket.resolved_at))) ? 'Not yet resolved' :

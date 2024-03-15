@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssignedTickets;
 use App\Models\Employee;
 use App\Models\Technician;
 use App\Models\Ticket;
@@ -18,11 +19,9 @@ class TechnicianTicketController extends Controller
         $technician = Technician::where('user_id', $user_id)->with('user')->first();
 
         $tickets = Ticket::query()
-            ->with('employee.user', 'technician1.user', 'technician2.user', 'technician3.user')
-            ->where(function ($query) use ($technician, $request) {
-                $query->where('technician1', $technician->technician_id)
-                    ->orWhere('technician3', $technician->technician_id)
-                    ->orWhere('technician2', $technician->technician_id);
+            ->with('employee.user', 'assigned.technician.user')
+            ->whereHas('assigned.technician.user', function ($query) use ($technician) {
+                $query->where('id', $technician->user->id);
             })
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
@@ -66,6 +65,7 @@ class TechnicianTicketController extends Controller
             'filters' => $filters,
         ]);
     }
+
 
 
     public function create()
@@ -121,9 +121,9 @@ class TechnicianTicketController extends Controller
 
         $ticket->status = $request->status;
         $ticket->save();
-        
+
         $employee->user->notify(new UpdateTicketStatus($ticket));
-        
+
         return redirect()->back()
             ->with('success', 'Status Update!')
             ->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now ' . $request->status);
@@ -134,11 +134,11 @@ class TechnicianTicketController extends Controller
         $request->validate([
             $field => 'nullable',
         ]);
-    
+
         $ticket = Ticket::where('ticket_number', $id)->first();
-    
+
         $ticket->$field = $request->$field;
-    
+
         // If the SR number is present in the request, update it in the tickets table
         if ($field === 'sr_no') {
             $ticket->save(); // Save the ticket first to ensure synchronization with the service_report table
@@ -155,16 +155,14 @@ class TechnicianTicketController extends Controller
                 ServiceReport::create($serviceData);
             }
         }
-    
+
         // Check if the SR number is present, and update resolved_at and status accordingly
         if ($ticket->sr_no !== null) {
             $ticket->resolved_at = now();
             $ticket->status = 'Resolved';
         }
-    
+
         $ticket->save();
         return redirect()->to('/technician/service-report/create');
     }
-    
-    
 }
