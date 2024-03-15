@@ -99,7 +99,7 @@
                   </span>
                 </td>
 
-                <td class="text-start"><!-- {{  ticket.technician1 ?  ticket.technician1.user.name: '' }} <br> {{  ticket.technician1 ? ticket.technician2.user.name: '' }} <br> {{ ticket.technician3 ? ticket.technician3.user.name : '' }} --></td>
+                <td class="text-start">{{  ticket.technician1 ?  ticket.technician1.user.name: '' }} <br> {{  ticket.technician2 ? ticket.technician2.user.name: '' }} <br> {{ ticket.technician3 ? ticket.technician3.user.name : '' }}</td>
 
                 <td class="text-start" style="max-width: 20px;" @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
                 <span v-if="!selectedInput || selectedInput !== ticket.sr_no">{{ ticket.sr_no }}</span>
@@ -212,7 +212,7 @@ let timeoutId = null;
 
 const fetchData = (type) => {
   router.get(
-    route('admin.tickets'),
+    route('technician.tickets'),
     {
       search: search.value,
       sort: sortColumn.value,
@@ -316,19 +316,12 @@ const handleSort = (column) => {
 // Sort end
 
 // Table update start
-const updateService = (ticket_id, service) => {
-  const form = useForm({
-    service: service,
-  });
-
-  form.put(route('admin.tickets.update.service', { ticket_id: ticket_id }));
-}
 
 const updateStatus = (ticket_id, status, old_status, srNo) => {
   if (status === 'Resolved') {
     if (!srNo) {
       page.props.flash.error = 'Status Update Error'
-      page.props.flash.error_message = 'Please enter a Service Request Number!'
+      page.props.flash.error_message = 'Please enter a Service Report Number!'
       return;
     }
   }
@@ -339,17 +332,9 @@ const updateStatus = (ticket_id, status, old_status, srNo) => {
     old_status: old_status,
   });
 
-  form.put(route('admin.tickets.update.status', { ticket_id: ticket_id }));
+  form.put(route('technician.tickets.update.status', { ticket_id: ticket_id }));
 }
 
-const updateComplexity = (ticket_id, complexity) => {
-  const form = useForm({
-    ticket_id: ticket_id,
-    complexity: complexity,
-  });
-
-  form.put(route('admin.tickets.update.complexity', { ticket_id: ticket_id }));
-}
 
 let selectedInput = ref(null);
 let selectedRow = ref(null);
@@ -375,7 +360,7 @@ const updateData = async (data, id, updateField, type) => {
       type: type,
     });
 
-    await form.put(route('admin.tickets.update', { ticket_id: id, field: updateField }));
+    await form.put(route('technician.tickets.update', { ticket_id: id, field: updateField }));
 
     selectedInput.value = null;
     editData[data] = '';
