@@ -97,15 +97,19 @@ class TechnicianTicketController extends Controller
         $ticketData = [
             'rs_no' => $request->rs_no,
             'employee' => $request->employee,
-            'technician1' => $technician->technician_id,
             'issue' => $request->issue,
             'description' => $request->description,
             'service' => $request->service,
             'status' => 'Pending',
         ];
 
-        Ticket::create($ticketData);
+        $ticket = Ticket::create($ticketData);
         $employee->update(['made_ticket' => $employee->made_ticket + 1]);
+
+        AssignedTickets::create([
+            'ticket_number' => $ticket->ticket_number,
+            'technician' => $technician->technician_id,
+        ]);
 
         return redirect()->to('/technician/tickets')->with('success', 'Ticket Created');
     }

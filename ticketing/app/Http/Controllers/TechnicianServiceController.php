@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\AssignedTickets;
+use App\Models\Employee;
 use App\Models\Technician;
 use App\Models\Ticket;
 use App\Models\ServiceReport;
+use App\Notifications\UpdateTicketStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -134,7 +136,18 @@ class TechnicianServiceController extends Controller
                 'remarks' => $request->remarks,
             ];
 
-            ServiceReport::create($serviceData);
+            $service = ServiceReport::create($serviceData);
+
+            $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
+
+            $ticket->update([
+                'sr_no' => $service->service_id,
+                'status' => 'Resolved',
+                'remarks' => $request->remarks,
+            ]);
+
+            $employee = Employee::find($ticket->employee);
+            $employee->user->notify(new UpdateTicketStatus($ticket));
         }
 
         return redirect()->to('/technician/service-report')->with('success', 'Report Created');
