@@ -143,7 +143,7 @@
                     </button>
 
                     <button type="button" :class="getButtonClass(ticket.status)" class="text-center rounded-end"
-                      style="width: 5rem;">
+                     >
                       {{ ticket.status }}
                     </button>
 

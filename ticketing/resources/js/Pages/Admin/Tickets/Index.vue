@@ -146,7 +146,7 @@
                       <span class="visually-hidden">Toggle Dropdown</span>
                     </button>
                     <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center rounded-end"
-                      style="width: 5rem;">
+                    >
                       {{ ticket.complexity ? ticket.complexity : 'N/A' }}
                     </button>
                     <ul class="dropdown-menu">
@@ -243,7 +243,7 @@
                       <span class="visually-hidden">Toggle Dropdown</span>
                     </button>
                     <button type="button" :class="getButtonClass(ticket.status)" class="text-center rounded-end"
-                      style="width: 5rem;">
+                     >
                       {{ ticket.status }}
                     </button>
 
