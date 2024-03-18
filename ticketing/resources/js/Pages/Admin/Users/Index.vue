@@ -16,8 +16,8 @@
       </Toast>
     </div>
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
-      <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
-        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+      <div class="text-center justify-content-center align-items-center d-flex mt-3 flex-column">
+        <div class="d-flex flex-column justify-content-center align-items-center gap-1">
           <h1 class="fw-bold">View All Users</h1>
           <p class="fs-5">Manage and Track All Users</p>
           <div class="d-flex flex-row gap-2 justify-content-center align-items-center w-100">

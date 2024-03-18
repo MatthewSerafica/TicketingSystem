@@ -16,16 +16,16 @@
       </Toast>
     </div>
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center  main-content">
-      <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
+      <div class="text-center justify-content-center align-items-center d-flex mt-3 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Service Reports</h1>
           <p class="fs-5">Manage and Track all TMDD Service Reports</p>
           <Link :href="route('admin.reports.service-report.create')">
           <Button :name="'Create Service Report'" :color="'primary'"
-            class="btn btn-tickets btn-primary py-2 px-5"></Button>
+            class="btn btn-tickets btn-primary py-2 px-5 shadow"></Button>
           </Link>
         </div>
-        <div class="input-group mt-3">
+        <div class="input-group mt-3 mb-2">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
           <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
             placeholder="Search Report..." aria-label="searchIcon" aria-describedby="searchIcon" />

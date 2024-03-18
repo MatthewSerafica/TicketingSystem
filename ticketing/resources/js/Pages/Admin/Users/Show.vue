@@ -18,9 +18,10 @@
         </div>
         <div class="w-25">
             <Link :href="route('admin.users')"
-                class="btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center" style="width: 6rem;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-caret-left-fill"
-                viewBox="0 0 16 16">
+                class="btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
+                style="width: 6rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                class="bi bi-caret-left-fill" viewBox="0 0 16 16">
                 <path
                     d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
             </svg>
@@ -40,8 +41,9 @@
                                     Name
                                 </div>
                                 <span v-if="!selectedInput || selectedInput !== user.name" class="card-text"
-                                    @click="showInput(user.name)">{{ user.name
-                                    }}</span>
+                                    @click="showInput(user.name)">
+                                    {{ user.name }}
+                                </span>
                                 <input type="text" v-if="selectedInput === user.name" v-model="editData[user.name]"
                                     @blur="updateData(user.name, user.id, 'name', false, false)"
                                     @keyup.enter="updateData(user.name, user.id, 'name', false, false)"
@@ -71,10 +73,9 @@
                                     Department
                                 </div>
                                 <div class="btn-group">
-                                    <button type="button" class="btn text-start">{{
-                                        user.employee.department ?
-                                        user.employee.department :
-                                        'Unassigned' }}</button>
+                                    <button type="button" class="btn text-start">
+                                        {{ user.employee.department ? user.employee.department : 'Unassigned' }}
+                                    </button>
                                     <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
                                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                                         <span class="visually-hidden">Toggle Dropdown</span>
@@ -93,10 +94,9 @@
                                     Office
                                 </div>
                                 <div class="btn-group">
-                                    <button type="button" class="btn text-start text-break" style="max-width: 15rem;">{{
-                                        user.employee.office ?
-                                        user.employee.office :
-                                        'Unassigned' }}</button>
+                                    <button type="button" class="btn text-start text-break" style="max-width: 15rem;">
+                                        {{ user.employee.office ? user.employee.office : 'Unassigned' }}
+                                    </button>
                                     <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
                                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                                         <span class="visually-hidden">Toggle Dropdown</span>
@@ -130,8 +130,9 @@
                                     Name
                                 </div>
                                 <span v-if="!selectedInput || selectedInput !== user.name" class="card-text"
-                                    @click="showInput(user.name, user.id)">{{ user.name
-                                    }}</span>
+                                    @click="showInput(user.name, user.id)">
+                                    {{ user.name }}
+                                </span>
                                 <input type="text" v-if="selectedInput === user.name" v-model="editData[user.name]"
                                     @blur="updateData(user.name, user.id, 'name', false, false)"
                                     @keyup.enter="updateData(user.name, user.id, 'name', false, false)"
@@ -142,8 +143,9 @@
                                     Email
                                 </div>
                                 <span v-if="!selectedInput || selectedInput !== user.email" class="card-text"
-                                    @click="showInput(user.email, user.id)">{{ user.email
-                                    }}</span>
+                                    @click="showInput(user.email, user.id)">
+                                    {{ user.email }}
+                                </span>
                                 <input type="text" v-if="selectedInput === user.email" v-model="editData[user.email]"
                                     @blur="updateData(user.email, user.id, 'email', false, false)"
                                     @keyup.enter="updateData(user.email, user.id, 'email', false, false)"
@@ -162,10 +164,10 @@
                                     Assigned Department
                                 </div>
                                 <div class="btn-group">
-                                    <button type="button" class="btn text-start">{{
-                                        user.technician.assigned_department ?
-                                        user.technician.assigned_department :
-                                        'Unassigned' }}</button>
+                                    <button type="button" class="btn text-start">
+                                        {{ user.technician.assigned_department ? user.technician.assigned_department :
+                    'Unassigned' }}
+                                    </button>
                                     <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
                                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                                         <span class="visually-hidden">Toggle Dropdown</span>
@@ -195,7 +197,8 @@
                     </div>
                 </div>
             </div>
-            <div v-if="user.employee" class="d-flex flex-row align-items-center justify-content-center" style="gap:10rem;">
+            <div v-if="user.employee" class="d-flex flex-row align-items-center justify-content-center"
+                style="gap:10rem;">
                 <div class="d-flex flex-row card p-5 gap-5 shadow">
                     <div class="">
                         <Doughnut style="width: 20rem;"></Doughnut>
