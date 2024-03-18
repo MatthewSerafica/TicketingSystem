@@ -122,7 +122,7 @@
                 </td>
 
                 <td class="text-start">
-                  <div class="btn-group">
+                  <div class="btn-group position-static">
                     <button v-if="ticket.status !== 'Resolved'" type="button" class="dropdown-toggle dropdown-toggle-split service-dropdown-toggle"
                       data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                       <span class="visually-hidden">Toggle Dropdown</span>
@@ -130,7 +130,7 @@
                     <button type="button" class="btn text-start">
                       {{ ticket.service ? ticket.service : 'Unassigned' }}
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu dropdown-menu-end">
                       <li class="dropdown-item disabled">Select a service</li>
                       <li v-for="service in services" class="btn dropdown-item"
                         @click="updateService(ticket.ticket_number, service.service)">{{ service.service }}</li>
@@ -145,7 +145,7 @@
                       data-bs-reference="parent">
                       <span class="visually-hidden">Toggle Dropdown</span>
                     </button>
-                    <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center"
+                    <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center rounded-end"
                       style="width: 5rem;">
                       {{ ticket.complexity ? ticket.complexity : 'N/A' }}
                     </button>
@@ -233,17 +233,21 @@
                     class="w-100 rounded border border-secondary-subtle text-center"></textarea>
 
                 </td>
-                <td class="text-start">
-                  <div v-if="ticket.status !== 'Resolved'" class="btn-group">
-                    <button type="button" :class="getButtonClass(ticket.status)" class="text-center"
-                      style="width: 5rem;">
-                      {{ ticket.status }}
-                    </button>
+
+                <td class="text-start ">
+                  
+                  <div v-if="ticket.status !== 'Resolved'" class="btn-group position-static">
                     <button type="button" :class="getButtonClass(ticket.status)"
                       class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
                       data-bs-reference="parent">
                       <span class="visually-hidden">Toggle Dropdown</span>
                     </button>
+                    <button type="button" :class="getButtonClass(ticket.status)" class="text-center rounded-end"
+                      style="width: 5rem;">
+                      {{ ticket.status }}
+                    </button>
+
+
                     <ul class="dropdown-menu">
                       <li @click="updateStatus(ticket.ticket_number, 'New', ticket.status, ticket.sr_no)"
                         class="btn dropdown-item">New

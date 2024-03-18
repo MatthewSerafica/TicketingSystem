@@ -135,7 +135,7 @@
 
                 </td>
                 <td class="text-start">
-                  <div class="btn-group">
+                  <div class="btn-group position-static">
                     <button type="button" :class="getButtonClass(ticket.status)"
                       class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
                       data-bs-reference="parent">
