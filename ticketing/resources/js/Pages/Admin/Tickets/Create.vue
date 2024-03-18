@@ -1,6 +1,22 @@
 <template>
   <div>
     <Header></Header>
+
+    <!--Toast Render-->
+    <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
+      <Toast
+        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
+        v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
+        @close="handleClose">
+      </Toast>
+
+      <Toast
+        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showErrorToast"
+        :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
+      </Toast>
+    </div>
     <div class="mt-3">
       <form @submit.prevent="create">
         <br />
@@ -155,6 +171,28 @@ import Button from '@/Components/Button.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link, router, useForm } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
+import Toast from '@/Components/Toast.vue';
+import Alpine from 'alpinejs';
+
+
+Alpine.start()
+
+const page = usePage();
+
+let showSuccessToast = ref(false);
+let showErrorToast = ref(false);
+
+watchEffect(() => {
+  showSuccessToast.value = !!page.props.flash.success;
+  showErrorToast.value = !!page.props.flash.error;
+})
+
+const handleClose = () => {
+  page.props.flash.success = null;
+  page.props.flash.error = null;
+  showSuccessToast.value = false;
+  showErrorToast.value = false;
+}
 
 const props = defineProps({
   technicians: Object,
