@@ -136,15 +136,17 @@
                 </td>
                 <td class="text-start">
                   <div class="btn-group">
-                    <button type="button" :class="getButtonClass(ticket.status)" class="text-center"
-                      style="width: 5rem;">
-                      {{ ticket.status }}
-                    </button>
                     <button type="button" :class="getButtonClass(ticket.status)"
                       class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
                       data-bs-reference="parent">
                       <span class="visually-hidden">Toggle Dropdown</span>
                     </button>
+
+                    <button type="button" :class="getButtonClass(ticket.status)" class="text-center rounded-end"
+                      style="width: 5rem;">
+                      {{ ticket.status }}
+                    </button>
+
                     <ul class="dropdown-menu">
                       <li @click="updateStatus(ticket.ticket_number, 'New', ticket.status, ticket.sr_no)"
                         class="btn dropdown-item">New
@@ -221,7 +223,7 @@ let timeoutId = null;
 
 const fetchData = (type) => {
   router.get(
-    route('admin.tickets'),
+    route('technician.tickets'),
     {
       search: search.value,
       sort: sortColumn.value,
@@ -325,19 +327,12 @@ const handleSort = (column) => {
 // Sort end
 
 // Table update start
-const updateService = (ticket_id, service) => {
-  const form = useForm({
-    service: service,
-  });
-
-  form.put(route('admin.tickets.update.service', { ticket_id: ticket_id }));
-}
 
 const updateStatus = (ticket_id, status, old_status, srNo) => {
   if (status === 'Resolved') {
     if (!srNo) {
       page.props.flash.error = 'Status Update Error'
-      page.props.flash.error_message = 'Please enter a Service Request Number!'
+      page.props.flash.error_message = 'Please enter a Service Report Number!'
       return;
     }
   }
