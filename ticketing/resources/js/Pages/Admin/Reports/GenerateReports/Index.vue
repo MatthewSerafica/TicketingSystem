@@ -20,7 +20,7 @@
         <!--Main Content-->
         <div class="d-flex justify-content-center flex-column align-content-center align-items-center main-content">
             <!--CTAs and Search-->
-            <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
+            <div class="text-center justify-content-center align-items-center d-flex mt-3 flex-column">
                 <div class="d-flex flex-column justify-content-center align-items-center gap-2">
                     <h1 class="fw-bold">Generate Reports</h1>
                 </div>

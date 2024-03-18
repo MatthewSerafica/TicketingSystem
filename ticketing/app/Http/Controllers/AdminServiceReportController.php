@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\AssignedTickets;
+use App\Models\Employee;
 use App\Models\Service;
 use App\Models\ServiceReport;
 use App\Models\Technician;
 use App\Models\Ticket;
+use App\Notifications\UpdateTicketStatus;
 use Illuminate\Http\Request;
 
 class AdminServiceReportController extends Controller
@@ -103,7 +105,11 @@ class AdminServiceReportController extends Controller
         $ticket->update([
             'sr_no' => $service->service_id,
             'status' => 'Resolved',
+            'remarks' => $request->remarks,
         ]);
+        
+        $employee = Employee::find($ticket->employee);
+        $employee->user->notify(new UpdateTicketStatus($ticket));
 
         return redirect()->to('/admin/reports/service-report')->with('success', 'Report Created');
     }

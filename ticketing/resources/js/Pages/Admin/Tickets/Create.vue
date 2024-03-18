@@ -1,16 +1,15 @@
 <template>
   <div>
     <Header></Header>
-    <div class="mt-2 pt-5">
+    <div class="mt-3">
       <form @submit.prevent="create">
         <br />
         <div class="container">
-          <div class="title-container fw-bold mb-5 text-center">
-            <h1>Create Tickets</h1>
+          <div class="title-container fw-bold mb-3 text-center">
+            <h1 class="fw-bold">Create Tickets</h1>
           </div>
 
           <div class="create-ticket">
-
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
                 <div class="d-flex flex-row gap-3">

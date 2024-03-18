@@ -19,24 +19,24 @@
     <!--Main Content-->
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center main-content">
       <!--CTAs and Search-->
-      <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
+      <div class="text-center justify-content-center align-items-center d-flex mt-3 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Tickets</h1>
           <p class="fs-5"> Manage and track all TMDD tickets</p>
-          <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket
+          <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5 shadow">Create New Ticket
           </Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
-            <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
-            <Button :name="'New'" :color="'secondary'" class="btn-options" @click="filterTickets('new')"></Button>
-            <Button :name="'Pending'" :color="'secondary'" class="btn-options"
+            <Button :name="'All'" :color="'secondary'" class="btn-options shadow" @click="filterTickets('all')"></Button>
+            <Button :name="'New'" :color="'secondary'" class="btn-options shadow" @click="filterTickets('new')"></Button>
+            <Button :name="'Pending'" :color="'secondary'" class="btn-options shadow"
               @click="filterTickets('pending')"></Button>
-            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options"
+            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options shadow"
               @click="filterTickets('ongoing')"></Button>
-            <Button :name="'Resolved'" :color="'secondary'" class="btn-options"
+            <Button :name="'Resolved'" :color="'secondary'" class="btn-options shadow"
               @click="filterTickets('resolved')"></Button>
           </div>
         </div>
-        <div class="input-group mt-3">
+        <div class="input-group mt-3 mb-2">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
           <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
             placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
@@ -44,7 +44,7 @@
       </div>
 
       <!--Data Table-->
-      <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2 mt-3 pagination">
+      <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2 mt-2 pagination">
         <Pagination :links="tickets.links" :key="'tickets'" />
         <br>
       </div>
@@ -59,15 +59,15 @@
                     :class="{ 'bi bi-caret-up-fill': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-caret-down-fill': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-caret-down-fill text-muted': sortColumn !== 'ticket_number' }"></i>
                 </th>
                 <th class="text-muted">Date</th>
-                <th class="text-center text-muted">RR No</th>
-                <th class="text-center text-muted">MS No</th>
-                <th class="text-center text-muted">RS No</th>
+                <th class="text-center text-muted">RR</th>
+                <th class="text-center text-muted">MS</th>
+                <th class="text-center text-muted">RS</th>
                 <th class="text-muted">Client</th>
                 <th class="text-muted">Request</th>
                 <th class="text-muted">Service</th>
                 <th class="text-start text-muted">Complexity</th>
-                <th class="text-muted">Technician</th>
-                <th class="text-center text-muted">SR No</th>
+                <th class="text-muted" @click="toggleTechnicianCTAs">Technician</th>
+                <th class="text-center text-muted">SR</th>
                 <th class="text-muted">Date Resolved</th>
                 <th class="text-muted">Remarks</th>
                 <th class="text-center text-muted">Status</th>
@@ -123,39 +123,32 @@
 
                 <td class="text-start">
                   <div class="btn-group">
-                    <button type="button" class="dropdown-toggle dropdown-toggle-split service-dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                    <button v-if="ticket.status !== 'Resolved'" type="button" class="dropdown-toggle dropdown-toggle-split service-dropdown-toggle"
+                      data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                       <span class="visually-hidden">Toggle Dropdown</span>
                     </button>
                     <button type="button" class="btn text-start">
                       {{ ticket.service ? ticket.service : 'Unassigned' }}
                     </button>
-                    <button v-if="ticket.status !== 'Resolved'" type="button"
-                      class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
-                      data-bs-reference="parent">
-                      <span class="visually-hidden">Toggle Dropdown</span>
-                    </button>
                     <ul class="dropdown-menu">
                       <li class="dropdown-item disabled">Select a service</li>
-                      <li v-for="service in services" class="btn dropdown-item" @click="updateService(ticket.ticket_number, service.service)">{{ service.service }}</li>
+                      <li v-for="service in services" class="btn dropdown-item"
+                        @click="updateService(ticket.ticket_number, service.service)">{{ service.service }}</li>
                     </ul>
-                  </div> 	
+                  </div>
                 </td>
 
                 <td class="text-start">
                   <div v-if="ticket.status !== 'Resolved'" class="btn-group">
-                    <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center"
-                      style="width: 5rem;">
-                      {{ ticket.complexity ? ticket.complexity : 'N/A' }}
-                    </button>
                     <button type="button" :class="getComplexityClass(ticket.complexity)"
                       class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
                       data-bs-reference="parent">
                       <span class="visually-hidden">Toggle Dropdown</span>
                     </button>
-                    <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center rounded-end" style="width: 5rem;">
+                    <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center"
+                      style="width: 5rem;">
                       {{ ticket.complexity ? ticket.complexity : 'N/A' }}
                     </button>
-                    
                     <ul class="dropdown-menu">
                       <li @click="updateComplexity(ticket.ticket_number, 'Simple')" class="btn dropdown-item">Simple
                       </li>
@@ -163,7 +156,7 @@
                       </li>
                     </ul>
                   </div>
-                  <div v-else>
+                  <div v-else-if="ticket.status == 'Resolved'">
                     <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center px-3">
                       {{ ticket.complexity ? ticket.complexity : 'N/A' }}
                     </button>
@@ -173,15 +166,17 @@
                   <div class="d-flex flex-column justify-content-center align-items-center">
                     <div v-for="(assignedTech, index) in ticket.assigned" :key="index">
                       <div class="btn-group">
-                        <button v-if="ticket.status !== 'Resolved'" type="button" class="btn dropdown-toggle dropdown-toggle-split"
-                          data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                        <button v-if="ticket.status !== 'Resolved'" type="button"
+                          class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
+                          aria-expanded="false" data-bs-reference="parent">
                           <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
-                        <div v-if="ticket.status !== 'Resolved'" class="d-flex flex-row justify-content-center align-items-center"
+                        <div v-if="ticket.status !== 'Resolved'"
+                          class="d-flex flex-row justify-content-center align-items-center"
                           v-for="(tech, techIndex) in assignedTech.technician" :key="techIndex">
                           <button type="button" class="btn text-start" style="width: 10rem;"
                             @click="toggleTechnicianCTAs">
-                            {{ tech.user.name }}
+                            {{ tech.user.name ? tech.user.name : 'N/A' }}
                           </button>
                           <button v-if="technicianCTAs"
                             class="btn align-items-center justify-content-center d-flex text-danger fs-5"
@@ -249,11 +244,6 @@
                       data-bs-reference="parent">
                       <span class="visually-hidden">Toggle Dropdown</span>
                     </button>
-                    <button type="button" :class="getButtonClass(ticket.status)" class="text-center rounded-end"
-                      style="width: 5rem;">
-                      {{ ticket.status }}
-                    </button>
-
                     <ul class="dropdown-menu">
                       <li @click="updateStatus(ticket.ticket_number, 'New', ticket.status, ticket.sr_no)"
                         class="btn dropdown-item">New
@@ -631,11 +621,10 @@ const validateNumericInput = (inputValue, propName) => {
 </script>
 
 <style scoped>
-
 .service-dropdown-toggle {
-  border-color: transparent; 
-  background-color: transparent; 
-  color: #000; 
+  border-color: transparent;
+  background-color: transparent;
+  color: #000;
 }
 
 .table-responsive {

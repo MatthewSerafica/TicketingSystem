@@ -111,9 +111,6 @@ class AdminTicketController extends Controller
             'employee' => 'required',
             'issue' => 'required',
             'service' => 'required',
-            'technician1' => 'nullable',
-            'technician2' => 'nullable',
-            'technician3' => 'nullable',
             'rr_no' => 'nullable|numeric',
             'rs_no' => 'nullable|numeric',
         ]);
@@ -132,9 +129,6 @@ class AdminTicketController extends Controller
         $ticketData = [
             'rs_no' => $request->rs_no,
             'employee' => $request->employee,
-            'technician1' => $request->technician1,
-            'technician2' => $request->technician2,
-            'technician3' => $request->technician3,
             'issue' => $request->issue,
             'description' => $request->description,
             'service' => $request->service,

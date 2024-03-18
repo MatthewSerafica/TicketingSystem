@@ -1,12 +1,12 @@
 <template>
   <div>
     <Header></Header>
-    <div class="mt-2 pt-5">
+    <div class="mt-3">
       <form @submit.prevent="create">
         <br />
         <div class="container">
-          <div class="title-container text-center">
-            <h1>SERVICE REPORT FORM</h1>
+          <div class="title-container text-center mb-2">
+            <h1 class="fw-bold">Service Report</h1>
           </div>
           <div class="create-report">
             <div class="row justify-content-center mb-4">
