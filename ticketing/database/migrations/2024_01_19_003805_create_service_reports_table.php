@@ -18,8 +18,7 @@ return new class extends Migration
             $table->time('time_started')->nullable();
             $table->unsignedBigInteger('ticket_number')->nullable();
             $table->foreign('ticket_number')->references('ticket_number')->on('tickets');
-            $table->unsignedBigInteger('technician')->nullable();
-            $table->foreign('technician')->references('technician_id')->on('technicians')->onUpdate('cascade')->onDelete('cascade');
+            $table->text('technician')->nullable();
             $table->string('requesting_office')->nullable();
             $table->string('equipment_no')->nullable();
             $table->string('issue')->nullable();
@@ -30,7 +29,6 @@ return new class extends Migration
             $table->string('remarks')->nullable();
             $table->timestamps();
         });
-        
     }
 
     /**

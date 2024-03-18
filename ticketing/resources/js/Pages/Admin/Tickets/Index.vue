@@ -125,8 +125,9 @@
                     <button type="button" class="btn text-start">
                       {{ ticket.service ? ticket.service : 'Unassigned' }}
                     </button>
-                    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
-                      aria-expanded="false" data-bs-reference="parent">
+                    <button v-if="ticket.status !== 'Resolved'" type="button"
+                      class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
+                      data-bs-reference="parent">
                       <span class="visually-hidden">Toggle Dropdown</span>
                     </button>
                     <ul class="dropdown-menu">
@@ -138,7 +139,7 @@
                   </div>
                 </td>
                 <td class="text-start">
-                  <div class="btn-group">
+                  <div v-if="ticket.status !== 'Resolved'" class="btn-group">
                     <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center"
                       style="width: 5rem;">
                       {{ ticket.complexity ? ticket.complexity : 'N/A' }}
@@ -155,17 +156,21 @@
                       </li>
                     </ul>
                   </div>
+                  <div v-else>
+                    <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center px-3">
+                      {{ ticket.complexity ? ticket.complexity : 'N/A' }}
+                    </button>
+                  </div>
                 </td>
                 <td class="text-start">
                   <div class="d-flex flex-column justify-content-center align-items-center">
                     <div v-for="(assignedTech, index) in ticket.assigned" :key="index">
                       <div class="btn-group">
-                        <button type="button"
-                          class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
-                          aria-expanded="false" data-bs-reference="parent">
+                        <button v-if="ticket.status !== 'Resolved'" type="button" class="btn dropdown-toggle dropdown-toggle-split"
+                          data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                           <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
-                        <div class="d-flex flex-row justify-content-center align-items-center"
+                        <div v-if="ticket.status !== 'Resolved'" class="d-flex flex-row justify-content-center align-items-center"
                           v-for="(tech, techIndex) in assignedTech.technician" :key="techIndex">
                           <button type="button" class="btn text-start" style="width: 10rem;"
                             @click="toggleTechnicianCTAs">
@@ -174,7 +179,14 @@
                           <button v-if="technicianCTAs"
                             class="btn align-items-center justify-content-center d-flex text-danger fs-5"
                             style="height:1.5em;" @click="removeTechnician(ticket, index, tech.technician_id)"><i
-                              class="bi bi-dash-circle-fill"></i></button>
+                              class="bi bi-dash-circle-fill"></i>
+                          </button>
+                        </div>
+                        <div v-else class="d-flex flex-row justify-content-center align-items-center"
+                          v-for="tech in assignedTech.technician">
+                          <button type="button" class="btn text-start" style="width: 10rem;">
+                            {{ tech.user.name }}
+                          </button>
                         </div>
                         <ul class="dropdown-menu" style="max-height: 250px; overflow-y: auto;">
                           <li v-for="technician in technicians" class="btn dropdown-item border"
@@ -185,7 +197,8 @@
                         </ul>
                       </div>
                     </div>
-                    <button v-if="technicianCTAs" class="btn align-items-center justify-content-center d-flex text-primary fs-5"
+                    <button v-if="technicianCTAs"
+                      class="btn align-items-center justify-content-center d-flex text-primary fs-5"
                       style="height:1.5em;" @click="addDropdown(ticket)">
                       <i class="bi bi-plus-circle-fill"></i>
                     </button>
@@ -219,7 +232,7 @@
 
                 </td>
                 <td class="text-start">
-                  <div class="btn-group">
+                  <div v-if="ticket.status !== 'Resolved'" class="btn-group">
                     <button type="button" :class="getButtonClass(ticket.status)" class="text-center"
                       style="width: 5rem;">
                       {{ ticket.status }}
@@ -246,6 +259,11 @@
                         Resolved
                       </li>
                     </ul>
+                  </div>
+                  <div v-else>
+                    <button type="button" :class="getButtonClass(ticket.status)" class="text-center px-3">
+                      {{ ticket.status }}
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -604,12 +622,12 @@ const validateNumericInput = (inputValue, propName) => {
 .table-responsive {
   width: 90%;
   overflow-x: auto;
- 
+
 }
 
 .pagination {
   width: 90%;
- 
+
 }
 
 .btn-tickets {

@@ -8,10 +8,7 @@
           <div class="title-container text-center">
             <h1>SERVICE REPORT FORM</h1>
           </div>
-
           <div class="create-report">
-
-
             <div class="row justify-content-center mb-4">
               <div class="col-md-6">
                 <div class="input-group">
@@ -41,12 +38,7 @@
             <div class="row mb-4">
               <div class="col-md-4">
                 <label for="technician" class="form-label">Technicians:</label>
-                <select id="technician" class="form-select rounded border-secondary-subtle"
-                  placeholder="Assign Technician..." v-model.number="form.technician">
-                  <option disabled>Assign Technician</option>
-                  <option v-for="technician in technicians" :value="technician.technician_id">{{ technician.user.name }}
-                  </option>
-                </select>
+                <textarea class="form-control" id="technician" v-model="form.technician"></textarea>
               </div>
               <div class="col-md-4">
                 <label for="requestingOffice" class="form-label">Requesting Office:</label>
@@ -85,7 +77,7 @@
               </div>
               <div class="col-md-4">
                 <label for="remarks" class="form-label">Remarks</label>
-                <input type="text" class="form-control" id="remarks" v-model="form.remarks">
+                <textarea type="text" class="form-control" id="remarks" v-model="form.remarks"></textarea>
               </div>
             </div>
             <div class="row justify-content-end">
@@ -106,7 +98,7 @@
 <script setup>
 import Button from '@/Components/Button.vue';
 import Header from '@/Pages/Layouts/AdminHeader.vue';
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import { ref, watch } from "vue";
 
 const props = defineProps({
@@ -125,7 +117,7 @@ const form = useForm({
   date_started: null,
   time_started: null,
   ticket_number: null,
-  technician: null,
+  technician: [],
   requesting_office: null,
   equipment_no: null,
   issue: null,
@@ -177,11 +169,24 @@ const validate_service_id = async (service_id) => {
 watch(() => form.ticket_number, async (newValue) => {
   const selectedTicket = props.tickets.find(ticket => ticket.ticket_number === newValue);
 
+  console.log(selectedTicket.ticket_number)
   if (selectedTicket) {
     form.action = selectedTicket.service;
     form.issue = selectedTicket.description;
     form.requesting_office = selectedTicket.employee.department + ' - ' + selectedTicket.employee.office;
-    form.technician = selectedTicket.technician.technician_id;
+
+    const response = await fetch(route('admin.tickets.assigned', { id: selectedTicket.ticket_number }));
+    const data = await response.json();
+    const technicianNames = [];
+    const technicianId = [];
+
+    for (let i = 0; i < data.length; i++) {
+      technicianNames.push(data[i].technician[0].user.name);
+      technicianId.push(data[i].technician[0].technician_id);
+    }
+    
+    const formattedTechnicianNames = technicianNames.join(' / ');
+    form.technician = formattedTechnicianNames;
   }
 })
 
