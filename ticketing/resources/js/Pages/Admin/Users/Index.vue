@@ -31,7 +31,12 @@
                 <div class="d-flex flex-row justify-content-end">
                   <button type="button" class="btn-close" @click="closeModal"></button>
                 </div>
-                <div>
+                <div v-if="isLoading" class="d-flex justify-content-center align-items-center">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+                <div v-else>
                   <form @submit.prevent="uploadCsv" enctype="multipart/form-data">
                     <div class="d-flex flex-column justify-content-center align-items-start">
                       <label for="file" class="form-label fw-semibold">Upload File</label>
@@ -64,6 +69,7 @@
       </div>
 
       <div class="w-75">
+
         <div v-if="users.data.length" class="d-flex justify-content-end mb-2">
           <Pagination :links="users.links" :key="'users'" />
         </div>
@@ -237,11 +243,13 @@ const handleFileUpload = () => {
 }
 
 const uploadCsv = async () => {
+  isLoading.value = true;
   let formData = new FormData()
   console.log('formData:', formData); 
   formData.append('file', file.value)
 
   try {
+    await new Promise(resolve => setTimeout(resolve, 2000));
     await axios.post(route('admin.users.bulk'), formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -253,6 +261,8 @@ const uploadCsv = async () => {
   } catch (err) {
     console.log('Error uploading file:', err.response.data);
     console.error(err)
+  } finally {
+    isLoading.value = false;
   }
 }
 
