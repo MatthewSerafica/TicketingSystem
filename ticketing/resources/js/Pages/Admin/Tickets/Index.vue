@@ -66,7 +66,7 @@
                 <th class="text-muted">Request</th>
                 <th class="text-muted">Service</th>
                 <th class="text-start text-muted">Complexity</th>
-                <th class="text-muted">Technician</th>
+                <th class="text-muted" @click="toggleTechnicianCTAs">Technician</th>
                 <th class="text-center text-muted">SR</th>
                 <th class="text-muted">Date Resolved</th>
                 <th class="text-muted">Remarks</th>
@@ -176,7 +176,7 @@
                           v-for="(tech, techIndex) in assignedTech.technician" :key="techIndex">
                           <button type="button" class="btn text-start" style="width: 10rem;"
                             @click="toggleTechnicianCTAs">
-                            {{ tech.user.name }}
+                            {{ tech.user.name ? tech.user.name : 'N/A' }}
                           </button>
                           <button v-if="technicianCTAs"
                             class="btn align-items-center justify-content-center d-flex text-danger fs-5"
