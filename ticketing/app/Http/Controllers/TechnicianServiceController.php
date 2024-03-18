@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssignedTickets;
 use App\Models\Technician;
 use App\Models\Ticket;
 use App\Models\ServiceReport;
@@ -11,37 +12,35 @@ use Illuminate\Http\Request;
 class TechnicianServiceController extends Controller
 {
     public function index(Request $request)
-    {   
+    {
         $user_id = auth()->id();
-        $technician = Technician::where('user_id', $user_id)->first();
+        $technician = Technician::where('user_id', $user_id)->with('user')->first();
 
-        $service_report = ServiceReport::query() 
-            ->with('technician.user')
-            ->where('technician', $technician->technician_id)
+        $service_report = ServiceReport::query()
+            ->where('technician', 'like', '%' . $technician->user->name . '%')
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where('service_id', 'like', '%' . $search . '%')
-                ->orWhere('ticket_number', 'like', '%' . $search . '%')
-                ->orWhere('requesting_office', 'like', '%' . $search . '%')
-                ->orWhere('equipment_no', 'like', '%' . $search . '%')
-                ->orWhere('issue', 'like', '%' . $search . '%')
-                ->orWhere('action', 'like', '%' . $search . '%')
-                ->orWhere('recommendation', 'like', '%' . $search . '%')
-                ->orWhere('remarks', 'like', '%' . $search . '%')
-                ->orWhereHas('technician.user', function ($subquery) use ($search) {
-                    $subquery->where('name', 'like', '%' . $search . '%');
-                });
+                    ->orWhere('ticket_number', 'like', '%' . $search . '%')
+                    ->orWhere('requesting_office', 'like', '%' . $search . '%')
+                    ->orWhere('equipment_no', 'like', '%' . $search . '%')
+                    ->orWhere('issue', 'like', '%' . $search . '%')
+                    ->orWhere('action', 'like', '%' . $search . '%')
+                    ->orWhere('recommendation', 'like', '%' . $search . '%')
+                    ->orWhere('remarks', 'like', '%' . $search . '%')
+                    ->orWhereHas('technician.user', function ($subquery) use ($search) {
+                        $subquery->where('name', 'like', '%' . $search . '%');
+                    });
             })
             ->orderBy('service_id')
             ->paginate(10);
-        $technicians = Technician::with('user')->get();
         $filters = $request->only(['search']);
         return inertia('Technician/ServiceReports/Index', [
             'service_report' => $service_report,
             'filters' => $filters,
         ]);
     }
-    
+
     public function create()
     {
         $latest_report = ServiceReport::orderBy('created_at', 'desc')->first();
@@ -59,7 +58,7 @@ class TechnicianServiceController extends Controller
     {
         // Check if a service report with the given service_id exists
         $exists = ServiceReport::where('service_id', $currentServiceId)->exists();
-        
+
         // If a service report with the given service_id exists and date_started is not null
         if ($exists) {
             $latestReport = ServiceReport::where('service_id', $currentServiceId)->latest()->first();
@@ -74,12 +73,12 @@ class TechnicianServiceController extends Controller
             // If no service report with the given service_id exists, maintain the same service_id
             $newNumericPartFormatted = $currentServiceId;
         }
-        
+
         return $newNumericPartFormatted;
     }
-    
 
-    public function check_service_id(Request $request, $service_id)
+
+    public function checkServiceId(Request $request, $service_id)
     {
         $service_id = $request->service_id;
 
@@ -103,15 +102,12 @@ class TechnicianServiceController extends Controller
                 'remarks' => $request->remarks,
             ]);
         } else {
-            // Create a new ServiceReport if the service_id does not exist
-            $technician = Technician::where('user_id', $request->technician)->firstOrFail();
-
             $serviceData = [
                 'service_id' => $service_id,
                 'date_started' => $request->date_started,
                 'time_started' => $request->time_started,
                 'ticket_number' => $request->ticket_number,
-                'technician' => $technician->technician_id,
+                'technician' => $request->technician,
                 'requesting_office' => $request->requesting_office,
                 'equipment_no' => $request->equipment_no,
                 'issue' => $request->issue,
@@ -125,11 +121,12 @@ class TechnicianServiceController extends Controller
             ServiceReport::create($serviceData);
         }
 
+        return response()->json(['exists' => $existingServiceReport !== null]);
     }
 
 
 
-    public function store(Request $request) 
+    public function store(Request $request)
     {
         $request->validate([
             'service_id' => 'required',
@@ -146,12 +143,12 @@ class TechnicianServiceController extends Controller
             'time_done' => 'required',
             'remarks' => 'nullable',
         ]);
-    
+
         $service_id = $request->service_id;
-    
+
         // Check if a ServiceReport with the given service_id exists
         $existingServiceReport = ServiceReport::where('service_id', $service_id)->first();
-    
+
         // If a ServiceReport with the given service_id exists, update it
         if ($existingServiceReport) {
             $existingServiceReport->update([
@@ -171,7 +168,7 @@ class TechnicianServiceController extends Controller
         } else {
             // Create a new ServiceReport if the service_id does not exist
             $technician = Technician::where('user_id', $request->technician)->firstOrFail();
-    
+
             $serviceData = [
                 'service_id' => $service_id,
                 'date_started' => $request->date_started,
@@ -187,13 +184,16 @@ class TechnicianServiceController extends Controller
                 'time_done' => $request->time_done,
                 'remarks' => $request->remarks,
             ];
-    
+
             ServiceReport::create($serviceData);
         }
-    
+
         return redirect()->to('/technician/service-report')->with('success', 'Report Created');
     }
-    
 
-
+    public function assigned($id)
+    {
+        $assigned = AssignedTickets::where('ticket_number', $id)->with('technician.user')->get();
+        return response()->json($assigned);
+    }
 }

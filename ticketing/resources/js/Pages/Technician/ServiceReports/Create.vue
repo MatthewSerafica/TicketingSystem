@@ -7,11 +7,11 @@
         <div class="container">
           <div class="title-container text-center">
             <h1>SERVICE REPORT FORM</h1>
-          </div>    
+          </div>
 
           <div class="create-report">
 
-            
+
             <div class="row justify-content-center mb-4">
               <div class="col-md-6">
                 <div class="input-group">
@@ -22,7 +22,7 @@
               </div>
             </div>
 
-            
+
             <div class="row mb-4">
               <div class="col-md-4">
                 <label for="dateStarted" class="form-label">Date Started:</label>
@@ -44,11 +44,11 @@
 
             </div>
 
-            
+
             <div class="row mb-4">
               <div class="col-md-4">
                 <label for="technicianName" class="form-label">Technician Name:</label>
-                <input type="text" class="form-control" id="technicianName" v-model="form.technician_name" readonly>
+                <textarea class="form-control" id="technicianName" v-model="form.technician" readonly> </textarea>
               </div>
               <div class="col-md-4">
                 <label for="requestingOffice" class="form-label">Requesting Office:</label>
@@ -60,7 +60,7 @@
               </div>
             </div>
 
-           
+
             <div class="row mb-4">
               <div class="col-md-4">
                 <label for="problemEncountered" class="form-label">Problem Encountered:</label>
@@ -76,7 +76,7 @@
               </div>
             </div>
 
-            
+
             <div class="row mb-4">
               <div class="col-md-4">
                 <label for="dateDone" class="form-label">Date Done:</label>
@@ -88,11 +88,11 @@
               </div>
               <div class="col-md-4">
                 <label for="remarks" class="form-label">Remarks</label>
-                <input type="text" class="form-control" id="remarks" v-model="form.remarks">
+                <textarea class="form-control" id="remarks" v-model="form.remarks"></textarea>
               </div>
             </div>
 
-            
+
             <div class="row justify-content-end">
               <div class="col-md-4">
                 <div class="d-flex justify-content-end gap-2">
@@ -122,81 +122,62 @@ const props = defineProps({
 })
 
 const today = new Date();
-const minDate = today.toISOString().split('T')[0]; 
+const minDate = today.toISOString().split('T')[0];
 
 const page = usePage();
 
 const form = useForm({
   service_id: props.new_service_id,
-  date_started: '',
-  time_started: '',
-  ticket_number: '',
-  technician_name: page.props.user.name,
-  technician: page.props.user.id,
-  requesting_office: '',
-  equipment_no: '',
-  issue: '',
-  action: '',
-  recommendation: '',
-  date_done: '',
-  time_done: '',
-  remarks:'',
-});
-
-const filteredTickets = computed(() => {
-  return props.tickets.filter(ticket => ticket.technician_id === form.technician);
+  date_started: null,
+  time_started: null,
+  ticket_number: null,
+  technician: [],
+  requesting_office: null,
+  equipment_no: null,
+  issue: null,
+  action: null,
+  recommendation: null,
+  date_done: null,
+  time_done: null,
+  remarks: null,
 });
 
 const create = async () => {
-    if (!/^\d+$/.test(form.ticket_number)) {
-        form.errors.ticket_number = 'Ticket number should contain only numeric characters.';
-        return;
-    }
+  if (!/^\d+$/.test(form.ticket_number)) {
+    form.errors.ticket_number = 'Ticket number should contain only numeric characters.';
+    return;
+  }
 
-    const is_valid_service_id = await validate_service_id(form.service_id);
-
-    if (!is_valid_service_id) {
-        form.errors.service_id = 'Invalid or duplicate service ID';
-        return;
-    }
-
-    form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false });
-}
-
-
-
-const validate_service_id = async (service_id) => {
-    const service_id_regex = /^\d{4}$/;
-
-    if (!service_id_regex.test(service_id)) {
-        console.error('Invalid service_id format');
-        return false;
-    }
-
-    const response = await fetch(`/technician/check-service-id/${service_id}`);
-    const data = await response.json();
-
-/*     if (data.exists) {
-        console.error('Service id already exists');
-        return false;
-    } */
-
-    return true;
+  form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false });
 }
 
 watch(() => form.ticket_number, async (newValue) => {
   const selectedTicket = props.tickets.find(ticket => ticket.ticket_number === newValue);
 
   if (selectedTicket) {
+    form.action = selectedTicket.service;
     form.problemEncountered = selectedTicket.description;
     form.requesting_office = selectedTicket.employee.department + ' - ' + selectedTicket.employee.office;
+
+    const response = await fetch(route('technician.tickets.assigned', { id: selectedTicket.ticket_number }));
+    const data = await response.json();
+    const technicianNames = [];
+    const technicianId = [];
+
+    for (let i = 0; i < data.length; i++) {
+      technicianNames.push(data[i].technician[0].user.name);
+      technicianId.push(data[i].technician[0].technician_id);
+    }
+
+    const formattedTechnicianNames = technicianNames.join(' / ');
+    form.technician = formattedTechnicianNames;
+    console.log(form.technician);
   }
 })
 
 </script>
 
 <style scoped>
-
 .error-message {
   color: red;
 }

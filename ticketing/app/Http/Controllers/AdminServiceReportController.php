@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssignedTickets;
 use App\Models\Service;
 use App\Models\ServiceReport;
 use App\Models\Technician;
@@ -13,17 +14,14 @@ class AdminServiceReportController extends Controller
     public function index(Request $request)
     {
         $service_reports = ServiceReport::query()
-            ->with('technician.user')
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where('service_id', 'like', '%' . $search . '%')
-                ->orWhere('ticket_number', 'like', '%' . $search . '%')
-                ->orWhere('requesting_office', 'like', '%' . $search . '%')
-                ->orWhere('equipment_no', 'like', '%' . $search . '%')
-                ->orWhere('issue', 'like', '%' . $search . '%')
-                ->orWhereHas('technician.user', function ($subquery) use ($search) {
-                    $subquery->where('name', 'like', '%' . $search . '%');
-                });
+                    ->orWhere('ticket_number', 'like', '%' . $search . '%')
+                    ->orWhere('requesting_office', 'like', '%' . $search . '%')
+                    ->orWhere('equipment_no', 'like', '%' . $search . '%')
+                    ->orWhere('issue', 'like', '%' . $search . '%')
+                    ->orWhere('technician', 'like', '%' . $search . '%');
             })
             ->paginate(10);
 
@@ -41,7 +39,7 @@ class AdminServiceReportController extends Controller
         $new_service_id = $latest_report ? $this->incrementServiceId($latest_report->service_id) : '0001';
         $technicians = Technician::with('user')->get();
         $services = Service::all();
-        $tickets = Ticket::with('employee.user')->get();
+        $tickets = Ticket::with('employee.user', 'assigned.technician.user')->get();
         return inertia('Admin/Reports/ServiceReports/Create', [
             'technicians' => $technicians,
             'new_service_id' => $new_service_id,
@@ -82,14 +80,12 @@ class AdminServiceReportController extends Controller
             'remarks' => 'nullable',
         ]);
 
-        $technician = Technician::where('technician_id', $request->technician)->firstOrFail();
-
         $serviceData = [
             'service_id' => $request->service_id,
             'date_started' => $request->date_started,
             'time_started' => $request->time_started,
             'ticket_number' => $request->ticket_number,
-            'technician' => $technician->technician_id,
+            'technician' => $request->technician,
             'requesting_office' => $request->requesting_office,
             'equipment_no' => $request->equipment_no,
             'issue' => $request->issue,
@@ -100,8 +96,22 @@ class AdminServiceReportController extends Controller
             'remarks' => $request->remarks,
         ];
 
-        ServiceReport::create($serviceData);
+        $service = ServiceReport::create($serviceData);
+
+        $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
+
+        $ticket->update([
+            'sr_no' => $service->service_id,
+            'status' => 'Resolved',
+        ]);
 
         return redirect()->to('/admin/reports/service-report')->with('success', 'Report Created');
+    }
+
+
+    public function assigned($id)
+    {
+        $assigned = AssignedTickets::where('ticket_number', $id)->with('technician.user')->get();
+        return response()->json($assigned);
     }
 }
