@@ -78,54 +78,6 @@ class TechnicianServiceController extends Controller
     }
 
 
-    public function checkServiceId(Request $request, $service_id)
-    {
-        $service_id = $request->service_id;
-
-        // Check if a ServiceReport with the given service_id exists
-        $existingServiceReport = ServiceReport::where('service_id', $service_id)->first();
-
-        // If a ServiceReport with the given service_id exists, update it
-        if ($existingServiceReport) {
-            $existingServiceReport->update([
-                'date_started' => $request->date_started,
-                'time_started' => $request->time_started,
-                'ticket_number' => $request->ticket_number,
-                'technician' => $request->technician,
-                'requesting_office' => $request->requesting_office,
-                'equipment_no' => $request->equipment_no,
-                'issue' => $request->issue,
-                'action' => $request->action,
-                'recommendation' => $request->recommendation,
-                'date_done' => $request->date_done,
-                'time_done' => $request->time_done,
-                'remarks' => $request->remarks,
-            ]);
-        } else {
-            $serviceData = [
-                'service_id' => $service_id,
-                'date_started' => $request->date_started,
-                'time_started' => $request->time_started,
-                'ticket_number' => $request->ticket_number,
-                'technician' => $request->technician,
-                'requesting_office' => $request->requesting_office,
-                'equipment_no' => $request->equipment_no,
-                'issue' => $request->issue,
-                'action' => $request->action,
-                'recommendation' => $request->recommendation,
-                'date_done' => $request->date_done,
-                'time_done' => $request->time_done,
-                'remarks' => $request->remarks,
-            ];
-
-            ServiceReport::create($serviceData);
-        }
-
-        return response()->json(['exists' => $existingServiceReport !== null]);
-    }
-
-
-
     public function store(Request $request)
     {
         $request->validate([
@@ -166,15 +118,12 @@ class TechnicianServiceController extends Controller
                 'remarks' => $request->remarks,
             ]);
         } else {
-            // Create a new ServiceReport if the service_id does not exist
-            $technician = Technician::where('user_id', $request->technician)->firstOrFail();
-
             $serviceData = [
                 'service_id' => $service_id,
                 'date_started' => $request->date_started,
                 'time_started' => $request->time_started,
                 'ticket_number' => $request->ticket_number,
-                'technician' => $technician->technician_id,
+                'technician' => $request->technician,
                 'requesting_office' => $request->requesting_office,
                 'equipment_no' => $request->equipment_no,
                 'issue' => $request->issue,
