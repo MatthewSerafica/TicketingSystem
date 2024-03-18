@@ -19,24 +19,24 @@
     <!--Main Content-->
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center main-content">
       <!--CTAs and Search-->
-      <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
+      <div class="text-center justify-content-center align-items-center d-flex mt-3 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Tickets</h1>
           <p class="fs-5"> Manage and track all TMDD tickets</p>
-          <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket
+          <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5 shadow">Create New Ticket
           </Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
-            <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
-            <Button :name="'New'" :color="'secondary'" class="btn-options" @click="filterTickets('new')"></Button>
-            <Button :name="'Pending'" :color="'secondary'" class="btn-options"
+            <Button :name="'All'" :color="'secondary'" class="btn-options shadow" @click="filterTickets('all')"></Button>
+            <Button :name="'New'" :color="'secondary'" class="btn-options shadow" @click="filterTickets('new')"></Button>
+            <Button :name="'Pending'" :color="'secondary'" class="btn-options shadow"
               @click="filterTickets('pending')"></Button>
-            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options"
+            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options shadow"
               @click="filterTickets('ongoing')"></Button>
-            <Button :name="'Resolved'" :color="'secondary'" class="btn-options"
+            <Button :name="'Resolved'" :color="'secondary'" class="btn-options shadow"
               @click="filterTickets('resolved')"></Button>
           </div>
         </div>
-        <div class="input-group mt-3">
+        <div class="input-group mt-3 mb-2">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
           <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
             placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
@@ -44,7 +44,7 @@
       </div>
 
       <!--Data Table-->
-      <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2 mt-3 pagination">
+      <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2 mt-2 pagination">
         <Pagination :links="tickets.links" :key="'tickets'" />
         <br>
       </div>
@@ -66,7 +66,7 @@
                 <th class="text-muted">Request</th>
                 <th class="text-muted">Service</th>
                 <th class="text-start text-muted">Complexity</th>
-                <th class="text-muted">Technician</th>
+                <th class="text-muted" @click="toggleTechnicianCTAs">Technician</th>
                 <th class="text-center text-muted">SR</th>
                 <th class="text-muted">Date Resolved</th>
                 <th class="text-muted">Remarks</th>
@@ -176,7 +176,7 @@
                           v-for="(tech, techIndex) in assignedTech.technician" :key="techIndex">
                           <button type="button" class="btn text-start" style="width: 10rem;"
                             @click="toggleTechnicianCTAs">
-                            {{ tech.user.name }}
+                            {{ tech.user.name ? tech.user.name : 'N/A' }}
                           </button>
                           <button v-if="technicianCTAs"
                             class="btn align-items-center justify-content-center d-flex text-danger fs-5"

@@ -17,13 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('ms_no')->nullable();
             $table->unsignedBigInteger('rs_no')->nullable();
             $table->unsignedBigInteger('employee');
-            $table->unsignedBigInteger('technician1')->nullable();
-            $table->unsignedBigInteger('technician2')->nullable();
-            $table->unsignedBigInteger('technician3')->nullable();
             $table->foreign('employee')->references('employee_id')->on('employees')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('technician1')->references('technician_id')->on('technicians')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('technician2')->references('technician_id')->on('technicians')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('technician3')->references('technician_id')->on('technicians')->onUpdate('cascade')->onDelete('cascade');
             $table->string('issue');
             $table->string('service')->nullable();
             $table->text('description')->nullable();

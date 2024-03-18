@@ -111,10 +111,6 @@ class AdminTicketController extends Controller
             'employee' => 'required',
             'issue' => 'required',
             'service' => 'required',
-            'technician1' => 'nullable',
-            'technician2' => 'nullable',
-            'technician3' => 'nullable',
-            'rr_no' => 'nullable|numeric',
             'rs_no' => 'nullable|numeric',
         ]);
 
@@ -126,15 +122,12 @@ class AdminTicketController extends Controller
 
         $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
         if ($employee->made_ticket >= 5) {
-            return redirect()->back()->with('error', 'You have already made the maximum number of tickets.');
+            return redirect()->back()->with('error', 'Error Creating Ticket')->with('message', 'Employee has already met ticket limit!');
         }
 
         $ticketData = [
             'rs_no' => $request->rs_no,
             'employee' => $request->employee,
-            'technician1' => $request->technician1,
-            'technician2' => $request->technician2,
-            'technician3' => $request->technician3,
             'issue' => $request->issue,
             'description' => $request->description,
             'service' => $request->service,

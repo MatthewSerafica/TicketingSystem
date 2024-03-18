@@ -1,16 +1,31 @@
 <template>
   <div>
     <Header></Header>
-    <div class="mt-2 pt-5">
+
+    <!--Toast Render-->
+    <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
+      <Toast
+        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
+        v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
+        @close="handleClose">
+      </Toast>
+
+      <Toast
+        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showErrorToast"
+        :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
+      </Toast>
+    </div>
+    <div class="mt-3">
       <form @submit.prevent="create">
         <br />
         <div class="container">
-          <div class="title-container fw-bold mb-5 text-center">
-            <h1>Create Tickets</h1>
+          <div class="title-container fw-bold mb-3 text-center">
+            <h1 class="fw-bold">Create Tickets</h1>
           </div>
 
           <div class="create-ticket">
-
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
                 <div class="d-flex flex-row gap-3">
@@ -153,9 +168,31 @@
 
 <script setup>
 import Button from '@/Components/Button.vue';
+import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link, router, useForm } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { Link, router, useForm, usePage } from "@inertiajs/vue3";
+import Alpine from 'alpinejs';
+import { ref, watch, watchEffect } from "vue";
+
+
+Alpine.start()
+
+const page = usePage();
+
+let showSuccessToast = ref(false);
+let showErrorToast = ref(false);
+
+watchEffect(() => {
+  showSuccessToast.value = !!page.props.flash.success;
+  showErrorToast.value = !!page.props.flash.error;
+})
+
+const handleClose = () => {
+  page.props.flash.success = null;
+  page.props.flash.error = null;
+  showSuccessToast.value = false;
+  showErrorToast.value = false;
+}
 
 const props = defineProps({
   technicians: Object,

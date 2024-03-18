@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\AssignedTickets;
+use App\Models\Employee;
 use App\Models\Technician;
 use App\Models\Ticket;
 use App\Models\ServiceReport;
+use App\Notifications\UpdateTicketStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -45,12 +47,17 @@ class TechnicianServiceController extends Controller
     {
         $latest_report = ServiceReport::orderBy('created_at', 'desc')->first();
         $new_service_id = $latest_report ? $this->incrementServiceId($latest_report->service_id) : '0001';
+        $ticket_id = $latest_report->ticket_number;
+        $date_done = $latest_report->date_done;
         $tickets = Ticket::with('employee.user')->get();
         $technicians = Technician::all();
         return inertia('Technician/ServiceReports/Create', [
             'technicians' => $technicians,
             'new_service_id' => $new_service_id,
             'tickets' => $tickets,
+            'ticket_id' => $ticket_id,
+            'date_done' => $date_done,
+
         ]);
     }
 
@@ -76,54 +83,6 @@ class TechnicianServiceController extends Controller
 
         return $newNumericPartFormatted;
     }
-
-
-    public function checkServiceId(Request $request, $service_id)
-    {
-        $service_id = $request->service_id;
-
-        // Check if a ServiceReport with the given service_id exists
-        $existingServiceReport = ServiceReport::where('service_id', $service_id)->first();
-
-        // If a ServiceReport with the given service_id exists, update it
-        if ($existingServiceReport) {
-            $existingServiceReport->update([
-                'date_started' => $request->date_started,
-                'time_started' => $request->time_started,
-                'ticket_number' => $request->ticket_number,
-                'technician' => $request->technician,
-                'requesting_office' => $request->requesting_office,
-                'equipment_no' => $request->equipment_no,
-                'issue' => $request->issue,
-                'action' => $request->action,
-                'recommendation' => $request->recommendation,
-                'date_done' => $request->date_done,
-                'time_done' => $request->time_done,
-                'remarks' => $request->remarks,
-            ]);
-        } else {
-            $serviceData = [
-                'service_id' => $service_id,
-                'date_started' => $request->date_started,
-                'time_started' => $request->time_started,
-                'ticket_number' => $request->ticket_number,
-                'technician' => $request->technician,
-                'requesting_office' => $request->requesting_office,
-                'equipment_no' => $request->equipment_no,
-                'issue' => $request->issue,
-                'action' => $request->action,
-                'recommendation' => $request->recommendation,
-                'date_done' => $request->date_done,
-                'time_done' => $request->time_done,
-                'remarks' => $request->remarks,
-            ];
-
-            ServiceReport::create($serviceData);
-        }
-
-        return response()->json(['exists' => $existingServiceReport !== null]);
-    }
-
 
 
     public function store(Request $request)
@@ -166,15 +125,12 @@ class TechnicianServiceController extends Controller
                 'remarks' => $request->remarks,
             ]);
         } else {
-            // Create a new ServiceReport if the service_id does not exist
-            $technician = Technician::where('user_id', $request->technician)->firstOrFail();
-
             $serviceData = [
                 'service_id' => $service_id,
                 'date_started' => $request->date_started,
                 'time_started' => $request->time_started,
                 'ticket_number' => $request->ticket_number,
-                'technician' => $technician->technician_id,
+                'technician' => $request->technician,
                 'requesting_office' => $request->requesting_office,
                 'equipment_no' => $request->equipment_no,
                 'issue' => $request->issue,
@@ -185,7 +141,18 @@ class TechnicianServiceController extends Controller
                 'remarks' => $request->remarks,
             ];
 
-            ServiceReport::create($serviceData);
+            $service = ServiceReport::create($serviceData);
+
+            $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
+
+            $ticket->update([
+                'sr_no' => $service->service_id,
+                'status' => 'Resolved',
+                'remarks' => $request->remarks,
+            ]);
+
+            $employee = Employee::find($ticket->employee);
+            $employee->user->notify(new UpdateTicketStatus($ticket));
         }
 
         return redirect()->to('/technician/service-report')->with('success', 'Report Created');

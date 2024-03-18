@@ -112,13 +112,15 @@
 import Header from '@/Pages/Layouts/TechnicianHeader.vue'
 import { Link, router, useForm, usePage } from '@inertiajs/vue3';
 import Button from '@/Components/Button.vue';
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed,onMounted } from "vue";
 
 const props = defineProps({
   technicians: Object,
   new_service_id: String,
+  ticket_id: String,
   service_report: Object,
   tickets: Object,
+  date_done: String,
 })
 
 const today = new Date();
@@ -130,16 +132,48 @@ const form = useForm({
   service_id: props.new_service_id,
   date_started: null,
   time_started: null,
-  ticket_number: null,
+  ticket_number: props.ticket_id,
   technician: [],
   requesting_office: null,
   equipment_no: null,
   issue: null,
   action: null,
   recommendation: null,
-  date_done: null,
+  date_done: props.date_done,
   time_done: null,
   remarks: null,
+});
+
+const fillFormWithTicket = (ticket) => {
+  form.action = ticket.service;
+  form.problemEncountered = ticket.description;
+  form.requesting_office = `${ticket.employee.department} - ${ticket.employee.office}`;
+  // Fill other form fields as needed
+};
+
+onMounted(async () => {
+  // Check if props.ticket_id is present
+  if (props.ticket_id) {
+    const selectedTicket = props.tickets.find(ticket => ticket.ticket_number === props.ticket_id);
+    if (selectedTicket) {
+      fillFormWithTicket(selectedTicket);
+      const response = await fetch(route('technician.tickets.assigned', { id: selectedTicket.ticket_number }));
+      const data = await response.json();
+      const technicianNames = [];
+      const technicianId = [];
+
+      for (let i = 0; i < data.length; i++) {
+        technicianNames.push(data[i].technician[0].user.name);
+        technicianId.push(data[i].technician[0].technician_id);
+      }
+
+      const formattedTechnicianNames = technicianNames.join(' / ');
+      form.technician = formattedTechnicianNames;
+      console.log(form.technician);
+      }
+    }
+
+  
 });
 
 const create = async () => {
