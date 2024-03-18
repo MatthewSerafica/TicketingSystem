@@ -244,7 +244,12 @@ class AdminTicketController extends Controller
 
         $ticket = Ticket::where('ticket_number', $ticket_id)->firstOrFail();
         $employee = Employee::find($ticket->employee);
-        $technicians = Technician::whereIn('technician_id', [$ticket->technician1, $ticket->technician2, $ticket->technician3])->get();
+        $assigned = AssignedTickets::where('ticket_number', $ticket->ticket_number)->get();
+        
+        $technicians = collect([]);
+        foreach ($assigned as $assign) {
+            $technicians = $technicians->merge(Technician::where('technician_id', $assign->technician)->get());
+        }
 
         $ticket->status = $request->status;
 
