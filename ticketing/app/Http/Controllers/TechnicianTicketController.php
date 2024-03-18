@@ -151,7 +151,9 @@ class TechnicianTicketController extends Controller
                 $serviceData = [
                     'service_id' => $ticket->$field,
                     'ticket_number' => $ticket->ticket_number,
-                    'date_done' => $ticket->resolved_at,
+                    'date_done' => now(),
+                    'issue' => $ticket->description,
+                    
                 ];
                 ServiceReport::create($serviceData);
             }
