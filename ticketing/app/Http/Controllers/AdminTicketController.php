@@ -111,7 +111,6 @@ class AdminTicketController extends Controller
             'employee' => 'required',
             'issue' => 'required',
             'service' => 'required',
-            'rr_no' => 'nullable|numeric',
             'rs_no' => 'nullable|numeric',
         ]);
 
