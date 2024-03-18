@@ -168,11 +168,11 @@
 
 <script setup>
 import Button from '@/Components/Button.vue';
+import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link, router, useForm, usePage } from "@inertiajs/vue3";
-import { ref, watch, watchEffect } from "vue";
-import Toast from '@/Components/Toast.vue';
 import Alpine from 'alpinejs';
+import { ref, watch, watchEffect } from "vue";
 
 
 Alpine.start()
