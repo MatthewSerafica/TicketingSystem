@@ -102,7 +102,7 @@ class TechnicianTicketController extends Controller
             'issue' => 'required',
             'service' => 'required',
             'user' => 'required',
-            'rs_no' => 'nullable',
+            'rs_no' => 'nullable|numeric',
             'assignToSelf' => 'nullable',
         ]);
         $technician = Technician::where('user_id', $request->user)->firstOrFail();
@@ -125,12 +125,12 @@ class TechnicianTicketController extends Controller
         $ticket = Ticket::create($ticketData);
         $employee->update(['made_ticket' => $employee->made_ticket + 1]);
 
-        if ($request->assignToSelf){
+        if ($request->assign_to_self){
             AssignedTickets::create([
                 'ticket_number' => $ticket->ticket_number,
                 'technician' => $technician->technician_id,
             ]);
-
+            $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
         }
         $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
         $admins = User::where('user_type', 'admin')->get();
@@ -184,7 +184,7 @@ class TechnicianTicketController extends Controller
     public function update(Request $request, $field, $id)
     {
         $request->validate([
-            $field => 'nullable',
+            $field => 'nullable|regex:/^\s*$/|numeric',
         ]);
 
         $ticket = Ticket::where('ticket_number', $id)->first();
@@ -193,7 +193,7 @@ class TechnicianTicketController extends Controller
 
         // If the SR number is present in the request, update it in the tickets table
         if ($field === 'sr_no') {
-            $ticket->save(); // Save the ticket first to ensure synchronization with the service_report table
+            $ticket->save(); 
             $serviceReport = ServiceReport::where('ticket_number', $ticket->ticket_number)->first();
             if ($serviceReport) {
                 $serviceReport->service_id = $ticket->$field;

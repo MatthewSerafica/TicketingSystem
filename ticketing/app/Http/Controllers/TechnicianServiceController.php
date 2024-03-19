@@ -147,7 +147,6 @@ class TechnicianServiceController extends Controller
             $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
             $ticket->update([
                 'sr_no' => $service->service_id,
-                'status' => 'Resolved',
                 'remarks' => $request->remarks,
             ]);
            /*  $ticket->save(); */
