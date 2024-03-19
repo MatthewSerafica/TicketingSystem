@@ -371,7 +371,7 @@ const updateComplexity = (ticket_id, complexity) => {
 }
 
 const updateData = async (data, id, updateField, type) => {
-  console.log(selectedInput.value, type, editData[data], updateField)
+  console.log(selectedInput.value, type, editData[data], id, updateField)
   if (selectedInput.value === type) {
 
     if (!validateNumericInput(editData[data], updateField)) {

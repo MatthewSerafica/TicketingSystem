@@ -7,6 +7,8 @@ use App\Models\Employee;
 use App\Models\Technician;
 use App\Models\Ticket;
 use App\Models\ServiceReport;
+use App\Models\User;
+use App\Notifications\ResolvedTicket;
 use App\Notifications\UpdateTicketStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -140,21 +142,26 @@ class TechnicianServiceController extends Controller
                 'time_done' => $request->time_done,
                 'remarks' => $request->remarks,
             ];
-
-
             $service = ServiceReport::create($serviceData);
-
-            $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
-            $ticket->update([
-                'sr_no' => $service->service_id,
-                'remarks' => $request->remarks,
-            ]);
-           /*  $ticket->save(); */
-
-            $employee = Employee::find($ticket->employee);
-            $employee->user->notify(new UpdateTicketStatus($ticket));
         }
+        
+        $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
+        $ticket->update([
+            'sr_no' =>  $request->service_id,
+            'remarks' => $request->remarks,
+            'status' => 'Resolved',
+            'resolved_at' => $request->date_done,
+        ]);
+       /*  $ticket->save(); */
 
+        $employee = Employee::find($ticket->employee);
+        $employee->user->notify(new UpdateTicketStatus($ticket));
+        $admins = User::where('user_type', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(
+                new ResolvedTicket ($ticket)
+            );
+        }
         return redirect()->to('/technician/service-report')->with('success', 'Report Created');
     }
 
