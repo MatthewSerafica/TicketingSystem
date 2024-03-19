@@ -11,6 +11,7 @@ use App\Notifications\TicketMade;
 use App\Models\ServiceReport;
 use App\Notifications\UpdateTicketStatus;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 
 class TechnicianTicketController extends Controller
@@ -102,7 +103,7 @@ class TechnicianTicketController extends Controller
             'issue' => 'required',
             'service' => 'required',
             'user' => 'required',
-            'rs_no' => 'nullable',
+            'rs_no' => 'nullable|numeric',
             'assignToSelf' => 'nullable',
         ]);
         $technician = Technician::where('user_id', $request->user)->firstOrFail();
@@ -125,12 +126,12 @@ class TechnicianTicketController extends Controller
         $ticket = Ticket::create($ticketData);
         $employee->update(['made_ticket' => $employee->made_ticket + 1]);
 
-        if ($request->assignToSelf){
+        if ($request->assign_to_self){
             AssignedTickets::create([
                 'ticket_number' => $ticket->ticket_number,
                 'technician' => $technician->technician_id,
             ]);
-
+            $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
         }
         $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
         $admins = User::where('user_type', 'admin')->get();
@@ -142,6 +143,24 @@ class TechnicianTicketController extends Controller
 
         return redirect()->to('/technician/tickets')->with('success', 'Ticket Created');
     }
+
+
+    public function complexity(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'complexity' => 'nullable',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->complexity = $request->complexity;
+        if ($ticket->status == 'New') {
+            $ticket->status = 'Pending';
+        }
+        $ticket->save();
+        return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now set as ' . $request->complexity);
+    }
+
 
     public function status(Request $request, $ticket_id)
     {
@@ -164,41 +183,46 @@ class TechnicianTicketController extends Controller
 
     public function update(Request $request, $field, $id)
     {
-        $request->validate([
-            $field => 'nullable',
-        ]);
-
-        $ticket = Ticket::where('ticket_number', $id)->first();
-
-        $ticket->$field = $request->$field;
-
-        // If the SR number is present in the request, update it in the tickets table
-        if ($field === 'sr_no') {
-            $ticket->save(); // Save the ticket first to ensure synchronization with the service_report table
-            $serviceReport = ServiceReport::where('ticket_number', $ticket->ticket_number)->first();
-            if ($serviceReport) {
-                $serviceReport->service_id = $ticket->$field;
-                $serviceReport->save();
-            } else {
-                // If no service report exists, create a new one with the updated SR number
-                $serviceData = [
-                    'service_id' => $ticket->$field,
-                    'ticket_number' => $ticket->ticket_number,
-                    'date_done' => now(),
-                    'issue' => $ticket->description,
-                    
-                ];
-                ServiceReport::create($serviceData);
+        try{
+            $request->validate([
+                $field => 'nullable|numeric',
+            ]);
+    
+            $ticket = Ticket::where('ticket_number', $id)->first();
+    
+            $ticket->$field = $request->$field;
+    
+            // If the SR number is present in the request, update it in the tickets table
+            if ($field === 'sr_no') {
+                $ticket->save(); 
+                $serviceReport = ServiceReport::where('ticket_number', $ticket->ticket_number)->first();
+                if ($serviceReport) {
+                    $serviceReport->service_id = $ticket->$field;
+                    $serviceReport->save();
+                } else {
+                    // If no service report exists, create a new one with the updated SR number
+                    $serviceData = [
+                        'service_id' => $ticket->$field,
+                        'ticket_number' => $ticket->ticket_number,
+                        'date_done' => now(),
+                        'issue' => $ticket->description,
+                        
+                    ];
+                    ServiceReport::create($serviceData);
+                }
             }
+    
+            // Check if the SR number is present, and update resolved_at and status accordingly
+            if ($ticket->sr_no !== null) {
+                $ticket->resolved_at = now();
+                $ticket->status = 'Resolved';
+            }
+    
+            $ticket->save();
+        } catch(Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred!')->with('message', $e->getMessage());
         }
-
-        // Check if the SR number is present, and update resolved_at and status accordingly
-        if ($ticket->sr_no !== null) {
-            $ticket->resolved_at = now();
-            $ticket->status = 'Resolved';
-        }
-
-        $ticket->save();
+       
         return redirect()->to('/technician/service-report/create');
     }
 }
