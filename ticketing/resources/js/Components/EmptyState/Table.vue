@@ -1,8 +1,8 @@
 <template>
     <div class="card shadow-sm" style="width: 30rem; height: 10rem;">
         <div class="card-body container-fluid text-center row justify-content-center align-items-center">
-            <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" width="120" height="80"
+            <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" width="200" height="150"
                     viewBox="0 0 862.70323 644.78592" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <polygon points="629.943 612.644 612.777 612.644 604.608 546.435 629.943 546.435 629.943 612.644"
                         fill="#9e616a" />
@@ -168,7 +168,7 @@
                         d="M793.7871,226.19592c-1.20908-7.942-2.47188-15.95043-5.31228-23.42857-2.8404-7.47821-7.41882-14.48249-13.98647-18.71882-10.39879-6.70709-23.862-5.41352-35.52074-1.55544-9.01622,2.9837-17.81761,7.51864-24.17574,14.8093-6.35848,7.29074-9.92957,17.69379-7.56439,27.22665q18.65464-4.40738,37.30893-8.81483l-1.36137.962a30.03765,30.03765,0,0,1,16.03083,20.8927,31.12209,31.12209,0,0,1-6.56554,25.84773q12.72244-4.51323,25.44489-9.0263c5.23526-1.85713,10.83833-3.997,13.94267-8.76047C795.62723,240.107,794.79091,232.78685,793.7871,226.19592Z"
                         transform="translate(-168.64838 -127.60704)" fill="#2f2e41" />
                 </svg>
-                <h3>No tickets yet...</h3>
+                <h2>No tickets yet...</h2>
             </div>
         </div>
     </div>
