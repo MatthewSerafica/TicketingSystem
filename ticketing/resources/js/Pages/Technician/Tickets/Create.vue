@@ -10,7 +10,6 @@
           </div>
 
           <div class="create-ticket d-flex flex-column justify-content-center align-items-center">
-
             <div class="d-flex flex-row gap-3 w-50 justify-content-center mb-4">
               <div class=" flex-grow-1 w-50">
                 <div class="d-flex flex-column flex-shrink-0">
@@ -81,15 +80,15 @@
             </div>
 
             <div class="row justify-content-center">
-                <div class="col gap-1">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="assignToSelf" v-model="form.assignToSelf">
-                    <label class="form-check-label" for="assignToSelf">
-                      Assign to Self
-                    </label>
-                  </div>
+              <div class="col gap-1">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="assignToSelf" v-model="form.assign_to_self">
+                  <label class="form-check-label" for="assignToSelf">
+                    Assign to Self
+                  </label>
                 </div>
               </div>
+            </div>
 
             <div class="row justify-content-center mb-4">
               <div class="col-md-8 d-flex justify-content-end gap-2">
@@ -125,7 +124,7 @@ const form = useForm({
   description: null,
   employee: null,
   user: page.props.user.id,
-  assignToSelf: false,
+  assign_to_self: false,
 })
 
 let selectedEmployee = ref('');

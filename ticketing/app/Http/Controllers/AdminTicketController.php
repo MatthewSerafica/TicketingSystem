@@ -9,6 +9,7 @@ use App\Models\Technician;
 use App\Models\Ticket;
 use App\Models\TicketsAssigned;
 use App\Notifications\TicketMade;
+use App\Notifications\UpdateTechnicianReplace;
 use App\Notifications\UpdateTicketStatus;
 use App\Notifications\UpdateTicketTechnician;
 use Carbon\Carbon;
@@ -369,13 +370,14 @@ class AdminTicketController extends Controller
                 'old' => 'required',
             ]);
 
-            $assigned = AssignedTickets::where(['ticket_number' => $request->ticket_number, 'technician' => $request->old])->first();
+            $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
+            $assigned = AssignedTickets::where(['ticket_number' => $request->ticket_number, 'technician' => $request->old])->with('technician.user')->first();
 
-            $old = Technician::where('technician_id', $request->old)->first();
-            $new = Technician::where('technician_id', $request->technician)->first();
+            $old = Technician::where('technician_id', $request->old)->with('user')->first();
+            $new = Technician::where('technician_id', $request->technician)->with('user')->first();
 
             if ($old->tickets_assigned >= 0) {
-                $old->tickets_assigned = $old->tickets_assigned - 1;
+                $old->tickets_assigned = 0;
                 if ($new->tickets_assigned == 5) {
                     DB::rollBack();
                     return redirect()->back()->with('error', 'An error occurred!')->with('message', 'Technician ' . $new->user->name . ' has 5 tickets assigned to them already!');
@@ -391,25 +393,23 @@ class AdminTicketController extends Controller
                 $new->save();
             }
 
-            $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
+
+            $assigned->update([
+                'technician' => $new->technician_id,
+            ]);
+
+            $old->user->notify(
+                new UpdateTechnicianReplace($ticket)
+            );
 
             $new->user->notify(
                 new UpdateTicketTechnician($ticket)
             );
-            $assigned->update();
 
             DB::commit();
-        } catch (QueryException $e) {
-            DB::rollBack();
-            $errorCode = $e->errorInfo[1];
-            if ($errorCode == 1062) {
-                return redirect()->back()->with('error', 'The Ticket number already exist.');
-            } else {
-                return redirect()->back()->with('error', 'Update Ticket Error')->with('message', $errorCode);
-            }
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'An error occurred!');
+            return redirect()->back()->with('error', 'An error occurred!')->with('message', $e->getMessage());
         }
 
         return redirect()->back()->with('success', 'Ticket Updated!')->with('message', 'Technician has been replaced!');

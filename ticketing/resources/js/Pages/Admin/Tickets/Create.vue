@@ -131,15 +131,15 @@
                             </ul>
                           </div>
                           <button type="button"
-                            class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-6 text-danger"
+                            class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-5 text-danger"
                             @click="removeDropdown(index)">
-                            <i class="bi bi-dash-circle"></i>
+                            <i class="bi bi-dash-circle-fill"></i>
                           </button>
                         </div>
                       </div>
                       <div v-if="show">
                         <button type="button" as="button"
-                          class="btn align-items-center justify-content-center d-flex text-primary fs-5 gap-3"
+                          class="btn align-items-center justify-content-center d-flex text-primary fs-5 gap-2"
                           style="height:1.5em;" @click="addDropdown">
                           <i class="bi bi-plus-circle-fill"></i>
                           <span v-if="showLabel">Assign Technician</span>
