@@ -92,10 +92,24 @@
                   </span>
                 </td>
 
-                <td class="text-center ticket-description">
-                  <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center px-3">
-                    {{ ticket.complexity ? ticket.complexity : 'N/A' }}
-                  </button>
+                <td class="text-center">
+                  <div v-if="ticket.status !== 'Resolved'" class="">
+                    <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center px-3"
+                      data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                      {{ ticket.complexity ? ticket.complexity : 'N/A' }}
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li @click="updateComplexity(ticket.ticket_number, 'Simple')" class="btn dropdown-item">Simple
+                      </li>
+                      <li @click="updateComplexity(ticket.ticket_number, 'Complex')" class="btn dropdown-item">Complex
+                      </li>
+                    </ul>
+                  </div>
+                  <div v-else-if="ticket.status == 'Resolved'">
+                    <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center px-3">
+                      {{ ticket.complexity ? ticket.complexity : 'N/A' }}
+                    </button>
+                  </div>
                 </td>
 
                 <td class="text-start">
@@ -347,7 +361,14 @@ const showInput = (data, id, type) => {
   editData[data] = data ? data : '';
   console.log(selectedInput.value, editData[data], selectedRow.value);
 }
+const updateComplexity = (ticket_id, complexity) => {
+  const form = useForm({
+    ticket_id: ticket_id,
+    complexity: complexity,
+  });
 
+  form.put(route('technician.tickets.update.complexity', { ticket_id: ticket_id }));
+}
 
 const updateData = async (data, id, updateField, type) => {
   console.log(selectedInput.value, type, editData[data], updateField)
