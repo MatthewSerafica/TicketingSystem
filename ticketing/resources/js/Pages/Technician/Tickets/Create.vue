@@ -90,8 +90,8 @@
               </div>
             </div>
 
-            <div class="row justify-content-center mb-4">
-              <div class="col-md-8 d-flex justify-content-end gap-2">
+            <div class="d-flex-row justify-content-end mb-4 w-50">
+              <div class="d-flex justify-content-end gap-2">
                 <Button :name="'Submit'" :color="'primary'" class="submit-btn"></Button>
                 <Link :href="`/technician/tickets`" class="btn btn-outline-primary">Cancel</Link>
               </div>
