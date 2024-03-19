@@ -144,6 +144,24 @@ class TechnicianTicketController extends Controller
         return redirect()->to('/technician/tickets')->with('success', 'Ticket Created');
     }
 
+
+    public function complexity(Request $request, $ticket_id)
+    {
+        $request->validate([
+            'complexity' => 'nullable',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+
+        $ticket->complexity = $request->complexity;
+        if ($ticket->status == 'New') {
+            $ticket->status = 'Pending';
+        }
+        $ticket->save();
+        return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now set as ' . $request->complexity);
+    }
+
+
     public function status(Request $request, $ticket_id)
     {
         $request->validate([
