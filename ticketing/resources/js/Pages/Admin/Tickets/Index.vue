@@ -51,8 +51,8 @@
         <Pagination :links="tickets.links" :key="'tickets'" />
         <br>
       </div>
-      <div class="table-responsive rounded shadow pt-2 px-2 mb-3">
-        <div class="">
+      <div v-if="tickets.data.length" class="table-responsive rounded shadow pt-2 px-2 mb-3">
+        <div class="d-flex justify-content-center align-items-center pb-2">
           <table class="table table-hover custom-rounded-table">
             <thead>
               <tr class="text-start">
@@ -113,8 +113,9 @@
                     @keyup.enter="updateData(ticket.rs_no, ticket.ticket_number, 'rs_no', 'rs')"
                     class="w-100 rounded border border-secondary-subtle text-center">
                 </td>
-                <td class="text-start text-truncate" style="max-width: 10rem;" :title="ticket.employee.user.name + '\n' + ticket.employee.department + ' - ' + ticket.employee.office">
-                  <span class="fw-medium" >
+                <td class="text-start text-truncate" style="max-width: 10rem;"
+                  :title="ticket.employee.user.name + '\n' + ticket.employee.department + ' - ' + ticket.employee.office">
+                  <span class="fw-medium">
                     {{ ticket.employee.user.name }}
                   </span>
                   <br>
@@ -128,7 +129,7 @@
                 </td>
 
                 <td class="text-center">
-                  <div class="">
+                  <div v-if="ticket.status !== 'Resolved'" class="">
                     <button type="button" class="btn text-center" data-bs-toggle="dropdown" aria-expanded="false"
                       data-bs-reference="parent">
                       {{ ticket.service ? ticket.service : 'Unassigned' }}
@@ -138,6 +139,11 @@
                       <li v-for="service in services" class="btn dropdown-item"
                         @click="updateService(ticket.ticket_number, service.service)">{{ service.service }}</li>
                     </ul>
+                  </div>
+                  <div v-else-if="ticket.status == 'Resolved'">
+                    <button type="button" class="btn text-center">
+                      {{ ticket.service ? ticket.service : 'N/A' }}
+                    </button>
                   </div>
                 </td>
 
@@ -197,7 +203,7 @@
                         </ul>
                       </div>
                     </div>
-                    <button v-if="technicianCTAs"
+                    <button v-if="technicianCTAs && ticket.status !== 'Resolved'"
                       class="btn align-items-center justify-content-center d-flex text-primary fs-5"
                       style="height:1.5em;" @click="addDropdown(ticket)">
                       <i class="bi bi-plus-circle-fill"></i>
@@ -232,7 +238,7 @@
 
                 </td>
                 <td class="text-start">
-                  <div v-if="ticket.status !== 'Resolved'" class="">
+                  <div class="">
                     <button type="button" :class="getButtonClass(ticket.status)" class="text-center px-3"
                       data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                       {{ ticket.status }}
@@ -255,23 +261,21 @@
                       </li>
                     </ul>
                   </div>
-                  <div v-else>
-                    <button type="button" :class="getButtonClass(ticket.status)" class="text-center px-3">
-                      {{ ticket.status }}
-                    </button>
-                  </div>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
+      <EmptyCard v-else class="mt-2 w-75" style="height:20rem;">
+      </EmptyCard>
     </div>
   </div>
 </template>
 
 <script setup>
 import Button from '@/Components/Button.vue';
+import EmptyCard from '@/Components/EmptyState/Table.vue';
 import Pagination from '@/Components/Pagination.vue';
 import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
