@@ -121,7 +121,7 @@
                   <br>
                   <small>{{ ticket.employee.department }} - {{ ticket.employee.office }}</small>
                 </td>
-                <td class="text-start text-truncate ticket-description" style="max-width: 10rem"
+                <td class="text-start text-truncate ticket-description" style="max-width: 8rem"
                   data-hover-text="{{ ticket.description }}">
                   <span :title="ticket.description">
                     {{ ticket.description }}
@@ -211,7 +211,7 @@
                   </div>
                 </td>
                 <td class="text-center" style="max-width: 60px;"
-                  @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
+                  @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr', ticket.status)">
                   <span v-if="!selectedInput || selectedInput !== 'sr' || selectedRow !== ticket.ticket_number">
                     {{ ticket.sr_no ? ticket.sr_no : 'N/A' }}
                   </span>
@@ -465,11 +465,14 @@ let selectedInput = ref(null);
 let selectedRow = ref(null);
 let editData = reactive({});
 
-const showInput = (data, id, type) => {
-  selectedInput.value = type;
-  selectedRow.value = id;
-  editData[data] = data ? data : '';
-  console.log(selectedInput.value, editData[data], selectedRow.value);
+const showInput = (data, id, type, status) => {
+  if (status != 'Resolved') {
+    console.log(data);
+    selectedInput.value = type;
+    selectedRow.value = id;
+    editData[data] = data ? data : '';
+    console.log(selectedInput.value, editData[data], selectedRow.value);
+  }
 }
 
 

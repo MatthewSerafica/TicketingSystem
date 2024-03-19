@@ -140,7 +140,6 @@ class TechnicianTicketController extends Controller
             );
         }
 
-
         return redirect()->to('/technician/tickets')->with('success', 'Ticket Created');
     }
 

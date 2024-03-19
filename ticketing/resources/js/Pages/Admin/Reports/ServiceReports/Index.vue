@@ -45,7 +45,7 @@
               <th class="text-muted">Time Started</th>
               <th class="text-center text-muted">Ticket No</th>
               <th class="text-muted">Technician</th>
-              <th class="text-muted">Office</th>
+              <th class="text-muted">Requesting Office</th>
               <th class="text-center text-muted">Equipment No</th>
               <th class="text-muted">Issue</th>
               <th class="text-muted">Action</th>
@@ -58,18 +58,18 @@
           <tbody>
             <tr v-for="service_report in service_reports.data" :key="service_report.service_id" class="align-middle">
               <td class="text-center">{{ service_report.service_id }}</td>
-              <td class="text-start">{{ moment(service_report.date_started).format("MMM DD, YYYY") }}</td>
-              <td class="text-start">{{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</td>
+              <td class="text-start" style="width:7rem;">{{ moment(service_report.date_started).format("MMM DD, YYYY") }}</td>
+              <td class="text-start" style="width:6rem;">{{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</td>
               <td class="text-center">{{ service_report.ticket_number }}</td>
-              <td class="text-start">{{ service_report.technician }}</td>
-              <td class="text-start">{{ service_report.requesting_office }}</td>
+              <td class="text-start" style="width: 12rem;">{{ service_report.technician }}</td>
+              <td class="text-start" style="width:8rem;">{{ service_report.requesting_office }}</td>
               <td class="text-center">{{ service_report.equipment_no }}</td>
-              <td class="text-start cursor text-truncate" :title="service_report.issue" style="max-width: 10rem;">{{ service_report.issue }}</td>
-              <td class="text-start cursor text-truncate" :title="service_report.action" style="max-width: 10rem;">{{ service_report.action }}</td>
+              <td class="text-start cursor text-truncate" :title="service_report.issue" style="max-width: 8rem;">{{ service_report.issue }}</td>
+              <td class="text-start cursor text-truncate" :title="service_report.action" style="max-width: 8rem;">{{ service_report.action }}</td>
               <td class="text-start cursor text-truncate" :title="service_report.recommendation" style="max-width: 10rem;">{{ service_report.recommendation }}
               </td>
-              <td class="text-start">{{ moment(service_report.date_done).format("MMM DD, YYYY") }}</td>
-              <td class="text-start">{{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}</td>
+              <td class="text-start" style="width: 7rem;">{{ moment(service_report.date_done).format("MMM DD, YYYY") }}</td>
+              <td class="text-start" style="width: 6rem;">{{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}</td>
               <td class="text-start">{{ service_report.remarks }} </td>
             </tr>
           </tbody>
@@ -112,7 +112,6 @@ const handleClose = () => {
 const props = defineProps({
   service_reports: Object,
   filters: Object,
-
 })
 
 let search = ref(props.filters.search);
@@ -133,7 +132,6 @@ const fetchData = () => {
       replace: true,
     }
   )
-
 }
 
 const resetSorting = () => {

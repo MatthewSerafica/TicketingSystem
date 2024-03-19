@@ -413,7 +413,7 @@ class AdminTicketController extends Controller
         }
 
         return redirect()->back()->with('success', 'Ticket Updated!')->with('message', 'Technician has been replaced!');
-    }
+    }   
 
     public function remove(Request $request)
     {
