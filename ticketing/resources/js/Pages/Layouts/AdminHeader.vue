@@ -117,7 +117,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Notification Title</h5> <!--PLACEHOLDER-->
                                 <p class="card-text">Technician is going on a vacation</p> <!--PLACEHOLDER-->
-                                <small class="card-text fst-italic text-muted">{{ notificationDateTime() }}</small>
+                                <small class="card-text fst-italic text-muted"></small>
                             </div>
                         </div>
                         <div v-if="activeTab === 'employee'" class="card mt-3"
@@ -132,14 +132,14 @@
                                             <p class="card-text">{{ notification.notification.data.description }}</p>
                                         </div>
                                     </div>
-                                    <small class="card-text">{{ notification.name }} | {{ notification.department }} -
-                                        {{
-                            notification.office }}
+                                    <small class="card-text">
+                                        {{ notification.name }} | {{ notification.department }} -
+                                        {{ notification.office }}
                                     </small>
                                     <br>
-                                    <small class="card-text fst-italic text-muted">{{
-                            formatDate(notification.notification.created_at) }} /
-                                        {{ formatTime(notification.notification.created_at) }}</small>
+                                    <small class="card-text fst-italic text-muted">
+                                        {{ formatDateTime(notification.notification.created_at) }}
+                                    </small>
                                 </div>
                             </div>
                         </div>
@@ -153,8 +153,7 @@
 <script setup>
 import { Link, usePage } from "@inertiajs/vue3";
 import axios from 'axios';
-import { computed, ref, defineProps, reactive, onMounted } from 'vue';
-import moment from "moment";
+import { computed, ref, defineProps, onMounted } from 'vue';
 import Logo from '@/Components/Logo.vue';
 
 const props = defineProps({});
@@ -178,22 +177,27 @@ const determineActiveLink = () => {
         setActiveLink('dashboard');
     }
 }
-
 const formatDate = (date) => {
-    return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
-};
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = new Date(date).toLocaleDateString(undefined, options);
+    return formattedDate;
+}
 
 const formatTime = (time) => {
-    return moment(time, 'HH:mm:ss').format('hh:mm A');
+    const [hours, minutes] = time.split(':');
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedTime = `${formattedHours}:${minutes} ${period}`;
+    return formattedTime;
+}
+const formatDateTime = (datetime) => {
+    const date = new Date(datetime);
+    const formattedDate = formatDate(date);
+    const formattedTime = formatTime(date.toTimeString().split(' ')[0]);
+    return `${formattedDate} | ${formattedTime}`;
 }
 
 const page = usePage();
-
-function notificationDateTime() {
-    const currentDateTime = new Date();
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    return currentDateTime.toLocaleDateString('en-US', options).replace(/\//g, '-');
-}
 
 function showTab(tab) {
     activeTab.value = tab;
