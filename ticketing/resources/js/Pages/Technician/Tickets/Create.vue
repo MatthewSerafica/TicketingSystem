@@ -29,6 +29,18 @@
               </div>
             </div>
 
+            <div class="flex-grow-1 w-50">
+                <div class="d-flex flex-column flex-shrink-0">
+                  <label for="complexity" class="fw-semibold">Complexity</label>
+                  <select id="complexity" class="h-100 rounded border-secondary-subtle form-select"
+                    placeholder="Select Complexity..." v-model="form.complexity">
+                    <option disabled>Select Complexity</option>
+                    <option value="Simple">Simple</option>
+                    <option value="Complex">Complex</option>
+                  </select>
+                </div>
+              </div>
+
             <div class="d-flex flex-row justify-content-center mb-4 w-75">
               <div class="col-md-8">
                 <div class="d-flex flex-column flex-shrink-0">
@@ -123,6 +135,7 @@ const form = useForm({
   issue: null,
   service: null,
   description: null,
+  complexity: null,
   employee: null,
   user: page.props.user.id,
   assignToSelf: false,

@@ -141,16 +141,17 @@ class TechnicianServiceController extends Controller
                 'remarks' => $request->remarks,
             ];
 
+
             $service = ServiceReport::create($serviceData);
 
             $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
-
             $ticket->update([
                 'sr_no' => $service->service_id,
                 'status' => 'Resolved',
-                'remarks' => $request->remarks,
+                'remarks' => $service->remarks,
             ]);
-
+            $ticket->save();
+            
             $employee = Employee::find($ticket->employee);
             $employee->user->notify(new UpdateTicketStatus($ticket));
         }

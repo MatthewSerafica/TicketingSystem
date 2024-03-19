@@ -6,6 +6,8 @@ use App\Models\AssignedTickets;
 use App\Models\Employee;
 use App\Models\Technician;
 use App\Models\Ticket;
+use App\Models\User;
+use App\Notifications\TicketMade;
 use App\Models\ServiceReport;
 use App\Notifications\UpdateTicketStatus;
 use Carbon\Carbon;
@@ -94,6 +96,7 @@ class TechnicianTicketController extends Controller
     {
 
         $request->validate([
+            'complexity' => 'required',
             'description' => 'required',
             'employee' => 'required',
             'issue' => 'required',
@@ -110,6 +113,7 @@ class TechnicianTicketController extends Controller
         }
 
         $ticketData = [
+            'complexity' => $request->complexity,
             'rs_no' => $request->rs_no,
             'employee' => $request->employee,
             'issue' => $request->issue,
@@ -126,7 +130,17 @@ class TechnicianTicketController extends Controller
                 'ticket_number' => $ticket->ticket_number,
                 'technician' => $technician->technician_id,
             ]);
+
         }
+        $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
+        $admins = User::where('user_type', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(
+                new TicketMade($ticket)
+            );
+        }
+
+
         return redirect()->to('/technician/tickets')->with('success', 'Ticket Created');
     }
 
@@ -173,7 +187,7 @@ class TechnicianTicketController extends Controller
                     'ticket_number' => $ticket->ticket_number,
                     'date_done' => now(),
                     'issue' => $ticket->description,
-
+                    
                 ];
                 ServiceReport::create($serviceData);
             }
