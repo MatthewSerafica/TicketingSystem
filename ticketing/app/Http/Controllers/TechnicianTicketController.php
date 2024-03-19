@@ -68,11 +68,25 @@ class TechnicianTicketController extends Controller
 
 
 
-    public function create()
+    public function create(Request $request)
     {
-        $employees = Employee::with('user')->get();
+        $searchQuery = $request->input('search');
+        $employees = Employee::with('user')
+            ->when($searchQuery, function ($query) use ($searchQuery) {
+                $query->where(function ($subquery) use ($searchQuery) {
+                    $subquery->whereHas('user', function ($nameQuery) use ($searchQuery) {
+                        $nameQuery->where('name', 'like', '%' . $searchQuery . '%');
+                    })
+                        ->orWhere('department', 'like', '%' . $searchQuery . '%')
+                        ->orWhere('office', 'like', '%' . $searchQuery . '%');
+                });
+            })
+            ->get();
+            
+        $filter = $request->only(['search']);
         return inertia('Technician/Tickets/Create', [
             'employees' => $employees,
+            'filters' => $filter,
         ]);
     }
 
@@ -157,7 +171,7 @@ class TechnicianTicketController extends Controller
                     'ticket_number' => $ticket->ticket_number,
                     'date_done' => now(),
                     'issue' => $ticket->description,
-                    
+
                 ];
                 ServiceReport::create($serviceData);
             }

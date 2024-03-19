@@ -80,8 +80,8 @@
               </div>
             </div>
 
-            <div class="row justify-content-center mb-4">
-              <div class="col-md-8 d-flex justify-content-end gap-2">
+            <div class="d-flex justify-content-end mb-4 w-100">
+              <div class="col-md-8 d-flex justify-content-center gap-2">
                 <Button :name="'Submit'" :color="'primary'" class="submit-btn"></Button>
                 <Link :href="`/technician/tickets`" class="btn btn-outline-primary">Cancel</Link>
               </div>
@@ -96,11 +96,13 @@
 <script setup>
 import Button from '@/Components/Button.vue';
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
-import { Link, useForm, usePage } from "@inertiajs/vue3";
+import { Link, router, useForm, usePage } from "@inertiajs/vue3";
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   technicians: Object,
   employees: Object,
+  filters: Object,
 })
 
 const page = usePage()
@@ -113,6 +115,58 @@ const form = useForm({
   employee: null,
   technician: page.props.user.id,
 })
+
+let selectedEmployee = ref('');
+let search = ref(props.filters.search);
+let sortColumn = ref("ticket_number");
+let sortDirection = ref("asc");
+let timeoutId = null;
+
+const fetchData = () => {
+  router.get(
+    route('technician.tickets.create', {
+      search: search.value,
+      sort: sortColumn.value,
+      direction: sortDirection.value,
+    },
+      {
+        preserveState: true,
+        replace: true,
+        preserveScroll: true,
+      }
+    )
+  )
+}
+
+const resetSorting = () => {
+  console.log("Reset Sorting");
+  sortColumn.value = "employee_id"
+  sortDirection.value = "asc"
+}
+
+const debouncedFetchData = () => {
+  if (timeoutId) {
+    clearTimeout(timeoutId)
+  }
+  timeoutId = setTimeout(() => {
+    fetchData()
+  }, 500)
+}
+
+watch(search, () => {
+  if (search.value === '') {
+    resetSorting();
+  }
+  debouncedFetchData();
+})
+
+
+const selectEmployee = (employee) => {
+  selectedEmployee.value = employee.user.name;
+  form.employee = employee.employee_id;
+
+  document.getElementById('employeeDropdown').classList.remove('show');
+}
 
 const create = () => {
   if (form.rs_no && !/^\d+$/.test(form.rs_no)) {
