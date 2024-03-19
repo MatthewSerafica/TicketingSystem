@@ -134,7 +134,7 @@
                       data-bs-reference="parent">
                       {{ ticket.service ? ticket.service : 'Unassigned' }}
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu dropdown-menu-end">
                       <li class="dropdown-item disabled">Select a service</li>
                       <li v-for="service in services" class="btn dropdown-item"
                         @click="updateService(ticket.ticket_number, service.service)">{{ service.service }}</li>
