@@ -69,15 +69,17 @@
 </template>
 
 <script setup>
+import Button from '@/Components/Button.vue';
 import Delete from "@/Components/DeleteModal.vue";
 import Pagination from "@/Components/Pagination.vue";
+import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link, useForm, usePage } from "@inertiajs/vue3";
+import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 import Alpine from 'alpinejs';
 import moment from "moment";
-import { reactive, ref, watchEffect, defineProps } from 'vue';
-import Toast from '@/Components/Toast.vue';
-import Button from '@/Components/Button.vue';
+import { reactive, ref, watch, watchEffect, defineProps } from 'vue';
+
+
 
 Alpine.start()
 
@@ -100,11 +102,54 @@ const handleClose = () => {
 
 const props = defineProps({
   departments: Object,
+  filters: Object,
 });
 
 // Start of Update Functions
 let editedDepartment = reactive({});
 let selectedDepartmentId = ref(null);
+
+let search = ref(props.filters.search);
+let sortColumn = ref("id");
+let sortDirection = ref("asc");
+let timeoutId = null;
+
+const fetchData = () => {
+  router.get(
+    route('admin.department'),
+    {
+      search: search.value,
+      sort: sortColumn.value,
+      direction: sortDirection.value,
+    },
+    {
+      preserveState: true,
+      replace: true,
+    }
+  )
+
+}
+const resetSorting = () => {
+  console.log("Reset Sorting");
+  sortColumn.value = "id"
+  sortDirection.value = "asc"
+}
+
+const debouncedFetchData = () => {
+  if (timeoutId) {
+    clearTimeout(timeoutId)
+  }
+  timeoutId = setTimeout(() => {
+    fetchData()
+  }, 500)
+}
+
+watch(search, () => {
+  if (!search.value) {
+    resetSorting()
+  }
+  debouncedFetchData();
+})
 
 const startEditing = (departmentId, departmentName) => {
   selectedDepartmentId.value = departmentId;

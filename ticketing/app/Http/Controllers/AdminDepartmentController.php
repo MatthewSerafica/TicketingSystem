@@ -9,9 +9,17 @@ class AdminDepartmentController extends Controller
 {
     public function index(Request $request)
     {
-        $departments = Department::paginate(10);
+        $departments = Department::query()
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = $request->input('search');
+                $query->where('id', 'like', '%' . $search . '%')
+                    ->orWhere('department', 'like', '%' . $search . '%');
+            })
+            ->paginate(10);
+        $filters = $request->only(['search']);
         return inertia('Admin/Department/Index', [
             'departments' => $departments,
+            'filters' => $filters,
         ]);
     }
 

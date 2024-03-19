@@ -71,10 +71,10 @@ import Delete from "@/Components/DeleteModal.vue";
 import pagination from "@/Components/Pagination.vue";
 import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link, useForm, usePage } from "@inertiajs/vue3";
+import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 import Alpine from 'alpinejs';
 import moment from "moment";
-import { reactive, ref, watchEffect } from 'vue';
+import { reactive, ref, watch, watchEffect } from 'vue';
 
 Alpine.start()
 
@@ -97,17 +97,57 @@ const handleClose = () => {
 
 const props = defineProps({
   offices: Object,
+  filters: Object,
 });
 
-const search = ref('');
 
 const formatDate = (date) => {
   return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
 };
 
-
+let search = ref(props.filters.search);
+let sortColumn = ref("id");
+let sortDirection = ref("asc");
+let timeoutId = null;
 let editedOffice = reactive({});
 let selectedOfficeId = ref(null);
+
+const fetchData = () => {
+  router.get(
+    route('admin.office'),
+    {
+      search: search.value,
+      sort: sortColumn.value,
+      direction: sortDirection.value,
+    },
+    {
+      preserveState: true,
+      replace: true,
+    }
+  )
+
+}
+const resetSorting = () => {
+  console.log("Reset Sorting");
+  sortColumn.value = "id"
+  sortDirection.value = "asc"
+}
+
+const debouncedFetchData = () => {
+  if (timeoutId) {
+    clearTimeout(timeoutId)
+  }
+  timeoutId = setTimeout(() => {
+    fetchData()
+  }, 500)
+}
+
+watch(search, () => {
+  if (!search.value) {
+    resetSorting()
+  }
+  debouncedFetchData();
+})
 
 const startEditing = (officeId, officeName) => {
   selectedOfficeId.value = officeId;

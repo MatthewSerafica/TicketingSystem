@@ -9,9 +9,17 @@ class AdminServiceController extends Controller
 {
     public function index(Request $request)
     {
-        $services = Service::paginate(10);
+        $services = Service::query()
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = $request->input('search');
+                $query->where('id', 'like', '%' . $search . '%')
+                    ->orWhere('office', 'like', '%' . $search . '%');
+            })
+            ->paginate(10);
+        $filters = $request->only(['search']);
         return inertia('Admin/Services/Index', [
             'services' => $services,
+            'filters' => $filters,
         ]);
     }
 
