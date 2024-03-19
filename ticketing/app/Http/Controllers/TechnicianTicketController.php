@@ -102,7 +102,7 @@ class TechnicianTicketController extends Controller
             'issue' => 'required',
             'service' => 'required',
             'user' => 'required',
-            'rs_no' => 'nullable',
+            'rs_no' => 'nullable|numeric',
             'assignToSelf' => 'nullable',
         ]);
         $technician = Technician::where('user_id', $request->user)->firstOrFail();
@@ -166,7 +166,7 @@ class TechnicianTicketController extends Controller
     public function update(Request $request, $field, $id)
     {
         $request->validate([
-            $field => 'nullable',
+            $field => 'nullable|regex:/^\s*$/|numeric',
         ]);
 
         $ticket = Ticket::where('ticket_number', $id)->first();
