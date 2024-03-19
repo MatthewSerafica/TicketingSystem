@@ -84,10 +84,11 @@ class TechnicianTicketController extends Controller
             'employee' => 'required',
             'issue' => 'required',
             'service' => 'required',
-            'technician' => 'required',
+            'user' => 'required',
             'rs_no' => 'nullable',
+            'assignToSelf' => 'nullable',
         ]);
-        $technician = Technician::where('user_id', $request->technician)->firstOrFail();
+        $technician = Technician::where('user_id', $request->user)->firstOrFail();
         $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
 
         if ($employee->made_ticket >= 5) {
@@ -106,11 +107,12 @@ class TechnicianTicketController extends Controller
         $ticket = Ticket::create($ticketData);
         $employee->update(['made_ticket' => $employee->made_ticket + 1]);
 
-        AssignedTickets::create([
-            'ticket_number' => $ticket->ticket_number,
-            'technician' => $technician->technician_id,
-        ]);
-
+        if ($request->assignToSelf){
+            AssignedTickets::create([
+                'ticket_number' => $ticket->ticket_number,
+                'technician' => $technician->technician_id,
+            ]);
+        }
         return redirect()->to('/technician/tickets')->with('success', 'Ticket Created');
     }
 

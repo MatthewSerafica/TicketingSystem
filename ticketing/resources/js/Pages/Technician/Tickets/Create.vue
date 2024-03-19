@@ -80,6 +80,17 @@
               </div>
             </div>
 
+            <div class="row justify-content-center">
+                <div class="col gap-1">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="assignToSelf" v-model="form.assignToSelf">
+                    <label class="form-check-label" for="assignToSelf">
+                      Assign to Self
+                    </label>
+                  </div>
+                </div>
+              </div>
+
             <div class="row justify-content-center mb-4">
               <div class="col-md-8 d-flex justify-content-end gap-2">
                 <Button :name="'Submit'" :color="'primary'" class="submit-btn"></Button>
@@ -111,7 +122,8 @@ const form = useForm({
   service: null,
   description: null,
   employee: null,
-  technician: page.props.user.id,
+  user: page.props.user.id,
+  assignToSelf: false,
 })
 
 const create = () => {
