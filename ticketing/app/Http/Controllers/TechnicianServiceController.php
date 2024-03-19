@@ -148,10 +148,10 @@ class TechnicianServiceController extends Controller
             $ticket->update([
                 'sr_no' => $service->service_id,
                 'status' => 'Resolved',
-                'remarks' => $service->remarks,
+                'remarks' => $request->remarks,
             ]);
-            $ticket->save();
-            
+           /*  $ticket->save(); */
+
             $employee = Employee::find($ticket->employee);
             $employee->user->notify(new UpdateTicketStatus($ticket));
         }
