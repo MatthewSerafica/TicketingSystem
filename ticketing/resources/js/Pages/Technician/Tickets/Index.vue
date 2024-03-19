@@ -62,9 +62,9 @@
                 <th class="text-muted">Client</th>
                 <th class="text-muted">Request</th>
                 <th class="text-muted">Service</th>
-                <th class="text-start text-muted">Complexity</th>
-                <th class="text-muted">Technician</th>
-                <th class="text-muted">SR No.</th>
+                <th class="text-center text-muted">Complexity</th>
+                <th class="text-muted center">Technician</th>
+                <th class="text-muted">SR</th>
                 <th class="text-muted">Date Resolved</th>
                 <th class="text-muted">Remarks</th>
                 <th class="text-center text-muted">Status</th>
@@ -92,10 +92,8 @@
                   </span>
                 </td>
 
-                <td class="text-start text-truncate ticket-description" style="max-width: 130px;"
-                  data-hover-text="{{ ticket.complexity }}">
-                  <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center"
-                    style="width: 5rem;">
+                <td class="text-center ticket-description">
+                  <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center px-3">
                     {{ ticket.complexity ? ticket.complexity : 'N/A' }}
                   </button>
                 </td>
@@ -132,22 +130,15 @@
                     @blur="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
                     @keyup.enter="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
                     class="w-100 rounded border border-secondary-subtle text-center"></textarea>
-
                 </td>
                 <td class="text-start">
                   <div class="btn-group position-static">
-                    <button type="button" :class="getButtonClass(ticket.status)"
-                      class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"
-                      data-bs-reference="parent">
-                      <span class="visually-hidden">Toggle Dropdown</span>
-                    </button>
-
                     <button type="button" :class="getButtonClass(ticket.status)" class="text-center rounded-end"
-                     >
+                      data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                       {{ ticket.status }}
                     </button>
 
-                    <ul class="dropdown-menu">
+                    <ul v-if="ticket.status !== 'Resolved'" class="dropdown-menu">
                       <li @click="updateStatus(ticket.ticket_number, 'New', ticket.status, ticket.sr_no)"
                         class="btn dropdown-item">New
                       </li>

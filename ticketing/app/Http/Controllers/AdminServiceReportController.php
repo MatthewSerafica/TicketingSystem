@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Models\ServiceReport;
 use App\Models\Technician;
 use App\Models\Ticket;
+use App\Models\User;
 use App\Notifications\UpdateTicketStatus;
 use Illuminate\Http\Request;
 
@@ -107,9 +108,20 @@ class AdminServiceReportController extends Controller
             'status' => 'Resolved',
             'remarks' => $request->remarks,
         ]);
-        
+
         $employee = Employee::find($ticket->employee);
         $employee->user->notify(new UpdateTicketStatus($ticket));
+
+        $technicians = explode(' / ', $request->technician);
+        foreach ($technicians as $technicianName) {
+            $user = User::where('name', $technicianName)->first();
+            if ($user) {
+                $technician = Technician::where('user_id', $user->id)->first();
+                if ($technician) {
+                    $technician->user->notify(new UpdateTicketStatus($ticket));
+                }
+            }
+        }
 
         return redirect()->to('/admin/reports/service-report')->with('success', 'Report Created');
     }
