@@ -35,6 +35,7 @@
                   <div class="spinner-border text-primary" role="status">
                     <span class="visually-hidden">Loading...</span>
                   </div>
+                  <div class="text-primary ms-2">Importing...</div>
                 </div>
                 <div v-else>
                   <form @submit.prevent="uploadCsv" enctype="multipart/form-data">
