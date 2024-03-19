@@ -113,12 +113,28 @@
                             employeeCount }}</span></a>
                     </nav>
                     <div id="tab-content">
-                        <div v-if="activeTab === 'technician'" class="card mt-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Notification Title</h5> <!--PLACEHOLDER-->
-                                <p class="card-text">Technician is going on a vacation</p> <!--PLACEHOLDER-->
-                                <small class="card-text fst-italic text-muted">{{ notificationDateTime() }}</small>
-                            </div>
+                        <div v-if="activeTab === 'technician'" class="card mt-3" v-for="notification in notifications.slice(0, 9)" :key="notification.notification.id">
+                            <div class="card-body"
+                                    v-if="notification.notification.type === 'App\\Notifications\\ResolvedTicket'">
+                                    <div class="d-flex flex-row">
+                                        <div class="d-flex flex-column">
+                                            <h5 class="card-title fw-bold">Ticket No: {{ notification.notification.data.ticket_number }} {{ notification.notification.data.status }}
+                                            </h5>
+                                            <p class="card-subtitle">Remarks: {{ notification.notification.data.remarks }}</p>
+
+                                            <p class="card-subtitle">Service Report No.: {{ notification.notification.data.sr_no }}</p>
+                                        </div>
+                                    </div>
+                                    <small class="card-text">{{ notification.name }} | {{ notification.department }} -
+                                        {{
+                            notification.office }}
+                                    </small>
+                                    <br>
+                                    <small class="card-text fst-italic text-muted">{{
+                            formatDate(notification.notification.created_at) }} /
+                                        {{ formatTime(notification.notification.created_at) }}</small>
+                                </div>
+                            
                         </div>
                         <div v-if="activeTab === 'employee'" class="card mt-3"
                             v-for="notification in notifications.slice(0, 9)" :key="notification.notification.id">
@@ -127,7 +143,7 @@
                                     v-if="notification.notification.type === 'App\\Notifications\\TicketMade'">
                                     <div class="d-flex flex-row">
                                         <div class="d-flex flex-column">
-                                            <h5 class="card-title fw-bold">{{ notification.notification.data.issue }}
+                                            <h5 class="card-title fw-bold">New Ticket No: {{ notification.notification.data.ticket_number }}
                                             </h5>
                                             <p class="card-text">{{ notification.notification.data.description }}</p>
                                         </div>

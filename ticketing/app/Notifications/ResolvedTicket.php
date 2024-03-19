@@ -57,6 +57,7 @@ class ResolvedTicket extends Notification
             'sr_no' => $this->ticket->sr_no,
             'service' => $this->ticket->service,
             'status' => $this->ticket->status,
+            'remarks' => $this->ticket->remarks,
             'resolved_at' => $this->ticket->resolved_at,
         ];
     }
