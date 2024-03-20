@@ -16,6 +16,7 @@
                 @close="handleClose">
             </Toast>
         </div>
+
         <div class="w-25">
             <Link :href="route('employee')"
                 class="btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
@@ -27,8 +28,9 @@
             </svg>
             <span>Back</span>
             </Link>
-            </div>
-            <div class="d-flex flex-column gap-5 justify-content-center mt-3 align-items-center">
+        </div>
+
+        <div class="d-flex flex-column gap-5 justify-content-center mt-3 align-items-center">
             <div v-if="users.employee" class="card shadow p-2" style="max-width: 50rem;">
                 <div class="card-body d-flex flex-column gap-2">
                     <div class="card-title fw-bold fs-3">
@@ -160,6 +162,8 @@ const handleClose = () => {
 const props = defineProps({
     users: Object,
     departments: Object,
+    yearly: Object,
+    service: Object,
 })
 
 let selectedInput = ref(null);
