@@ -20,56 +20,58 @@ class AdminTicketController extends Controller
 {
     public function index(Request $request)
     {
-        $tickets = Ticket::query()
-            ->with('employee.user', 'assigned.technician.user')
-            ->when($request->filled('search'), function ($query) use ($request) {
-                $search = $request->input('search');
-                $query->where('ticket_number', 'like', '%' . $search . '%')
-                    ->orWhere('status', 'like', '%' . $search . '%')
-                    ->orWhere('rr_no', 'like', '%' . $search . '%')
-                    ->orWhere('ms_no', 'like', '%' . $search . '%')
-                    ->orWhere('rs_no', 'like', '%' . $search . '%')
-                    ->orWhere('sr_no', 'like', '%' . $search . '%')
-                    ->orWhere('service', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%')
-                    ->orWhere('remarks', 'like', '%' . $search . '%')
-                    ->orWhereHas('employee.user', function ($subquery) use ($search) {
-                        $subquery->where('name', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('employee', function ($subquery) use ($search) {
-                        $subquery->where('department', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('employee', function ($subquery) use ($search) {
-                        $subquery->where('office', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('technician1.user', function ($subquery) use ($search) {
-                        $subquery->where('name', 'like', '%' . $search . '%');
-                    });
-            })
-            ->when($request->filled('filterTickets'), function ($query) use ($request) {
-                $ticketFilter = $request->input('filterTickets');
-                if ($ticketFilter === 'new') {
-                    $query->where('status', 'like', '%' . $ticketFilter . '%');
-                } elseif ($ticketFilter === 'resolved') {
-                    $query->where('status', 'like', '%' . $ticketFilter . '%');
-                } elseif ($ticketFilter === 'pending') {
-                    $query->where('status', 'like', '%' . $ticketFilter . '%');
-                } elseif ($ticketFilter === 'ongoing') {
-                    $query->where('status', 'like', '%' . $ticketFilter . '%');
-                }
-            })
-            ->whereYear('created_at', Carbon::now()->year)
-            ->whereMonth('created_at', Carbon::now()->month)
-            ->orderBy(
-                $request->input('sort', 'ticket_number'),
-                $request->input('direction', 'asc')
-            )
-            ->paginate(10);
+        $query = Ticket::query()->with('employee.user', 'assigned.technician.user')->whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month)->orderBy($request->input('sort', 'ticket_number'), $request->input('direction', 'asc'));
 
-        $filter = $request->only(['search']);
+        $filter = $request->only(['search', 'filterTickets', 'all', 'new', 'pending', 'ongoing', 'resolved']);
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('ticket_number', 'like', '%' . $search . '%')
+                ->orWhere('status', 'like', '%' . $search . '%')
+                ->orWhere('rr_no', 'like', '%' . $search . '%')
+                ->orWhere('ms_no', 'like', '%' . $search . '%')
+                ->orWhere('rs_no', 'like', '%' . $search . '%')
+                ->orWhere('sr_no', 'like', '%' . $search . '%')
+                ->orWhere('service', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%')
+                ->orWhere('remarks', 'like', '%' . $search . '%')
+                ->orWhereHas('employee.user', function ($subquery) use ($search) {
+                    $subquery->where('name', 'like', '%' . $search . '%');
+                })
+                ->orWhereHas('employee', function ($subquery) use ($search) {
+                    $subquery->where('department', 'like', '%' . $search . '%');
+                })
+                ->orWhereHas('employee', function ($subquery) use ($search) {
+                    $subquery->where('office', 'like', '%' . $search . '%');
+                })
+                ->orWhereHas('technician1.user', function ($subquery) use ($search) {
+                    $subquery->where('name', 'like', '%' . $search . '%');
+                });
+        }
+
+        if ($request->filled('filterTickets')) {
+            $ticketFilter = $request->input('filterTickets');
+            if ($ticketFilter === 'new') {
+                $query->where('status', 'like', '%' . $ticketFilter . '%');
+            } elseif ($ticketFilter === 'resolved') {
+                $query->where('status', 'like', '%' . $ticketFilter . '%');
+            } elseif ($ticketFilter === 'pending') {
+                $query->where('status', 'like', '%' . $ticketFilter . '%');
+            } elseif ($ticketFilter === 'ongoing') {
+                $query->where('status', 'like', '%' . $ticketFilter . '%');
+            }
+        }
+
+        $tickets = $query->paginate(2);
+
+        $tickets->appends($filter);
+
+        $request->session()->put('filter', $filter);
+
         $technicians = Technician::with('user')
             ->where('tickets_assigned', '!=', 5)
             ->get();
+
         $services = Service::all();
         return inertia('Admin/Tickets/Index', [
             'tickets' => $tickets,

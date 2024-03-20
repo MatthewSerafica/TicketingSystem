@@ -320,7 +320,7 @@ let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
 let timeoutId = null;
 
-const fetchData = (type) => {
+const fetchData = (type, all, ne, pending, ongoing, resolved) => {
   router.get(
     route('admin.tickets'),
     {
@@ -328,17 +328,24 @@ const fetchData = (type) => {
       sort: sortColumn.value,
       direction: sortDirection.value,
       filterTickets: type,
+      all: all,
+      new: ne,
+      pending: pending,
+      ongoing: ongoing,
+      resolved: resolved,
     },
     {
       preserveState: true,
       replace: true,
     }
   )
-  filter.all = type === "all";
+  /* filter.all = type === "all";
   filter.new = type === "new";
   filter.pending = type === "pending";
   filter.pending = type === "ongoing";
-  filter.pending = type === "resolved";
+  filter.pending = type === "resolved"; */
+  
+  router.remember({ filter: filter });
 }
 
 const resetSorting = () => {
@@ -406,7 +413,7 @@ const filterTickets = async (type) => {
     filter.pending = false;
     filter.ongoing = true;
   }
-  await fetchData(type);
+  await fetchData(type, filter.all, filter.new, filter.resolved, filter.pending, filter.ongoing);
 
   await nextTick();
   console.log("After filter change:", filter);
