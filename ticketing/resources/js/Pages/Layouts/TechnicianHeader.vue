@@ -56,7 +56,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <Link :href="route('technician.change', page.props.user.id)" v-if="page.props.user"
+                                    <Link :href="route('technician.profile', page.props.user.id)" v-if="page.props.user"
                                         class="text-decoration-none dropdown-item">Change password
                                     </Link>
                                     <Link :href="route('technician.change', page.props.user.id)" v-if="page.props.user"

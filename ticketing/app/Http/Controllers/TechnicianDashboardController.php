@@ -77,8 +77,8 @@ class TechnicianDashboardController extends Controller
 
     public function show($id)
     {
-        $user_id = auth()->id();
-        $user = Technician::where('user_id', $user_id)->with('user')->first();
+
+        $user = Technician::where('user_id', $id)->with('user')->first();
         $departments = Department::all();
         $offices = Office::all();
         return inertia('/technician/profile', [
