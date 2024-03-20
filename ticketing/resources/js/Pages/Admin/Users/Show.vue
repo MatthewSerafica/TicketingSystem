@@ -197,25 +197,14 @@
                     </div>
                 </div>
             </div>
-            <div v-if="users.employee" class="d-flex flex-row align-items-center justify-content-center"
+            <div class="d-flex flex-row align-items-center justify-content-center"
                 style="gap:10rem;">
                 <div class="d-flex flex-row card p-5 gap-5 shadow">
                     <div class="">
-                        <Doughnut style="width: 20rem;"></Doughnut>
+                        <Doughnut :service="service" style="width: 20rem;"></Doughnut>
                     </div>
                     <div class="=">
-                        <Bar style="width: 40rem;"></Bar>
-                    </div>
-                </div>
-            </div>
-            <div v-if="users.technician" class="d-flex flex-row align-items-center justify-content-center"
-                style="gap:10rem;">
-                <div class="d-flex flex-row card p-5 gap-5 shadow">
-                    <div class="">
-                        <Doughnut style="width: 20rem;"></Doughnut>
-                    </div>
-                    <div class="">
-                        <Bar style="width: 40rem;"></Bar>
+                        <Bar :yearly="yearly" style="width: 40rem;"></Bar>
                     </div>
                 </div>
             </div>
@@ -255,6 +244,8 @@ const props = defineProps({
     users: Object,
     offices: Object,
     departments: Object,
+    yearly: Object,
+    service: Object,
 })
 
 let selectedInput = ref(null);
