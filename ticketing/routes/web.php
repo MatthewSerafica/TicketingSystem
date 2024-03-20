@@ -93,6 +93,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/employee', [EmployeeTicketController::class, 'index'])->name('employee');
         Route::get('/employee/change', [EmployeeTicketController::class, 'password'])->name('employee.change');
         Route::post('/employee/change-password/{user_id}', [EmployeeTicketController::class, 'changePassword'])->name('employee.change-password');
+        Route::get('/employee/profile/{user_id}', [TechnicianDashboardController::class, 'profile'])->name('employee.profile');
         Route::get('/employee/create', [EmployeeTicketController::class, 'create'])->name('employee.create');
         Route::post('/employee/create/store', [EmployeeTicketController::class, 'store'])->name('employee.store');
         Route::get('/employee/notifications', [EmployeeNotificationController::class, 'index'])->name('employee.notifications');
