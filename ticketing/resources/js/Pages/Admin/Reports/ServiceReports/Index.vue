@@ -36,7 +36,7 @@
         <Pagination :links="service_reports.links" :key="'service_reports'" />
         <br>
       </div>
-      <div class="table-responsive rounded shadow pt-2 px-2">
+      <div v-if="service_reports.data.length" class="table-responsive rounded shadow pt-2 px-2">
         <table class="table table-hover custom-rounded-table">
           <thead>
             <tr class="text-start text-muted">
@@ -75,6 +75,8 @@
           </tbody>
         </table>
       </div>
+      <EmptyCard v-else class="mt-2 w-75" style="height:20rem;">
+      </EmptyCard>
     </div>
   </div>
 
@@ -82,6 +84,7 @@
 
 <script setup>
 import Button from '@/Components/Button.vue';
+import EmptyCard from '@/Components/EmptyState/Table.vue';
 import Pagination from '@/Components/Pagination.vue';
 import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
