@@ -29,7 +29,7 @@
             </Link>
         </div>
         <div class="d-flex flex-column gap-5 justify-content-center mt-3 align-items-center">
-            <div v-if="user.employee" class="card shadow p-2" style="max-width: 50rem;">
+            <div v-if="users.employee" class="card shadow p-2" style="max-width: 50rem;">
                 <div class="card-body d-flex flex-column gap-2">
                     <div class="card-title fw-bold fs-3">
                         User Details
@@ -40,31 +40,31 @@
                                 <div class="card-subtitle fw-medium fs-5">
                                     Name
                                 </div>
-                                <span v-if="!selectedInput || selectedInput !== user.name" class="card-text"
-                                    @click="showInput(user.name)">
-                                    {{ user.name }}
+                                <span v-if="!selectedInput || selectedInput !== users.name" class="card-text"
+                                    @click="showInput(users.name)">
+                                    {{ users.name }}
                                 </span>
-                                <input type="text" v-if="selectedInput === user.name" v-model="editData[user.name]"
-                                    @blur="updateData(user.name, user.id, 'name', false, false)"
-                                    @keyup.enter="updateData(user.name, user.id, 'name', false, false)"
+                                <input type="text" v-if="selectedInput === users.name" v-model="editData[users.name]"
+                                    @blur="updateData(users.name, user.id, 'name', false, false)"
+                                    @keyup.enter="updateData(users.name, users.id, 'name', false, false)"
                                     class="rounded border border-secondary-subtle text-start">
                             </div>
                             <div>
                                 <div class="card-subtitle fw-medium fs-5">
                                     Email
                                 </div>
-                                <span v-if="!selectedInput || selectedInput !== user.email" class="card-text"
-                                    @click="showInput(user.email)">{{ user.email }}</span>
-                                <input type="text" v-if="selectedInput === user.email" v-model="editData[user.email]"
-                                    @blur="updateData(user.email, user.id, 'email', false, false)"
-                                    @keyup.enter="updateData(user.email, user.id, 'email', false, false)"
+                                <span v-if="!selectedInput || selectedInput !== users.email" class="card-text"
+                                    @click="showInput(users.email)">{{ users.email }}</span>
+                                <input type="text" v-if="selectedInput === users.email" v-model="editData[users.email]"
+                                    @blur="updateData(users.email, users.id, 'email', false, false)"
+                                    @keyup.enter="updateData(users.email, users.id, 'email', false, false)"
                                     class="rounded border border-secondary-subtle text-start">
                             </div>
                             <div>
                                 <div class="card-subtitle fw-medium fs-5">
                                     User Type
                                 </div>
-                                <p class="card-text text-capitalize">{{ user.user_type }}</p>
+                                <p class="card-text text-capitalize">{{ users.user_type }}</p>
                             </div>
                         </div>
                         <div class="d-flex flex-column gap-2">
@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="btn-group">
                                     <button type="button" class="btn text-start">
-                                        {{ user.employee.department ? user.employee.department : 'Unassigned' }}
+                                        {{ users.employee.department ? users.employee.department : 'Unassigned' }}
                                     </button>
                                     <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
                                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
@@ -83,7 +83,7 @@
                                     <ul class="dropdown-menu">
                                         <li class="dropdown-item disabled">Select a department</li>
                                         <li v-for="department in departments" class="btn dropdown-item"
-                                            @click="showInput(department.department), updateData(department.department, user.employee.employee_id, 'department', true, false), console.log('Dropdown item clicked:', department.department)">
+                                            @click="showInput(department.department), updateData(department.department, users.employee.employee_id, 'department', true, false), console.log('Dropdown item clicked:', department.department)">
                                             {{ department.department }}
                                         </li>
                                     </ul>
@@ -95,7 +95,7 @@
                                 </div>
                                 <div class="btn-group">
                                     <button type="button" class="btn text-start text-break" style="max-width: 15rem;">
-                                        {{ user.employee.office ? user.employee.office : 'Unassigned' }}
+                                        {{ users.employee.office ? users.employee.office : 'Unassigned' }}
                                     </button>
                                     <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
                                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
@@ -104,7 +104,7 @@
                                     <ul class="dropdown-menu">
                                         <li class="dropdown-item disabled">Select an office</li>
                                         <li v-for="office in offices" class="btn dropdown-item"
-                                            @click="showInput(office.office), updateData(office.office, user.employee.employee_id, 'office', true, false)">
+                                            @click="showInput(office.office), updateData(office.office, users.employee.employee_id, 'office', true, false)">
                                             {{ office.office }}
                                         </li>
                                     </ul>
@@ -114,13 +114,13 @@
                     </div>
                 </div>
             </div>
-            <div v-if="user.technician" class="card shadow" style="width: 35rem;">
+            <div v-if="users.technician" class="card shadow" style="width: 35rem;">
                 <div class="card-body d-flex flex-column gap-1">
                     <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
                         <h3 class="mt-1">User Details</h3>
-                        <span v-if="user.technician.is_working == 1" class="badge bg-success rounded-circle"
+                        <span v-if="users.technician.is_working == 1" class="badge bg-success rounded-circle"
                             style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
-                        <span v-if="user.technician.is_working == 0" class="badge bg-danger rounded-circle"
+                        <span v-if="users.technician.is_working == 0" class="badge bg-danger rounded-circle"
                             style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
                     </div>
                     <div class="d-flex flex-row gap-5">
@@ -129,33 +129,33 @@
                                 <div class="card-subtitle fw-medium fs-5">
                                     Name
                                 </div>
-                                <span v-if="!selectedInput || selectedInput !== user.name" class="card-text"
-                                    @click="showInput(user.name, user.id)">
-                                    {{ user.name }}
+                                <span v-if="!selectedInput || selectedInput !== users.name" class="card-text"
+                                    @click="showInput(users.name, user.id)">
+                                    {{ users.name }}
                                 </span>
-                                <input type="text" v-if="selectedInput === user.name" v-model="editData[user.name]"
-                                    @blur="updateData(user.name, user.id, 'name', false, false)"
-                                    @keyup.enter="updateData(user.name, user.id, 'name', false, false)"
+                                <input type="text" v-if="selectedInput === users.name" v-model="editData[users.name]"
+                                    @blur="updateData(users.name, users.id, 'name', false, false)"
+                                    @keyup.enter="updateData(users.name, users.id, 'name', false, false)"
                                     class="rounded border border-secondary-subtle text-start">
                             </div>
                             <div>
                                 <div class="card-subtitle fw-medium fs-5">
                                     Email
                                 </div>
-                                <span v-if="!selectedInput || selectedInput !== user.email" class="card-text"
-                                    @click="showInput(user.email, user.id)">
-                                    {{ user.email }}
+                                <span v-if="!selectedInput || selectedInput !== users.email" class="card-text"
+                                    @click="showInput(users.email, users.id)">
+                                    {{ users.email }}
                                 </span>
-                                <input type="text" v-if="selectedInput === user.email" v-model="editData[user.email]"
-                                    @blur="updateData(user.email, user.id, 'email', false, false)"
-                                    @keyup.enter="updateData(user.email, user.id, 'email', false, false)"
+                                <input type="text" v-if="selectedInput === users.email" v-model="editData[users.email]"
+                                    @blur="updateData(users.email, users.id, 'email', false, false)"
+                                    @keyup.enter="updateData(users.email, users.id, 'email', false, false)"
                                     class="rounded border border-secondary-subtle text-start">
                             </div>
                             <div>
                                 <div class="card-subtitle fw-medium fs-5">
                                     User Type
                                 </div>
-                                <p class="card-text text-capitalize">{{ user.user_type }}</p>
+                                <p class="card-text text-capitalize">{{ users.user_type }}</p>
                             </div>
                         </div>
                         <div class="d-flex flex-column gap-2">
@@ -165,7 +165,7 @@
                                 </div>
                                 <div class="btn-group">
                                     <button type="button" class="btn text-start">
-                                        {{ user.technician.assigned_department ? user.technician.assigned_department :
+                                        {{ users.technician.assigned_department ? users.technician.assigned_department :
                     'Unassigned' }}
                                     </button>
                                     <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
@@ -175,7 +175,7 @@
                                     <ul class="dropdown-menu">
                                         <li class="dropdown-item disabled">Select a department</li>
                                         <li v-for="department in departments" class="btn dropdown-item"
-                                            @click="showInput(department.department), updateData(department.department, user.technician.technician_id, 'assigned_department', false, true), console.log('Dropdown item clicked:', department.department)">
+                                            @click="showInput(department.department), updateData(department.department, users.technician.technician_id, 'assigned_department', false, true), console.log('Dropdown item clicked:', department.department)">
                                             {{ department.department }}
                                         </li>
                                     </ul>
@@ -185,19 +185,19 @@
                                 <div class="card-subtitle fw-medium fs-6">
                                     Tickets Assigned
                                 </div>
-                                <p class="card-text">{{ user.technician.tickets_assigned }}</p>
+                                <p class="card-text">{{ users.technician.tickets_assigned }}</p>
                             </div>
                             <div>
                                 <div class="card-subtitle fw-medium fs-6">
                                     Total Tickets Resolved
                                 </div>
-                                <p class="card-text">{{ user.technician.tickets_resolved }}</p>
+                                <p class="card-text">{{ users.technician.tickets_resolved }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-if="user.employee" class="d-flex flex-row align-items-center justify-content-center"
+            <div v-if="users.employee" class="d-flex flex-row align-items-center justify-content-center"
                 style="gap:10rem;">
                 <div class="d-flex flex-row card p-5 gap-5 shadow">
                     <div class="">
@@ -208,7 +208,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="user.technician" class="d-flex flex-row align-items-center justify-content-center"
+            <div v-if="users.technician" class="d-flex flex-row align-items-center justify-content-center"
                 style="gap:10rem;">
                 <div class="d-flex flex-row card p-5 gap-5 shadow">
                     <div class="">
@@ -252,7 +252,7 @@ const handleClose = () => {
 }
 
 const props = defineProps({
-    user: Object,
+    users: Object,
     offices: Object,
     departments: Object,
 })

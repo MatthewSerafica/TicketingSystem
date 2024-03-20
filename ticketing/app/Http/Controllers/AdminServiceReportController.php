@@ -37,12 +37,14 @@ class AdminServiceReportController extends Controller
 
     public function create()
     {
-
         $latest_report = ServiceReport::orderBy('created_at', 'desc')->first();
         $new_service_id = $latest_report ? $this->incrementServiceId($latest_report->service_id) : '0001';
         $technicians = Technician::with('user')->get();
         $services = Service::all();
-        $tickets = Ticket::with('employee.user', 'assigned.technician.user')->get();
+        $tickets = Ticket::whereNull('sr_no')
+            ->orWhere('sr_no', '')
+            ->with('employee.user', 'assigned.technician.user')
+            ->get();
         return inertia('Admin/Reports/ServiceReports/Create', [
             'technicians' => $technicians,
             'new_service_id' => $new_service_id,

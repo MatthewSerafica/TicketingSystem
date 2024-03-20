@@ -194,8 +194,8 @@
                             {{ tech.user.name }}
                           </button>
                         </div>
-                        <ul class="dropdown-menu" style="max-height: 250px; overflow-y: auto;">
-                          <li v-for="technician in technicians" class="btn dropdown-item border"
+                        <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                          <li v-for="technician in technicians" class="btn dropdown-item"
                             @click="assignTechnician(ticket, index, technician)">
                             <span class="fw-semibold">{{ technician.user.name }}</span>
                             <br> <small>{{ technician.assigned_department }}</small>

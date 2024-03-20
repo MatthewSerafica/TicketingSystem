@@ -112,7 +112,7 @@ class AdminUsersController extends Controller
         $departments = Department::all();
         $offices = Office::all();
         return inertia('Admin/Users/Show', [
-            'user' => $user,
+            'users' => $user,
             'departments' => $departments,
             'offices' => $offices,
         ]);
