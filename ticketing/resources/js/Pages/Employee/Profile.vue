@@ -37,8 +37,8 @@
 <script setup>
 import Toast from '@/Components/Toast.vue';
 import Header from '@/Pages/Layouts/EmployeeHeader.vue';
-import Bar from '@/Pages/Employee/Dashboard/Charts/Bar.vue';
-import Doughnut from '@/Pages/Employee/Dashboard/Charts/Doughnut.vue';
+import Bar from '@/Pages/Employee/Charts/Bar.vue';
+import Doughnut from '@/Pages/Employee/Charts/Doughnut.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import Alpine from 'alpinejs';
 import { reactive, ref, watchEffect } from 'vue';
