@@ -13,7 +13,7 @@ class AdminServiceController extends Controller
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where('id', 'like', '%' . $search . '%')
-                    ->orWhere('office', 'like', '%' . $search . '%');
+                    ->orWhere('service', 'like', '%' . $search . '%');
             })
             ->paginate(10);
         $filters = $request->only(['search']);

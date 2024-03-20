@@ -80,8 +80,10 @@
   
   const page = usePage();
   
+  
   let showSuccessToast = ref(false);
   let showErrorToast = ref(false);
+
   
   watchEffect(() => {
     showSuccessToast.value = !!page.props.flash.success;
@@ -99,6 +101,11 @@
     services: Object,
     filters: Object,
   });
+
+  let search = ref(props.filters.search);
+  let sortColumn = ref("id");
+  let sortDirection = ref("asc");
+  let timeoutId = null;
   
   const fetchData = () => {
   router.get(

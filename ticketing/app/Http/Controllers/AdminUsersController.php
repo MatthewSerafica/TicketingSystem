@@ -10,7 +10,9 @@ use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Office;
 use App\Models\Technician;
+use App\Models\Ticket;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -23,6 +25,7 @@ class AdminUsersController extends Controller
     public function index(Request $request)
     {
         $users = User::query()->with('technician', 'employee')
+            ->whereNot('user_type', 'admin')
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where('id', 'like', '%' . $search . '%')
@@ -111,11 +114,82 @@ class AdminUsersController extends Controller
         $user = User::where('id', $id)->with('employee', 'technician')->firstOrFail();
         $departments = Department::all();
         $offices = Office::all();
+        $yearly = $this->getYearlyData($user);
+        $service = $this->getType($user);
         return inertia('Admin/Users/Show', [
             'users' => $user,
             'departments' => $departments,
             'offices' => $offices,
+            'yearly' => $yearly,
+            'service' => $service,
         ]);
+    }
+
+    private function getYearlyData($user)
+    {
+        $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        if ($user->user_type == 'employee') {
+            $yearly_data = Ticket::whereYear('created_at', Carbon::now()->year)
+                ->where('employee', $user->employee->employee_id)
+                ->get()
+                ->groupBy(function ($ticket) {
+                    return Carbon::parse($ticket->created_at)->format('M');
+                })
+                ->map(function ($grouped_tickets) {
+                    return $grouped_tickets->count();
+                });
+        } else if ($user->user_type == 'technician') {
+            $yearly_data = Ticket::whereYear('created_at', Carbon::now()->year)
+                ->with('assigned.technician.user')
+                ->whereHas('assigned.technician.user', function ($query) use ($user) {
+                    $query->where('id', $user->id);
+                })
+                ->get()
+                ->groupBy(function ($ticket) {
+                    return Carbon::parse($ticket->created_at)->format('M');
+                })
+                ->map(function ($grouped_tickets) {
+                    return $grouped_tickets->count();
+                });
+        }
+        $ordered_data = collect([]);
+        foreach ($months as $month) {
+            $ordered_data[$month] = $yearly_data->get($month, 0);
+        }
+        return $ordered_data;
+    }
+
+    private function getType($user)
+    {
+        if ($user->user_type == 'employee') {
+            $types = Ticket::distinct('service')->where('employee', $user->employee->employee_id)->pluck('service');
+            $typeCounts = [];
+
+            foreach ($types as $type) {
+                $count = Ticket::where('service', $type)->where('employee', $user->employee->employee_id)->count(); // Count tickets for each type
+                $typeCounts[$type] = $count;
+            }
+        } else if ($user->user_type == 'technician') {
+            $types = Ticket::distinct('service')
+                ->with('assigned.technician.user')
+                ->whereHas('assigned.technician.user', function ($query) use ($user) {
+                    $query->where('id', $user->id);
+                })
+                ->pluck('service');
+            $typeCounts = [];
+
+            foreach ($types as $type) {
+                $count = Ticket::where('service', $type)
+                    ->with('assigned.technician.user')
+                    ->whereHas('assigned.technician.user', function ($query) use ($user) {
+                        $query->where('id', $user->id);
+                    })
+                    ->count(); // Count tickets for each type
+                $typeCounts[$type] = $count;
+            }
+        }
+
+        return $typeCounts;
     }
 
     public function name(Request $request, $id)

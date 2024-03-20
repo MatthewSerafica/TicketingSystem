@@ -93,6 +93,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/employee', [EmployeeTicketController::class, 'index'])->name('employee');
         Route::get('/employee/change', [EmployeeTicketController::class, 'password'])->name('employee.change');
         Route::post('/employee/change-password/{user_id}', [EmployeeTicketController::class, 'changePassword'])->name('employee.change-password');
+        Route::get('/employee/profile/{user_id}', [EmployeeTicketController::class, 'profile'])->name('employee.profile');
         Route::get('/employee/create', [EmployeeTicketController::class, 'create'])->name('employee.create');
         Route::post('/employee/create/store', [EmployeeTicketController::class, 'store'])->name('employee.store');
         Route::get('/employee/notifications', [EmployeeNotificationController::class, 'index'])->name('employee.notifications');
@@ -105,7 +106,7 @@ Route::middleware(['web'])->group(function () {
         Route::put('/technician/update/status/{is_working}', [TechnicianDashboardController::class, 'updateStatus'])->name('technician.update.status');
         Route::get('/technician/change', [TechnicianDashboardController::class, 'password'])->name('technician.change');
         Route::post('/technician/change-password/{user_id}', [TechnicianDashboardController::class, 'changePassword'])->name('technician.change-password');
-        Route::get('/technician/profile/{user_id}', [TechnicianDashboardController::class, 'profile'])->name('technician.profile');
+        Route::get('/technician/profile', [TechnicianDashboardController::class, 'profile'])->name('technician.profile');
 
         Route::get('/technician/tickets', [TechnicianTicketController::class, 'index'])->name('technician.tickets');
         Route::get('/technician/tickets/create', [TechnicianTicketController::class, 'create'])->name('technician.tickets.create');

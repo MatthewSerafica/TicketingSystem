@@ -106,4 +106,14 @@ class EmployeeTicketController extends Controller
             return back()->with('error', 'An error occurred while updating the user.')->withInput();
         }
     }
+
+    public function profile($id)
+    {
+        $user = User::where('id', $id)->with('employee')->firstOrFail();
+        $departments = Department::all();
+        return inertia('Employee/Profile', [
+            'users' => $user,
+            'departments' => $departments,
+        ]);
+    }
 }

@@ -6,30 +6,46 @@
 import { Chart } from 'chart.js/auto';
 import { onMounted } from 'vue';
 
+const props = defineProps({
+    yearly: Object,
+})
+
 onMounted(() => {
-    const data = [
-        { year: 2010, count: 10 },
-        { year: 2011, count: 20 },
-        { year: 2012, count: 15 },
-        { year: 2013, count: 25 },
-        { year: 2014, count: 22 },
-        { year: 2015, count: 30 },
-        { year: 2016, count: 28 },
-    ];
-    new Chart(
-        document.getElementById('chart'),
-        {
-            type: 'bar',
-            data: {
-                labels: data.map(row => row.year),
-                datasets: [
-                    {
-                        label: 'Requests by year',
-                        data: data.map(row => row.count)
+    let delayed
+    const yearlyReportChart = document.getElementById('chart')
+    new Chart(yearlyReportChart, {
+        data: {
+            labels: Object.keys(props.yearly),
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Requests for this year',
+                    data: Object.values(props.yearly),
+                    backgroundColor: '#1B59F8',
+                    borderColor: '#1B59F8',
+                    borderWidth: 1,
+                    borderRadius: 10,
+                    spanGaps: true,
+                    barThickness: 15,
+                    hoverBackgroundColor: '#377DFF',
+                    hoverBorderColor: '#377DFF',
+                },
+            ],
+        },
+        options: {
+            animation: {
+                onComplete: () => {
+                    delayed = true
+                },
+                delay: (context) => {
+                    let delay = 0;
+                    if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                        delay = context.dataIndex * 300 + context.datasetIndex * 100;
                     }
-                ]
-            }
-        }
-    );
+                    return delay;
+                },
+            },
+        },
+    })
 })
 </script>
