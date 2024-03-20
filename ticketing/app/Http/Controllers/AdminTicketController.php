@@ -62,7 +62,7 @@ class AdminTicketController extends Controller
             }
         }
 
-        $tickets = $query->paginate(2);
+        $tickets = $query->paginate(10);
 
         $tickets->appends($filter);
 
