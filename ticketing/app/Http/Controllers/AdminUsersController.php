@@ -18,16 +18,21 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Validation\Rule;
 
 class AdminUsersController extends Controller
 {
+
     public function index(Request $request)
     {
-        $users = User::query()->with('technician', 'employee')
-            ->whereNot('user_type', 'admin')
-            ->when($request->filled('search'), function ($query) use ($request) {
-                $search = $request->input('search');
+        $query = User::query()->with('technician', 'employee')
+            ->whereNot('user_type', 'admin');
+
+        // Retrieve filter state from query parameters
+        $filter = $request->only(['search', 'filterUsers', 'all', 'employee', 'technician']);
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($query) use ($search) {
                 $query->where('id', 'like', '%' . $search . '%')
                     ->orWhere('name', 'like', '%' . $search . '%')
                     ->orWhere('email', 'like', '%' . $search . '%')
@@ -35,24 +40,30 @@ class AdminUsersController extends Controller
                     ->orWhereHas('employee', function ($subquery) use ($search) {
                         $subquery->where('department', 'like', '%' . $search . '%');
                     });
-            })
-            ->when($request->filled('filterUsers'), function ($query) use ($request) {
-                $userFilter = $request->input('filterUsers');
-                if ($userFilter === 'employee') {
-                    $query->where('user_type', 'like', '%' . $userFilter . '%');/*  */
-                } elseif ($userFilter === 'technician') {
-                    $query->where('user_type', 'like', '%' . $userFilter . '%');
-                }
-            })
-            ->paginate(10);
+            });
+        }
 
-        $filters = $request->only(['search']);
+        if ($request->filled('filterUsers')) {
+            // Apply user type filter
+            $userFilter = $request->input('filterUsers');
+            if ($userFilter === 'employee' || $userFilter === 'technician') {
+                $query->where('user_type', $userFilter);
+            }
+        }
+
+        $users = $query->paginate(10);
+
+        $users->appends($filter);
+
+        // Save the filter in the session to maintain state across page requests
+        $request->session()->put('filter', $filter);
 
         return inertia('Admin/Users/Index', [
             'users' => $users,
-            'filter' => $filters,
+            'filter' => $filter, // Pass the filter state to the view
         ]);
     }
+
 
 
     public function create()

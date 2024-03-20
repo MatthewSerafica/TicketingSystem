@@ -17,8 +17,8 @@
             </Toast>
         </div>
         <div class="w-25">
-            <Link :href="route('technician')"
-                class="btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
+            <Link :href="route('technician')" 
+                class="btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center back-button"
                 style="width: 6rem;">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                 class="bi bi-caret-left-fill" viewBox="0 0 16 16">
@@ -28,8 +28,8 @@
             <span>Back</span>
             </Link>
         </div>
-        <div class="d-flex flex-column gap-5 justify-content-center mt-3 align-items-center">
-            <div class="card shadow" style="width: 35rem;">
+        <div class="d-flex flex-row gap-5 justify-content-center mt-3 align-items-center mb-3">
+            <div class="card shadow" style="width: 35rem; height: 785px;">
                 <div class="card-body d-flex flex-column gap-1">
                     <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
                         <h3 class="mt-1">User Details</h3>
@@ -133,7 +133,7 @@
             </div>
             <div class="d-flex flex-row align-items-center justify-content-center"
                 style="gap:10rem;">
-                <div class="d-flex flex-row card p-5 gap-5 shadow">
+                <div class="d-flex flex-column justify-content-center align-items-center card p-5 gap-5 shadow">
                     <div class="">
                         <Doughnut :service="service" style="width: 20rem;"></Doughnut>
                     </div>
@@ -199,3 +199,14 @@ const updateStatus = (is_working) => {
 }
 
 </script>
+
+<style scoped>
+.back-button {
+  width: 6rem;
+  transition: transform 0.3s ease; 
+}
+
+.back-button:hover {
+  transform: scale(1.1); 
+}
+</style>

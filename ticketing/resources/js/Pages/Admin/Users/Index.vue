@@ -25,7 +25,8 @@
               class="btn btn-tickets btn-primary w-50 d-flex justify-content-center align-items-center shadow">
             Create User
             </Link>
-            <Button :name="'Import'" :color="'outline-primary'" :width="'50'" @click="showModal" class="shadow"></Button>
+            <Button :name="'Import'" :color="'outline-primary'" :width="'50'" @click="showModal"
+              class="shadow"></Button>
             <div v-if="isShowModal" class="custom-modal">
               <div class="modal-content d-flex flex-column">
                 <div class="d-flex flex-row justify-content-end">
@@ -68,11 +69,9 @@
           </div>
         </div>
       </div>
-
       <div class="w-75">
-
         <div v-if="users.data.length" class="d-flex justify-content-end mb-2">
-          <Pagination :links="users.links" :key="'users'" />
+          <Pagination :links="users.links" :filter="filter" :key="'users'" />
         </div>
         <table class="table table-hover shadow custom-rounded-table">
           <thead v-if="!isLoading">
@@ -82,6 +81,7 @@
               <th class="text-muted">Email</th>
               <th class="text-muted">User Type</th>
               <th class="text-muted">Created At</th>
+              <th v-if="filter.filterUsers === 'technician'" class="text-muted">Status</th>
             </tr>
           </thead>
           <tbody v-if="!isLoading">
@@ -103,6 +103,14 @@
               <td class="text-start py-3">
                 <Link :href="route('admin.users.show', user.id)" class="btn">{{ formatDate(user.created_at) }}</Link>
               </td>
+              <td v-if="filter.filterUsers === 'technician'" class="text-start py-3">
+                <Link v-if="user.technician" :href="route('admin.users.show', user.id)" class="btn">
+                <span v-if="user.technician.is_working == 1" class="badge bg-success rounded-circle"
+                  style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
+                <span v-if="user.technician.is_working == 0" class="badge bg-danger rounded-circle"
+                  style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
+                </Link>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -114,13 +122,13 @@
 <script setup>
 import Button from '@/Components/Button.vue';
 import Pagination from '@/Components/Pagination.vue';
-import Header from "@/Pages/Layouts/AdminHeader.vue";
 import Toast from '@/Components/Toast.vue';
-import axios from "axios"
-import { router, Link, usePage } from '@inertiajs/vue3';
-import moment from "moment";
+import Header from "@/Pages/Layouts/AdminHeader.vue";
+import { Link, router, usePage } from '@inertiajs/vue3';
 import Alpine from 'alpinejs';
-import { computed, defineProps, nextTick, reactive, ref, watch, watchEffect } from 'vue';
+import axios from "axios";
+import moment from "moment";
+import { defineProps, nextTick, reactive, ref, watch, watchEffect } from 'vue';
 
 Alpine.start()
 
@@ -162,7 +170,9 @@ let sortDirection = ref("asc");
 let timeoutId = null;
 let isLoading = ref(false);
 
-const fetchData = async (type) => {
+// Load filter state from session
+
+const fetchData = async (type, all, employee, technician) => {
   isLoading = true;
   await router.get(
     route('admin.users'),
@@ -171,6 +181,9 @@ const fetchData = async (type) => {
       sort: sortColumn.value,
       direction: sortDirection.value,
       filterUsers: type,
+      all: all,
+      employee: employee,
+      technician: technician,
     },
     {
       preserveScroll: true,
@@ -178,10 +191,12 @@ const fetchData = async (type) => {
     }
   );
   // Update the filter state after fetching data
-  filter.all = type === "all";
+  /* filter.all = type === "all";
   filter.employee = type === "employee";
-  filter.technician = type === "technician";
+  filter.technician = type === "technician"; */
+
   router.remember({ filter: filter });
+
   await nextTick();
   console.log("After data fetch and filter update:", filter);
   isLoading = false;
@@ -209,31 +224,30 @@ watch(search, () => {
   debouncedFetchData();
 })
 
-const filter = reactive({
+const filters = reactive({
   all: true,
   employee: false,
   technician: false,
 })
 
 const filterUsers = async (type) => {
-  console.log("Before filter change:", filter);
+  console.log("Before filter change:", filters);
   if (type === "all") {
-    filter.all = true;
-    filter.employee = false;
-    filter.technician = false;
+    filters.all = true;
+    filters.employee = false;
+    filters.technician = false;
   } else if (type === "employee") {
-    filter.all = false;
-    filter.employee = true;
-    filter.technician = false;
+    filters.all = false;
+    filters.employee = true;
+    filters.technician = false;
   } else if (type === "technician") {
-    filter.all = false;
-    filter.employee = false;
-    filter.technician = true;
+    filters.all = false;
+    filters.employee = false;
+    filters.technician = true;
   }
-  await fetchData(type); // Pass the type to fetchData and wait for it to complete
-  // Use nextTick to log the updated state after the next DOM update
+  await fetchData(type, filters.all, filters.employee, filters.technician);
   await nextTick();
-  console.log("After filter change:", filter);
+  console.log("After filter change:", filters);
 }
 
 const file = ref(null);
@@ -246,7 +260,7 @@ const handleFileUpload = () => {
 const uploadCsv = async () => {
   isLoading.value = true;
   let formData = new FormData()
-  console.log('formData:', formData); 
+  console.log('formData:', formData);
   formData.append('file', file.value)
 
   try {

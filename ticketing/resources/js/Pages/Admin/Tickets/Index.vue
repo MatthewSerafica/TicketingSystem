@@ -69,7 +69,7 @@
                 <th class="text-muted">Request</th>
                 <th class="text-muted text-center">Service</th>
                 <th class="text-start text-muted">Complexity</th>
-                <th class="text-muted" @click="toggleTechnicianCTAs">Technician</th>
+                <th class="text-muted" style="cursor:pointer;" @click="toggleTechnicianCTAs">Technician</th>
                 <th class="text-center text-muted">SR</th>
                 <th class="text-muted">Date Resolved</th>
                 <th class="text-muted">Remarks</th>
@@ -320,7 +320,7 @@ let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
 let timeoutId = null;
 
-const fetchData = (type) => {
+const fetchData = (type, all, ne, pending, ongoing, resolved) => {
   router.get(
     route('admin.tickets'),
     {
@@ -328,17 +328,24 @@ const fetchData = (type) => {
       sort: sortColumn.value,
       direction: sortDirection.value,
       filterTickets: type,
+      all: all,
+      new: ne,
+      pending: pending,
+      ongoing: ongoing,
+      resolved: resolved,
     },
     {
       preserveState: true,
       replace: true,
     }
   )
-  filter.all = type === "all";
+  /* filter.all = type === "all";
   filter.new = type === "new";
   filter.pending = type === "pending";
   filter.pending = type === "ongoing";
-  filter.pending = type === "resolved";
+  filter.pending = type === "resolved"; */
+  
+  router.remember({ filter: filter });
 }
 
 const resetSorting = () => {
@@ -406,7 +413,7 @@ const filterTickets = async (type) => {
     filter.pending = false;
     filter.ongoing = true;
   }
-  await fetchData(type);
+  await fetchData(type, filter.all, filter.new, filter.resolved, filter.pending, filter.ongoing);
 
   await nextTick();
   console.log("After filter change:", filter);
@@ -620,7 +627,44 @@ const validateNumericInput = (inputValue, propName) => {
 
 </script>
 
+
 <style scoped>
+
+.dropdown-menu {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease; 
+}
+
+.dropdown-menu.show {
+  display: block;
+  opacity: 1;
+}
+
+.dropdown-item {
+  opacity: 0;
+  transition: opacity 0.5s ease; 
+}
+
+.dropdown-menu.show .dropdown-item {
+  opacity: 1;
+}
+
+.dropdown-item {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
+
 .service-dropdown-toggle {
   border-color: transparent;
   background-color: transparent;
