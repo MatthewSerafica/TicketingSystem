@@ -110,9 +110,10 @@ class TechnicianDashboardController extends Controller
         }
     }
 
-    public function profile($id)
+    public function profile()
     {
-        $user = User::where('id', $id)->with('technician')->firstOrFail();
+        $auth = Auth::user();
+        $user = User::where('id', $auth->id)->with('technician')->firstOrFail();
         $departments = Department::all();
         $yearly = $this->getYearlyData($user);
         $service = $this->getType($user);
