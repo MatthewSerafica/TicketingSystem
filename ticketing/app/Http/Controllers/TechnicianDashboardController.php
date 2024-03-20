@@ -83,4 +83,15 @@ class TechnicianDashboardController extends Controller
             'departments' => $departments,
         ]);
     }
+
+    
+    public function updateStatus($is_working)
+    {
+        $user = Auth::user();
+        $technician = Technician::where('user_id', $user->id)->firstOrFail();
+        $technician->update(['is_working' => $is_working]);
+
+
+        return redirect()->back()->with('success', 'Status updated successfully.');
+    }
 }
