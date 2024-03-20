@@ -36,10 +36,10 @@
                 <h1 class="stat-label">Statistics</h1>
                 <div class="w-100 justify-content-center align-items-center gap-5 m-3 statistics">
                     <div class="card p-5 shadow-sm">
-                        <Doughnut class="doughnut"></Doughnut>
+                        <Doughnut :service="service" class="doughnut"></Doughnut>
                     </div>
                     <div class="card p-5 shadow-sm">
-                        <Bar class="bar"></Bar>
+                        <Bar :yearly_data="yearly_data" class="bar"></Bar>
                     </div>
                 </div>
             </div>
@@ -61,6 +61,8 @@ import { ref, watch } from 'vue';
 
 const props = defineProps({
     tickets: Object,
+    yearly_data: Object,
+    service: Object,
 })
 
 const formatDate = (date) => {

@@ -6,25 +6,20 @@
 import { Chart } from 'chart.js/auto';
 import { onMounted } from 'vue';
 
+const props = defineProps({
+    service: Object,
+})
+
 onMounted(() => {
     new Chart(
         document.getElementById('doughnut'),
         {
             type: 'doughnut',
             data: {
-                labels: [
-                    'Hardware Repair',
-                    'Software Repair',
-                    'Maintenance'
-                ],
+                labels: Object.keys(props.service),
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [300, 50, 100],
-                    backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
-                    ],
+                    label: 'Service Data',
+                    data: Object.values(props.service),
                     hoverOffset: 4
                 }]
             }
