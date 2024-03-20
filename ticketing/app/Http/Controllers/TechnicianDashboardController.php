@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
+use App\Models\Office;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
@@ -71,5 +73,18 @@ class TechnicianDashboardController extends Controller
         } catch (Exception $e) {
             return back()->with('error', 'An error occurred while updating the user.')->withInput();
         }
+    }
+
+    public function show($id)
+    {
+        $user_id = auth()->id();
+        $user = Technician::where('user_id', $user_id)->with('user')->first();
+        $departments = Department::all();
+        $offices = Office::all();
+        return inertia('/technician/profile', [
+            'user' => $user,
+            'departments' => $departments,
+            'offices' => $offices,
+        ]);
     }
 }
