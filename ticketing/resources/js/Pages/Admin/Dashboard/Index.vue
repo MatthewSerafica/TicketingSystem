@@ -52,11 +52,11 @@
 import Button from '@/Components/Button.vue';
 import Card from '@/Components/Cards.vue';
 import EmptyCard from '@/Components/EmptyState/Cards.vue';
+import Bar from "@/Pages/Admin/Dashboard/Charts/Bar.vue";
+import Doughnut from "@/Pages/Admin/Dashboard/Charts/Doughnut.vue";
 import Header from '@/Pages/Layouts/AdminHeader.vue';
 import { Link } from '@inertiajs/vue3';
 import moment from "moment";
-import Bar from "@/Pages/Admin/Dashboard/Charts/Bar.vue"
-import Doughnut from "@/Pages/Admin/Dashboard/Charts/Doughnut.vue"
 import { ref, watch } from 'vue';
 
 const props = defineProps({
