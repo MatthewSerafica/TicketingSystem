@@ -12,6 +12,7 @@ use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Ticket;
 use App\Models\User;
+use Carbon\Carbon;
 use App\Notifications\TicketMade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,8 @@ class EmployeeTicketController extends Controller
             'tickets' => $ticket,
         ]);
     }
+
+
     public function create()
     {
         return inertia('Employee/Create');
@@ -105,5 +108,51 @@ class EmployeeTicketController extends Controller
         } catch (Exception $e) {
             return back()->with('error', 'An error occurred while updating the user.')->withInput();
         }
+    }
+
+    public function profile($id)
+    {
+        $user = User::where('id', $id)->with('employee')->firstOrFail();
+        $departments = Department::all();
+        $yearly = $this->getYearlyData($user);
+        $service = $this->getType($user);
+        return inertia('Employee/Profile', [
+            'users' => $user,
+            'departments' => $departments,
+            'yearly' => $yearly,
+            'service' => $service,
+        ]);
+    }
+    
+    private function getYearlyData($user)
+    {
+        $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        $yearly_data = Ticket::whereYear('created_at', Carbon::now()->year)
+                ->where('employee', $user->employee->employee_id)
+                ->get()
+                ->groupBy(function ($ticket) {
+                    return Carbon::parse($ticket->created_at)->format('M');
+                })
+                ->map(function ($grouped_tickets) {
+                    return $grouped_tickets->count();
+                });
+        $ordered_data = collect([]);
+        foreach ($months as $month) {
+            $ordered_data[$month] = $yearly_data->get($month, 0);
+        }
+        return $ordered_data;
+    }
+
+    private function getType($user)
+    {
+        $types = Ticket::distinct('service')->where('employee', $user->employee->employee_id)->pluck('service');
+            $typeCounts = [];
+
+            foreach ($types as $type) {
+                $count = Ticket::where('service', $type)->where('employee', $user->employee->employee_id)->count(); // Count tickets for each type
+                $typeCounts[$type] = $count;
+            }
+
+        return $typeCounts;
     }
 }
