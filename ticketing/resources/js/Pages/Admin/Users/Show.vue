@@ -18,7 +18,7 @@
         </div>
         <div class="w-25">
             <Link :href="route('admin.users')"
-                class="btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
+                class="btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center back-button"
                 style="width: 6rem;">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                 class="bi bi-caret-left-fill" viewBox="0 0 16 16">
@@ -28,8 +28,8 @@
             <span>Back</span>
             </Link>
         </div>
-        <div class="d-flex flex-column gap-5 justify-content-center mt-3 align-items-center">
-            <div v-if="users.employee" class="card shadow p-2" style="max-width: 50rem;">
+        <div class="d-flex flex-row gap-5 justify-content-center mt-3 align-items-center mb-3">
+            <div v-if="users.employee" class="card shadow p-2" style="max-width: 50rem; height: 800px;">
                 <div class="card-body d-flex flex-column gap-2">
                     <div class="card-title fw-bold fs-3">
                         User Details
@@ -114,7 +114,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="users.technician" class="card shadow" style="width: 35rem;">
+            <div v-if="users.technician" class="card shadow" style="width: 35rem; height: 785px;">
                 <div class="card-body d-flex flex-column gap-1">
                     <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
                         <h3 class="mt-1">User Details</h3>
@@ -197,9 +197,9 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex flex-row align-items-center justify-content-center"
+            <div class="d-flex flex-row align-items-center justify-content-center card-row"
                 style="gap:10rem;">
-                <div class="d-flex flex-row card p-5 gap-5 shadow">
+                <div class="d-flex flex-column justify-content-center align-items-center card p-5 gap-5 shadow">
                     <div class="">
                         <Doughnut :service="service" style="width: 20rem;"></Doughnut>
                     </div>
@@ -272,3 +272,48 @@ const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
 };
 
 </script>
+
+<style scoped>
+.dropdown-menu {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease; 
+}
+
+.dropdown-menu.show {
+  display: block;
+  opacity: 1;
+}
+
+.dropdown-item {
+  opacity: 0;
+  transition: opacity 0.5s ease; 
+}
+
+.dropdown-menu.show .dropdown-item {
+  opacity: 1;
+}
+
+.dropdown-item {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.back-button {
+  width: 6rem;
+  transition: transform 0.3s ease; 
+}
+
+.back-button:hover {
+  transform: scale(1.1); 
+}
+
+</style>

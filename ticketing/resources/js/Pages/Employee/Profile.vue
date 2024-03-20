@@ -16,9 +16,9 @@
                 @close="handleClose">
             </Toast>
         </div>
-        <div class="w-25">
+        <div class="w-25 ">
             <Link :href="route('employee')"
-                class="btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
+                class="btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center back-button"
                 style="width: 6rem;">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                 class="bi bi-caret-left-fill" viewBox="0 0 16 16">
@@ -186,3 +186,14 @@ const showInput = (data) => {
 }; */
 
 </script>
+
+<style scoped>
+.back-button {
+  width: 6rem;
+  transition: transform 0.3s ease; 
+}
+
+.back-button:hover {
+  transform: scale(1.1); 
+}
+</style>
