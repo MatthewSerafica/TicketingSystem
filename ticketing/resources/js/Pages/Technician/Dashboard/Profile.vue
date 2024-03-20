@@ -29,7 +29,7 @@
             </Link>
         </div>
         <div class="d-flex flex-column gap-5 justify-content-center mt-3 align-items-center">
-            <div v-if="users.technician" class="card shadow" style="width: 35rem;">
+            <div class="card shadow" style="width: 35rem;">
                 <div class="card-body d-flex flex-column gap-1">
                     <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
                         <h3 class="mt-1">User Details</h3>
@@ -112,14 +112,14 @@
                     </div>
                 </div>
             </div>
-            <div v-if="users.technician" class="d-flex flex-row align-items-center justify-content-center"
+            <div class="d-flex flex-row align-items-center justify-content-center"
                 style="gap:10rem;">
                 <div class="d-flex flex-row card p-5 gap-5 shadow">
                     <div class="">
-                        <Doughnut style="width: 20rem;"></Doughnut>
+                        <Doughnut :service="service" style="width: 20rem;"></Doughnut>
                     </div>
                     <div class="">
-                        <Bar style="width: 40rem;"></Bar>
+                        <Bar :yearly="yearly" style="width: 40rem;"></Bar>
                     </div>
                 </div>
             </div>
@@ -158,6 +158,8 @@ const handleClose = () => {
 const props = defineProps({
     users: Object,
     departments: Object,
+    service: Object,
+    yearly: Object,
 })
 
 let selectedInput = ref(null);

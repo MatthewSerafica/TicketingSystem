@@ -25,6 +25,7 @@ class AdminUsersController extends Controller
     public function index(Request $request)
     {
         $users = User::query()->with('technician', 'employee')
+            ->whereNot('user_type', 'admin')
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where('id', 'like', '%' . $search . '%')

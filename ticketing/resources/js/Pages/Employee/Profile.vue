@@ -29,77 +29,7 @@
             </Link>
         </div>
         <div class="d-flex flex-column gap-5 justify-content-center mt-3 align-items-center">
-            <div v-if="users.employee" class="card shadow" style="width: 35rem;">
-                <div class="card-body d-flex flex-column gap-1">
-                    <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
-                        <h3 class="mt-1">User Details</h3>
-                        <span v-if="users.employee.is_working == 1" class="badge bg-success rounded-circle"
-                            style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
-                        <span v-if="users.employee.is_working == 0" class="badge bg-danger rounded-circle"
-                            style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
-                    </div>
-                    <div class="d-flex flex-row gap-5">
-                        <div class="d-flex flex-column gap-2">
-                            <div>
-                                <div class="card-subtitle fw-medium fs-5">
-                                    Name
-                                </div>
-                                <span v-if="!selectedInput || selectedInput !== users.name" class="card-text"
-                                    @click="showInput(users.name, user.id)">
-                                    {{ users.name }}
-                                </span>
-                                <input type="text" v-if="selectedInput === users.name" v-model="editData[users.name]"
-                                    @blur="updateData(users.name, users.id, 'name', false, false)"
-                                    @keyup.enter="updateData(users.name, users.id, 'name', false, false)"
-                                    class="rounded border border-secondary-subtle text-start">
-                            </div>
-                            <div>
-                                <div class="card-subtitle fw-medium fs-5">
-                                    Email
-                                </div>
-                                <span v-if="!selectedInput || selectedInput !== users.email" class="card-text"
-                                    @click="showInput(users.email, users.id)">
-                                    {{ users.email }}
-                                </span>
-                                <input type="text" v-if="selectedInput === users.email" v-model="editData[users.email]"
-                                    @blur="updateData(users.email, users.id, 'email', false, false)"
-                                    @keyup.enter="updateData(users.email, users.id, 'email', false, false)"
-                                    class="rounded border border-secondary-subtle text-start">
-                            </div>
-                            <div>
-                                <div class="card-subtitle fw-medium fs-5">
-                                    User Type
-                                </div>
-                                <p class="card-text text-capitalize">{{ users.user_type }}</p>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column gap-2">
-                            <div>
-                                <div class="card-subtitle fw-medium fs-5">
-                                    Assigned Department
-                                </div>
-                                <div class="btn-group">
-                                    <button type="button" class="btn text-start">
-                                        {{ users.employee.assigned_department ? users.employee.assigned_department :
-                    'Unassigned' }}
-                                    </button>
-                                    <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
-                                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                                        <span class="visually-hidden">Toggle Dropdown</span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li class="dropdown-item disabled">Select a department</li>
-                                        <li v-for="department in departments" class="btn dropdown-item"
-                                            @click="showInput(department.department), updateData(department.department, users.employee.employee_id, 'assigned_department', false, true), console.log('Dropdown item clicked:', department.department)">
-                                            {{ department.department }}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
+            test
         </div>
     </div>
 </template>
@@ -107,6 +37,8 @@
 <script setup>
 import Toast from '@/Components/Toast.vue';
 import Header from '@/Pages/Layouts/EmployeeHeader.vue';
+import Bar from '@/Pages/Employee/Charts/Bar.vue';
+import Doughnut from '@/Pages/Employee/Charts/Doughnut.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import Alpine from 'alpinejs';
 import { reactive, ref, watchEffect } from 'vue';
@@ -143,5 +75,19 @@ const showInput = (data) => {
     editData[data] = data ? data : '';
 }
 
+/* const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
+    if (selectedInput.value === data) {
+        const routeName = 'technician.users.update.technician';
+        const form = useForm({
+            [updateField]: editData[data],
+        });
+        console.log(routeName)
+
+        await form.put(route(routeName, { user_id: id, field: updateField }));
+
+        selectedInput.value = null;
+        editData[data] = '';
+    }
+}; */
 
 </script>

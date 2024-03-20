@@ -217,7 +217,14 @@ const addDropdown = () => {
 }
 
 const removeDropdown = (index) => {
-  techniciansData.value.splice(index, 1)
+  const removedTechnicianId = techniciansData.value[index].technicianId;
+  techniciansData.value.splice(index, 1);
+
+  // Remove the technicianId from the form.technicians array
+  const technicianIndex = form.technicians.indexOf(removedTechnicianId);
+  if (technicianIndex !== -1) {
+    form.technicians.splice(technicianIndex, 1);
+  }
 }
 
 const selectTechnician = (technician, index) => {
