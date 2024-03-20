@@ -22,10 +22,10 @@
           <p class="fs-5">Manage and Track All Users</p>
           <div class="d-flex flex-row gap-2 justify-content-center align-items-center w-100">
             <Link :href="route('admin.users.create')"
-              class="btn btn-tickets btn-primary w-50 d-flex justify-content-center align-items-center">
+              class="btn btn-tickets btn-primary w-50 d-flex justify-content-center align-items-center shadow">
             Create User
             </Link>
-            <Button :name="'Import'" :color="'outline-primary'" :width="'50'" @click="showModal"></Button>
+            <Button :name="'Import'" :color="'outline-primary'" :width="'50'" @click="showModal" class="shadow"></Button>
             <div v-if="isShowModal" class="custom-modal">
               <div class="modal-content d-flex flex-column">
                 <div class="d-flex flex-row justify-content-end">
@@ -54,14 +54,14 @@
             </div>
           </div>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
-            <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterUsers('all')"></Button>
-            <Button :name="'Employees'" :color="'secondary'" class="btn-options"
+            <Button :name="'All'" :color="'secondary'" class="btn-options shadow" @click="filterUsers('all')"></Button>
+            <Button :name="'Employees'" :color="'secondary'" class="btn-options shadow"
               @click="filterUsers('employee')"></Button>
-            <Button :name="'Technicians'" :color="'secondary'" class="btn-options"
+            <Button :name="'Technicians'" :color="'secondary'" class="btn-options shadow"
               @click="filterUsers('technician')"></Button>
           </div>
           <!-- Add buttons for filtering if needed -->
-          <div class="input-group mt-3">
+          <div class="input-group mt-3 shadow rounded">
             <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
             <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
               placeholder="Search Users..." aria-label="searchIcon" aria-describedby="searchIcon" />
