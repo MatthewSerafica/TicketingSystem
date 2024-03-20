@@ -111,53 +111,60 @@ class AdminTicketController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'description' => 'required',
-            'employee' => 'required',
-            'issue' => 'required',
-            'service' => 'required',
-            'rs_no' => 'nullable|numeric',
-        ]);
-
-        if ($request->filled('rs_no')) {
-            if (!is_numeric($request->rs_no)) {
-                return redirect()->back()->with('error', 'RS number must be numeric.');
-            }
-        }
-
-        $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
-        if ($employee->made_ticket >= 5) {
-            return redirect()->back()->with('error', 'Error Creating Ticket')->with('message', 'Employee has already met ticket limit!');
-        }
-
-        $ticketData = [
-            'rs_no' => $request->rs_no,
-            'employee' => $request->employee,
-            'issue' => $request->issue,
-            'description' => $request->description,
-            'service' => $request->service,
-            'status' => 'Pending',
-        ];
-
-        $ticket = Ticket::create($ticketData);
-
-
-        $assignedTechnicians = $request->technicians;
-
-        foreach ($assignedTechnicians as $technicianId) {
-            AssignedTickets::create([
-                'ticket_number' => $ticket->ticket_number,
-                'technician' => $technicianId,
+        try {
+            DB::beginTransaction();
+            $request->validate([
+                'description' => 'required',
+                'employee' => 'required',
+                'issue' => 'required',
+                'service' => 'required',
+                'rs_no' => 'nullable|numeric',
             ]);
 
-            $this->sendTechnicianNotification($technicianId, $ticket);
+            if ($request->filled('rs_no')) {
+                if (!is_numeric($request->rs_no)) {
+                    return redirect()->back()->with('error', 'RS number must be numeric.');
+                }
+            }
+
+            $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
+            if ($employee->made_ticket >= 5) {
+                return redirect()->back()->with('error', 'Error Creating Ticket')->with('message', 'Employee has already met ticket limit!');
+            }
+
+
+            $ticketData = [
+                'rs_no' => $request->rs_no,
+                'employee' => $request->employee,
+                'issue' => $request->issue,
+                'description' => $request->description,
+                'service' => $request->service,
+                'status' => 'Pending',
+            ];
+
+            $ticket = Ticket::create($ticketData);
+
+
+            $assignedTechnicians = $request->technicians;
+
+            foreach ($assignedTechnicians as $technicianId) {
+                AssignedTickets::create([
+                    'ticket_number' => $ticket->ticket_number,
+                    'technician' => $technicianId,
+                ]);
+
+                $this->sendTechnicianNotification($technicianId, $ticket);
+            }
+
+            $employee->update(['made_ticket' => $employee->made_ticket + 1]);
+            $employee->user->notify(
+                new TicketMade($ticket)
+            );
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->to('/admin/tickets')->with('error', 'An error occurred!')->with('message', $e->getMessage());
         }
-
-        $employee->update(['made_ticket' => $employee->made_ticket + 1]);
-        $employee->user->notify(
-            new TicketMade($ticket)
-        );
-
         return redirect()->to('/admin/tickets')->with('success', 'Ticket Created')->with('message', 'All assigned technicians are notified.');
     }
 
