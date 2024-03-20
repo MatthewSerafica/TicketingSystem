@@ -75,13 +75,12 @@ class TechnicianDashboardController extends Controller
         }
     }
 
-    public function show($id)
+    public function profile()
     {
-
-        $user = Technician::where('user_id', $id)->with('user')->first();
+        $user = Auth::user();
         $departments = Department::all();
         $offices = Office::all();
-        return inertia('/technician/profile', [
+        return inertia('/Technician/Profile', [
             'user' => $user,
             'departments' => $departments,
             'offices' => $offices,
