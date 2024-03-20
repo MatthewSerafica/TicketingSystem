@@ -7,17 +7,14 @@ use App\Models\Employee;
 use App\Models\Service;
 use App\Models\Technician;
 use App\Models\Ticket;
-use App\Models\TicketsAssigned;
 use App\Notifications\TicketMade;
 use App\Notifications\UpdateTechnicianReplace;
 use App\Notifications\UpdateTicketStatus;
 use App\Notifications\UpdateTicketTechnician;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Expr\Assign;
 
 class AdminTicketController extends Controller
 {
@@ -70,7 +67,9 @@ class AdminTicketController extends Controller
             ->paginate(10);
 
         $filter = $request->only(['search']);
-        $technicians = Technician::with('user')->get();
+        $technicians = Technician::with('user')
+            ->where('tickets_assigned', '!=', 5)
+            ->get();
         $services = Service::all();
         return inertia('Admin/Tickets/Index', [
             'tickets' => $tickets,
@@ -83,7 +82,9 @@ class AdminTicketController extends Controller
 
     public function create(Request $request)
     {
-        $technicians = Technician::with('user')->get();
+        $technicians = Technician::with('user')
+            ->where('tickets_assigned', '!=', 5)
+            ->get();
         $services = Service::all();
         $searchQuery = $request->input('search');
 
@@ -413,7 +414,7 @@ class AdminTicketController extends Controller
         }
 
         return redirect()->back()->with('success', 'Ticket Updated!')->with('message', 'Technician has been replaced!');
-    }   
+    }
 
     public function remove(Request $request)
     {
