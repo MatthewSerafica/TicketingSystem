@@ -38,8 +38,9 @@
                             <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
                             <span v-if="notificationCount" class="position-relative">
                                 <span class="position-absolute translate-middle badge rounded-pill bg-danger"
-                                    style="font-size: small; top: -5px; right: -5px; padding: 2px 5px 2px 5px;">{{
-                            notificationCount }}</span>
+                                    style="font-size: small; top: -5px; right: -5px; padding: 2px 5px 2px 5px;">
+                                    {{ notificationCount }}
+                                </span>
                             </span>
                         </button>
 
@@ -49,21 +50,24 @@
                             <path fill-rule="evenodd"
                                 d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
                         </svg>
-                        <div class="dropdown-center"> 
+                        <div class="dropdown-center">
                             <a class="text-decoration-none dropdown-toggle text-white" type="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ page.props.user.name }}
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <Link :href="route('technician.profile')" v-if="page.props.user"
-                                        class="text-decoration-none dropdown-item">Profile  
+                                    <Link :href="route('technician.profile', page.props.user.id)" v-if="page.props.user"
+                                        class="text-decoration-none dropdown-item">
+                                    Profile
                                     </Link>
                                     <Link :href="route('technician.change', page.props.user.id)" v-if="page.props.user"
-                                        class="text-decoration-none dropdown-item">Change password
+                                        class="text-decoration-none dropdown-item">
+                                    Change password
                                     </Link>
                                     <Link :href="route('logout')" method="delete" v-if="page.props.user"
-                                        class="text-decoration-none dropdown-item">Logout
+                                        class="text-decoration-none dropdown-item">
+                                    Logout
                                     </Link>
                                 </li>
                             </ul>
@@ -127,7 +131,6 @@
 import { Link, usePage } from "@inertiajs/vue3";
 import axios from "axios";
 import { computed, ref, defineProps, onMounted } from 'vue';
-import moment from "moment";
 
 const props = defineProps({});
 const activeLink = ref('');

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
-use App\Models\Office;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
@@ -75,15 +74,13 @@ class TechnicianDashboardController extends Controller
         }
     }
 
-    public function profile()
+    public function profile($id)
     {
-        $user = Auth::user();
+        $user = User::where('id', $id)->with('technician')->firstOrFail();
         $departments = Department::all();
-        $offices = Office::all();
-        return inertia('/Technician/Profile', [
-            'user' => $user,
+        return inertia('Technician/Dashboard/Profile', [
+            'users' => $user,
             'departments' => $departments,
-            'offices' => $offices,
         ]);
     }
 }
