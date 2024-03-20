@@ -17,7 +17,7 @@
       </Toast>
     </div>
     <!--Main Content-->
-    <div class="d-flex justify-content-center flex-column align-content-center align-items-center main-content">
+    <div class="d-flex justify-content-center flex-column align-content-center align-items-center main-content mb-3">
       <!--CTAs and Search-->
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
@@ -44,13 +44,13 @@
         </div>
       </div>
       <!--Data Table-->
-      <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2 mt-3 pagination">
+      <div v-if="tickets.data.length" class="d-flex justify-content-end mb-3 mt-3 pagination">
         <Pagination :links="tickets.links" :key="'tickets'" />
         <br>
       </div>
-      <div class="table-responsive rounded shadow pt-2 px-2 mb-5">
+      <div v-if="tickets.data.length > 0" class="table-responsive rounded shadow pt-2 px-2 mb-5">
         <div class="">
-          <table class="table table-hover custom-rounded-table">
+          <table class="table table-hover custom-rounded-table ">
             <thead>
               <tr class="text-start">
                 <th class="text-start text-muted" @click="handleSort('ticket_number')">
@@ -176,12 +176,15 @@
           </table>
         </div>
       </div>
+      <EmptyCard v-else class="mt-2 w-75" style="height:20rem;">
+      </EmptyCard>
     </div>
   </div>
 </template>
 
 <script setup>
 import Button from '@/Components/Button.vue';
+import EmptyCard from '@/Components/EmptyState/Table.vue';
 import Pagination from '@/Components/Pagination.vue';
 import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
@@ -441,9 +444,12 @@ const validateNumericInput = (inputValue, propName) => {
 </script>
 
 <style scoped>
+
+
 .table-responsive {
   width: 90%;
   overflow-x: auto;
+ 
 }
 
 .pagination {

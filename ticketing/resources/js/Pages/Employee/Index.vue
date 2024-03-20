@@ -3,7 +3,7 @@
     <Header></Header>
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
-        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+        <div class="d-flex flex-column justify-content-center align-items-center gap-2 ">
           <h1 class="fw-bold">View All Tickets</h1>
           <p class="fs-5"> Manage and Track all TMDD tickets</p>
           <Link :href="route('employee.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New Ticket</Link>
@@ -28,7 +28,7 @@
         <Pagination :links="tickets.links" :key="'tickets'" />
         <br>
       </div>
-      <div class="rounded shadow w-75 mb-5">
+      <div v-if="tickets.data.length" class="rounded shadow w-75">
         <table class="table table-hover custom-rounded-table">
           <thead>
             <tr class="text-start">
@@ -61,12 +61,15 @@
           </tbody>
         </table>
       </div>
+      <EmptyCard v-else class="mt-2 w-75" style="height:20rem;">
+      </EmptyCard>
     </div>
   </div>
 </template>
 
 <script setup>
 import Button from '@/Components/Button.vue';
+import EmptyCard from '@/Components/EmptyState/Table.vue';
 import Header from "@/Pages/Layouts/EmployeeHeader.vue";
 import { Link, router } from "@inertiajs/vue3";
 import moment from "moment";

@@ -23,7 +23,7 @@
         <Pagination :links="service_reports.links" :key="'service_report'" />
         <br>
       </div>
-    <div class="table-responsive w-75 rounded shadow">
+    <div v-if="service_report.data.length" class="table-responsive w-75 rounded shadow">
       <table class="table table-hover custom-rounded-table">
         <thead>
           <tr class="text-center">
@@ -61,12 +61,15 @@
         </tbody>
       </table>
     </div>
+    <EmptyCard v-else class="mt-2 w-75" style="height:20rem;">
+      </EmptyCard>
   </div>
   </div>
   
 </template>
 
 <script setup>
+import EmptyCard from '@/Components/EmptyState/Table.vue';
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
 import { Link, router } from "@inertiajs/vue3";
 import moment from "moment";
