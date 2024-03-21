@@ -19,13 +19,58 @@ use Illuminate\Support\Facades\Auth;
 
 class EmployeeTicketController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $employee = Employee::where('user_id', $user->id)->firstOrFail();
-        $ticket = Ticket::where('employee', $employee->employee_id)->with('employee.user', 'assigned.technician.user')->paginate(10);
+        $query = Ticket::query()->where('employee', $employee->employee_id)->with('employee.user', 'assigned.technician.user');
+
+        $filter = $request->only(['search', 'filterTickets', 'all', 'new', 'pending', 'ongoing', 'resolved']);
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('ticket_number', 'like', '%' . $search . '%')
+                ->orWhere('status', 'like', '%' . $search . '%')
+                ->orWhere('rr_no', 'like', '%' . $search . '%')
+                ->orWhere('ms_no', 'like', '%' . $search . '%')
+                ->orWhere('rs_no', 'like', '%' . $search . '%')
+                ->orWhere('sr_no', 'like', '%' . $search . '%')
+                ->orWhere('service', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%')
+                ->orWhere('remarks', 'like', '%' . $search . '%')
+                ->orWhereHas('employee.user', function ($subquery) use ($search) {
+                    $subquery->where('name', 'like', '%' . $search . '%');
+                })
+                ->orWhereHas('employee', function ($subquery) use ($search) {
+                    $subquery->where('department', 'like', '%' . $search . '%');
+                })
+                ->orWhereHas('employee', function ($subquery) use ($search) {
+                    $subquery->where('office', 'like', '%' . $search . '%');
+                })
+                ->orWhereHas('assigned.technician.user', function ($subquery) use ($search) {
+                    $subquery->where('name', 'like', '%' . $search . '%');
+                });
+        }
+
+        if ($request->filled('filterTickets')) {
+            $ticketFilter = $request->input('filterTickets');
+            if ($ticketFilter === 'new') {
+                $query->where('status', 'like', '%' . $ticketFilter . '%');
+            } elseif ($ticketFilter === 'resolved') {
+                $query->where('status', 'like', '%' . $ticketFilter . '%');
+            } elseif ($ticketFilter === 'pending') {
+                $query->where('status', 'like', '%' . $ticketFilter . '%');
+            } elseif ($ticketFilter === 'ongoing') {
+                $query->where('status', 'like', '%' . $ticketFilter . '%');
+            }
+        }
+
+        $tickets = $query->paginate(10);
+        $tickets->appends($filter);
+        $request->session()->put('filter', $filter);
         return inertia('Employee/Index', [
-            'tickets' => $ticket,
+            'tickets' => $tickets,
+            'filters' => $filter,
         ]);
     }
 
@@ -123,19 +168,19 @@ class EmployeeTicketController extends Controller
             'service' => $service,
         ]);
     }
-    
+
     private function getYearlyData($user)
     {
         $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         $yearly_data = Ticket::whereYear('created_at', Carbon::now()->year)
-                ->where('employee', $user->employee->employee_id)
-                ->get()
-                ->groupBy(function ($ticket) {
-                    return Carbon::parse($ticket->created_at)->format('M');
-                })
-                ->map(function ($grouped_tickets) {
-                    return $grouped_tickets->count();
-                });
+            ->where('employee', $user->employee->employee_id)
+            ->get()
+            ->groupBy(function ($ticket) {
+                return Carbon::parse($ticket->created_at)->format('M');
+            })
+            ->map(function ($grouped_tickets) {
+                return $grouped_tickets->count();
+            });
         $ordered_data = collect([]);
         foreach ($months as $month) {
             $ordered_data[$month] = $yearly_data->get($month, 0);
@@ -146,12 +191,12 @@ class EmployeeTicketController extends Controller
     private function getType($user)
     {
         $types = Ticket::distinct('service')->where('employee', $user->employee->employee_id)->pluck('service');
-            $typeCounts = [];
+        $typeCounts = [];
 
-            foreach ($types as $type) {
-                $count = Ticket::where('service', $type)->where('employee', $user->employee->employee_id)->count(); // Count tickets for each type
-                $typeCounts[$type] = $count;
-            }
+        foreach ($types as $type) {
+            $count = Ticket::where('service', $type)->where('employee', $user->employee->employee_id)->count(); // Count tickets for each type
+            $typeCounts[$type] = $count;
+        }
 
         return $typeCounts;
     }
