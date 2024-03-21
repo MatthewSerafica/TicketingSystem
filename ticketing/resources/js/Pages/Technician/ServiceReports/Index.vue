@@ -1,6 +1,6 @@
 <template>
   <div>
-  <Header></Header>
+  <Header class="sticky-top" style="z-index: 110;"></Header>
   <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
     <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
       <div class="d-flex flex-column justify-content-center align-items-center gap-2">

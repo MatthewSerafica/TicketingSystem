@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header></Header>
+    <Header class="sticky-top" style="z-index: 110;"></Header>
     <!--Toast Render-->
     <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
       <Toast
@@ -28,12 +28,12 @@
           </Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
-            <Button :name="'New'" :color="'secondary'" class="btn-options" @click="filterTickets('new')"></Button>
-            <Button :name="'Pending'" :color="'secondary'" class="btn-options"
+            <Button :name="'New'" :color="'danger'" class="btn-options" @click="filterTickets('new')"></Button>
+            <Button :name="'Pending'" :color="'warning'" class="btn-options"
               @click="filterTickets('pending')"></Button>
-            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options"
+            <Button :name="'Ongoing'" :color="'info'" class="btn-options"
               @click="filterTickets('ongoing')"></Button>
-            <Button :name="'Resolved'" :color="'secondary'" class="btn-options"
+            <Button :name="'Resolved'" :color="'success'" class="btn-options"
               @click="filterTickets('resolved')"></Button>
           </div>
         </div>

@@ -29,13 +29,13 @@
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options shadow"
               @click="filterTickets('all')"></Button>
-            <Button :name="'New'" :color="'secondary'" class="btn-options shadow"
+            <Button :name="'New'" :color="'danger'" class="btn-options shadow"
               @click="filterTickets('new')"></Button>
-            <Button :name="'Pending'" :color="'secondary'" class="btn-options shadow"
+            <Button :name="'Pending'" :color="'warning'" class="btn-options shadow"
               @click="filterTickets('pending')"></Button>
-            <Button :name="'Ongoing'" :color="'secondary'" class="btn-options shadow"
+            <Button :name="'Ongoing'" :color="'info'" class="btn-options shadow"
               @click="filterTickets('ongoing')"></Button>
-            <Button :name="'Resolved'" :color="'secondary'" class="btn-options shadow"
+            <Button :name="'Resolved'" :color="'success'" class="btn-options shadow"
               @click="filterTickets('resolved')"></Button>
           </div>
         </div>
@@ -339,11 +339,6 @@ const fetchData = (type, all, ne, pending, ongoing, resolved) => {
       replace: true,
     }
   )
-  /* filter.all = type === "all";
-  filter.new = type === "new";
-  filter.pending = type === "pending";
-  filter.pending = type === "ongoing";
-  filter.pending = type === "resolved"; */
   
   router.remember({ filter: filter });
 }

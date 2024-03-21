@@ -98,7 +98,6 @@ Route::middleware(['web'])->group(function () {
         Route::post('/employee/create/store', [EmployeeTicketController::class, 'store'])->name('employee.store');
         Route::get('/employee/notifications', [EmployeeNotificationController::class, 'index'])->name('employee.notifications');
         Route::post('/employee/notifications/seen', [EmployeeNotificationController::class, 'update'])->name('employee.notifications.seen');
-        Route::put('/employee/tickets/update-status/{ticket_id}', [EmployeeTicketController::class, 'status'])->name('employee.tickets.update.status');
     });
 
     Route::middleware(['auth', 'technician'])->group(function () {
