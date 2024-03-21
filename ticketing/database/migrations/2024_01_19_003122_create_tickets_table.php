@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id('ticket_number');
-            $table->unsignedBigInteger('rr_no')->nullable();
-            $table->unsignedBigInteger('ms_no')->nullable();
-            $table->unsignedBigInteger('rs_no')->nullable();
+            $table->text('rr_no')->nullable();
+            $table->text('ms_no')->nullable();
+            $table->text('rs_no')->nullable();
             $table->unsignedBigInteger('employee');
             $table->foreign('employee')->references('employee_id')->on('employees')->onUpdate('cascade')->onDelete('cascade');
             $table->string('issue');
