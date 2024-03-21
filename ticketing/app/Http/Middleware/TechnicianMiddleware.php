@@ -18,6 +18,6 @@ class TechnicianMiddleware
         if (auth()->check() && auth()->user()->user_type === 'technician') {
             return $next($request);
         }
-        return redirect('/login');
+        return redirect()->back()->with('error', 'Invalid Request')->with('message', 'You cannot access this page!');
     }
 }

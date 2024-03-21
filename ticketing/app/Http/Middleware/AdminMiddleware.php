@@ -18,6 +18,6 @@ class AdminMiddleware
         if (auth()->check() && auth()->user()->user_type === 'admin') {
             return $next($request);
         }
-        return redirect()->route('login');
+        return redirect()->back()->with('error', 'Invalid Request')->with('message', 'You cannot access this page!');
     }
 }
