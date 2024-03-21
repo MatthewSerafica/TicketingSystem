@@ -36,8 +36,7 @@
                 <h1 class="stat-label">Statistics</h1>
                 <div class="w-100 justify-content-center align-items-center gap-5 m-3 statistics">
                     <div class="card p-5 shadow-sm">
-                        <Doughnut  v-if="service.length" :service="service" class="doughnut"></Doughnut>
-                        <EmptyData v-else></EmptyData>
+                        <Doughnut :service="service" class="doughnut"></Doughnut>
                     </div>
                     <div class="card p-5 shadow-sm">
                         <Bar :yearly_data="yearly_data" class="bar"></Bar>

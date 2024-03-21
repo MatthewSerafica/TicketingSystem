@@ -153,8 +153,9 @@
 import Toast from '@/Components/Toast.vue';
 import Header from '@/Pages/Layouts/TechnicianHeader.vue';
 import Bar from '@/Pages/Technician/Dashboard/Charts/Bar.vue';
+import EmptyData from '@/Components/EmptyState/Statistics.vue';
 import Doughnut from '@/Pages/Technician/Dashboard/Charts/Doughnut.vue';
-import { Link, usePage, useForm } from '@inertiajs/vue3';
+import { Link, useForm, usePage } from '@inertiajs/vue3';
 import Alpine from 'alpinejs';
 import { reactive, ref, watchEffect } from 'vue';
 

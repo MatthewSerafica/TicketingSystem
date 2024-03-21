@@ -190,7 +190,7 @@
           </table>
         </div>
       </div>
-      <EmptyCard v-else class="mt-2 w-75" style="height:20rem;">
+      <EmptyCard :title="'No tickets yet...'" v-else class="mt-2 w-75" style="height:20rem;">
       </EmptyCard>
     </div>
   </div>
