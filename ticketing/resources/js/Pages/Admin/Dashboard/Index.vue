@@ -28,7 +28,7 @@
                         </div>
                     </div>
                     <div v-else>
-                        <EmptyCard></EmptyCard>
+                        <EmptyCard :title="'No tickets yet...'"></EmptyCard>
                     </div>
                 </div>
             </div>
@@ -36,7 +36,8 @@
                 <h1 class="stat-label">Statistics</h1>
                 <div class="w-100 justify-content-center align-items-center gap-5 m-3 statistics">
                     <div class="card p-5 shadow-sm">
-                        <Doughnut :service="service" class="doughnut"></Doughnut>
+                        <Doughnut  v-if="service.length" :service="service" class="doughnut"></Doughnut>
+                        <EmptyData v-else></EmptyData>
                     </div>
                     <div class="card p-5 shadow-sm">
                         <Bar :yearly_data="yearly_data" class="bar"></Bar>
@@ -52,6 +53,7 @@
 import Button from '@/Components/Button.vue';
 import Card from '@/Components/Cards.vue';
 import EmptyCard from '@/Components/EmptyState/Cards.vue';
+import EmptyData from '@/Components/EmptyState/Statistics.vue';
 import Bar from "@/Pages/Admin/Dashboard/Charts/Bar.vue";
 import Doughnut from "@/Pages/Admin/Dashboard/Charts/Doughnut.vue";
 import Header from '@/Pages/Layouts/AdminHeader.vue';
