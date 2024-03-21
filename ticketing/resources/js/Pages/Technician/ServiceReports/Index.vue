@@ -19,11 +19,11 @@
       </div>
     
 
-      <div v-if="service_report.data.length" class="d-flex justify-content-end mb-2 mt-3 pagination">
+      <div v-if="service_report.data.length" class="d-flex justify-content-end mb-2 pagination">
         <Pagination :links="service_reports.links" :key="'service_report'" />
         <br>
       </div>
-    <div v-if="service_report.data.length" class="table-responsive w-75 rounded shadow">
+    <div v-if="service_report.data.length" class="table-responsive rounded shadow pt-2 px-2">
       <table class="table table-hover custom-rounded-table">
         <thead>
           <tr class="text-center">
@@ -45,17 +45,17 @@
         <tbody>
           <tr v-for="service_report in service_reports.data" :key="service_report.service_id" class="align-middle">
               <td class="text-center">{{ service_report.service_id }}</td>
-              <td class="text-start">{{ formatDate(service_report.date_started) }}</td>
-              <td class="text-start">{{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</td>
+              <td class="text-start" style="width:7rem;">{{ formatDate(service_report.date_started) }}</td>
+              <td class="text-start" style="width:6rem;">{{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</td>
               <td class="text-center">{{ service_report.ticket_number }}</td>
-              <td class="text-start">{{ service_report.technician }}</td>
-              <td class="text-start">{{ service_report.requesting_office }}</td>
+              <td class="text-start" style="width: 12rem;">{{ service_report.technician }}</td>
+              <td class="text-start" tyle="width:8rem;">{{ service_report.requesting_office }}</td>
               <td class="text-center">{{ service_report.equipment_no }}</td>
-              <td class="text-start cursor" :title="service_report.issue">{{ service_report.issue }}</td>
-              <td class="text-start cursor" :title="service_report.action">{{ service_report.action }}</td>
-              <td class="text-start cursor" :title="service_report.recommendation">{{ service_report.recommendation }}</td>
-              <td class="text-start">{{ formatDate(service_report.date_done) }}</td>
-              <td class="text-start">{{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}</td>
+              <td class="text-start cursor text-truncate" :title="service_report.issue" style="max-width: 8rem;">{{ service_report.issue }}</td>
+              <td class="text-start cursor text-truncate" :title="service_report.action" style="max-width: 8rem;">{{ service_report.action }}</td>
+              <td class="text-start cursor text-truncate" :title="service_report.recommendation" style="max-width: 10rem;">{{ service_report.recommendation }}</td>
+              <td class="text-start" style="width: 7rem;">{{ formatDate(service_report.date_done) }}</td>
+              <td class="text-start" style="width: 6rem;">{{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}</td>
               <td class="text-start">{{ service_report.remarks }} </td>
             </tr>
         </tbody>
@@ -137,6 +137,10 @@ const formatDate = (date) => {
 
 <style scoped>
 
+.table-responsive {
+  width: 90%;
+  overflow-x: auto;
+}
 
 .table-container {
   margin-top: 20px;
@@ -159,11 +163,8 @@ const formatDate = (date) => {
   overflow-x: auto;
 }
 
-.pagination {
-  width: 90%;
-}
 
 .pagination {
-    width: 85rem;
-  }
+  width: 88%;
+}
 </style>
