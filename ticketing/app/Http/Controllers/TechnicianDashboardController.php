@@ -120,9 +120,18 @@ class TechnicianDashboardController extends Controller
         return inertia('Technician/Dashboard/Profile', [
             'users' => $user,
             'departments' => $departments,
-            'yearly' => $yearly,
-            'service' => $service,
         ]);
+    }
+
+    
+    public function updateStatus($is_working)
+    {
+        $user = Auth::user();
+        $technician = Technician::where('user_id', $user->id)->firstOrFail();
+        $technician->update(['is_working' => $is_working]);
+
+
+        return redirect()->back()->with('success', 'Status updated successfully.');
     }
     private function getYearlyData($user)
     {
@@ -169,4 +178,7 @@ class TechnicianDashboardController extends Controller
         }
         return $typeCounts;
     }
+
+    
+
 }

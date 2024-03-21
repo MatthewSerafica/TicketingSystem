@@ -34,10 +34,29 @@
                     <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
                         <h3 class="mt-1">User Details</h3>
                         <span v-if="users.technician.is_working == 1" class="badge bg-success rounded-circle"
-                            style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
+                            style="width: 2em; height: 2em;"><span class="visually-hidden">Available</span></span>
                         <span v-if="users.technician.is_working == 0" class="badge bg-danger rounded-circle"
-                            style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
+                            style="width: 2em; height: 2em;"><span class="visually-hidden">Unavailable</span></span>
+
+                        <div class="card-subtitle fw-medium fs-5">
+                            Status
+                            <div class="btn-group">
+                                <button type="button" class="btn text-start" :class="users.technician.is_working ? 'N/A' : 'N/A'">
+                                    {{ users.technician.is_working ? 'Available' : 'Unavailable' }}
+                                </button>
+                                <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
+                                    data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                                    <span class="visually-hidden">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-item disabled">Select status</li>
+                                    <li class="dropdown-item" @click="updateStatus(0)">Unavailable</li>
+                                     <li class="dropdown-item" @click="updateStatus(1)">Available</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="d-flex flex-row gap-5">
                         <div class="d-flex flex-column gap-2">
                             <div>
@@ -170,20 +189,14 @@ const showInput = (data) => {
     editData[data] = data ? data : '';
 }
 
-/* const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
-    if (selectedInput.value === data) {
-        const routeName = 'technician.users.update.technician';
-        const form = useForm({
-            [updateField]: editData[data],
-        });
-        console.log(routeName)
 
-        await form.put(route(routeName, { user_id: id, field: updateField }));
+const updateStatus = (is_working) => {
+  const form = useForm({
+    is_working: is_working,
+  });
 
-        selectedInput.value = null;
-        editData[data] = '';
-    }
-}; */
+  form.put(route('technician.update.status', { is_working: is_working }));
+}
 
 </script>
 
