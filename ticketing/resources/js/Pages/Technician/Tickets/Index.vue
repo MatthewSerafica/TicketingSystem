@@ -72,9 +72,9 @@
             </thead>
             <tbody>
               <tr v-for="ticket in tickets.data" :key="ticket.ticket_number" class="align-middle">
-                <td class="text-center">{{ ticket.ticket_number }}</td>
-                <td class="text-start">{{ formatDate(ticket.created_at) }}</td>
-                <td class="text-start"><span class="fw-medium">
+                <td class="text-center" style="width: 4rem;">{{ ticket.ticket_number }}</td>
+                <td class="text-start" style="width: 7rem;">{{ formatDate(ticket.created_at) }}</td>
+                <td class="text-start" style="width: 12rem;"><span class="fw-medium">
                     {{ ticket.employee.user.name }}</span><br>
                   <small>{{ ticket.employee.department }} - {{ ticket.employee.office }}</small>
                 </td>
@@ -85,11 +85,23 @@
                   </span>
                 </td>
 
-                <td class="text-start text-truncate ticket-description" style="max-width: 130px;"
-                  data-hover-text="{{ ticket.service }}">
-                  <span class="d-inline-block" tabindex="0" :title="ticket.service">
-                    {{ ticket.service }}
-                  </span>
+                <td class="text-center">
+                  <div v-if="ticket.status !== 'Resolved'" class="">
+                    <button type="button" class="btn text-center" data-bs-toggle="dropdown" aria-expanded="false"
+                      data-bs-reference="parent">
+                      {{ ticket.service ? ticket.service : 'Unassigned' }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li class="dropdown-item disabled">Select a service</li>
+                      <li v-for="service in services" class="btn dropdown-item"
+                        @click="updateService(ticket.ticket_number, service.service)">{{ service.service }}</li>
+                    </ul>
+                  </div>
+                  <div v-else-if="ticket.status == 'Resolved'">
+                    <span class="text-center">
+                      {{ ticket.service ? ticket.service : 'N/A' }}
+                    </span>
+                  </div>
                 </td>
 
                 <td class="text-center">
@@ -120,9 +132,11 @@
                   </div>
                 </td>
 
-                <td class="text-center" style="max-width: 20px;"
+                <td class="text-center" style="max-width: 60px;"
                   @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
-                  <span v-if="!selectedInput || selectedInput !== ticket.sr_no">{{ ticket.sr_no }}</span>
+                  <span v-if="!selectedInput || selectedInput !== 'sr' || selectedRow !== ticket.ticket_number">
+                    {{ ticket.sr_no ? ticket.sr_no : 'N/A' }}
+                  </span>
                   <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'sr'"
                     v-model="editData[ticket.sr_no]"
                     @blur="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no', 'sr')"
@@ -229,7 +243,7 @@ let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
 let timeoutId = null;
 
-const fetchData = (type) => {
+const fetchData = (type, all, ne, pending, ongoing, resolved) => {
   router.get(
     route('technician.tickets'),
     {
@@ -237,17 +251,24 @@ const fetchData = (type) => {
       sort: sortColumn.value,
       direction: sortDirection.value,
       filterTickets: type,
+      all: all,
+      new: ne,
+      pending: pending,
+      ongoing: ongoing,
+      resolved: resolved,
     },
     {
       preserveState: true,
       replace: true,
     }
   )
-  filter.all = type === "all";
+  /* filter.all = type === "all";
   filter.new = type === "new";
   filter.pending = type === "pending";
   filter.pending = type === "ongoing";
-  filter.pending = type === "resolved";
+  filter.pending = type === "resolved"; */
+
+  router.remember({ filter: filter });
 }
 
 const resetSorting = () => {
@@ -315,7 +336,7 @@ const filterTickets = async (type) => {
     filter.pending = false;
     filter.ongoing = true;
   }
-  await fetchData(type);
+  await fetchData(type, filter.all, filter.new, filter.resolved, filter.pending, filter.ongoing);
 
   await nextTick();
   console.log("After filter change:", filter);
@@ -335,6 +356,13 @@ const handleSort = (column) => {
 // Sort end
 
 // Table update start
+const updateService = (ticket_id, service) => {
+  const form = useForm({
+    service: service,
+  });
+
+  form.put(route('technician.tickets.update.service', { ticket_id: ticket_id }));
+}
 
 const updateStatus = (ticket_id, status, old_status, srNo) => {
   if (status === 'Resolved') {
@@ -447,7 +475,7 @@ const validateNumericInput = (inputValue, propName) => {
 .dropdown-menu {
   display: none;
   opacity: 0;
-  transition: opacity 0.3s ease; 
+  transition: opacity 0.3s ease;
 }
 
 .dropdown-menu.show {
@@ -457,7 +485,7 @@ const validateNumericInput = (inputValue, propName) => {
 
 .dropdown-item {
   opacity: 0;
-  transition: opacity 0.5s ease; 
+  transition: opacity 0.5s ease;
 }
 
 .dropdown-menu.show .dropdown-item {
@@ -472,6 +500,7 @@ const validateNumericInput = (inputValue, propName) => {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -481,7 +510,7 @@ const validateNumericInput = (inputValue, propName) => {
 .table-responsive {
   width: 90%;
   overflow-x: auto;
- 
+
 }
 
 .pagination {
