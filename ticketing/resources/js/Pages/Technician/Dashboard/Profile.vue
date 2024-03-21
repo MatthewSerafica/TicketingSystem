@@ -188,6 +188,31 @@ const showInput = (data) => {
 </script>
 
 <style scoped>
+
+.dropdown-menu {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease; 
+}
+
+.dropdown-menu.show {
+  display: block;
+  opacity: 1;
+}
+
+.dropdown-item {
+  opacity: 0;
+  transition: opacity 0.5s ease; 
+}
+
+.dropdown-menu.show .dropdown-item {
+  opacity: 1;
+}
+
+.dropdown-item {
+  animation: fadeIn 0.5s ease forwards;
+}
+
 .back-button {
   width: 6rem;
   transition: transform 0.3s ease; 
