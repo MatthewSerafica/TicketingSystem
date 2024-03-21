@@ -25,7 +25,7 @@
                     <h1 class="fw-bold">Generate Reports</h1>
                 </div>
 
-                <div class="table-responsive rounded shadow pt-2 px-2" style="width: 50rem;">
+                <div v-if="monthsAndYears.length > 0" class="table-responsive rounded shadow pt-2 px-2" style="width: 50rem;">
                     <div class="">
                         <table class="table table-hover custom-rounded-table">
                             <thead>
@@ -60,6 +60,8 @@
                         </table>
                     </div>
                 </div>
+                <EmptyCard :title="'No reports yet...'" v-else class="mt-2" style="height:20rem;">
+                </EmptyCard>
             </div>
         </div>
     </div>
@@ -67,6 +69,7 @@
 
 <script setup>
 import Button from '@/Components/Button.vue';
+import EmptyCard from '@/Components/EmptyState/Table.vue';
 import Pagination from '@/Components/Pagination.vue';
 import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";

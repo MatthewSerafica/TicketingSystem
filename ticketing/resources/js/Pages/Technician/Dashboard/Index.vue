@@ -28,7 +28,7 @@
                         </div>
                     </div>
                     <div v-else>
-                        <EmptyCard></EmptyCard>
+                        <EmptyCard :title="'No tickets yet...'"></EmptyCard>
                     </div>
                 </div>
             </div>
@@ -51,6 +51,7 @@
 import Button from '@/Components/Button.vue';
 import Card from '@/Components/Cards.vue';
 import EmptyCard from '@/Components/EmptyState/Cards.vue';
+import EmptyData from '@/Components/EmptyState/Statistics.vue';
 import Bar from "@/Pages/Technician/Dashboard/Charts/Bar.vue";
 import Doughnut from "@/Pages/Technician/Dashboard/Charts/Doughnut.vue";
 import Header from '@/Pages/Layouts/TechnicianHeader.vue';

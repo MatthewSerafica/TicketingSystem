@@ -61,7 +61,7 @@
         </tbody>
       </table>
     </div>
-    <EmptyCard v-else class="mt-2 w-75" style="height:20rem;">
+    <EmptyCard :title="'No service reports yet...'" v-else class="mt-2 w-75" style="height:20rem;">
       </EmptyCard>
   </div>
   </div>

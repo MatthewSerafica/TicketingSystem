@@ -203,7 +203,8 @@
                         <div class="">
                             <Doughnut :service="service" style="width: 30rem;"></Doughnut>
                         </div>
-                        <div class="=">
+                        <div class="">
+                            
                             <Bar :yearly="yearly" style="width: 45rem;"></Bar>
                         </div>
                     </div>
@@ -218,6 +219,7 @@ import Header from '@/Pages/Layouts/AdminHeader.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 import { reactive, ref, watchEffect } from 'vue';
 import Bar from '@/Pages/Admin/Users/Charts/Bar.vue';
+import EmptyData from '@/Components/EmptyState/Statistics.vue';
 import Doughnut from '@/Pages/Admin/Users/Charts/Doughnut.vue';
 import Alpine from 'alpinejs';
 import Toast from '@/Components/Toast.vue';
