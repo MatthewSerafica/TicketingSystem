@@ -83,38 +83,59 @@
                 <div class="container mt-4">
                     <div class="card mt-3" v-for="notification in notifications.slice(0, 9)"
                         :key="notification.notification.id">
-                        <div class="card-body"
+                        <div class="card-body d-flex flex-column gap-2"
                             v-if="notification.notification.type === 'App\\Notifications\\UpdateTicketTechnician'">
-                            <h5 class="card-title">You have been assigned Ticket #{{
-                            notification.notification.data.ticket_number }}</h5>
-                            <p class="card-text">Issue: {{ notification.notification.data.issue }}.</p>
-                            <p class="card-text">Description: {{ notification.notification.data.description }}.</p>
-                            <p class="card-text">Service Type: {{ notification.notification.data.service }}.</p>
-                            <p class="card-text">Client Details: {{ notification.name }} | {{ notification.department }}
-                                - {{
-                            notification.office }}.</p>
-                            <small class="card-text fst-italic text-muted"> {{ notificationDateTime() }}</small>
+                            <div class="d-flex flex-column gap-2">
+                                <h5 class="card-title">
+                                    You are assigned to Ticket #{{ notification.notification.data.ticket_number }}
+                                </h5>
+                                <p class="card-subtitle">Issue: {{ notification.notification.data.issue }}</p>
+                                <p class="card-subtitle">Description: {{ notification.notification.data.description }}
+                                </p>
+                                <p class="card-subtitle">Service Type: {{ notification.notification.data.service }}</p>
+                            </div>
+                            <div>
+                                <small class="card-text">
+                                    {{ notification.name }} | {{ notification.department }} -
+                                    {{ notification.office }}
+                                </small>
+                                <br>
+                                <small class="card-text fst-italic text-muted">
+                                    {{ formatDateTime(notification.notification.created_at) }}
+                                </small>
+                            </div>
                         </div>
                         <div class="card-body"
                             v-if="notification.notification.type === 'App\\Notifications\\UpdateTechnicianReplace'">
-                            <h5 class="card-title">You have been replaced for Ticket #{{
-                            notification.notification.data.ticket_number }}</h5>
-                            <p class="card-text">Issue: {{ notification.notification.data.issue }}.</p>
-                            <p class="card-text">Description: {{ notification.notification.data.description }}.</p>
-                            <p class="card-text">Service Type: {{ notification.notification.data.service }}.</p>
-                            <p class="card-text">Client Details: {{ notification.name }} | {{ notification.department }}
-                                - {{
-                            notification.office }}.</p>
-                            <small class="card-text fst-italic text-muted"> {{ notificationDateTime() }}</small>
+                            <h5 class="card-title">
+                                You have been replaced for Ticket # {{ notification.notification.data.ticket_number }}
+                            </h5>
+                            <p class="card-subtitle">Service: {{ notification.notification.data.service }}</p>
+                            <div>
+                                <small class="card-text">
+                                    {{ notification.name }} | {{ notification.department }} -
+                                    {{ notification.office }}
+                                </small>
+                                <br>
+                                <small class="card-text fst-italic text-muted">
+                                    {{ formatDateTime(notification.notification.created_at) }}
+                                </small>
+                            </div>
                         </div>
                         <div class="card-body"
                             v-if="notification.notification.type === 'App\\Notifications\\UpdateTicketStatus'">
-                            <h5 class="card-title">Ticket #{{ notification.notification.data.ticket_number }} Status
-                                Update</h5>
-                            <p class="card-text">Ticket #{{ notification.notification.data.ticket_number }} is now <span
-                                    class="p-2" :class="handleBadge(notification.notification.data.status)">{{
-                            notification.notification.data.status }}</span></p>
-                            <small class="card-text fst-italic text-muted"> {{ notificationDateTime() }}</small>
+                            <h5 class="card-title">
+                                Ticket #{{ notification.notification.data.ticket_number }} Status Update
+                            </h5>
+                            <p class="card-text">
+                                Ticket #{{ notification.notification.data.ticket_number }} is now
+                                <span class="p-2" :class="handleBadge(notification.notification.data.status)">
+                                    {{ notification.notification.data.status }}
+                                </span>
+                            </p>
+                            <small class="card-text fst-italic text-muted">
+                                {{ formatDateTime(notification.notification.created_at) }}
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -153,11 +174,26 @@ onMounted(() => {
     determineActiveLink();
 });
 
-function notificationDateTime() {
-    const currentDateTime = new Date();
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    return currentDateTime.toLocaleDateString('en-US', options).replace(/\//g, '-');
+const formatDate = (date) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = new Date(date).toLocaleDateString(undefined, options);
+    return formattedDate;
 }
+
+const formatTime = (time) => {
+    const [hours, minutes] = time.split(':');
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedTime = `${formattedHours}:${minutes} ${period}`;
+    return formattedTime;
+}
+const formatDateTime = (datetime) => {
+    const date = new Date(datetime);
+    const formattedDate = formatDate(date);
+    const formattedTime = formatTime(date.toTimeString().split(' ')[0]);
+    return `${formattedDate} | ${formattedTime}`;
+}
+
 
 const notificationCount = computed(
     () => Math.min(page.props.user.notificationCount, 9)

@@ -120,12 +120,17 @@
                                         <p class="card-subtitle">
                                             Service Report No.: {{ notification.notification.data.sr_no }}
                                         </p>
-                                        <p class="card-subtitle">
-                                            Technician/s:
-                                            <span v-for="technician in notification.technicians">
-                                                {{ technician.user.name }}
+                                        <div class="card-subtitle d-flex flex-row gap-1">
+                                            <span>
+                                                Technician/s:
                                             </span>
-                                        </p>
+                                            <br>
+                                            <div>
+                                                <span v-for="technician in notification.technicians">
+                                                    {{ technician.user.name }} <br>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div>
@@ -145,15 +150,26 @@
                                 <div class="d-flex flex-row">
                                     <div class="d-flex flex-column gap-2">
                                         <h5 class="card-title fw-bold d-flex flex-row align-items-center gap-3">
-                                            Ticket No: {{ notification.notification.data.ticket_number }} <span class="badge bg-danger">New</span> 
+                                            Ticket No: {{ notification.notification.data.ticket_number }} <span
+                                                class="badge bg-danger">New</span>
                                         </h5>
-                                        <p class="card-subtitle">Issue: {{ notification.notification.data.description }}</p>
                                         <p class="card-subtitle">
-                                            Technician/s:
-                                            <span v-for="technician in notification.technicians">
-                                                {{ technician.user.name }}
-                                            </span>
+                                            Issue: {{ notification.notification.data.description }}
                                         </p>
+                                        <p class="card-subtitle">
+                                            Description: {{ notification.notification.data.description }}
+                                        </p>
+                                        <div class="card-subtitle d-flex flex-row gap-1">
+                                            <span>
+                                                Technician/s:
+                                            </span>
+                                            <br>
+                                            <div>
+                                                <span v-for="technician in notification.technicians">
+                                                    {{ technician.user.name }} <br>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div>
@@ -182,6 +198,7 @@ import axios from 'axios';
 import { computed, defineProps, onMounted, ref } from 'vue';
 
 const props = defineProps({});
+
 const activeLink = ref('');
 const activeTab = ref('technician');
 
@@ -202,6 +219,7 @@ const determineActiveLink = () => {
         setActiveLink('dashboard');
     }
 }
+
 const formatDate = (date) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const formattedDate = new Date(date).toLocaleDateString(undefined, options);
@@ -232,14 +250,6 @@ const notifications = ref([]);
 
 const notificationCount = computed(
     () => Math.min(page.props.user.notificationCount, 9),
-)
-
-const employeeCount = computed(
-    () => Math.min(notifications.value.length, 9),
-)
-
-const technicianCount = computed(
-    () => Math.min(0, 9)
 )
 
 const fetchNotifications = async () => {
