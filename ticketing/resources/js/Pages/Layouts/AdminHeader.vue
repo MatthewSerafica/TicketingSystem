@@ -99,55 +99,64 @@
             </div>
             <div class="offcanvas-body">
                 <div class="container">
-                    <nav class="nav nav-pills nav-fill navbar-light" style="background-color: #fafafa;">
-                        <a class="nav-link" :class="{ 'active': activeTab === 'technician' }" aria-current="page"
-                            href="#technician-content" @click.prevent="showTab('technician')">Technician<span
-                                v-if="technicianCount"
-                                class="position-absolute translate-middle badge rounded-pill bg-danger" id="count"
-                                style="font-size: small; top: 100px; right: 185px; padding: 2px 5px 2px 5px;">{{
-                            technicianCount }}</span></a>
-                        <a class="nav-link" :class="{ 'active': activeTab === 'employee' }" href="#employee-content"
-                            @click.prevent="showTab('employee')">Employee<span v-if="employeeCount"
-                                class="position-absolute translate-middle badge rounded-pill bg-danger" id="count"
-                                style="font-size: small; top: 100px; right: 15px; padding: 2px 5px 2px 5px;">{{
-                            employeeCount }}</span></a>
-                    </nav>
                     <div id="tab-content">
-                        <div v-if="activeTab === 'technician'" class="card mt-3" v-for="notification in notifications.slice(0, 9)" :key="notification.notification.id">
-                            <div class="card-body"
-                                    v-if="notification.notification.type === 'App\\Notifications\\ResolvedTicket'">
-                                    <div class="d-flex flex-row">
-                                        <div class="d-flex flex-column">
-                                            <h5 class="card-title fw-bold">Ticket No: {{ notification.notification.data.ticket_number }} {{ notification.notification.data.status }}
-                                            </h5>
-                                            <p class="card-subtitle">Remarks: {{ notification.notification.data.remarks }}</p>
+                        <div class="card mt-3" v-for="notification in notifications.slice(0, 9)"
+                            :key="notification.notification.id">
+                            <div class="card-body d-flex flex-column gap-2"
+                                v-if="notification.notification.type === 'App\\Notifications\\ResolvedTicket'">
+                                <div class="d-flex flex-row">
+                                    <div class="d-flex flex-column gap-2">
+                                        <h5 class="card-title fw-bold text d-flex gap-2 align-items-center">
+                                            Ticket #{{ notification.notification.data.ticket_number }}
+                                            is now
+                                            <span class="badge bg-success">
+                                                {{ notification.notification.data.status }}
+                                            </span>
+                                        </h5>
+                                        <p class="card-subtitle">
+                                            Remarks: {{ notification.notification.data.remarks }}
+                                        </p>
 
-                                            <p class="card-subtitle">Service Report No.: {{ notification.notification.data.sr_no }}</p>
-                                        </div>
+                                        <p class="card-subtitle">
+                                            Service Report No.: {{ notification.notification.data.sr_no }}
+                                        </p>
+                                        <p class="card-subtitle">
+                                            Technician/s:
+                                            <span v-for="technician in notification.technicians">
+                                                {{ technician.user.name }}
+                                            </span>
+                                        </p>
                                     </div>
-                                    <small class="card-text">{{ notification.name }} | {{ notification.department }} -
-                                        {{
-                            notification.office }}
+                                </div>
+                                <div>
+                                    <small class="card-text">
+                                        {{ notification.name }} | {{ notification.department }} -
+                                        {{ notification.office }}
                                     </small>
                                     <br>
-                                    <small class="card-text fst-italic text-muted">{{
-                            formatDate(notification.notification.created_at) }} /
-                                        {{ formatTime(notification.notification.created_at) }}</small>
+                                    <small class="card-text fst-italic text-muted">
+                                        {{ formatDateTime(notification.notification.created_at) }}
+                                    </small>
                                 </div>
-                            
-                        </div>
-                        <div v-if="activeTab === 'employee'" class="card mt-3"
-                            v-for="notification in notifications.slice(0, 9)" :key="notification.notification.id">
-                            <div>
-                                <div class="card-body"
-                                    v-if="notification.notification.type === 'App\\Notifications\\TicketMade'">
-                                    <div class="d-flex flex-row">
-                                        <div class="d-flex flex-column">
-                                            <h5 class="card-title fw-bold">New Ticket No: {{ notification.notification.data.ticket_number }}
-                                            </h5>
-                                            <p class="card-text">{{ notification.notification.data.description }}</p>
-                                        </div>
+                            </div>
+
+                            <div class="card-body d-flex flex-column gap-2"
+                                v-if="notification.notification.type === 'App\\Notifications\\TicketMade'">
+                                <div class="d-flex flex-row">
+                                    <div class="d-flex flex-column gap-2">
+                                        <h5 class="card-title fw-bold d-flex flex-row align-items-center gap-3">
+                                            Ticket No: {{ notification.notification.data.ticket_number }} <span class="badge bg-danger">New</span> 
+                                        </h5>
+                                        <p class="card-subtitle">Issue: {{ notification.notification.data.description }}</p>
+                                        <p class="card-subtitle">
+                                            Technician/s:
+                                            <span v-for="technician in notification.technicians">
+                                                {{ technician.user.name }}
+                                            </span>
+                                        </p>
                                     </div>
+                                </div>
+                                <div>
                                     <small class="card-text">
                                         {{ notification.name }} | {{ notification.department }} -
                                         {{ notification.office }}

@@ -88,9 +88,10 @@
                                     <p class="card-text">{{ notification.data.description }}</p>
                                 </div>
                             </div>
-                            <small class="card-text fst-italic text-muted">{{
-                        formatDate(notification.created_at) }} /
-                                {{ formatTime(notification.created_at) }}</small>
+                            <small class="card-text fst-italic text-muted">
+                                {{ formatDate(notification.created_at) }} /
+                                {{ formatTime(notification.created_at) }}
+                            </small>
                         </div>
                     </div>
                 </div>

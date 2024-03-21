@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssignedTickets;
 use App\Models\Employee;
-use App\Models\User;
+use App\Models\Technician;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,14 +15,22 @@ class AdminNotificationController extends Controller
         $notifications = $request->user()->notifications()->get();
         $notifications_with_user = [];
 
-        foreach($notifications as $notification) {
+        foreach ($notifications as $notification) {
             $data = $notification->data;
 
             $employee = Employee::where('employee_id', $data['employee'])->with('user')->firstOrFail();
+            $assigned = AssignedTickets::where('ticket_number', $data['ticket_number'])->get();
+
+            $technicians = collect([]);
+
+            foreach ($assigned as $assign) {
+                $technicians = $technicians->merge(Technician::where('technician_id', $assign->technician)->with('user')->get());
+            }
 
             $notifications_with_user[] = [
                 'notification' => $notification,
                 'name' => $employee->user->name,
+                'technicians' => $technicians,
                 'department' => $employee->department,
                 'office' => $employee->office,
             ];
