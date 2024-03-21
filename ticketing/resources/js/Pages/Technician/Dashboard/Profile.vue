@@ -38,28 +38,29 @@
                         <span v-if="users.technician.is_working == 0" class="badge bg-danger rounded-circle"
                             style="width: 2em; height: 2em;"><span class="visually-hidden">Unavailable</span></span>
 
-                        <div class="card-subtitle fw-medium fs-5">
-                            Status
-                            <div class="btn-group">
-                                <button type="button" class="btn text-start" :class="users.technician.is_working ? 'N/A' : 'N/A'">
-                                    {{ users.technician.is_working ? 'Available' : 'Unavailable' }}
-                                </button>
-                                <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
-                                    data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                                    <span class="visually-hidden">Toggle Dropdown</span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li class="dropdown-item disabled">Select status</li>
-                                    <li class="dropdown-item" @click="updateStatus(0)">Unavailable</li>
-                                     <li class="dropdown-item" @click="updateStatus(1)">Available</li>
-                                </ul>
-                            </div>
-                        </div>
+
                     </div>
 
                     <div class="d-flex flex-row gap-5">
                         <div class="d-flex flex-column gap-2">
                             <div>
+                                <div class="card-subtitle fw-medium fs-5">
+                                    Status
+                                    <div class="btn-group">
+                                        <button type="button" class="btn text-start" :class="users.technician.is_working ? 'N/A' : 'N/A'">
+                                            {{ users.technician.is_working ? 'Available' : 'Unavailable' }}
+                                        </button>
+                                        <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
+                                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                                            <span class="visually-hidden">Toggle Dropdown</span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li class="dropdown-item disabled">Select status</li>
+                                            <li class="dropdown-item" @click="updateStatus(0)">Unavailable</li>
+                                            <li class="dropdown-item" @click="updateStatus(1)">Available</li>
+                                        </ul>
+                                    </div>
+                                </div>
                                 <div class="card-subtitle fw-medium fs-5">
                                     Name
                                 </div>
@@ -151,7 +152,7 @@ import Toast from '@/Components/Toast.vue';
 import Header from '@/Pages/Layouts/TechnicianHeader.vue';
 import Bar from '@/Pages/Technician/Dashboard/Charts/Bar.vue';
 import Doughnut from '@/Pages/Technician/Dashboard/Charts/Doughnut.vue';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link, usePage,  useForm } from '@inertiajs/vue3';
 import Alpine from 'alpinejs';
 import { reactive, ref, watchEffect } from 'vue';
 
