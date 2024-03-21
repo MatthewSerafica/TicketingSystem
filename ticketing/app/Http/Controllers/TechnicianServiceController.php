@@ -153,6 +153,11 @@ class TechnicianServiceController extends Controller
             'resolved_at' => $request->date_done,
         ]);
        /*  $ticket->save(); */
+       $user_id = auth()->id();
+       $technician = Technician::where('user_id', $user_id)->with('user')->first();
+       $technician->tickets_resolved = $technician->tickets_resolved + 1;
+       $technician->tickets_assigned = $technician->tickets_assigned - 1;
+       $technician->save();
 
         $employee = Employee::find($ticket->employee);
         $employee->user->notify(new UpdateTicketStatus($ticket));
