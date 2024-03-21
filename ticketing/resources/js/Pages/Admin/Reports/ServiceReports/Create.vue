@@ -148,13 +148,6 @@ const create = async () => {
 
 
 const validate_service_id = async (service_id) => {
-  const service_id_regex = /^\d{4}$/;
-
-  if (!service_id_regex.test(service_id)) {
-    console.error('Invalid service_id format');
-    return false;
-  }
-
   const response = await fetch(`/admin/check-service-id/${service_id}`);
   const data = await response.json();
 

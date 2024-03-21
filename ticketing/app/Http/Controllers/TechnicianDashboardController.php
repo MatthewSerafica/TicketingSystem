@@ -120,6 +120,8 @@ class TechnicianDashboardController extends Controller
         return inertia('Technician/Dashboard/Profile', [
             'users' => $user,
             'departments' => $departments,
+            'service' => $service,
+            'yearly' => $yearly,
         ]);
     }
 

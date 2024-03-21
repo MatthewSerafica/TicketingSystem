@@ -28,14 +28,14 @@
             <span>Back</span>
             </Link>
         </div>
-        <div class="d-flex flex-row gap-5 justify-content-center mt-3 align-items-center mb-3">
-            <div v-if="users.employee" class="card shadow p-2" style="max-width: 50rem; height: 800px;">
-                <div class="card-body d-flex flex-column gap-2">
-                    <div class="card-title fw-bold fs-3">
-                        User Details
-                    </div>
-                    <div class="d-flex flex-row gap-5">
-                        <div class="d-flex flex-column gap-2">
+        <div class="container gap-5 justify-content-center mt-3 align-items-center mb-3">
+            <div class="row row-cols-2">
+                <div v-if="users.employee" class="card shadow p-2 w-25">
+                    <div class="card-body d-flex flex-column gap-4">
+                        <div class="card-title fw-bold fs-3">
+                            User Details
+                        </div>
+                        <div class="d-flex flex-column gap-3">
                             <div>
                                 <div class="card-subtitle fw-medium fs-5">
                                     Name
@@ -67,7 +67,7 @@
                                 <p class="card-text text-capitalize">{{ users.user_type }}</p>
                             </div>
                         </div>
-                        <div class="d-flex flex-column gap-2">
+                        <div class="d-flex flex-column gap-3">
                             <div>
                                 <div class="card-subtitle fw-medium fs-5">
                                     Department
@@ -113,18 +113,16 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div v-if="users.technician" class="card shadow" style="width: 35rem; height: 780px;">
-                <div class="card-body d-flex flex-column gap-1">
-                    <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
-                        <h3 class="mt-1">User Details</h3>
-                        <span v-if="users.technician.is_working == 1" class="badge bg-success rounded-circle"
-                            style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
-                        <span v-if="users.technician.is_working == 0" class="badge bg-danger rounded-circle"
-                            style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
-                    </div>
-                    <div class="d-flex flex-row gap-5">
-                        <div class="d-flex flex-column gap-2">
+                <div v-if="users.technician" class="card shadow p-2 w-25">
+                    <div class="card-body d-flex flex-column gap-4">
+                        <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
+                            <h3 class="mt-1">User Details</h3>
+                            <span v-if="users.technician.is_working == 1" class="badge bg-success rounded-circle"
+                                style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
+                            <span v-if="users.technician.is_working == 0" class="badge bg-danger rounded-circle"
+                                style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
+                        </div>
+                        <div class="d-flex flex-column gap-3">
                             <div>
                                 <div class="card-subtitle fw-medium fs-5">
                                     Name
@@ -158,14 +156,15 @@
                                 <p class="card-text text-capitalize">{{ users.user_type }}</p>
                             </div>
                         </div>
-                        <div class="d-flex flex-column gap-2">
+                        <div class="d-flex flex-column gap-3">
                             <div>
                                 <div class="card-subtitle fw-medium fs-5">
                                     Assigned Department
                                 </div>
                                 <div class="btn-group">
                                     <button type="button" class="btn text-start">
-                                        {{ users.technician.assigned_department ? users.technician.assigned_department :
+                                        {{ users.technician.assigned_department ?
+                    users.technician.assigned_department :
                     'Unassigned' }}
                                     </button>
                                     <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
@@ -181,30 +180,32 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div>
-                                <div class="card-subtitle fw-medium fs-6">
-                                    Tickets Assigned
+                            <div class="d-flex flex-row gap-5">
+                                <div class="d-flex flex-column">
+                                    <div class="card-subtitle fw-medium fs-6">
+                                        Total Assigned
+                                    </div>
+                                    <p class="card-text text-center">{{ users.technician.tickets_assigned }}</p>
                                 </div>
-                                <p class="card-text">{{ users.technician.tickets_assigned }}</p>
-                            </div>
-                            <div>
-                                <div class="card-subtitle fw-medium fs-6">
-                                    Total Tickets Resolved
+                                <div class="d-flex flex-column">
+                                    <div class="card-subtitle fw-medium fs-6">
+                                        Total Resolved
+                                    </div>
+                                    <p class="card-text text-center">{{ users.technician.tickets_resolved }}</p>
                                 </div>
-                                <p class="card-text">{{ users.technician.tickets_resolved }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="d-flex flex-row align-items-center justify-content-center card-row"
-                style="gap:10rem;">
-                <div class="d-flex flex-column justify-content-center align-items-center card p-5 gap-5 shadow">
-                    <div class="">
-                        <Doughnut :service="service" style="width: 20rem;"></Doughnut>
-                    </div>
-                    <div class="=">
-                        <Bar :yearly="yearly" style="width: 40rem;"></Bar>
+                <div class="d-flex flex-row align-items-center justify-content-center card-row w-75">
+                    <div
+                        class="flex-grow-1 d-flex flex-column justify-content-center align-items-center card p-5 gap-5 shadow">
+                        <div class="">
+                            <Doughnut :service="service" style="width: 30rem;"></Doughnut>
+                        </div>
+                        <div class="=">
+                            <Bar :yearly="yearly" style="width: 45rem;"></Bar>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -275,45 +276,45 @@ const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
 
 <style scoped>
 .dropdown-menu {
-  display: none;
-  opacity: 0;
-  transition: opacity 0.3s ease; 
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .dropdown-menu.show {
-  display: block;
-  opacity: 1;
+    display: block;
+    opacity: 1;
 }
 
 .dropdown-item {
-  opacity: 0;
-  transition: opacity 0.5s ease; 
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
 
 .dropdown-menu.show .dropdown-item {
-  opacity: 1;
+    opacity: 1;
 }
 
 .dropdown-item {
-  animation: fadeIn 0.5s ease forwards;
+    animation: fadeIn 0.5s ease forwards;
 }
 
 @keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 .back-button {
-  width: 6rem;
-  transition: transform 0.3s ease; 
+    width: 6rem;
+    transition: transform 0.3s ease;
 }
 
 .back-button:hover {
-  transform: scale(1.1); 
+    transform: scale(1.1);
 }
-
 </style>

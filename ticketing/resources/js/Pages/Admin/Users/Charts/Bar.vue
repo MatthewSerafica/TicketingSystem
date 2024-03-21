@@ -19,7 +19,7 @@ onMounted(() => {
             datasets: [
                 {
                     type: 'bar',
-                    label: 'Requests for this year',
+                    label: 'Tickets for this year',
                     data: Object.values(props.yearly),
                     backgroundColor: '#1B59F8',
                     borderColor: '#1B59F8',

@@ -14,6 +14,7 @@ use App\Notifications\UpdateTicketStatus;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TechnicianTicketController extends Controller
 {
@@ -117,51 +118,56 @@ class TechnicianTicketController extends Controller
 
     public function store(Request $request)
     {
-
-        $request->validate([
-            'complexity' => 'required',
-            'description' => 'required',
-            'employee' => 'required',
-            'issue' => 'required',
-            'service' => 'required',
-            'user' => 'required',
-            'assignToSelf' => 'nullable',
-        ]);
-        $technician = Technician::where('user_id', $request->user)->firstOrFail();
-        $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
-
-        if ($employee->made_ticket >= 5) {
-            return redirect()->back()->with('error', 'You have already made the max number of tickets.');
-        }
-
-        $ticketData = [
-            'complexity' => $request->complexity,
-            'employee' => $request->employee,
-            'issue' => $request->issue,
-            'description' => $request->description,
-            'service' => $request->service,
-            'status' => 'Pending',
-        ];
-
-        $ticket = Ticket::create($ticketData);
-        $employee->update(['made_ticket' => $employee->made_ticket + 1]);
-
-        if ($request->assign_to_self) {
-            AssignedTickets::create([
-                'ticket_number' => $ticket->ticket_number,
-                'technician' => $technician->technician_id,
+        try {
+            DB::beginTransaction();
+            $request->validate([
+                'complexity' => 'required',
+                'description' => 'required',
+                'employee' => 'required',
+                'issue' => 'required',
+                'service' => 'required',
+                'user' => 'required',
+                'assignToSelf' => 'nullable',
             ]);
-            $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
-        }
-        $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
-        $admins = User::where('user_type', 'admin')->get();
-        foreach ($admins as $admin) {
-            $admin->notify(
-                new TicketMade($ticket)
-            );
-        }
+            $technician = Technician::where('user_id', $request->user)->firstOrFail();
+            $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
 
-        return redirect()->to('/technician/tickets')>with('success', 'Ticket Created')->with('message', 'Admin is notified of the ticket!');
+            if ($employee->made_ticket >= 5 || $technician->assigned_ticket >= 5) {
+                DB::rollBack();
+                return redirect()->back()->with('error', 'You have already made the max number of tickets.');
+            }
+
+            $ticketData = [
+                'complexity' => $request->complexity,
+                'employee' => $request->employee,
+                'issue' => $request->issue,
+                'description' => $request->description,
+                'service' => $request->service,
+                'status' => 'Pending',
+            ];
+
+            $ticket = Ticket::create($ticketData);
+            $employee->update(['made_ticket' => $employee->made_ticket + 1]);
+
+            if ($request->assign_to_self) {
+                AssignedTickets::create([
+                    'ticket_number' => $ticket->ticket_number,
+                    'technician' => $technician->technician_id,
+                ]);
+                $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
+            }
+            $admins = User::where('user_type', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(
+                    new TicketMade($ticket)
+                );
+            }
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->to('/technician/tickets')->with('error', 'Invalid Ticket')->with('message', $e->getMessage());
+        }
+        return redirect()->to('/technician/tickets')->with('success', 'Ticket Created')->with('message', 'Admin is notified of the ticket!');
     }
 
     public function service(Request $request, $ticket_id)

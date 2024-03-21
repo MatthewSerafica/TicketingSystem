@@ -119,6 +119,9 @@ class AdminServiceReportController extends Controller
             $user = User::where('name', $technicianName)->first();
             if ($user) {
                 $technician = Technician::where('user_id', $user->id)->first();
+                $technician->tickets_assigned = $technician->tickets_assigned - 1;
+                $technician->tickets_resolved = $technician->tickets_resolved + 1;
+                $technician->save();
                 if ($technician) {
                     $technician->user->notify(new UpdateTicketStatus($ticket));
                 }
