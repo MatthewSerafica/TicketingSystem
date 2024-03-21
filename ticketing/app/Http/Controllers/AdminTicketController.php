@@ -167,7 +167,7 @@ class AdminTicketController extends Controller
             DB::rollBack();
             return redirect()->to('/admin/tickets')->with('error', 'An error occurred!')->with('message', $e->getMessage());
         }
-        return redirect()->to('/admin/tickets')->with('success', 'Ticket Created')->with('message', 'All assigned technicians are notified.');
+        return redirect()->to('/admin/tickets')->with('success', 'Ticket Created')->with('message', 'All assigned technicians are notified!');
     }
 
     protected function sendTechnicianNotification($technicianId, $ticket)

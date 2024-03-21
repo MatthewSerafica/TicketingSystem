@@ -165,7 +165,7 @@ watch(search, () => {
       const form = useForm({
         service: editedService[serviceId],
       });
-      form.put(route('admin.service.update', { service_id: serviceId }));
+      form.put(route('admin.services.update', { service_id: serviceId }));
       selectedServiceId.value = null;
     }
   };

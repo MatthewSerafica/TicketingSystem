@@ -167,10 +167,10 @@
 </template>
 
 <script setup>
+import Logo from '@/Components/Logo.vue';
 import { Link, usePage } from "@inertiajs/vue3";
 import axios from 'axios';
-import { computed, ref, defineProps, onMounted } from 'vue';
-import Logo from '@/Components/Logo.vue';
+import { computed, defineProps, onMounted, ref } from 'vue';
 
 const props = defineProps({});
 const activeLink = ref('');

@@ -1,14 +1,10 @@
 <template>
     <div>
         <nav class="navbar navbar-expand-lg shadow-sm header-color">
-            <div class="container-fluid gap-3">
+            <div class="container-fluid gap-5">
                 <!-- Logo -->
                 <div class="d-flex gap-2 col-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
-                        class="bi bi-brilliance mt-2" viewBox="0 0 16 16">
-                        <path
-                            d="M8 16A8 8 0 1 1 8 0a8 8 0 0 1 0 16M1 8a7 7 0 0 0 7 7 3.5 3.5 0 1 0 0-7 3.5 3.5 0 1 1 0-7 7 7 0 0 0-7 7" />
-                    </svg>
+                    <Logo class="logo"></Logo>
                     <Link class="navbar-brand text-white" :href="`/employee`">TMDD Ticketing System</Link>
                 </div>
 
@@ -104,10 +100,11 @@
 </template>
 
 <script setup>
+import Logo from '@/Components/Logo.vue';
 import { Link, usePage } from "@inertiajs/vue3";
 import axios from "axios";
-import { computed, ref } from "vue";
 import moment from "moment";
+import { computed, ref } from "vue";
 
 const page = usePage();
 
