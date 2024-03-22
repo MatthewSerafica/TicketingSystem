@@ -23,7 +23,7 @@
                         </li>
                         <li class="nav-item" :class="{ 'active': activeLink === 'service-report' }">
                             <a class="nav-link text-white" href="/technician/service-report"
-                                @click="setActiveLink('service-report')">Service Reports</a>
+                                @click="setActiveLink('service-report')">Service Report</a>
                         </li>
                     </ul>
 
