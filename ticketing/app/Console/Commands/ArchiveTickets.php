@@ -73,7 +73,7 @@ class ArchiveTickets extends Command
         $admins = User::where('user_type', 'admin')->get();
         foreach ($admins as $admin) {
             $admin->notify(
-                new ArchivedTickets($ticketsToArchive[0],$monthAgo)
+                new ArchivedTickets($ticketsToArchive[0], $monthAgo)
             );
         }
 

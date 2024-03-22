@@ -183,7 +183,6 @@
                                     </small>
                                 </div>
                             </div>
-
                             <div class="card-body d-flex flex-column gap-2"
                                 v-if="notification.notification.type === 'App\\Notifications\\ArchivedTickets'">
                                 <div class="d-flex flex-row">
@@ -203,6 +202,21 @@
                                             </a>
                                             to see the generated report!
                                         </p>
+                                        <small class="card-text fst-italic text-muted">
+                                            {{ formatDateTime(notification.notification.created_at) }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body d-flex flex-column gap-2"
+                                v-if="notification.notification.type === 'App\\Notifications\\DeletedTickets'">
+                                <div class="d-flex flex-row">
+                                    <div class="d-flex flex-column gap-2">
+                                        <h5 class="card-title fw-bold d-flex flex-row align-items-center gap-3">
+                                            {{ notification.notification.data.title }} <span
+                                                class="badge bg-danger">Reminder</span>
+                                        </h5>
+                                        <p class="card-subtitle">{{ notification.notification.data.message }}</p>
                                         <small class="card-text fst-italic text-muted">
                                             {{ formatDateTime(notification.notification.created_at) }}
                                         </small>
