@@ -192,11 +192,14 @@
                                             {{ notification.notification.data.title }} <span
                                                 class="badge bg-danger">Reminder</span>
                                         </h5>
-                                        <p class="card-subtitle">{{ notification.notification.data.message }}</p>
-                                        <p class="card-subtitle text-danger">
+                                        <div class="card-subtitle ">
+                                            <p>{{ notification.notification.data.message }}</p>
+                                            <p class="fw-bold text-uppercase">{{ formatMonthYear(notification.notification.data.date) }}</p>
+                                        </div>
+                                        <p class="card-subtitle text-danger fw-bold">
                                             {{ notification.notification.data.message_two }}
                                         </p>
-                                        <p>{{ formatDateTime(notification.notification.data.date) }}</p>
+                                        
                                         <p class="card-subtitle">Click
                                             <a href="/admin/reports/generate-report">
                                                 here
@@ -222,6 +225,8 @@ import Logo from '@/Components/Logo.vue';
 import { Link, usePage } from "@inertiajs/vue3";
 import axios from 'axios';
 import { computed, defineProps, onMounted, ref } from 'vue';
+import moment from 'moment';
+
 
 const props = defineProps({});
 
@@ -264,6 +269,11 @@ const formatDateTime = (datetime) => {
     const formattedDate = formatDate(date);
     const formattedTime = formatTime(date.toTimeString().split(' ')[0]);
     return `${formattedDate} | ${formattedTime}`;
+}
+
+const formatMonthYear = (datetime) => {
+    const formattedDate = moment(datetime).format("MMMM YYYY");
+    return formattedDate;
 }
 
 const page = usePage();

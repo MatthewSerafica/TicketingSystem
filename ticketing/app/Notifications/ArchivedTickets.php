@@ -61,7 +61,7 @@ class ArchivedTickets extends Notification
             'remarks' => $this->ticket->remarks,
             'resolved_at' => $this->ticket->resolved_at,
             'title' => 'Tickets Archived',
-            'message' => 'The tickets from the previous month have been archived.',
+            'message' => '<b>The tickets from the previous month have been archived.</b>',
             'message_two' => 'Please download and print the tickets generated before the tickets are deleted!',
             'date' => $this->date,
         ];
