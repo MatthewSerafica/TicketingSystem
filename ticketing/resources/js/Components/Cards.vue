@@ -8,10 +8,12 @@
                 <div class="card-subtitle row ps-4 pb-2 date">{{ date }}</div>
             </div>
             <div class="col">
-                <div class="card-subtitle ps-2 text-secondary row date">Status</div>
-                <div class="card-subtitle ps-2 pb-3 row other">{{ status }}</div>
+                <div class="card-subtitle ps-1 row other mb-3" style="width: 5rem;">
+                    <span :class="getBadgeColor(status)" class="p-2">{{ status }}</span>
+                </div>
                 <div class="card-subtitle ps-2 text-secondary row date">Assigned to</div>
-                <div class="card-subtitle ps-2 row other" v-for="technician in technicians">{{ technician.technician[0].user.name }}</div>
+                <div class="card-subtitle ps-2 row other" v-for="technician in technicians">{{
+                    technician.technician[0].user.name }}</div>
             </div>
         </div>
     </div>
@@ -19,7 +21,7 @@
 
 <script setup>
 const props = defineProps({
-    no:  Number,
+    no: Number,
     issue: String,
     employee: String,
     department: String,
@@ -27,11 +29,24 @@ const props = defineProps({
     technicians: String,
     date: String,
 })
+
+const getBadgeColor = (status) => {
+    switch (status.toLowerCase()) {
+        case 'new':
+            return 'badge text-bg-danger';
+        case 'pending':
+            return 'badge text-bg-warning';
+        case 'ongoing':
+            return 'badge text-bg-primary';
+        case 'resolved':
+            return 'badge text-bg-success';
+        default:
+            return 'badge badge-secondary';
+    }
+};
 </script>
 
 <style scoped>
-
-
 .ticket {
     font-size: 20px;
 }
@@ -52,7 +67,6 @@ const props = defineProps({
 
 .other {
     font-size: 16px;
-    font-weight:400;
+    font-weight: 400;
 }
-
 </style>

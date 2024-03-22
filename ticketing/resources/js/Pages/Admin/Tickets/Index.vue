@@ -41,7 +41,7 @@
         </div>
         <div class="input-group mt-3 mb-2">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
-          <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
+          <input type="text" class="form-control py-2 shadow-sm" id="search" name="search" v-model="search"
             placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>

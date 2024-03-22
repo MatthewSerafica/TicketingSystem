@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex gap-1">
     <template v-for="(link, index) in links">
-      <Link v-if="link.url !== undefined && link.url !== null" :key="index"
+      <Link class="shadow-sm" v-if="link.url !== undefined && link.url !== null" :key="index"
         :class="[link.active ? 'btn btn-primary fw-semibold' : 'btn btn-outline-primary border-2 fw-semibold']"
         :href="link.url" v-html="getLabel(link)">
       </Link>
