@@ -3,9 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Models\ArchivedTicket;
+use App\Models\AssignedTickets;
 use App\Models\Employee;
-use App\Models\Technician;
 use App\Models\Ticket;
+use App\Models\User;
+use App\Notifications\ArchivedTickets;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -33,21 +35,26 @@ class ArchiveTickets extends Command
         $monthAgo = Carbon::now()->subMonth();
         $ticketsToArchive = Ticket::where('created_at', '<', $monthAgo)->get();
 
+
         foreach ($ticketsToArchive as $ticket) {
             $employee = Employee::where('employee_id', $ticket->employee)->first();
-            $tech1 = Technician::where('technician_id', $ticket->technician1)->first();
-            $tech2 = Technician::where('technician_id', $ticket->technician2)->first();
-            $tech3 = Technician::where('technician_id', $ticket->technician3)->first();
-            $technician1Name = ($tech1 && $tech1->user) ? $tech1->user->name : '';
-            $technician2Name = ($tech2 && $tech2->user) ? '/' . $tech2->user->name : '';
-            $technician3Name = ($tech3 && $tech3->user) ? '/' . $tech3->user->name : '';
+            $assigned = AssignedTickets::where('ticket_number', $ticket->ticket_number)->with('technician.user')->get()->toJson();
+            $technicianNames = [];
+            $assignedArray = json_decode($assigned, true);
+
+            foreach ($assignedArray as $item) {
+                $technicianNames[] = $item['technician'][0]['user']['name'];
+            }
+
+            $formattedTechnicianNames = implode(' / ', $technicianNames);
+            $technicians = $formattedTechnicianNames;
             ArchivedTicket::create([
                 'ticket_number' => $ticket->ticket_number,
                 'rr_no' => $ticket->rr_no,
                 'ms_no' => $ticket->ms_no,
                 'rs_no' => $ticket->rs_no,
                 'employee' => $employee->user->name,
-                'technicians' => $technician1Name . $technician2Name . $technician3Name,
+                'technicians' => $technicians,
                 'issue' => $ticket->issue,
                 'service' => $ticket->service,
                 'description' => $ticket->description,
@@ -61,6 +68,13 @@ class ArchiveTickets extends Command
                 'archived_at' => now(),
             ]);
             $ticket->delete();
+        }
+
+        $admins = User::where('user_type', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(
+                new ArchivedTickets($ticketsToArchive[0],$monthAgo)
+            );
         }
 
         $this->info('Tickets archived successfully!');

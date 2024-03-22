@@ -18,7 +18,7 @@ class AdminNotificationController extends Controller
         foreach ($notifications as $notification) {
             $data = $notification->data;
 
-            $employee = Employee::where('employee_id', $data['employee'])->with('user')->firstOrFail();
+            $employee = Employee::where('employee_id', $data['employee'])->with('user')->first();
             $assigned = AssignedTickets::where('ticket_number', $data['ticket_number'])->get();
 
             $technicians = collect([]);
@@ -35,7 +35,7 @@ class AdminNotificationController extends Controller
                 'office' => $employee->office,
             ];
         }
-
+        
         return response()->json([
             'notifications' => $notifications_with_user,
         ]);

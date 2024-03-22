@@ -53,7 +53,7 @@
                         <td class="text-start">{{ ticket.employee }}</td>
                         <td class="text-start" style="max-width: 15rem;">{{ ticket.description }}</td>
                         <td class="text-start">{{ ticket.service }}</td>
-                        <td class="text-start">{{ ticket.technicians }}</td>
+                        <td class="text-start" style="max-width:8rem;">{{ ticket.technicians }}</td>
                         <td class="text-center">{{ ticket.sr_no }}</td>
                         <td class="text-start">{{
                     ticket.resolved_at ? moment(ticket.resolved_at).format("MMM DD, YYYY") : null }}
