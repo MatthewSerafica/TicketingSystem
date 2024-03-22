@@ -11,6 +11,14 @@
 
           <div class="create-ticket d-flex flex-column justify-content-center align-items-center">
             <div class="d-flex flex-row gap-3 w-50 justify-content-center mb-4">
+              <div class=" flex-shrink-1 w-25">
+                <div class="d-flex flex-column flex-shrink-0">
+                  <label for="rs_no" class="fw-semibold">RS No.</label>
+                  <input id="rs_no" class="form-control h-100 rounded border-secondary-subtle" type="text"
+                    placeholder="Enter RS No..." v-model="form.rs_no" />
+                  <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
+                </div>
+              </div>
               <div class="flex-grow-1 w-50">
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="issue" class="fw-semibold">Title</label>
@@ -122,6 +130,7 @@ const props = defineProps({
 const page = usePage()
 
 const form = useForm({
+  rs_no: null,
   issue: null,
   service: null,
   description: null,
@@ -184,6 +193,11 @@ const selectEmployee = (employee) => {
 }
 
 const create = () => {
+  if (form.rs_no && !/^\d+$/.test(form.rs_no)) {
+    form.errors.rs_no = 'Requisition Slip Number should contain only numeric characters.';
+    return;
+  }
+
   form.post(route('technician.tickets.store'), { preserveScroll: false, preserveState: false });
 }
 </script>
