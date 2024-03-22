@@ -196,6 +196,7 @@
                                         <p class="card-subtitle text-danger">
                                             {{ notification.notification.data.message_two }}
                                         </p>
+                                        <p>{{ formatDateTime(notification.notification.data.date) }}</p>
                                         <p class="card-subtitle">Click
                                             <a href="/admin/reports/generate-report">
                                                 here
