@@ -183,7 +183,6 @@
                                     </small>
                                 </div>
                             </div>
-
                             <div class="card-body d-flex flex-column gap-2"
                                 v-if="notification.notification.type === 'App\\Notifications\\ArchivedTickets'">
                                 <div class="d-flex flex-row">

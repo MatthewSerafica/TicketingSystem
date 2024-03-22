@@ -60,6 +60,7 @@
                 </th>
                 <th class="text-muted">Date</th>
                 <th class="text-muted">Client</th>
+                <th class="text-muted">RS No</th>
                 <th class="text-muted">Request</th>
                 <th class="text-muted">Service</th>
                 <th class="text-center text-muted">Complexity</th>
@@ -77,6 +78,9 @@
                 <td class="text-start" style="width: 12rem;"><span class="fw-medium">
                     {{ ticket.employee.user.name }}</span><br>
                   <small>{{ ticket.employee.department }} - {{ ticket.employee.office }}</small>
+                </td>
+                <td class="text-start">
+                    {{ ticket.rs_no ? ticket.rs_no : "N/A" }}
                 </td>
                 <td class="text-start text-truncate ticket-description" style="max-width: 130px;"
                   data-hover-text="{{ ticket.description }}">

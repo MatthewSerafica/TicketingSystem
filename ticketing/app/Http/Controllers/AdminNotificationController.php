@@ -19,9 +19,9 @@ class AdminNotificationController extends Controller
             $data = $notification->data;
 
             $employee = Employee::where('employee_id', $data['employee'])->with('user')->first();
-            $assigned = AssignedTickets::where('ticket_number', $data['ticket_number'])->get();
 
             $technicians = collect([]);
+            $assigned = AssignedTickets::where('ticket_number', $data['ticket_number'])->get();
 
             foreach ($assigned as $assign) {
                 $technicians = $technicians->merge(Technician::where('technician_id', $assign->technician)->with('user')->get());
@@ -34,8 +34,9 @@ class AdminNotificationController extends Controller
                 'department' => $employee->department,
                 'office' => $employee->office,
             ];
+            
         }
-        
+
         return response()->json([
             'notifications' => $notifications_with_user,
         ]);

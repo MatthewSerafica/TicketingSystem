@@ -127,6 +127,7 @@ class TechnicianTicketController extends Controller
                 'issue' => 'required',
                 'service' => 'required',
                 'user' => 'required',
+                'rs_no' => 'nullable|numeric',
                 'assignToSelf' => 'nullable',
             ]);
             $technician = Technician::where('user_id', $request->user)->firstOrFail();
@@ -139,6 +140,7 @@ class TechnicianTicketController extends Controller
 
             $ticketData = [
                 'complexity' => $request->complexity,
+                'rs_no' => $request->rs_no,
                 'employee' => $request->employee,
                 'issue' => $request->issue,
                 'description' => $request->description,
