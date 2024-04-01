@@ -9,7 +9,7 @@
                 </div>
                 <div class="card p-4 col-md-5">
                     <div class="card-body">
-                    <h3 class="mb-5 text-primary">TMDD Ticketing System</h3>
+                    <h3 class="mb-5 text-primary text-center">TMDD Ticketing System</h3>
                     <form @submit.prevent="login">
                         <!-- Email input -->
                         <div class="form-outline mb-4">
