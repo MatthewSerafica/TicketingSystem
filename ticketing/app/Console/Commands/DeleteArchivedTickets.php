@@ -30,7 +30,7 @@ class DeleteArchivedTickets extends Command
      */
     public function handle()
     {
-        $years = Carbon::now()->subYears(2);
+        $years = Carbon::now()->subYears(2)->endOfYear();
 
         $tickets = ArchivedTicket::whereNotNull('archived_at')
             ->where('archived_at', '<=', $years)
