@@ -6,7 +6,7 @@
         <br />
         <div class="container">
           <div class="title-container fw-bold mb-5 text-center">
-            <h1>Create Tickets</h1>
+            <h1 class="fw-bold">Create Tickets</h1>
           </div>
 
           <div class="create-ticket d-flex flex-column justify-content-center align-items-center">
