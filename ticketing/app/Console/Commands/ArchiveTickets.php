@@ -32,8 +32,8 @@ class ArchiveTickets extends Command
      */
     public function handle()
     {
-        $monthAgo = Carbon::now()->subMonth();
-        $ticketsToArchive = Ticket::where('created_at', '<', $monthAgo)->get();
+        $monthAgo = Carbon::now()->subMonth()->endOfMonth();
+        $ticketsToArchive = Ticket::whereDate('created_at', '<', $monthAgo)->get();
 
 
         foreach ($ticketsToArchive as $ticket) {
@@ -70,13 +70,13 @@ class ArchiveTickets extends Command
             $ticket->delete();
         }
 
-        $admins = User::where('user_type', 'admin')->get();
+        /* $admins = User::where('user_type', 'admin')->get();
         foreach ($admins as $admin) {
             $admin->notify(
                 new ArchivedTickets($ticketsToArchive[0], $monthAgo)
             );
-        }
+        } */
 
-        $this->info('Tickets archived successfully!');
+        $this->info($ticketsToArchive->count() .' Tickets archived successfully!');
     }
 }

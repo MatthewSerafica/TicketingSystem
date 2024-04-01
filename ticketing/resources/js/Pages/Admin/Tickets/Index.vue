@@ -23,14 +23,13 @@
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Tickets</h1>
           <p class="fs-5"> Manage and track all TMDD tickets</p>
-          <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5 shadow">Create New
-          Ticket
+          <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5 shadow">
+          Create New Ticket
           </Link>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options shadow"
               @click="filterTickets('all')"></Button>
-            <Button :name="'New'" :color="'danger'" class="btn-options shadow"
-              @click="filterTickets('new')"></Button>
+            <Button :name="'New'" :color="'danger'" class="btn-options shadow" @click="filterTickets('new')"></Button>
             <Button :name="'Pending'" :color="'warning'" class="btn-options shadow"
               @click="filterTickets('pending')"></Button>
             <Button :name="'Ongoing'" :color="'info'" class="btn-options shadow"
@@ -339,7 +338,7 @@ const fetchData = (type, all, ne, pending, ongoing, resolved) => {
       replace: true,
     }
   )
-  
+
   router.remember({ filter: filter });
 }
 
@@ -624,11 +623,10 @@ const validateNumericInput = (inputValue, propName) => {
 
 
 <style scoped>
-
 .dropdown-menu {
   display: none;
   opacity: 0;
-  transition: opacity 0.3s ease; 
+  transition: opacity 0.3s ease;
 }
 
 .dropdown-menu.show {
@@ -638,7 +636,7 @@ const validateNumericInput = (inputValue, propName) => {
 
 .dropdown-item {
   opacity: 0;
-  transition: opacity 0.5s ease; 
+  transition: opacity 0.5s ease;
 }
 
 .dropdown-menu.show .dropdown-item {
@@ -653,6 +651,7 @@ const validateNumericInput = (inputValue, propName) => {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
