@@ -6,7 +6,7 @@
       <br />
       <div class="container">
         <div class="title-container fw-bold mb-5 text-center">
-          <h1>Add Department</h1>
+          <h1 class="fw-bold">Add Department</h1>
           <p class="fs-5"> Add Department Abbreviation</p>
         </div>
 

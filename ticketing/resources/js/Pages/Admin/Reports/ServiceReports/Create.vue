@@ -6,7 +6,7 @@
         <br />
         <div class="container">
           <div class="title-container text-center mb-2">
-            <h1 class="fw-bold">Service Report</h1>
+            <h1 class="fw-bold">Create Service Reports</h1>
           </div>
           <div class="create-report">
             <div class="row justify-content-center mb-4">

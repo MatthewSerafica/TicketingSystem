@@ -22,7 +22,7 @@
       <div class="text-center justify-content-center align-items-center d-flex mt-3 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Tickets</h1>
-          <p class="fs-5"> Manage and track all TMDD tickets</p>
+          <p class="fs-5"> Manage and Track all TMDD Tickets</p>
           <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5 shadow">
           Create New Ticket
           </Link>

@@ -6,7 +6,7 @@
         <br />
         <div class="container">
           <div class="title-container text-center">
-            <h1>SERVICE REPORT FORM</h1>
+            <h1 class="fw-bold">Create Service Reports</h1>
           </div>
 
           <div class="create-report">

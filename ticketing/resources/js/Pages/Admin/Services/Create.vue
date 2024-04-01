@@ -6,7 +6,7 @@
         <br />
         <div class="container">
           <div class="title-container fw-bold mb-5 text-center">
-            <h1>Add Service</h1>
+            <h1 class="fw-bold">Add Service</h1>
           </div>
   
           <div class="create-service">

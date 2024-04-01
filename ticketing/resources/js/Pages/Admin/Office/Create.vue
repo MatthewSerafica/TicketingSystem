@@ -6,7 +6,7 @@
       <br />
       <div class="container">
         <div class="title-container fw-bold mb-5 text-center">
-          <h1>Add Office</h1>
+          <h1 class="fw-bold">Add Office</h1>
         </div>
 
         <div class="create-office">
