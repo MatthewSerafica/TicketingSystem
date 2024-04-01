@@ -12,6 +12,7 @@ class AuthController extends Controller
     {
         return inertia('Auth/Login');
     }
+    
     public function store(Request $request)
     {
         $credentials = $request->validate([
@@ -24,13 +25,6 @@ class AuthController extends Controller
                 'email' => __('auth.failed')
             ]);
         }
-
-        /* if (!auth()->user()->is_active) {
-            Auth::logout();
-            throw ValidationException::withMessages([
-                'email' => ('Account is deactivated')
-            ]);
-        } */
 
         $request->session()->regenerate();
 

@@ -9,6 +9,10 @@ class AdminDepartmentController extends Controller
 {
     public function index(Request $request)
     {
+        $request->validate([
+            'search' => 'nullable|string|max:255', // Example validation rule for search
+        ]);
+        
         $departments = Department::query()
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
@@ -35,7 +39,7 @@ class AdminDepartmentController extends Controller
     {
 
         $request->validate([
-            'department' => 'required',
+            'department' => 'required|string|max:255',
         ]);
 
 
@@ -51,13 +55,12 @@ class AdminDepartmentController extends Controller
     public function update(Request $request, $department_id)
     {
         $request->validate([
-            'department' => 'required',
+            'department' => 'required|string|max:255',
         ]);
 
         $department = Department::findOrFail($department_id);
         $old_department = $department->department;
-        $department->department = $request->department;
-        $department->save();
+        $department->update(['department' => $request->department]);
 
         return redirect()->back()->with('success', 'Department Updated!')->with('message', $old_department . ' is updated to ' . $request->department);
     }
@@ -70,5 +73,4 @@ class AdminDepartmentController extends Controller
 
         return redirect()->back()->with('success', 'Department Deleted!')->with('message', $name . ' has been deleted from the departments');
     }
-
 }
