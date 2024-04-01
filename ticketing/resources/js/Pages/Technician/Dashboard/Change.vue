@@ -6,7 +6,7 @@
         <br />
         <div class="container">
           <div class="title-container fw-bold mb-5 text-center">
-            <h1>Change Password</h1>
+            <h1 class="fw-bold">Change Password</h1>
             <div v-if="form.errors.oldPassword">{{ form.errors.oldPassword }}</div>
             <div class="text-danger">{{ page.props.flash.error }}</div>
             <div class="text-success">{{ page.props.flash.success }}</div>
