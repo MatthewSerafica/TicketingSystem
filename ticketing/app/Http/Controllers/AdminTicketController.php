@@ -91,8 +91,8 @@ class AdminTicketController extends Controller
 
     public function create(Request $request)
     {
-        $latest = HistoryNumber::select('rs_no')->whereNotNull('rs_no')->orderByDesc('rs_no')->first();
-        $new = $latest ? $this->increment($latest->ticket_number, $latest->rs_no) : '1';
+        $latest = HistoryNumber::whereNotNull('rs_no')->orderByDesc('rs_no')->first();
+        $new = $latest ? $this->increment($latest->ticket_number, $latest->rs_no) : '0001';
         $technicians = Technician::with('user')
             ->where('tickets_assigned', '!=', 5)
             ->get();
@@ -126,15 +126,17 @@ class AdminTicketController extends Controller
         if ($exists) {
             $latest =  HistoryNumber::whereNotNull('rs_no')->orderByDesc('rs_no')->first();
             if ($latest) {
-                $new = $latest->rs_no + 1;
+                $numeric_part = (int)$latest->rs_no;
+                $new = $numeric_part + 1;
+                $new_numeric = sprintf('%04d', $new);
             } else {
-                $new = $rs_no;
+                $new_numeric = $rs_no;
             }
         } else {
-            $new = $rs_no;
+            $new_numeric = $rs_no;
         }
 
-        return $new;
+        return $new_numeric;
     }
 
     public function store(Request $request)

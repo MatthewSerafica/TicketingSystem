@@ -162,7 +162,6 @@
         </div>
       </form>
     </div>
-    {{ new_rs }}
   </div>
 </template>
 

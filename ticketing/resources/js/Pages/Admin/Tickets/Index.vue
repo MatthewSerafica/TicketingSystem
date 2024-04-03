@@ -45,13 +45,13 @@
         </div>
       </div>
 
-      <div class="d-flex align-items-center justify-content-between mt-2 mb-2 px-3 pagination">
+      <div v-if="tickets.data.length" class="d-flex align-items-center justify-content-between mt-2 mb-2 px-3 pagination">
         <div class="d-flex flex-grow-1 gap-2 w-100">
           <p>RS - {{ rs ? rs.rs_no : 0 }} | </p>
           <p>MS - {{ ms ? ms.ms_no : 0 }} | </p>
           <p>RR - {{ rr ? rr.rr_no : 0 }}</p>
         </div>
-        <div v-if="tickets.data.length" class="d-flex flex-grow-1">
+        <div class="d-flex flex-grow-1">
           <Pagination :links="tickets.links" :key="'tickets'" />
           <br>
         </div>
@@ -245,7 +245,6 @@
                     @blur="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
                     @keyup.enter="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
                     class="w-100 rounded border border-secondary-subtle text-center"></textarea>
-
                 </td>
                 <td class="text-start">
                   <div class="">

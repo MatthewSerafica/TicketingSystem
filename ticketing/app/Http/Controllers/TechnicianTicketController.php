@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AssignedTickets;
 use App\Models\Employee;
+use App\Models\HistoryNumber;
 use App\Models\Service;
 use App\Models\Technician;
 use App\Models\Ticket;
@@ -96,6 +97,8 @@ class TechnicianTicketController extends Controller
 
     public function create(Request $request)
     {
+        $latest = HistoryNumber::whereNotNull('rs_no')->orderByDesc('rs_no')->first();
+        $new = $latest ? $this->increment($latest->ticket_number, $latest->rs_no) : '1';
         $searchQuery = $request->input('search');
         $employees = Employee::with('user')
             ->when($searchQuery, function ($query) use ($searchQuery) {
@@ -113,7 +116,27 @@ class TechnicianTicketController extends Controller
         return inertia('Technician/Tickets/Create', [
             'employees' => $employees,
             'filters' => $filter,
+            'new_rs' => $new,
         ]);
+    }
+
+    private function increment($id, $rs_no)
+    {
+        $exists = HistoryNumber::where('ticket_number', $id)->exists();
+        if ($exists) {
+            $latest =  HistoryNumber::whereNotNull('rs_no')->orderByDesc('rs_no')->first();
+            if ($latest) {
+                $numeric_part = (int)$latest->rs_no;
+                $new = $numeric_part + 1;
+                $new_numeric = sprintf('%04d', $new);
+            } else {
+                $new_numeric = $rs_no;
+            }
+        } else {
+            $new_numeric = $rs_no;
+        }
+
+        return $new_numeric;
     }
 
     public function store(Request $request)
@@ -150,6 +173,13 @@ class TechnicianTicketController extends Controller
 
             $ticket = Ticket::create($ticketData);
             $employee->update(['made_ticket' => $employee->made_ticket + 1]);
+
+            $history_data = [
+                'ticket_number' => $ticket->ticket_number,
+                'rs_no' => $request->rs_no,
+            ];
+
+            HistoryNumber::create($history_data);
 
             if ($request->assign_to_self) {
                 AssignedTickets::create([
@@ -229,6 +259,10 @@ class TechnicianTicketController extends Controller
             $request->validate([
                 $field => 'nullable',
             ]);
+
+            if (!$request->$field) {
+                return redirect()->back()->with('error', 'An empty field error occurred!')->with('message', 'Please do not leave the field empty.');
+            }
 
             $ticket = Ticket::where('ticket_number', $id)->first();
 
