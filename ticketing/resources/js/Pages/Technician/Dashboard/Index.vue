@@ -19,7 +19,7 @@
                         class="d-flex flex-column gap-4 justify-content-center align-items-center">
                         <div class="" v-for="ticket in tickets" :key="tickets.ticket_number">
                             <Link class="text-decoration-none" :href="route('technician.tickets')">
-                            <Card class="text-truncate" :no="ticket.ticket_number" :issue="ticket.issue"
+                            <Card class="text-truncate hover" :no="ticket.ticket_number" :issue="ticket.issue"
                                 :employee="ticket.employee.user.name" :department="ticket.employee.department"
                                 :date="formatDate(ticket.created_at)" :status="ticket.status"
                                 :technicians="ticket.assigned ? ticket.assigned : 'Unassigned'">
@@ -35,10 +35,10 @@
             <div class="d-flex flex-column w-100 justify-content-center align-items-center text-center">
                 <h1 class="stat-label">Statistics</h1>
                 <div class="w-100 justify-content-center align-items-center gap-5 m-3 statistics">
-                    <div class="card p-5 shadow-sm">
+                    <div class="card hover p-5 shadow-sm">
                         <Doughnut :service="service" class="doughnut"></Doughnut>
                     </div>
-                    <div class="card p-5 shadow-sm">
+                    <div class="card hover p-5 shadow-sm">
                         <Bar :yearly="yearly_data" class="bar"></Bar>
                     </div>
                 </div>
@@ -70,6 +70,13 @@ const formatDate = (date) => {
 </script>
 
 <style scoped>
+
+.hover:hover {
+    background-color: white;
+    transition: transform 0.5s ease;
+    transform: scale(1.1); 
+}
+
 .btn-width {
     width: 150px;
     height: 50px;
