@@ -84,6 +84,7 @@ Route::middleware(['web'])->group(function () {
 
         Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications');
         Route::post('/admin/notifications/seen', [AdminNotificationController::class, 'update'])->name('admin.notifications.seen');
+        Route::delete('/admin/notifications/mark/{notif_id}', [AdminNotificationController::class, 'marked'])->name('admin.notifications.marked');
 
         Route::get('/admin/users/change', [AdminUsersController::class, 'password'])->name('admin.change');
         Route::post('/admin/users/change-password/{user_id}', [AdminUsersController::class, 'changePassword'])->name('admin.change-password');
