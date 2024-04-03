@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="d-flex flex-row justify-content-between p-2 print-hidden">
+            
             <div class="print-hidden">
                 <Link :href="route('admin.reports.generate-report')"
                     class="print-hidden btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
@@ -25,38 +26,40 @@
                 </button>
             </div>
         </div>
+        <div class="text-center fw-bold mb-2"> RS System (Monitoring) <br> {{ monthName(month) }} {{ year }} </div> 
+        
         <div class="table-responsive px-3 rounded shadow pt-2 px-2">
             <table class="table table-hover custom-rounded-table">
                 <thead>
                     <tr class="text-start text-muted">
-                        <th class="text-start text-muted">No</th>
+                        <th class="text-start text-muted">Ticket No</th>
                         <th class="text-muted">Date</th>
                         <th class="text-center text-muted">RR No</th>
                         <th class="text-center text-muted">MS No</th>
                         <th class="text-center text-muted">RS No</th>
                         <th class="text-muted">Client</th>
+                        <th class="text-muted">Office</th>
                         <th class="text-muted">Request</th>
-                        <th class="text-muted">Service</th>
                         <th class="text-muted">Technician</th>
                         <th class="text-center text-muted">SR No</th>
-                        <th class="text-muted">Date Resolved</th>
+                        <th class="text-muted">Date Done</th>
                         <th class="text-muted">Remarks</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="ticket in tickets" class="align-middle">
                         <td class="text-center">{{ ticket.ticket_number }}</td>
-                        <td class="text-start">{{ moment(ticket.created_at).format("MMM DD, YYYY") }}</td>
+                        <td class="text-start">{{ moment(ticket.created_at).format("MM/DD/YYYY") }}</td>
                         <td class="text-center">{{ ticket.rr_no }}</td>
                         <td class="text-center">{{ ticket.ms_no }}</td>
                         <td class="text-center">{{ ticket.rs_no }}</td>
                         <td class="text-start">{{ ticket.employee }}</td>
+                        <td class="text-start">{{ ticket.employee.department }} - {{ ticket.employee.office }}</td>
                         <td class="text-start" style="max-width: 15rem;">{{ ticket.description }}</td>
-                        <td class="text-start">{{ ticket.service }}</td>
                         <td class="text-start" style="max-width:8rem;">{{ ticket.technicians }}</td>
                         <td class="text-center">{{ ticket.sr_no }}</td>
                         <td class="text-start">{{
-                    ticket.resolved_at ? moment(ticket.resolved_at).format("MMM DD, YYYY") : null }}
+                    ticket.resolved_at ? moment(ticket.resolved_at).format("MM/DD/YYYY") : null }}
                         </td>
                         <td class="text-start">{{ ticket.remarks }}</td>
                     </tr>
@@ -72,7 +75,14 @@ import moment from "moment";
 
 const props = defineProps({
     tickets: Object,
+    month: Object,
+    year: Object,
 })
+
+const monthName = (month) => {
+    const date = new Date(2000, month - 1, 1);
+    return date.toLocaleString('en-US', { month: 'long' });
+};
 
 const printPage = () => {
     window.print();
@@ -84,5 +94,12 @@ const printPage = () => {
     .print-hidden {
         display: none;
     }
+
+    @page {
+        size: auto; 
+        margin: 0; 
+    }
 }
+
+
 </style>

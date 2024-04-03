@@ -35,6 +35,8 @@ class AdminGenerateReportController extends Controller
 
         return inertia('Admin/Reports/GenerateReports/Print', [
             'tickets' => $tickets,
+            'month' => $month,
+            'year' => $year,
         ]);
     }
 }
