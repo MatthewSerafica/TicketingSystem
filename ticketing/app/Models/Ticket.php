@@ -21,6 +21,11 @@ class Ticket extends Model
         return $this->hasMany(AssignedTickets::class, 'ticket_number', 'ticket_number');
     }
 
+    public function history()
+    {
+        return $this->hasOne(HistoryNumber::class, 'ticket_number', 'ticket_number');
+    }
+
     protected $fillable = [
         'employee', 
         'rr_no', 

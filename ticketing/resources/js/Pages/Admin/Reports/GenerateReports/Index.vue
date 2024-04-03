@@ -70,13 +70,10 @@
 <script setup>
 import Button from '@/Components/Button.vue';
 import EmptyCard from '@/Components/EmptyState/Table.vue';
-import Pagination from '@/Components/Pagination.vue';
 import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link, router, useForm, usePage } from "@inertiajs/vue3";
-import Alpine from 'alpinejs';
+import { Link } from "@inertiajs/vue3";
 import moment from "moment";
-import { nextTick, reactive, ref, watch, watchEffect } from "vue";
 
 const props = defineProps({
     monthsAndYears: Object,

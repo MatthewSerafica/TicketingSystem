@@ -49,41 +49,48 @@ class TechnicianServiceController extends Controller
     {
         $latest_report = ServiceReport::orderBy('created_at', 'desc')->first();
         $new_service_id = $latest_report ? $this->incrementServiceId($latest_report->service_id) : '0001';
-        $ticket_id = $latest_report->ticket_number;
-        $date_done = $latest_report->date_done;
+        if ($latest_report) {
+            $new_service_id = $this->incrementServiceId($latest_report->service_id);
+            $ticket_id = $latest_report->ticket_number;
+            $date_done = $latest_report->date_done;
+        } else {
+            $new_service_id = '0001';
+            $ticket_id = null;
+            $date_done = null;
+        }
         $tickets = Ticket::with('employee.user')->get();
         $technicians = Technician::all();
         return inertia('Technician/ServiceReports/Create', [
             'technicians' => $technicians,
             'new_service_id' => $new_service_id,
             'tickets' => $tickets,
-            'ticket_id' => $ticket_id,
+            'ticket_id' => $ticket_id ? $ticket_id : null,
             'date_done' => $date_done,
 
         ]);
     }
 
-    private function incrementServiceId($currentServiceId)
+    private function incrementServiceId($current_service_id)
     {
         // Check if a service report with the given service_id exists
-        $exists = ServiceReport::where('service_id', $currentServiceId)->exists();
+        $exists = ServiceReport::where('service_id', $current_service_id)->exists();
 
         // If a service report with the given service_id exists and date_started is not null
         if ($exists) {
-            $latestReport = ServiceReport::where('service_id', $currentServiceId)->latest()->first();
-            if ($latestReport->date_started !== null) {
-                $numericPart = (int)$currentServiceId;
-                $newNumericPart = $numericPart + 1;
-                $newNumericPartFormatted = sprintf('%04d', $newNumericPart);
+            $latest_report = ServiceReport::where('service_id', $current_service_id)->latest()->first();
+            if ($latest_report->date_started !== null) {
+                $numeric_part = (int)$current_service_id;
+                $new_numeric = $numeric_part + 1;
+                $new_numeric_formatted = sprintf('%04d', $new_numeric);
             } else {
-                $newNumericPartFormatted = $currentServiceId;
+                $new_numeric_formatted = $current_service_id;
             }
         } else {
             // If no service report with the given service_id exists, maintain the same service_id
-            $newNumericPartFormatted = $currentServiceId;
+            $new_numeric_formatted = $current_service_id;
         }
 
-        return $newNumericPartFormatted;
+        return $new_numeric_formatted;
     }
 
 
@@ -144,7 +151,7 @@ class TechnicianServiceController extends Controller
             ];
             $service = ServiceReport::create($serviceData);
         }
-        
+
         $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
         $ticket->update([
             'sr_no' =>  $request->service_id,
@@ -152,19 +159,19 @@ class TechnicianServiceController extends Controller
             'status' => 'Resolved',
             'resolved_at' => $request->date_done,
         ]);
-       /*  $ticket->save(); */
-       $user_id = auth()->id();
-       $technician = Technician::where('user_id', $user_id)->with('user')->first();
-       $technician->tickets_resolved = $technician->tickets_resolved + 1;
-       $technician->tickets_assigned = $technician->tickets_assigned - 1;
-       $technician->save();
+        /*  $ticket->save(); */
+        $user_id = auth()->id();
+        $technician = Technician::where('user_id', $user_id)->with('user')->first();
+        $technician->tickets_resolved = $technician->tickets_resolved + 1;
+        $technician->tickets_assigned = $technician->tickets_assigned - 1;
+        $technician->save();
 
         $employee = Employee::find($ticket->employee);
         $employee->user->notify(new UpdateTicketStatus($ticket));
         $admins = User::where('user_type', 'admin')->get();
         foreach ($admins as $admin) {
             $admin->notify(
-                new ResolvedTicket ($ticket)
+                new ResolvedTicket($ticket)
             );
         }
         return redirect()->to('/technician/service-report')->with('success', 'Report Created');

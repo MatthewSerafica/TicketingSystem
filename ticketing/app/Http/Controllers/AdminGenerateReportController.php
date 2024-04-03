@@ -19,6 +19,7 @@ class AdminGenerateReportController extends Controller
             ->orderByDesc('year')
             ->orderByDesc('month')
             ->get();
+            
         return inertia('Admin/Reports/GenerateReports/Index', [
             'monthsAndYears' => $monthsAndYears,
             'tickets' => $tickets,

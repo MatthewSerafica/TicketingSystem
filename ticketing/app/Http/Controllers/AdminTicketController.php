@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AssignedTickets;
 use App\Models\Employee;
+use App\Models\HistoryNumber;
 use App\Models\Service;
 use App\Models\Technician;
 use App\Models\Ticket;
@@ -73,23 +74,30 @@ class AdminTicketController extends Controller
             ->get();
 
         $services = Service::all();
+        $latest_rs = HistoryNumber::select('rs_no')->whereNotNull('rs_no')->orderByDesc('rs_no')->first();
+        $latest_ms = HistoryNumber::select('ms_no')->whereNotNull('ms_no')->orderByDesc('ms_no')->first();
+        $latest_rr = HistoryNumber::select('rr_no')->whereNotNull('rr_no')->orderByDesc('rr_no')->first();
         return inertia('Admin/Tickets/Index', [
             'tickets' => $tickets,
             'technicians' => $technicians,
             'filters' => $filter,
             'services' => $services,
+            'rs' => $latest_rs,
+            'ms' => $latest_ms,
+            'rr' => $latest_rr,
         ]);
     }
 
 
     public function create(Request $request)
     {
+        $latest = HistoryNumber::select('rs_no')->whereNotNull('rs_no')->orderByDesc('rs_no')->first();
+        $new = $latest ? $this->increment($latest->ticket_number, $latest->rs_no) : '1';
         $technicians = Technician::with('user')
             ->where('tickets_assigned', '!=', 5)
             ->get();
         $services = Service::all();
         $searchQuery = $request->input('search');
-
         $employees = Employee::with('user')
             ->when($searchQuery, function ($query) use ($searchQuery) {
                 $query->where(function ($subquery) use ($searchQuery) {
@@ -108,7 +116,25 @@ class AdminTicketController extends Controller
             'employees' => $employees,
             'services' => $services,
             'filters' => $filter,
+            'new_rs' => $new,
         ]);
+    }
+
+    private function increment($id, $rs_no)
+    {
+        $exists = HistoryNumber::where('ticket_number', $id)->exists();
+        if ($exists) {
+            $latest =  HistoryNumber::whereNotNull('rs_no')->orderByDesc('rs_no')->first();
+            if ($latest) {
+                $new = $latest->rs_no + 1;
+            } else {
+                $new = $rs_no;
+            }
+        } else {
+            $new = $rs_no;
+        }
+
+        return $new;
     }
 
     public function store(Request $request)
@@ -135,7 +161,7 @@ class AdminTicketController extends Controller
             }
 
 
-            $ticketData = [
+            $ticket_data = [
                 'rs_no' => $request->rs_no,
                 'employee' => $request->employee,
                 'issue' => $request->issue,
@@ -144,18 +170,24 @@ class AdminTicketController extends Controller
                 'status' => 'Pending',
             ];
 
-            $ticket = Ticket::create($ticketData);
+            $ticket = Ticket::create($ticket_data);
 
+            $history_data = [
+                'ticket_number' => $ticket->ticket_number,
+                'rs_no' => $request->rs_no,
+            ];
 
-            $assignedTechnicians = $request->technicians;
+            HistoryNumber::create($history_data);
 
-            foreach ($assignedTechnicians as $technicianId) {
+            $assigned_technicians = $request->technicians;
+
+            foreach ($assigned_technicians as $technician_id) {
                 AssignedTickets::create([
                     'ticket_number' => $ticket->ticket_number,
-                    'technician' => $technicianId,
+                    'technician' => $technician_id,
                 ]);
 
-                $this->sendTechnicianNotification($technicianId, $ticket);
+                $this->sendTechnicianNotification($technician_id, $ticket);
             }
 
             $employee->update(['made_ticket' => $employee->made_ticket + 1]);
@@ -170,9 +202,9 @@ class AdminTicketController extends Controller
         return redirect()->to('/admin/tickets')->with('success', 'Ticket Created')->with('message', 'All assigned technicians are notified!');
     }
 
-    protected function sendTechnicianNotification($technicianId, $ticket)
+    protected function sendTechnicianNotification($technician_id, $ticket)
     {
-        $technician = Technician::where('technician_id', $technicianId)->firstOrFail();
+        $technician = Technician::where('technician_id', $technician_id)->firstOrFail();
         $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
         $technician->user->notify(new UpdateTicketTechnician($ticket));
     }
@@ -196,6 +228,10 @@ class AdminTicketController extends Controller
     {
         $ticket->$field = $request->$field;
         $ticket->save();
+
+        $history = HistoryNumber::where('ticket_number', $ticket->ticket_number)->first();
+        $history->$field = $request->$field;
+        $history->save();
 
         $fieldMappings = [
             'rr_no' => 'RR No.',
