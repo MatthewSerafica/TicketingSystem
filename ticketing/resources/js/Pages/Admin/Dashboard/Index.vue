@@ -28,7 +28,7 @@
                         </div>
                     </div>
                     <div v-else>
-                        <EmptyCard :title="'No tickets yet...'"></EmptyCard>
+                        <EmptyCard :title="'No tickets today...'"></EmptyCard>
                     </div>
                 </div>
             </div>

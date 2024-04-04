@@ -15,6 +15,7 @@ use App\Notifications\UpdateTicketTechnician;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 class AdminTicketController extends Controller
@@ -70,7 +71,6 @@ class AdminTicketController extends Controller
         $request->session()->put('filter', $filter);
 
         $technicians = Technician::with('user')
-            ->where('tickets_assigned', '!=', 5)
             ->get();
 
         $services = Service::all();
@@ -231,9 +231,11 @@ class AdminTicketController extends Controller
         $ticket->$field = $request->$field;
         $ticket->save();
 
-        $history = HistoryNumber::where('ticket_number', $ticket->ticket_number)->first();
-        $history->$field = $request->$field;
-        $history->save();
+        if ($field !== 'remarks') {
+            $history = HistoryNumber::where('ticket_number', $ticket->ticket_number)->first();
+            $history->$field = $request->$field;
+            $history->save();
+        }
 
         $fieldMappings = [
             'rr_no' => 'RR No.',
@@ -483,5 +485,12 @@ class AdminTicketController extends Controller
             }
             return redirect()->back()->with('success', 'Technician removed!')->with('message', 'Technician successfully removed from Ticket #' . $request->ticket_number);
         }
+    }
+
+    public function recommend($department)
+    {
+        $technicians = Technician::where('assigned_department', $department)->with('user')->get();
+
+        return response()->json(['recommended' => $technicians]);
     }
 }

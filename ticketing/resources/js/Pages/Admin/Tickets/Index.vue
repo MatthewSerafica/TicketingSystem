@@ -45,7 +45,8 @@
         </div>
       </div>
 
-      <div v-if="tickets.data.length" class="d-flex align-items-center justify-content-between mt-2 mb-2 px-3 pagination">
+      <div v-if="tickets.data.length"
+        class="d-flex align-items-center justify-content-between mt-2 mb-2 px-3 pagination">
         <div class="d-flex flex-grow-1 gap-2 w-100">
           <p>RS - {{ rs ? rs.rs_no : 0 }} | </p>
           <p>MS - {{ ms ? ms.ms_no : 0 }} | </p>
@@ -182,7 +183,8 @@
                       <div class="btn-group position-static">
                         <button v-if="ticket.status !== 'Resolved'" type="button"
                           class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
-                          aria-expanded="false" data-bs-reference="parent">
+                          aria-expanded="false" data-bs-reference="parent"
+                          @click="fetchRecommended(ticket.employee.department)">
                           <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
                         <div v-if="ticket.status !== 'Resolved'"
@@ -204,12 +206,40 @@
                             {{ tech.user.name }}
                           </button>
                         </div>
-                        <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                          <li v-for="technician in technicians" class="btn dropdown-item"
-                            @click="assignTechnician(ticket, index, technician)">
-                            <span class="fw-semibold">{{ technician.user.name }}</span>
-                            <br> <small>{{ technician.assigned_department }}</small>
+                        <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto; width: 16rem;">
+                          <div>
+                            <h6 class="dropdown-header">Recommended</h6>
+                            <div v-for="technicians in recommended">
+                              <li v-for="technician in technicians" class="btn dropdown-item"
+                                @click="assignTechnician(ticket, index, technician)"
+                                :class="{ 'disabled': technician.tickets_assigned >= 5 }">
+                                <div class="d-flex justify-content-between">
+                                  <div>
+                                    <span class="fw-semibold">{{ technician.user.name }}</span>
+                                    <br> <small>{{ technician.assigned_department }}</small>
+                                  </div>
+                                  <span>{{ technician.tickets_assigned }}</span>
+                                </div>
+                              </li>
+                            </div>
+                          </div>
+                          <li>
+                            <hr class="dropdown-divider">
                           </li>
+                          <div>
+                            <h6 class="dropdown-header">All</h6>
+                            <li v-for="technician in technicians" class="btn dropdown-item"
+                              @click="assignTechnician(ticket, index, technician)"
+                              :class="{ 'disabled': technician.tickets_assigned >= 5}">
+                              <div class="d-flex justify-content-between">
+                                <div>
+                                  <span class="fw-semibold">{{ technician.user.name }}</span>
+                                  <br> <small>{{ technician.assigned_department }}</small>
+                                </div>
+                                <span>{{ technician.tickets_assigned }}</span>
+                              </div>
+                            </li>
+                          </div>
                         </ul>
                       </div>
                     </div>
@@ -290,6 +320,7 @@ import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 import Alpine from 'alpinejs';
+import axios from 'axios';
 import moment from "moment";
 import { nextTick, reactive, ref, watch, watchEffect } from "vue";
 
@@ -489,7 +520,6 @@ const showInput = (data, id, type, status) => {
   }
 }
 
-
 const updateData = async (data, id, updateField, type) => {
   console.log(editData[data])
   if (selectedInput.value !== type) {
@@ -571,6 +601,24 @@ const assignTechnician = async (ticket, assignedIndex, technician) => {
     await updateData(ticket.assigned[assignedIndex].technician[0].technician_id, ticket.ticket_number, 'technician', 'technician');
   }
 };
+
+let recommended = ref([]);
+
+const fetchRecommended = async (department) => {
+  try {
+    const response = await axios.get(route('admin.recommended', department))
+
+    if (response.status !== 200) {
+      throw new Error('Failed to fetch recommended technicians');
+    }
+
+    recommended.value = response.data;
+
+  } catch (error) {
+    console.error('Error fetching recommended technicians:', error);
+    return null;
+  }
+}
 
 // Table update end
 
