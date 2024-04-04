@@ -46,7 +46,7 @@ class ArchiveTickets extends Command
                 $technicianNames[] = $item['technician'][0]['user']['name'];
             }
 
-            $formattedTechnicianNames = implode(' / ', $technicianNames);
+            $formattedTechnicianNames = implode(' , ', $technicianNames);
             $technicians = $formattedTechnicianNames;
             ArchivedTicket::create([
                 'ticket_number' => $ticket->ticket_number,
