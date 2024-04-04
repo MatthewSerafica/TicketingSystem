@@ -103,16 +103,33 @@ function download(month, year) {
 }
 
 function convertToCSV(data) {
-    // Exclude the 'id' column from headers
-    const headers = Object.keys(data[0]).filter(header => header !== 'id');
+    // Mapping headers to desired names
+    const headerMap = {
+        ticket_number: 'Ticket No.',
+        created_at: 'Date',
+        rr_no: 'RR No.',
+        ms_no: 'MS No.',
+        rs_no: 'RS No.',
+        employee: 'Client',
+        department: 'Office',
+        issue: 'Request',
+        technicians: 'Technician',
+        sr_no: 'SR No.',
+        resolved_at: 'Date Done',
+        remarks: 'Remarks'
+    };
 
+    const headers = Object.keys(headerMap);
     const rows = data.map(obj => headers.map(header => {
-        const value = obj[header];
-        // Check if the value is a string and contains commas, wrap it in double quotes
-        return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
+        if (header === 'department') {
+            return `${obj[header]} - ${obj.office}`;
+        } else {
+            const value = obj[header];
+            return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
+        }
     }));
 
-    const headerRow = headers.join(',');
+    const headerRow = headers.map(header => headerMap[header]).join(',');
     const csvRows = [headerRow, ...rows.map(row => row.join(','))];
     return csvRows.join('\n');
 }

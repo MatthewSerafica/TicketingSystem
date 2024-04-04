@@ -18,14 +18,14 @@ return new class extends Migration
             $table->unsignedBigInteger('ms_no')->nullable();
             $table->unsignedBigInteger('rs_no')->nullable();
             $table->string('employee');
+            $table->string('department');
+            $table->string('office');
             $table->text('technicians')->nullable();
             $table->string('issue');
             $table->string('service')->nullable();
             $table->text('description')->nullable();
-            $table->string('complexity')->nullable();
             $table->string('sr_no')->nullable();
             $table->text('remarks')->nullable();
-            $table->string('status');
             $table->timestamps();
             $table->timestamp('resolved_at')->nullable();
             $table->timestamp('archived_at')->nullable();
