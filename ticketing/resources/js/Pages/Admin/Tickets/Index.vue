@@ -211,7 +211,8 @@
                             <h6 class="dropdown-header">Recommended</h6>
                             <div v-for="technicians in recommended">
                               <li v-for="technician in technicians" class="btn dropdown-item"
-                                @click="assignTechnician(ticket, index, technician)">
+                                @click="assignTechnician(ticket, index, technician)"
+                                :class="{ 'disabled': technician.tickets_assigned >= 5 }">
                                 <div class="d-flex justify-content-between">
                                   <div>
                                     <span class="fw-semibold">{{ technician.user.name }}</span>
@@ -228,7 +229,8 @@
                           <div>
                             <h6 class="dropdown-header">All</h6>
                             <li v-for="technician in technicians" class="btn dropdown-item"
-                              @click="assignTechnician(ticket, index, technician)">
+                              @click="assignTechnician(ticket, index, technician)"
+                              :class="{ 'disabled': technician.tickets_assigned >= 5}">
                               <div class="d-flex justify-content-between">
                                 <div>
                                   <span class="fw-semibold">{{ technician.user.name }}</span>

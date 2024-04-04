@@ -71,7 +71,6 @@ class AdminTicketController extends Controller
         $request->session()->put('filter', $filter);
 
         $technicians = Technician::with('user')
-            ->where('tickets_assigned', '!=', 5)
             ->get();
 
         $services = Service::all();
