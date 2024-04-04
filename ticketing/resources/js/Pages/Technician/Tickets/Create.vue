@@ -125,12 +125,13 @@ const props = defineProps({
   technicians: Object,
   employees: Object,
   filters: Object,
+  new_rs: Object,
 })
 
 const page = usePage()
 
 const form = useForm({
-  rs_no: null,
+  rs_no: props.new_rs,
   issue: null,
   service: null,
   description: null,

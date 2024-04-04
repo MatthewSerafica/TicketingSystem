@@ -45,20 +45,31 @@
         </div>
       </div>
 
-      <!--Data Table-->
-      <div v-if="tickets.data.length" class="d-flex justify-content-end mb-2 mt-2 pagination">
-        <Pagination :links="tickets.links" :key="'tickets'" />
-        <br>
+      <div v-if="tickets.data.length" class="d-flex align-items-center justify-content-between mt-2 mb-2 px-3 pagination">
+        <div class="d-flex flex-grow-1 gap-2 w-100">
+          <p>RS - {{ rs ? rs.rs_no : 0 }} | </p>
+          <p>MS - {{ ms ? ms.ms_no : 0 }} | </p>
+          <p>RR - {{ rr ? rr.rr_no : 0 }}</p>
+        </div>
+        <div class="d-flex flex-grow-1">
+          <Pagination :links="tickets.links" :key="'tickets'" />
+          <br>
+        </div>
       </div>
+      <!--Data Table-->
       <div v-if="tickets.data.length" class="table-responsive rounded shadow pt-2 px-2 mb-3">
         <div class="d-flex justify-content-center align-items-center pb-2">
           <table class="table table-hover custom-rounded-table">
             <thead>
               <tr class="text-start">
                 <th class="text-start text-muted" @click="handleSort('ticket_number')">
-                  No
-                  <i
-                    :class="{ 'bi bi-caret-up-fill': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-caret-down-fill': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-caret-down-fill text-muted': sortColumn !== 'ticket_number' }"></i>
+                  <div class="d-flex gap-1">
+                    <span>
+                      No
+                    </span>
+                    <i
+                      :class="{ 'bi bi-caret-up-fill': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-caret-down-fill': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-caret-down-fill text-muted': sortColumn !== 'ticket_number' }"></i>
+                  </div>
                 </th>
                 <th class="text-muted">Date</th>
                 <th class="text-center text-muted">RR</th>
@@ -234,7 +245,6 @@
                     @blur="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
                     @keyup.enter="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
                     class="w-100 rounded border border-secondary-subtle text-center"></textarea>
-
                 </td>
                 <td class="text-start">
                   <div class="">
@@ -310,6 +320,9 @@ const props = defineProps({
   technicians: Object,
   filters: Object,
   services: Object,
+  rr: Object,
+  ms: Object,
+  rs: Object,
 });
 // end
 

@@ -35,7 +35,6 @@
                       placeholder="Enter RS No..." v-model="form.rs_no" />
                     <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
                   </div>
-
                   <div class="flex-grow-1 w-50">
                     <label for="issue" class="fw-semibold">Title</label>
                     <input id="issue" class="form-control rounded border-secondary-subtle" type="text"
@@ -199,6 +198,7 @@ const props = defineProps({
   employees: Object,
   filters: Object,
   services: Object,
+  new_rs: Object,
 })
 
 let selectedEmployee = ref('');
@@ -289,14 +289,11 @@ const selectService = (service) => {
 let show = ref(true);
 
 const form = useForm({
-  rs_no: null,
+  rs_no: props.new_rs,
   issue: null,
   service: null,
   description: null,
   employee: null,
-  technician1: null,
-  technician2: null,
-  technician3: null,
   technicians: [],
 })
 
@@ -311,12 +308,11 @@ const create = () => {
 </script>
 
 <style scoped>
-
 /* Transition for the dropdown Menus 6*/
 .dropdown-menu {
   display: none;
   opacity: 0;
-  transition: opacity 0.3s ease; 
+  transition: opacity 0.3s ease;
 }
 
 .dropdown-menu.show {
@@ -326,7 +322,7 @@ const create = () => {
 
 .dropdown-item {
   opacity: 0;
-  transition: opacity 0.5s ease; 
+  transition: opacity 0.5s ease;
 }
 
 .dropdown-menu.show .dropdown-item {
@@ -341,6 +337,7 @@ const create = () => {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
