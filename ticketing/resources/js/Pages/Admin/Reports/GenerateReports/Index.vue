@@ -86,18 +86,20 @@ const formatMonthYear = (month, year) => {
 };
 
 function download(month, year) {
+    const monthName = moment(`${year}-${month}-01`, 'YYYY-MM-DD').format('MMMM');
     const data = props.tickets.filter(ticket => {
-        const ticketDate = moment(ticket.created_at, 'YYYY-MM-DD'); // Assuming there's a 'date' property in your ticket object
+        const ticketDate = moment(ticket.created_at, 'YYYY-MM-DD');
         return ticketDate.month() + 1 === month && ticketDate.year() === year;
     });
-    const csvContent = convertToCSV(data)
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.setAttribute('download', `export_data_${year}_${month}.csv`)
-    link.click()
+    const csvContent = convertToCSV(data);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `RS System ${monthName} ${year}.csv`);
+    link.click();
 }
+
 
 function convertToCSV(data) {
     // Mapping headers to desired names
@@ -120,6 +122,9 @@ function convertToCSV(data) {
     const rows = data.map(obj => headers.map(header => {
         if (header === 'department') {
             return `${obj[header]} - ${obj.office}`;
+        } else if (header === 'created_at' || header === 'resolved_at') {
+            const value = obj[header];
+            return moment(value).format('MM/DD/YYYY');
         } else {
             const value = obj[header];
             return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
@@ -130,4 +135,5 @@ function convertToCSV(data) {
     const csvRows = [headerRow, ...rows.map(row => row.join(','))];
     return csvRows.join('\n');
 }
+
 </script>
