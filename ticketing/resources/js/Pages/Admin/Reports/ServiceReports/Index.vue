@@ -119,7 +119,7 @@ const props = defineProps({
 
 let search = ref(props.filters.search);
 let sortColumn = ref("service_id");
-let sortDirection = ref("asc");
+let sortDirection = ref("desc");
 let timeoutId = null;
 
 const fetchData = () => {

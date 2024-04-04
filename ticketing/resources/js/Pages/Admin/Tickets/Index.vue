@@ -69,7 +69,7 @@
                       No
                     </span>
                     <i
-                      :class="{ 'bi bi-caret-up-fill': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-caret-down-fill': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-caret-down-fill text-muted': sortColumn !== 'ticket_number' }"></i>
+                      :class="{ 'bi bi-caret-up-fill': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-caret-down-fill': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-caret-down-fill text-muted': sortColumn !== 'ticket_number' }"></i>
                   </div>
                 </th>
                 <th class="text-muted">Date</th>
@@ -360,7 +360,7 @@ const props = defineProps({
 // Search start
 let search = ref(props.filters.search);
 let sortColumn = ref("ticket_number");
-let sortDirection = ref("asc");
+let sortDirection = ref("desc");
 let timeoutId = null;
 
 const fetchData = (type, all, ne, pending, ongoing, resolved) => {
@@ -389,7 +389,7 @@ const fetchData = (type, all, ne, pending, ongoing, resolved) => {
 const resetSorting = () => {
   console.log("Reset Sorting");
   sortColumn.value = "ticket_number"
-  sortDirection.value = "asc"
+  sortDirection.value = "desc"
 }
 
 const debouncedFetchData = () => {

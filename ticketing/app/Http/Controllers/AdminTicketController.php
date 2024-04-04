@@ -22,7 +22,7 @@ class AdminTicketController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Ticket::query()->with('employee.user', 'assigned.technician.user')->whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month)->orderBy($request->input('sort', 'ticket_number'), $request->input('direction', 'asc'));
+        $query = Ticket::query()->with('employee.user', 'assigned.technician.user')->whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month)->orderBy($request->input('sort', 'ticket_number'), $request->input('direction', 'desc'));
 
         $filter = $request->only(['search', 'filterTickets', 'all', 'new', 'pending', 'ongoing', 'resolved']);
 
@@ -427,7 +427,11 @@ class AdminTicketController extends Controller
             $new = Technician::where('technician_id', $request->technician)->with('user')->first();
 
             if ($old->tickets_assigned >= 0) {
-                $old->tickets_assigned = 0;
+                if ($old->tickets_assigned <= 0) {
+                    $old->tickets_assigned = 0;
+                } else {
+                    $old->tickets_assigned = $old->tickets_assigned - 1;
+                }
                 if ($new->tickets_assigned == 5) {
                     DB::rollBack();
                     return redirect()->back()->with('error', 'An error occurred!')->with('message', 'Technician ' . $new->user->name . ' has 5 tickets assigned to them already!');
