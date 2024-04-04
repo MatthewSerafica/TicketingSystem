@@ -48,9 +48,12 @@
       <div v-if="tickets.data.length"
         class="d-flex align-items-center justify-content-between mt-2 mb-2 px-3 pagination">
         <div class="d-flex flex-grow-1 gap-2 w-100">
-          <p>RS - {{ rs ? rs.rs_no : 0 }} | </p>
-          <p>MS - {{ ms ? ms.ms_no : 0 }} | </p>
-          <p>RR - {{ rr ? rr.rr_no : 0 }}</p>
+          <div class="d-flex gap-2 border p-3 rounded" >
+            <p class="fw-bold text-secondary">RS - {{ rs ? rs.rs_no : 0 }} |</p>
+            <p class="fw-bold text-secondary">MS - {{ ms ? ms.ms_no : 0 }} |</p>
+            <p class="fw-bold text-secondary">RR - {{ rr ? rr.rr_no : 0 }}</p>
+          </div>
+
         </div>
         <div class="d-flex flex-grow-1">
           <Pagination :links="tickets.links" :key="'tickets'" />
