@@ -34,7 +34,7 @@
       </div>
 
 
-      <div v-if="service_report.data.length" class="d-flex justify-content-end mb-2 pagination">
+      <div v-if="service_report.data.length" class="d-flex justify-content-end mb-3 pagination">
         <Pagination :links="service_reports.links" :key="'service_report'" />
         <br>
       </div>

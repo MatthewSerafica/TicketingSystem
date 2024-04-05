@@ -9,7 +9,7 @@
             <h1 class="fw-bold">Create Service Reports</h1>
           </div>
 
-          <div class="create-report">
+          <div class="create-report mb-3">
 
 
             <div class="row justify-content-center mb-4">
