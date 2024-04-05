@@ -10,7 +10,8 @@ class TechnicianNotificationController extends Controller
 {
     public function index(Request $request)
     {
-        $notifications = $request->user()->notifications()->get();
+        $user = $request->user();
+        $notifications = $user->notifications()->where('marked_at', 0)->get();
         $notifications_with_user = [];
 
         foreach($notifications as $notification) {
@@ -31,7 +32,12 @@ class TechnicianNotificationController extends Controller
         ]);
     }
 
-
+    public function marked($notificationId)
+    {
+        $user = Auth::user();
+        $notification = $user->notifications()->findOrFail($notificationId);
+        $notification->update(['marked_at' => 1]); 
+    }
 
 
 

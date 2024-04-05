@@ -83,6 +83,9 @@
                 <div class="container mt-4">
                     <div class="card mt-3" v-for="notification in notifications.slice(0, 9)"
                         :key="notification.notification.id">
+                        <button class="close-icon btn" @click="closeNotification(notification.notification.id)">
+                                <i class="bi bi-x-circle"></i>
+                        </button>
                         <div class="card-body d-flex flex-column gap-2"
                             v-if="notification.notification.type === 'App\\Notifications\\UpdateTicketTechnician'">
                             <div class="d-flex flex-column gap-2">
@@ -200,7 +203,15 @@ const notificationCount = computed(
 )
 const notifications = ref([]);
 
-
+const closeNotification = async (notificationId) => {
+    try {
+        console.log('marking', notificationId)
+        await axios.delete(route('technician.notifications.marked', notificationId))
+        notifications.value = notifications.value.filter(notification => notification.notification.id !== notificationId);
+    } catch (err) {
+        console.error(err)
+    }
+}
 
 const fetchNotifications = async () => {
     try {
@@ -233,6 +244,29 @@ const handleBadge = (status) => {
 
 
 <style scoped>
+.close-icon {
+    position: absolute;
+    top: 10px; 
+    right: 10px; 
+    cursor: pointer;
+}
+.close-icon i {
+    font-size: 20px; 
+    color: #ff0000; 
+    transition: transform 0.5s ease;
+}
+.close-icon:hover i {
+    color: #ff0000; 
+}
+.close-icon:hover {
+    transform: scale(1.2); /* Scale up the icon container on hover */
+}
+.card {
+    transition: transform 0.3s ease; /* Add transition for smooth sliding */
+}
+.card.closed {
+    transform: translateX(100%); /* Slide the card to the right when closed */
+}
 .nav-link::after {
     content: '';
     display: block;

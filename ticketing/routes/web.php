@@ -125,5 +125,6 @@ Route::middleware(['web'])->group(function () {
 
         Route::get('/technician/notifications', [TechnicianNotificationController::class, 'index'])->name('technician.notifications');
         Route::post('/technician/notifications/seen', [TechnicianNotificationController::class, 'update'])->name('technician.notifications.seen');
+        Route::delete('/technician/notifications/mark/{notif_id}', [TechnicianNotificationController::class, 'marked'])->name('technician.notifications.marked');
     });
 });
