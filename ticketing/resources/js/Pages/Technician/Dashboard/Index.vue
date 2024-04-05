@@ -35,10 +35,10 @@
             <div class="d-flex flex-column w-100 justify-content-center align-items-center text-center">
                 <h1 class="stat-label">Statistics</h1>
                 <div class="w-100 justify-content-center align-items-center gap-5 m-3 statistics">
-                    <div class="card hover p-5 shadow-sm">
+                    <div class="card p-5 shadow-sm">
                         <Doughnut :service="service" class="doughnut"></Doughnut>
                     </div>
-                    <div class="card hover p-5 shadow-sm">
+                    <div class="card p-5 shadow-sm">
                         <Bar :yearly="yearly_data" class="bar"></Bar>
                     </div>
                 </div>

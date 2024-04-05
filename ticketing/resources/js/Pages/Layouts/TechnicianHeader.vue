@@ -249,24 +249,20 @@ const handleBadge = (status) => {
     top: 10px; 
     right: 10px; 
     cursor: pointer;
+    transition: transform 0.5s ease;
 }
 .close-icon i {
     font-size: 20px; 
-    color: #ff0000; 
-    transition: transform 0.5s ease;
+    color: #FFB6C1; 
+    
 }
 .close-icon:hover i {
     color: #ff0000; 
 }
 .close-icon:hover {
-    transform: scale(1.2); /* Scale up the icon container on hover */
+    transform: scale(1.2); 
 }
-.card {
-    transition: transform 0.3s ease; /* Add transition for smooth sliding */
-}
-.card.closed {
-    transform: translateX(100%); /* Slide the card to the right when closed */
-}
+
 .nav-link::after {
     content: '';
     display: block;
