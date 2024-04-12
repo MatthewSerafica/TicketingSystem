@@ -15,16 +15,40 @@ use App\Notifications\UpdateTicketTechnician;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 class AdminTicketController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Ticket::query()->with('employee.user', 'assigned.technician.user')->whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month)->orderBy($request->input('sort', 'ticket_number'), $request->input('direction', 'desc'));
+        $filter = $request->only(['search', 'filterTickets', 'all', 'new', 'pending', 'ongoing', 'resolved', 'month_filter']);
 
-        $filter = $request->only(['search', 'filterTickets', 'all', 'new', 'pending', 'ongoing', 'resolved']);
+        if (!$request->filled('month_filter')) {
+            $query = Ticket::query()
+                ->with('employee.user', 'assigned.technician.user')
+                ->whereYear('created_at', Carbon::now()->year)
+                ->whereMonth('created_at', Carbon::now()->month)
+                ->orderBy(
+                    $request->input('sort', 'ticket_number'),
+                    $request->input('direction', 'desc')
+                );
+        } else {
+            $query = Ticket::query()
+                ->with('employee.user', 'assigned.technician.user')
+                ->orderBy(
+                    $request->input('sort', 'ticket_number'),
+                    $request->input('direction', 'desc')
+                );
+        }
+
+
+        if ($request->filled('month_filter')) {
+            $monthFilter = $request->input('month_filter');
+            list($year, $month) = explode('-', $monthFilter);
+            $query->whereYear('created_at', $year)
+                ->whereMonth('created_at', $month);
+        }
+
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -46,7 +70,7 @@ class AdminTicketController extends Controller
                 ->orWhereHas('employee', function ($subquery) use ($search) {
                     $subquery->where('office', 'like', '%' . $search . '%');
                 })
-                ->orWhereHas('technician1.user', function ($subquery) use ($search) {
+                ->orWhereHas('assigned.technician.user', function ($subquery) use ($search) {
                     $subquery->where('name', 'like', '%' . $search . '%');
                 });
         }
@@ -63,6 +87,7 @@ class AdminTicketController extends Controller
                 $query->where('status', 'like', '%' . $ticketFilter . '%');
             }
         }
+
 
         $tickets = $query->paginate(10);
 

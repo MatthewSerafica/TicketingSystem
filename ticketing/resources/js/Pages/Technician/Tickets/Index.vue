@@ -26,13 +26,16 @@
           <Link :href="route('technician.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New
           Ticket
           </Link>
+          <div class="d-flex gap-2 rounded w-50">
+            <div class="input-group date" id="datepicker">
+              <input type="month" v-model="month_filter" class="form-control">
+            </div>
+          </div>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
             <Button :name="'New'" :color="'danger'" class="btn-options" @click="filterTickets('new')"></Button>
-            <Button :name="'Pending'" :color="'warning'" class="btn-options"
-              @click="filterTickets('pending')"></Button>
-            <Button :name="'Ongoing'" :color="'info'" class="btn-options"
-              @click="filterTickets('ongoing')"></Button>
+            <Button :name="'Pending'" :color="'warning'" class="btn-options" @click="filterTickets('pending')"></Button>
+            <Button :name="'Ongoing'" :color="'info'" class="btn-options" @click="filterTickets('ongoing')"></Button>
             <Button :name="'Resolved'" :color="'success'" class="btn-options"
               @click="filterTickets('resolved')"></Button>
           </div>
@@ -80,7 +83,7 @@
                   <small>{{ ticket.employee.department }} - {{ ticket.employee.office }}</small>
                 </td>
                 <td class="text-start">
-                    {{ ticket.rs_no ? ticket.rs_no : "N/A" }}
+                  {{ ticket.rs_no ? ticket.rs_no : "N/A" }}
                 </td>
                 <td class="text-start text-truncate ticket-description" style="max-width: 130px;"
                   data-hover-text="{{ ticket.description }}">
@@ -243,6 +246,7 @@ const props = defineProps({
 
 // Search start
 let search = ref(props.filters.search);
+let month_filter = ref(props.filters.month_filter);
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
 let timeoutId = null;
@@ -252,6 +256,7 @@ const fetchData = (type, all, ne, pending, ongoing, resolved) => {
     route('technician.tickets'),
     {
       search: search.value,
+      month_filter: month_filter.value,
       sort: sortColumn.value,
       direction: sortDirection.value,
       filterTickets: type,
@@ -266,12 +271,6 @@ const fetchData = (type, all, ne, pending, ongoing, resolved) => {
       replace: true,
     }
   )
-  /* filter.all = type === "all";
-  filter.new = type === "new";
-  filter.pending = type === "pending";
-  filter.pending = type === "ongoing";
-  filter.pending = type === "resolved"; */
-
   router.remember({ filter: filter });
 }
 
@@ -290,12 +289,12 @@ const debouncedFetchData = () => {
   }, 500)
 }
 
-watch(search, () => {
-  if (!search.value) {
-    resetSorting()
+watch([search, month_filter], ([newSearch, newMonthFilter]) => {
+  if (!newSearch && !newMonthFilter) {
+    resetSorting();
   }
   debouncedFetchData();
-})
+});
 // Search end
 
 // Filter start
