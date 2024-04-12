@@ -21,6 +21,8 @@
         "chart.js": "^4.4.1",
         "csv-writer": "^1.6.0",
         "lodash": "^4.17.21",
+        "mdb-vue-ui-kit": "^4.1.1",
+        "mdbvue": "^6.7.4",
         "moment": "^2.30.1",
         "vue": "^3.4.20",
         "vue-chartjs": "^3.5.1",

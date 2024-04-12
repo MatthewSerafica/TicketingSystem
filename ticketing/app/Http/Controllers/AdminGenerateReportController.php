@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\ArchivedTicket;
+use App\Models\Ticket;
 
 class AdminGenerateReportController extends Controller
 {
     public function index()
     {
-        $monthsAndYears = ArchivedTicket::selectRaw('MONTH(created_at) as month, YEAR(created_at) as year')
+        $monthsAndYears = Ticket::selectRaw('MONTH(created_at) as month, YEAR(created_at) as year')
             ->distinct()
             ->orderByDesc('year')
             ->orderByDesc('month')
             ->get();
 
-        $tickets = ArchivedTicket::select('*')
+        $tickets = Ticket::select('*')
             ->selectRaw('MONTH(created_at) as month, YEAR(created_at) as year')
             ->orderByDesc('year')
             ->orderByDesc('month')
@@ -28,10 +29,11 @@ class AdminGenerateReportController extends Controller
 
     public function print($year, $month)
     {
-        $tickets = ArchivedTicket::select('*')
+        $tickets = Ticket::select('*')
             ->whereYear('created_at', '=', $year)
             ->whereMonth('created_at', '=', $month)
             ->orderByDesc('created_at')
+            ->with('employee.user', 'assigned.technician.user')
             ->get();
 
         return inertia('Admin/Reports/GenerateReports/Print', [

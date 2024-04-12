@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="d-flex flex-row justify-content-between p-2 print-hidden">
-            
+
             <div class="print-hidden">
                 <Link :href="route('admin.reports.generate-report')"
                     class="print-hidden btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
@@ -26,10 +26,10 @@
                 </button>
             </div>
         </div>
-        <div class="text-center fw-bold mb-2"> RS System (Monitoring) <br> {{ monthName(month) }} {{ year }} </div> 
-        
-        <div class="table-responsive px-3 rounded shadow pt-2 px-2">
-            <table class="table table-hover custom-rounded-table">
+        <div class="text-center fw-bold mb-2"> RS System (Monitoring) <br> {{ monthName(month) }} {{ year }} </div>
+
+        <div class="table-responsive px-3 rounded pt-2 px-2">
+            <table class="table table-hover custom-rounded-table border shadow-sm">
                 <thead>
                     <tr class="text-start text-muted">
                         <th class="text-start text-muted">Ticket No</th>
@@ -53,10 +53,16 @@
                         <td class="text-center">{{ ticket.rr_no }}</td>
                         <td class="text-center">{{ ticket.ms_no }}</td>
                         <td class="text-center">{{ ticket.rs_no }}</td>
-                        <td class="text-start">{{ ticket.employee }}</td>
-                        <td class="text-start">{{ ticket.department }} - {{ ticket.office }}</td>
+                        <td class="text-start">{{ ticket.employee.user.name }}</td>
+                        <td class="text-start">{{ ticket.employee.department }} - {{ ticket.employee.office }}</td>
                         <td class="text-start" style="max-width: 15rem;">{{ ticket.description }}</td>
-                        <td class="text-start" style="max-width:8rem;">{{ ticket.technicians }}</td>
+                        <td class="text-start" style="max-width:8rem;">
+                            <div v-for="(assignedTech, index) in ticket.assigned" :key="index">
+                                <div v-for="(tech, techIndex) in assignedTech.technician" :key="techIndex">
+                                    {{ tech.user.name ? tech.user.name : 'N/A' }}
+                                </div>
+                            </div>
+                        </td>
                         <td class="text-center">{{ ticket.sr_no }}</td>
                         <td class="text-start">{{
                     ticket.resolved_at ? moment(ticket.resolved_at).format("MM/DD/YYYY") : null }}
@@ -96,10 +102,8 @@ const printPage = () => {
     }
 
     @page {
-        size: auto; 
-        margin: 0; 
+        size: auto;
+        margin: 0;
     }
 }
-
-
 </style>
