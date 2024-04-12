@@ -25,6 +25,10 @@
                             <a class="nav-link text-white" href="/technician/service-report"
                                 @click="setActiveLink('service-report')">Service Report</a>
                         </li>
+                        <li class="nav-item" :class="{ 'active': activeLink === 'forum' }">
+                            <a class="nav-link text-white" href="/technician/forum"
+                                @click="setActiveLink('forum')">Forum</a>
+                        </li>
                     </ul>
 
                     <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
