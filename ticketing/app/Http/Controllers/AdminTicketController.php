@@ -7,6 +7,7 @@ use App\Models\Employee;
 use App\Models\HistoryNumber;
 use App\Models\Service;
 use App\Models\Technician;
+use App\Models\Problem;
 use App\Models\Ticket;
 use App\Notifications\TicketMade;
 use App\Notifications\UpdateTechnicianReplace;
@@ -134,6 +135,8 @@ class AdminTicketController extends Controller
                 });
             })
             ->get();
+            
+        $problems = Problem::get();
 
         $filter = $request->only(['search']);
         return inertia('Admin/Tickets/Create', [
@@ -142,6 +145,7 @@ class AdminTicketController extends Controller
             'services' => $services,
             'filters' => $filter,
             'new_rs' => $new,
+            'problems' => $problems,
         ]);
     }
 

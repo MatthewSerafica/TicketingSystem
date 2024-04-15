@@ -1,7 +1,6 @@
 <template>
   <div>
     <Header></Header>
-
     <!--Toast Render-->
     <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
       <Toast
@@ -26,6 +25,7 @@
           </div>
 
           <div class="create-ticket">
+
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
                 <div class="d-flex flex-row gap-3">
@@ -35,10 +35,35 @@
                       placeholder="Enter RS No..." v-model="form.rs_no" />
                     <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
                   </div>
-                  <div class="flex-grow-1 w-50">
+
+
+                  <!-- <div class="flex-grow-1 w-50">
                     <label for="issue" class="fw-semibold">Title</label>
                     <input id="issue" class="form-control rounded border-secondary-subtle" type="text"
                       placeholder="Enter Ticket Title..." v-model="form.issue" required />
+                  </div> -->
+                  
+
+                  <div class="flex-grow-1 w-50 d-flex flex-column">
+                    <label for="Title" class="fw-semibold">Title</label>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ form.problem ? form.problem : 'Select a Title...' }}
+                      </button>
+                      <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                      </button>
+                      <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                        <li v-if="problems" v-for="problem in problems" class="btn dropdown-item"
+                            @click="selectProblem(problem)" style="width: 400px;">
+                            <span class="fw-semibold">{{ problem.problem }}</span>
+                        </li>
+                        <li v-else-if="!problems">No problems found...</li>
+                      </ul>
+                    </div>
+
                   </div>
 
                   <div class="flex-grow-1 w-50 d-flex flex-column">
@@ -197,11 +222,13 @@ const props = defineProps({
   technicians: Object,
   employees: Object,
   filters: Object,
+  problems: Object,
   services: Object,
   new_rs: Object,
 })
 
 let selectedEmployee = ref('');
+let selectedProblem = ref('');
 let search = ref(props.filters.search);
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
@@ -280,10 +307,18 @@ const selectEmployee = (employee) => {
 
   document.getElementById('employeeDropdown').classList.remove('show');
 }
+
 const selectService = (service) => {
   form.service = service.service;
 
   document.getElementById('technicianDropdown').classList.remove('show');
+}
+
+const selectProblem = (problem) => {
+  selectedProblem.value = problem.problem;
+  form.problem = problem.problem;
+
+  document.getElementById('titleDropdown').classList.remove('show');
 }
 
 let show = ref(true);
@@ -292,6 +327,7 @@ const form = useForm({
   rs_no: props.new_rs,
   issue: null,
   service: null,
+  problem: null,
   description: null,
   employee: null,
   technicians: [],
