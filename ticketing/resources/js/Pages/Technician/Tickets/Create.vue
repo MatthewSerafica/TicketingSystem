@@ -11,6 +11,20 @@
 
           <div class="create-ticket d-flex flex-column justify-content-center align-items-center">
             <div class="d-flex flex-row gap-3 w-50 justify-content-center mb-4">
+
+              <div class=" flex-shrink-1 w-25">
+                <div class="flex-grow-1 w-80 d-flex flex-column">
+                  <label for="request_type" class="fw-semibold">Request Type</label>
+                  <select id="request_type" class="h-100 rounded border-secondary-subtle form-select"
+                    placeholder="Select Request Type..." v-model="form.request_type" @change="toggleRSNoField">
+                    <option disabled>Select Type</option>
+                    <option value="Requisition Slip">RS</option>
+                    <option value="Phone Call">Phone Call</option>
+                    <option value="Text">Text</option>
+                    <option value="Verbal">Verbal</option>
+                  </select>
+                </div>
+              </div>
               <div class=" flex-shrink-1 w-25">
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="rs_no" class="fw-semibold">RS No.</label>
@@ -19,6 +33,7 @@
                   <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
                 </div>
               </div>
+
               <div class="flex-grow-1 w-50">
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="issue" class="fw-semibold">Title</label>
@@ -26,7 +41,7 @@
                     placeholder="Enter Ticket Title..." v-model="form.issue" required />
                 </div>
               </div>
-              <div class="flex-grow-1 w-50">
+              <div class="flex-grow-1 w-30">
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="complexity" class="fw-semibold">Complexity</label>
                   <select id="complexity" class="rounded border-secondary-subtle form-select"
@@ -138,7 +153,8 @@ const form = useForm({
   complexity: null,
   employee: null,
   user: page.props.user.id,
-  assign_to_self: false,
+  assign_to_self: true,
+  request_type: null,
 })
 
 let selectedEmployee = ref('');
@@ -161,6 +177,15 @@ const fetchData = () => {
       }
     )
   )
+}
+
+const toggleRSNoField = () => {
+  // If the selected request type is "Requisition Slip," allow filling the RS No. field
+  if (form.request_type === 'Requisition Slip') {
+    form.rs_no = null; // Clear RS No. if previously filled for other request types
+  } else {
+    form.rs_no = null; // Clear RS No. for non-"Requisition Slip" types as well (optional)
+  }
 }
 
 const resetSorting = () => {

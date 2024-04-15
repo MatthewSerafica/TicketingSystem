@@ -144,6 +144,7 @@ class TechnicianTicketController extends Controller
         try {
             DB::beginTransaction();
             $request->validate([
+                'request_type' => 'required',
                 'complexity' => 'required',
                 'description' => 'required',
                 'employee' => 'required',

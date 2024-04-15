@@ -28,6 +28,7 @@ class Ticket extends Model
 
     protected $fillable = [
         'employee', 
+        'request_type',
         'rr_no', 
         'ms_no', 
         'rs_no', 

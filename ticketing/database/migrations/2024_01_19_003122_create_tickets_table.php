@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id('ticket_number');
+            $table->text('request_type')->nullable();
             $table->text('rr_no')->nullable();
             $table->text('ms_no')->nullable();
             $table->text('rs_no')->nullable();
