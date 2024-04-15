@@ -11,22 +11,60 @@
 
           <div class="create-ticket d-flex flex-column justify-content-center align-items-center">
             <div class="d-flex flex-row gap-3 w-50 justify-content-center mb-4">
+
+              <div class=" flex-shrink-1 w-25">
+                <div class="flex-grow-1 w-80 d-flex flex-column">
+                  <label for="request_type" class="fw-semibold">Request Type</label>
+                  <select id="request_type" class="h-100 rounded border-secondary-subtle form-select"
+                    placeholder="Select Request Type..." v-model="form.request_type" @change="toggleRSNoField">
+                    <option disabled>Select Type</option>
+                    <option value="Requisition Slip">RS</option>
+                    <option value="Phone Call">Phone Call</option>
+                    <option value="Text">Text</option>
+                    <option value="Verbal">Verbal</option>
+                  </select>
+                </div>
+              </div>
               <div class=" flex-shrink-1 w-25">
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="rs_no" class="fw-semibold">RS No.</label>
                   <input id="rs_no" class="form-control h-100 rounded border-secondary-subtle" type="text"
-                    placeholder="Enter RS No..." v-model="form.rs_no" />
+                    placeholder="Enter RS No..." v-model="form.rs_no" :disabled="form.request_type !== 'Requisition Slip'" />
+
                   <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
                 </div>
               </div>
-              <div class="flex-grow-1 w-50">
+
+              <!-- <div class="flex-grow-1 w-50">
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="issue" class="fw-semibold">Title</label>
                   <input id="issue" class="form-control border-secondary-subtle" type="text"
                     placeholder="Enter Ticket Title..." v-model="form.issue" required />
                 </div>
-              </div>
-              <div class="flex-grow-1 w-50">
+              </div> -->
+              <div class="flex-grow-1 w-50 d-flex flex-column">
+                    <label for="Title" class="fw-semibold">Title</label>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ form.problem ? form.problem : 'Select a Title...' }}
+                      </button>
+                      <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                      </button>
+                      <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                        <li v-if="problems" v-for="problem in problems" class="btn dropdown-item"
+                            @click="selectProblem(problem)" style="width: 400px;">
+                            <span class="fw-semibold">{{ problem.problem }}</span>
+                        </li>
+                        <li v-else-if="!problems">No problems found...</li>
+                      </ul>
+                    </div>
+                  </div>
+
+
+              <div class="flex-grow-1 w-30">
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="complexity" class="fw-semibold">Complexity</label>
                   <select id="complexity" class="rounded border-secondary-subtle form-select"
@@ -37,6 +75,7 @@
                   </select>
                 </div>
               </div>
+             
             </div>
 
 
@@ -76,7 +115,13 @@
                     <li v-else-if="!employees">No results found...</li>
                   </ul>
                 </div>
+                
               </div>
+              <div class="flex-grow-1 w-50 d-flex flex-column">
+                    <label for="deptOffice" class="fw-semibold">Department & Office</label>
+                    <input id="deptOffice" class="form-control rounded border-secondary-subtle" type="text"
+                    placeholder=" " v-model="form.department" disabled/>
+                  </div>
               <div class="flex-grow-1 w-50">
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="service" class="fw-semibold">Service</label>
@@ -89,6 +134,8 @@
                   </select>
                 </div>
               </div>
+
+              
             </div>
 
             <div class="row justify-content-center">
@@ -124,6 +171,7 @@ import { ref, watch } from 'vue';
 const props = defineProps({
   technicians: Object,
   employees: Object,
+  problems: Object,
   filters: Object,
   new_rs: Object,
 })
@@ -134,14 +182,17 @@ const form = useForm({
   rs_no: props.new_rs,
   issue: null,
   service: null,
+  problem: null,
   description: null,
   complexity: null,
   employee: null,
   user: page.props.user.id,
-  assign_to_self: false,
+  assign_to_self: true,
+  request_type: null,
 })
 
 let selectedEmployee = ref('');
+let selectedProblem = ref('');
 let search = ref(props.filters.search);
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
@@ -162,6 +213,18 @@ const fetchData = () => {
     )
   )
 }
+
+const toggleRSNoField = () => {
+  // If the selected request type is "Requisition Slip," allow filling the RS No. field
+  if (form.request_type === 'Requisition Slip') {
+    form.rs_no = props.new_rs; // Clear RS No. if previously filled for other request types
+    document.getElementById('rs_no').disabled = false; // Enable the RS No. field
+  } else {
+    form.rs_no = null; // Clear RS No. for non-"Requisition Slip" types as well (optional)
+    document.getElementById('rs_no').disabled = true; // Disable the RS No. field
+  }
+}
+
 
 const resetSorting = () => {
   console.log("Reset Sorting");
@@ -189,8 +252,16 @@ watch(search, () => {
 const selectEmployee = (employee) => {
   selectedEmployee.value = employee.user.name;
   form.employee = employee.employee_id;
+  form.department = `${employee.department}-${employee.office}`;
 
   document.getElementById('employeeDropdown').classList.remove('show');
+}
+
+const selectProblem = (problem) => {
+  selectedProblem.value = problem.problem;
+  form.problem = problem.problem;
+
+  document.getElementById('titleDropdown').classList.remove('show');
 }
 
 const create = () => {

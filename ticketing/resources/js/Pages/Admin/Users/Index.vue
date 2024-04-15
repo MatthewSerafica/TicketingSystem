@@ -136,6 +136,19 @@ const page = usePage();
 
 let showSuccessToast = ref(false);
 let showErrorToast = ref(false);
+let isImporting = ref(false); // Flag to indicate if importing is in progress
+
+const handleBeforeUnload = (event) => {
+  if (isImporting.value) {
+    // Show a prompt message if importing is in progress
+    event.preventDefault();
+    event.returnValue = ''; // Required for some browsers
+    return ''; // This message will be shown to the user
+  }
+}
+
+// Add event listener for beforeunload
+window.addEventListener('beforeunload', handleBeforeUnload);
 
 watchEffect(() => {
   showSuccessToast.value = !!page.props.flash.success;
@@ -258,9 +271,9 @@ const handleFileUpload = () => {
 }
 
 const uploadCsv = async () => {
+  isImporting.value = true; // Set importing flag to true
   isLoading.value = true;
   let formData = new FormData()
-  console.log('formData:', formData);
   formData.append('file', file.value)
 
   try {
@@ -278,6 +291,7 @@ const uploadCsv = async () => {
     console.error(err)
   } finally {
     isLoading.value = false;
+    isImporting.value = false; // Reset importing flag
   }
 }
 

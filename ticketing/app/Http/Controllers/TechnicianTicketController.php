@@ -6,6 +6,7 @@ use App\Models\AssignedTickets;
 use App\Models\Employee;
 use App\Models\HistoryNumber;
 use App\Models\Service;
+use App\Models\Problem;
 use App\Models\Technician;
 use App\Models\Ticket;
 use App\Models\User;
@@ -115,7 +116,7 @@ class TechnicianTicketController extends Controller
     public function create(Request $request)
     {
         $latest = HistoryNumber::whereNotNull('rs_no')->orderByDesc('rs_no')->first();
-        $new = $latest ? $this->increment($latest->ticket_number, $latest->rs_no) : '1';
+        $new = $latest ? $this->increment($latest->ticket_number, $latest->rs_no) : '0001';
         $searchQuery = $request->input('search');
         $employees = Employee::with('user')
             ->when($searchQuery, function ($query) use ($searchQuery) {
@@ -129,11 +130,13 @@ class TechnicianTicketController extends Controller
             })
             ->get();
 
+        $problems = Problem::get();
         $filter = $request->only(['search']);
         return inertia('Technician/Tickets/Create', [
             'employees' => $employees,
             'filters' => $filter,
             'new_rs' => $new,
+            'problems' => $problems,
         ]);
     }
 
@@ -161,6 +164,7 @@ class TechnicianTicketController extends Controller
         try {
             DB::beginTransaction();
             $request->validate([
+                'request_type' => 'required',
                 'complexity' => 'required',
                 'description' => 'required',
                 'employee' => 'required',

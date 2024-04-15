@@ -185,5 +185,24 @@ class DatabaseSeeder extends Seeder
             \App\Models\Service::factory()->create($services);
         }
 
+        $problem = [
+            [
+            'problem' => 'No Internet Connection',
+            ],
+            [
+            'problem' => 'Computer is Slow',
+            ],
+            [
+            'problem' => 'Monitor Black Screen',
+            ],
+            [
+            'problem' => 'Bent HDMI cord',
+            ],
+                
+        ];
+        foreach ($problem as $problem) {
+            \App\Models\Problem::factory()->create($problem);
+        }
+
     }
 }

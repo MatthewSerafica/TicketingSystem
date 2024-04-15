@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminOfficeController;
 use App\Http\Controllers\AdminNotificationController;
 use App\Http\Controllers\AdminServiceController;
 use App\Http\Controllers\AdminServiceReportController;
+use App\Http\Controllers\AdminProblemController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeNotificationController;
 use App\Http\Controllers\TechnicianNotificationController;
@@ -83,6 +84,12 @@ Route::middleware(['web'])->group(function () {
         Route::post('/admin/services/create/store', [AdminServiceController::class, 'store'])->name('admin.services.store');
         Route::put('/admin/services/update/{service_id}', [AdminServiceController::class, 'update'])->name('admin.services.update');
         Route::delete('/admin/services/delete/{service_id}', [AdminServiceController::class, 'destroy'])->name('admin.services.delete');
+
+        Route::get('/admin/problems', [AdminProblemController::class, 'index'])->name('admin.problems');
+        Route::get('/admin/problems/create', [AdminProblemController::class, 'create'])->name('admin.problems.create');
+        Route::post('/admin/problems/create/store', [AdminProblemController::class, 'store'])->name('admin.problems.store');
+        Route::put('/admin/problems/update/{problem_id}', [AdminProblemController::class, 'update'])->name('admin.problems.update');
+        Route::delete('/admin/problems/delete/{problem_id}', [AdminProblemController::class, 'destroy'])->name('admin.problems.delete');
 
         Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications');
         Route::post('/admin/notifications/seen', [AdminNotificationController::class, 'update'])->name('admin.notifications.seen');
