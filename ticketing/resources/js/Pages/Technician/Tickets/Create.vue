@@ -75,6 +75,7 @@
                   </select>
                 </div>
               </div>
+             
             </div>
 
 
@@ -114,7 +115,13 @@
                     <li v-else-if="!employees">No results found...</li>
                   </ul>
                 </div>
+                
               </div>
+              <div class="flex-grow-1 w-50 d-flex flex-column">
+                    <label for="deptOffice" class="fw-semibold">Department & Office</label>
+                    <input id="deptOffice" class="form-control rounded border-secondary-subtle" type="text"
+                    placeholder=" " v-model="form.department" disabled/>
+                  </div>
               <div class="flex-grow-1 w-50">
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="service" class="fw-semibold">Service</label>
@@ -245,6 +252,7 @@ watch(search, () => {
 const selectEmployee = (employee) => {
   selectedEmployee.value = employee.user.name;
   form.employee = employee.employee_id;
+  form.department = `${employee.department}-${employee.office}`;
 
   document.getElementById('employeeDropdown').classList.remove('show');
 }
