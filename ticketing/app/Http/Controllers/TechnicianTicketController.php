@@ -24,16 +24,33 @@ class TechnicianTicketController extends Controller
         $user_id = auth()->id();
         $technician = Technician::where('user_id', $user_id)->with('user')->first();
 
-        $query = Ticket::query()
-            ->with('employee.user', 'assigned.technician.user')
-            ->whereHas('assigned.technician.user', function ($query) use ($technician) {
-                $query->where('id', $technician->user->id);
-            })
-            ->whereYear('created_at', Carbon::now()->year)
-            ->whereMonth('created_at', Carbon::now()->month)
-            ->orderBy($request->input('sort', 'ticket_number'), $request->input('direction', 'asc'));
+        $filter = $request->only(['search', 'filterTickets', 'all', 'new', 'pending', 'ongoing', 'resolved', 'month_filter']);
 
-        $filter = $request->only(['search', 'filterTickets', 'all', 'new', 'pending', 'ongoing', 'resolved']);
+        if (!$request->filled('month_filter')) {
+            $query = Ticket::query()
+                ->with('employee.user', 'assigned.technician.user')
+                ->whereHas('assigned.technician.user', function ($query) use ($technician) {
+                    $query->where('id', $technician->user->id);
+                })
+                ->whereYear('created_at', Carbon::now()->year)
+                ->whereMonth('created_at', Carbon::now()->month)
+                ->orderBy($request->input('sort', 'ticket_number'), $request->input('direction', 'asc'));
+        } else {
+            $query = Ticket::query()
+                ->with('employee.user', 'assigned.technician.user')
+                ->whereHas('assigned.technician.user', function ($query) use ($technician) {
+                    $query->where('id', $technician->user->id);
+                })
+                ->orderBy($request->input('sort', 'ticket_number'), $request->input('direction', 'asc'));
+        }
+
+
+        if ($request->filled('month_filter')) {
+            $monthFilter = $request->input('month_filter');
+            list($year, $month) = explode('-', $monthFilter);
+            $query->whereYear('created_at', $year)
+                ->whereMonth('created_at', $month);
+        }
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -55,7 +72,7 @@ class TechnicianTicketController extends Controller
                 ->orWhereHas('employee', function ($subquery) use ($search) {
                     $subquery->where('office', 'like', '%' . $search . '%');
                 })
-                ->orWhereHas('technician1.user', function ($subquery) use ($search) {
+                ->orWhereHas('assigned.technician.user', function ($subquery) use ($search) {
                     $subquery->where('name', 'like', '%' . $search . '%');
                 });
         }

@@ -26,6 +26,11 @@
           <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5 shadow">
           Create New Ticket
           </Link>
+          <div class="d-flex gap-2 rounded w-50">
+            <div class="input-group date" id="datepicker">
+              <input type="month" v-model="month_filter" class="form-control">
+            </div>
+          </div>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options shadow"
               @click="filterTickets('all')"></Button>
@@ -48,12 +53,11 @@
       <div v-if="tickets.data.length"
         class="d-flex align-items-center justify-content-between mt-2 mb-2 px-3 pagination">
         <div class="d-flex flex-grow-1 gap-2 w-100">
-          <div class="d-flex gap-2 border p-3 rounded" >
-            <p class="fw-bold text-secondary">RS - {{ rs ? rs.rs_no : 0 }} |</p>
-            <p class="fw-bold text-secondary">MS - {{ ms ? ms.ms_no : 0 }} |</p>
-            <p class="fw-bold text-secondary">RR - {{ rr ? rr.rr_no : 0 }}</p>
+          <div class="d-flex gap-2 border px-3 rounded">
+            <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
+            <p class="fw-bold text-secondary pt-3">MS - {{ ms ? ms.ms_no : 0 }} |</p>
+            <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }}</p>
           </div>
-
         </div>
         <div class="d-flex flex-grow-1">
           <Pagination :links="tickets.links" :key="'tickets'" />
@@ -233,7 +237,7 @@
                             <h6 class="dropdown-header">All</h6>
                             <li v-for="technician in technicians" class="btn dropdown-item"
                               @click="assignTechnician(ticket, index, technician)"
-                              :class="{ 'disabled': technician.tickets_assigned >= 5}">
+                              :class="{ 'disabled': technician.tickets_assigned >= 5 }">
                               <div class="d-flex justify-content-between">
                                 <div>
                                   <span class="fw-semibold">{{ technician.user.name }}</span>
@@ -327,6 +331,7 @@ import axios from 'axios';
 import moment from "moment";
 import { nextTick, reactive, ref, watch, watchEffect } from "vue";
 
+
 // Toast Start
 Alpine.start()
 
@@ -362,15 +367,18 @@ const props = defineProps({
 
 // Search start
 let search = ref(props.filters.search);
+let month_filter = ref(props.filters.month_filter);
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("desc");
 let timeoutId = null;
+
 
 const fetchData = (type, all, ne, pending, ongoing, resolved) => {
   router.get(
     route('admin.tickets'),
     {
       search: search.value,
+      month_filter: month_filter.value,
       sort: sortColumn.value,
       direction: sortDirection.value,
       filterTickets: type,
@@ -404,12 +412,13 @@ const debouncedFetchData = () => {
   }, 500)
 }
 
-watch(search, () => {
-  if (!search.value) {
-    resetSorting()
+watch([search, month_filter], ([newSearch, newMonthFilter]) => {
+  if (!newSearch && !newMonthFilter) {
+    resetSorting();
   }
   debouncedFetchData();
-})
+});
+
 // Search end
 
 // Filter start
@@ -650,7 +659,7 @@ const getButtonClass = (status) => {
     case 'pending':
       return 'btn btn-warning';
     case 'ongoing':
-      return 'btn btn-primary';
+      return 'btn btn-info';
     case 'resolved':
       return 'btn btn-success';
     default:

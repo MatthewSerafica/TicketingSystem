@@ -14,6 +14,7 @@ use App\Http\Controllers\EmployeeNotificationController;
 use App\Http\Controllers\TechnicianNotificationController;
 use App\Http\Controllers\EmployeeTicketController;
 use App\Http\Controllers\TechnicianDashboardController;
+use App\Http\Controllers\TechnicianForumController;
 use App\Http\Controllers\TechnicianServiceController;
 use App\Http\Controllers\TechnicianTicketController;
 use Illuminate\Support\Facades\Route;
@@ -122,6 +123,8 @@ Route::middleware(['web'])->group(function () {
         Route::get('/technician/service-report/update', [TechnicianServiceController::class, 'update'])->name('technician.service-report.update');
         Route::post('/technician/service-report/create/store', [TechnicianServiceController::class, 'store'])->name('technician.service-report.store');
         Route::get('/technician/service-report/service-report/{id}/assigned-technicians', [TechnicianServiceController::class, 'assigned'])->name('technician.tickets.assigned');
+
+        Route::get('/technician/forum', [TechnicianForumController::class, 'index'])->name('technician.forum');
 
         Route::get('/technician/notifications', [TechnicianNotificationController::class, 'index'])->name('technician.notifications');
         Route::post('/technician/notifications/seen', [TechnicianNotificationController::class, 'update'])->name('technician.notifications.seen');

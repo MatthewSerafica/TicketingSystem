@@ -1,18 +1,21 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import vue from '@vitejs/plugin-vue';
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
+import vue from "@vitejs/plugin-vue";
 
 export default defineConfig({
+    css: {
+        devSourcemap: true,
+    },
     plugins: [
         laravel({
-            input: ['resources/scss/styles.scss', 'resources/js/app.js'],
+            input: ["resources/scss/styles.scss", "resources/js/app.js"],
             refresh: true,
         }),
         vue({
             template: {
                 base: null,
                 includeAbsolute: false,
-            }
-        })
+            },
+        }),
     ],
 });
