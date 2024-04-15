@@ -88,7 +88,7 @@
                     <div class="card mt-3" v-for="notification in notifications.slice(0, 9)"
                         :key="notification.notification.id">
                         <button class="close-icon btn" @click="closeNotification(notification.notification.id)">
-                                <i class="bi bi-x-circle"></i>
+                            <i class="bi bi-x-circle"></i>
                         </button>
                         <div class="card-body d-flex flex-column gap-2"
                             v-if="notification.notification.type === 'App\\Notifications\\UpdateTicketTechnician'">
@@ -170,6 +170,8 @@ const determineActiveLink = () => {
         setActiveLink('tickets');
     } else if (currentPath.includes('service-report')) {
         setActiveLink('service-report');
+    } else if (currentPath.includes('forum')) {
+        setActiveLink('forum');
     } else {
         setActiveLink('dashboard');
     }
@@ -250,21 +252,24 @@ const handleBadge = (status) => {
 <style scoped>
 .close-icon {
     position: absolute;
-    top: 10px; 
-    right: 10px; 
+    top: 10px;
+    right: 10px;
     cursor: pointer;
     transition: transform 0.5s ease;
 }
+
 .close-icon i {
-    font-size: 20px; 
-    color: #FFB6C1; 
-    
+    font-size: 20px;
+    color: #FFB6C1;
+
 }
+
 .close-icon:hover i {
-    color: #ff0000; 
+    color: #ff0000;
 }
+
 .close-icon:hover {
-    transform: scale(1.2); 
+    transform: scale(1.2);
 }
 
 .nav-link::after {
