@@ -29,7 +29,8 @@
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="rs_no" class="fw-semibold">RS No.</label>
                   <input id="rs_no" class="form-control h-100 rounded border-secondary-subtle" type="text"
-                    placeholder="Enter RS No..." v-model="form.rs_no" />
+                    placeholder="Enter RS No..." v-model="form.rs_no" :disabled="form.request_type !== 'Requisition Slip'" />
+
                   <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
                 </div>
               </div>
@@ -182,11 +183,14 @@ const fetchData = () => {
 const toggleRSNoField = () => {
   // If the selected request type is "Requisition Slip," allow filling the RS No. field
   if (form.request_type === 'Requisition Slip') {
-    form.rs_no = null; // Clear RS No. if previously filled for other request types
+    form.rs_no = props.new_rs; // Clear RS No. if previously filled for other request types
+    document.getElementById('rs_no').disabled = false; // Enable the RS No. field
   } else {
     form.rs_no = null; // Clear RS No. for non-"Requisition Slip" types as well (optional)
+    document.getElementById('rs_no').disabled = true; // Disable the RS No. field
   }
 }
+
 
 const resetSorting = () => {
   console.log("Reset Sorting");

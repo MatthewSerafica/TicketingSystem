@@ -115,7 +115,7 @@ class TechnicianTicketController extends Controller
     public function create(Request $request)
     {
         $latest = HistoryNumber::whereNotNull('rs_no')->orderByDesc('rs_no')->first();
-        $new = $latest ? $this->increment($latest->ticket_number, $latest->rs_no) : '1';
+        $new = $latest ? $this->increment($latest->ticket_number, $latest->rs_no) : '0001';
         $searchQuery = $request->input('search');
         $employees = Employee::with('user')
             ->when($searchQuery, function ($query) use ($searchQuery) {
