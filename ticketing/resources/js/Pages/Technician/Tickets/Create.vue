@@ -35,13 +35,35 @@
                 </div>
               </div>
 
-              <div class="flex-grow-1 w-50">
+              <!-- <div class="flex-grow-1 w-50">
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="issue" class="fw-semibold">Title</label>
                   <input id="issue" class="form-control border-secondary-subtle" type="text"
                     placeholder="Enter Ticket Title..." v-model="form.issue" required />
                 </div>
-              </div>
+              </div> -->
+              <div class="flex-grow-1 w-50 d-flex flex-column">
+                    <label for="Title" class="fw-semibold">Title</label>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ form.problem ? form.problem : 'Select a Title...' }}
+                      </button>
+                      <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                      </button>
+                      <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                        <li v-if="problems" v-for="problem in problems" class="btn dropdown-item"
+                            @click="selectProblem(problem)" style="width: 400px;">
+                            <span class="fw-semibold">{{ problem.problem }}</span>
+                        </li>
+                        <li v-else-if="!problems">No problems found...</li>
+                      </ul>
+                    </div>
+                  </div>
+
+
               <div class="flex-grow-1 w-30">
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="complexity" class="fw-semibold">Complexity</label>
@@ -105,6 +127,8 @@
                   </select>
                 </div>
               </div>
+
+              
             </div>
 
             <div class="row justify-content-center">
@@ -140,6 +164,7 @@ import { ref, watch } from 'vue';
 const props = defineProps({
   technicians: Object,
   employees: Object,
+  problems: Object,
   filters: Object,
   new_rs: Object,
 })
@@ -150,6 +175,7 @@ const form = useForm({
   rs_no: props.new_rs,
   issue: null,
   service: null,
+  problem: null,
   description: null,
   complexity: null,
   employee: null,
@@ -159,6 +185,7 @@ const form = useForm({
 })
 
 let selectedEmployee = ref('');
+let selectedProblem = ref('');
 let search = ref(props.filters.search);
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
@@ -220,6 +247,13 @@ const selectEmployee = (employee) => {
   form.employee = employee.employee_id;
 
   document.getElementById('employeeDropdown').classList.remove('show');
+}
+
+const selectProblem = (problem) => {
+  selectedProblem.value = problem.problem;
+  form.problem = problem.problem;
+
+  document.getElementById('titleDropdown').classList.remove('show');
 }
 
 const create = () => {

@@ -6,6 +6,7 @@ use App\Models\AssignedTickets;
 use App\Models\Employee;
 use App\Models\HistoryNumber;
 use App\Models\Service;
+use App\Models\Problem;
 use App\Models\Technician;
 use App\Models\Ticket;
 use App\Models\User;
@@ -129,11 +130,13 @@ class TechnicianTicketController extends Controller
             })
             ->get();
 
+        $problems = Problem::get();
         $filter = $request->only(['search']);
         return inertia('Technician/Tickets/Create', [
             'employees' => $employees,
             'filters' => $filter,
             'new_rs' => $new,
+            'problems' => $problems,
         ]);
     }
 
