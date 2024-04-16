@@ -16,7 +16,9 @@ class ReplyMade extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        private Comment $comment, private $name
+        private Comment $comment, 
+        private $name,
+        private $title,
     )
     {
         //
@@ -58,6 +60,7 @@ class ReplyMade extends Notification
             'tagged_user' => $this->comment->tagged_user,
             'created_at' => $this->comment->created_at,
             'name' => $this->name,
+            'title' => $this->title,
         ];
     }
 }

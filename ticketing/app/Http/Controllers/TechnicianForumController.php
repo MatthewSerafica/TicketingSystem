@@ -128,7 +128,7 @@ class TechnicianForumController extends Controller
 
             if ($user_id !== $post->user_id) {
                 $post->user->notify(
-                    new CommentMade($comment, $commenter->name)
+                    new CommentMade($comment, $commenter->name, $post->title)
                 );
             }
 
@@ -165,12 +165,12 @@ class TechnicianForumController extends Controller
 
             if ($user_id !== $post->user_id) {
                 if ($originalComment->user->id !== $post->user_id) {
-                    $post->user->notify(new ReplyMade($reply, $replier->name));
+                    $post->user->notify(new ReplyMade($reply, $replier->name, $post->title));
                 }
             }
 
             if ($user_id !== $originalComment->user->id) {
-                $originalComment->user->notify(new ReplyMade($reply, $replier->name));
+                $originalComment->user->notify(new ReplyMade($reply, $replier->name, $post->title));
             }
 
             return redirect()->back()->with('success', 'Commented on the post!')->with('message', 'Comment successfully posted!');

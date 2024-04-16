@@ -85,11 +85,10 @@
             </div>
             <div class="offcanvas-body">
                 <div class="container mt-4">
-                    <div class="card mt-3" v-for="notification in notifications.slice(0, 9)"
-                        :key="notification.id">
+                    <div class="card mt-3" v-for="notification in notifications.slice(0, 9)" :key="notification.id">
                         <button class="close-icon btn" @click="closeNotification(notification.id)">
-                            <i class="bi bi-x-circle"></i>
-                        </button>
+                                <i class="bi bi-x-circle"></i>
+                            </button>
                         <div class="card-body d-flex flex-column gap-2"
                             v-if="notification.type === 'App\\Notifications\\UpdateTicketTechnician'">
                             <div class="d-flex flex-column gap-2">
@@ -129,8 +128,7 @@
                                 </small>
                             </div>
                         </div>
-                        <div class="card-body"
-                            v-if="notification.type === 'App\\Notifications\\UpdateTicketStatus'">
+                        <div class="card-body" v-if="notification.type === 'App\\Notifications\\UpdateTicketStatus'">
                             <h5 class="card-title">
                                 Ticket #{{ notification.data.ticket_number }} Status Update
                             </h5>
@@ -144,28 +142,28 @@
                                 {{ formatDateTime(notification.created_at) }}
                             </small>
                         </div>
-                        <div class="card-body"
-                            v-if="notification.type === 'App\\Notifications\\PostMade'">
-                            <p class="card-title w-75">
-                                <strong>{{ notification.data.name }}</strong> posted <strong>{{ notification.data.title }}</strong> in the <strong>Forum</strong>
+                        <div class="card-body" v-if="notification.type === 'App\\Notifications\\PostMade'">
+                            <p class="card-title" style="width: 90%;">
+                                <strong>{{ notification.data.name }}</strong> posted <strong>{{ notification.data.title
+                                    }}</strong> in the <strong>Forum</strong>
                             </p>
                             <small class="card-text fst-italic text-muted">
                                 {{ formatDateTime(notification.created_at) }}
                             </small>
                         </div>
-                        <div class="card-body"
-                            v-if="notification.type === 'App\\Notifications\\CommentMade'">
-                            <p class="card-title w-75">
-                                <strong>{{ notification.data.name }}</strong> commented on your post in the <strong>Forum</strong>
+                        <div class="card-body" v-if="notification.type === 'App\\Notifications\\CommentMade'">
+                            <p class="card-title" style="width: 90%;">
+                                <strong>{{ notification.data.name }}</strong> commented on your post, <strong>{{
+                            notification.data.title }}</strong>, in the <strong>Forum</strong>
                             </p>
                             <small class="card-text fst-italic text-muted">
                                 {{ formatDateTime(notification.created_at) }}
                             </small>
                         </div>
-                        <div class="card-body"
-                            v-if="notification.type === 'App\\Notifications\\ReplyMade'">
+                        <div class="card-body" v-if="notification.type === 'App\\Notifications\\ReplyMade'">
                             <p class="card-title w-75">
-                                <strong>{{ notification.data.name }}</strong> replied to your comment in the <strong>Forum</strong>
+                                <strong>{{ notification.data.name }}</strong> replied to your comment on the post, <strong>{{ notification.data.ttile }}</strong>, in the
+                                <strong>Forum</strong>
                             </p>
                             <small class="card-text fst-italic text-muted">
                                 {{ formatDateTime(notification.created_at) }}
@@ -279,8 +277,8 @@ const handleBadge = (status) => {
 <style scoped>
 .close-icon {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 8px;
+    right: 0px;
     cursor: pointer;
     transition: transform 0.5s ease;
 }
