@@ -132,7 +132,7 @@
                         <li v-else-if="!services">No results found...</li>
                       </ul>
                     </div>
-                  </div>
+                  </div>         
                   <div class="w-50 d-flex flex-column justify-content-start align-items-start">
                     <label for="" class="fw-semibold">Technicians</label>
                     <div class="d-flex flex-column justify-content-center align-items-center gap-2 w-100">
@@ -175,6 +175,7 @@
                           <span v-if="showLabel">Assign Technician</span>
                         </button>
                       </div>
+                      <span v-if="form.errors.technician" class="error-message">{{ form.errors.technician }}</span>
                     </div>
                   </div>
                 </div>
@@ -261,13 +262,29 @@ const removeDropdown = (index) => {
 }
 
 const selectTechnician = (technician, index) => {
+  // Check if the technician ID has been selected before
+  if (form.technicians.includes(technician.technician_id)) {
+    // Technician ID has been selected before, set error message
+    form.errors.technician = 'Technician is already selected.';
+    return; // Exit the function early
+  }
+
+  // Check if the technician ID has been selected before in the current selection array
+  if (techniciansData.value.some(item => item.technicianId === technician.technician_id)) {
+    form.errors.technician = 'Technician is already selected.';
+    return; 
+  }
+
+  // Update techniciansData with selected technician's name and ID
   techniciansData.value[index].selectedTechnician = technician.user.name;
   techniciansData.value[index].technicianId = technician.technician_id;
 
-
   // Store the selected technicianId in the form.technicians array
   form.technicians.push(technician.technician_id);
+
+  form.errors.technician = null;
 };
+
 
 const fetchData = () => {
   router.get(
