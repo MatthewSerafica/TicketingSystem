@@ -135,7 +135,7 @@ class AdminTicketController extends Controller
                 });
             })
             ->get();
-            
+
         $problems = Problem::get();
 
         $filter = $request->only(['search']);
@@ -237,7 +237,11 @@ class AdminTicketController extends Controller
     {
         $technician = Technician::where('technician_id', $technician_id)->firstOrFail();
         $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
-        $technician->user->notify(new UpdateTicketTechnician($ticket));
+        
+        $employee = Employee::findOrFail($ticket->employee);
+        $technician->user->notify(
+            new UpdateTicketTechnician($ticket, $employee->user->name, $employee->department, $employee->office)
+        );
     }
 
     public function update(Request $request, $field, $id)
@@ -314,9 +318,11 @@ class AdminTicketController extends Controller
             AssignedTickets::create($assign);
 
 
+            $employee = Employee::findOrFail($ticket->employee);
+
             if ($technician) {
                 $technician->user->notify(
-                    new UpdateTicketTechnician($ticket)
+                    new UpdateTicketTechnician($ticket, $employee->user->name, $employee->department, $employee->office,)
                 );
             }
             DB::commit();
@@ -481,12 +487,14 @@ class AdminTicketController extends Controller
                 'technician' => $new->technician_id,
             ]);
 
+            
+            $employee = Employee::findOrFail($ticket->employee);
             $old->user->notify(
-                new UpdateTechnicianReplace($ticket)
+                new UpdateTechnicianReplace($ticket, $employee->user->name, $employee->department, $employee->office,)
             );
 
             $new->user->notify(
-                new UpdateTicketTechnician($ticket)
+                new UpdateTicketTechnician($ticket, $employee->user->name, $employee->department, $employee->office,)
             );
 
             DB::commit();

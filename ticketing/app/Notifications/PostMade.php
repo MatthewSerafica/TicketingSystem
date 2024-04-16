@@ -2,13 +2,13 @@
 
 namespace App\Notifications;
 
-use App\Models\Ticket;
+use App\Models\Post;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class UpdateTicketTechnician extends Notification
+class PostMade extends Notification
 {
     use Queueable;
 
@@ -16,11 +16,9 @@ class UpdateTicketTechnician extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        private Ticket $ticket,
-        private $name,
-        private $department,
-        private $office,
-    ) {
+        private Post $post, private $name
+    )
+    {
         //
     }
 
@@ -40,9 +38,9 @@ class UpdateTicketTechnician extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -53,16 +51,12 @@ class UpdateTicketTechnician extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'ticket_number' => $this->ticket->ticket_number,
-            'employee' => $this->ticket->employee,
-            'issue' => $this->ticket->issue,
-            'description' => $this->ticket->description,
-            'service' => $this->ticket->service,
-            'status' => $this->ticket->status,
-            'resolved_at' => $this->ticket->resolved_at,
+            'user_id' => $this->post->user_id,
+            'title' => $this->post->title,
+            'content' => $this->post->content,
+            'tagged_user' => $this->post->tagged_user,
+            'created_at' => $this->post->created_at,
             'name' => $this->name,
-            'department' => $this->department,
-            'office' => $this->office,
         ];
     }
 }

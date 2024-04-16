@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\User;
+use App\Notifications\CommentMade;
+use App\Notifications\PostMade;
+use App\Notifications\ReplyMade;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -36,6 +40,7 @@ class TechnicianForumController extends Controller
     public function store(Request $request)
     {
         $user_id = auth()->id();
+        $poster = User::findOrFail($user_id);
         $request->validate([
             'title' => 'nullable',
             'content' => 'required',
@@ -49,7 +54,14 @@ class TechnicianForumController extends Controller
             'tagged_user' => $request->tagged_user,
         ];
 
-        Post::create($post);
+        $post = Post::create($post);
+
+        $techs = User::where('user_type', 'technician')->whereNot('id', $user_id)->get();
+        foreach ($techs as $tech) {
+            $tech->notify(
+                new PostMade($post, $poster->name)
+            );
+        }
 
         return redirect()->back()->with('success', 'Posted!')->with('message', 'Message posted successfully!');
     }
@@ -60,7 +72,7 @@ class TechnicianForumController extends Controller
             ->with('user')
             ->withCount('comment')
             ->first();
-            
+
         if ($post) {
             $post->time_since_posted = $post->created_at->diffForHumans();
         }
@@ -97,7 +109,8 @@ class TechnicianForumController extends Controller
     {
         try {
             $user_id = auth()->id();
-            $post = Post::where('id', $id)->first();
+            $commenter = User::findOrFail($user_id);
+            $post = Post::findOrFail($id);
 
             $request->validate([
                 'content' => 'required',
@@ -111,7 +124,13 @@ class TechnicianForumController extends Controller
                 'tagged_user' => $request->tagged_user,
             ];
 
-            Comment::create($comment);
+            $comment = Comment::create($comment);
+
+            if ($user_id !== $post->user_id) {
+                $post->user->notify(
+                    new CommentMade($comment, $commenter->name)
+                );
+            }
 
             return redirect()->back()->with('success', 'Commented on the post!')->with('message', 'Comment successfully posted!');
         } catch (Exception $e) {
@@ -123,7 +142,8 @@ class TechnicianForumController extends Controller
     {
         try {
             $user_id = auth()->id();
-            $post = Post::where('id', $id)->first();
+            $replier = User::findOrFail($user_id);
+            $post = Post::findOrFail($id);
 
             $request->validate([
                 'parent_comment_id' => 'nullable',
@@ -139,7 +159,19 @@ class TechnicianForumController extends Controller
                 'tagged_user' => $request->tagged_user,
             ];
 
-            Comment::create($comment);
+            $reply = Comment::create($comment);
+
+            $originalComment = Comment::with('user')->find($reply->parent_comment_id);
+
+            if ($user_id !== $post->user_id) {
+                if ($originalComment->user->id !== $post->user_id) {
+                    $post->user->notify(new ReplyMade($reply, $replier->name));
+                }
+            }
+
+            if ($user_id !== $originalComment->user->id) {
+                $originalComment->user->notify(new ReplyMade($reply, $replier->name));
+            }
 
             return redirect()->back()->with('success', 'Commented on the post!')->with('message', 'Comment successfully posted!');
         } catch (Exception $e) {

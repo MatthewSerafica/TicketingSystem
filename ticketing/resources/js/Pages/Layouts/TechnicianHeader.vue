@@ -86,62 +86,89 @@
             <div class="offcanvas-body">
                 <div class="container mt-4">
                     <div class="card mt-3" v-for="notification in notifications.slice(0, 9)"
-                        :key="notification.notification.id">
-                        <button class="close-icon btn" @click="closeNotification(notification.notification.id)">
+                        :key="notification.id">
+                        <button class="close-icon btn" @click="closeNotification(notification.id)">
                             <i class="bi bi-x-circle"></i>
                         </button>
                         <div class="card-body d-flex flex-column gap-2"
-                            v-if="notification.notification.type === 'App\\Notifications\\UpdateTicketTechnician'">
+                            v-if="notification.type === 'App\\Notifications\\UpdateTicketTechnician'">
                             <div class="d-flex flex-column gap-2">
                                 <h5 class="card-title">
-                                    You are assigned to Ticket #{{ notification.notification.data.ticket_number }}
+                                    You are assigned to <br> Ticket #{{ notification.data.ticket_number }}
                                 </h5>
-                                <p class="card-subtitle">Issue: {{ notification.notification.data.issue }}</p>
-                                <p class="card-subtitle">Description: {{ notification.notification.data.description }}
+                                <p class="card-subtitle">Issue: {{ notification.data.issue }}</p>
+                                <p class="card-subtitle">Description: {{ notification.data.description }}
                                 </p>
-                                <p class="card-subtitle">Service Type: {{ notification.notification.data.service }}</p>
+                                <p class="card-subtitle">Service Type: {{ notification.data.service }}</p>
                             </div>
                             <div>
                                 <small class="card-text">
-                                    {{ notification.name }} | {{ notification.department }} -
-                                    {{ notification.office }}
+                                    {{ notification.data.name }} | {{ notification.data.department }} -
+                                    {{ notification.data.office }}
                                 </small>
                                 <br>
                                 <small class="card-text fst-italic text-muted">
-                                    {{ formatDateTime(notification.notification.created_at) }}
+                                    {{ formatDateTime(notification.created_at) }}
                                 </small>
                             </div>
                         </div>
                         <div class="card-body"
-                            v-if="notification.notification.type === 'App\\Notifications\\UpdateTechnicianReplace'">
+                            v-if="notification.type === 'App\\Notifications\\UpdateTechnicianReplace'">
                             <h5 class="card-title">
-                                You have been replaced for Ticket # {{ notification.notification.data.ticket_number }}
+                                You have been replaced for <br> Ticket #{{ notification.data.ticket_number }}
                             </h5>
-                            <p class="card-subtitle">Service: {{ notification.notification.data.service }}</p>
+                            <p class="card-subtitle">Service: {{ notification.data.service }}</p>
                             <div>
                                 <small class="card-text">
-                                    {{ notification.name }} | {{ notification.department }} -
-                                    {{ notification.office }}
+                                    {{ notification.data.name }} | {{ notification.data.department }} -
+                                    {{ notification.data.office }}
                                 </small>
                                 <br>
                                 <small class="card-text fst-italic text-muted">
-                                    {{ formatDateTime(notification.notification.created_at) }}
+                                    {{ formatDateTime(notification.created_at) }}
                                 </small>
                             </div>
                         </div>
                         <div class="card-body"
-                            v-if="notification.notification.type === 'App\\Notifications\\UpdateTicketStatus'">
+                            v-if="notification.type === 'App\\Notifications\\UpdateTicketStatus'">
                             <h5 class="card-title">
-                                Ticket #{{ notification.notification.data.ticket_number }} Status Update
+                                Ticket #{{ notification.data.ticket_number }} Status Update
                             </h5>
                             <p class="card-text">
-                                Ticket #{{ notification.notification.data.ticket_number }} is now
-                                <span class="p-2" :class="handleBadge(notification.notification.data.status)">
-                                    {{ notification.notification.data.status }}
+                                Ticket #{{ notification.data.ticket_number }} is now
+                                <span class="p-2" :class="handleBadge(notification.data.status)">
+                                    {{ notification.data.status }}
                                 </span>
                             </p>
                             <small class="card-text fst-italic text-muted">
-                                {{ formatDateTime(notification.notification.created_at) }}
+                                {{ formatDateTime(notification.created_at) }}
+                            </small>
+                        </div>
+                        <div class="card-body"
+                            v-if="notification.type === 'App\\Notifications\\PostMade'">
+                            <p class="card-title w-75">
+                                <strong>{{ notification.data.name }}</strong> posted <strong>{{ notification.data.title }}</strong> in the <strong>Forum</strong>
+                            </p>
+                            <small class="card-text fst-italic text-muted">
+                                {{ formatDateTime(notification.created_at) }}
+                            </small>
+                        </div>
+                        <div class="card-body"
+                            v-if="notification.type === 'App\\Notifications\\CommentMade'">
+                            <p class="card-title w-75">
+                                <strong>{{ notification.data.name }}</strong> commented on your post in the <strong>Forum</strong>
+                            </p>
+                            <small class="card-text fst-italic text-muted">
+                                {{ formatDateTime(notification.created_at) }}
+                            </small>
+                        </div>
+                        <div class="card-body"
+                            v-if="notification.type === 'App\\Notifications\\ReplyMade'">
+                            <p class="card-title w-75">
+                                <strong>{{ notification.data.name }}</strong> replied to your comment in the <strong>Forum</strong>
+                            </p>
+                            <small class="card-text fst-italic text-muted">
+                                {{ formatDateTime(notification.created_at) }}
                             </small>
                         </div>
                     </div>
@@ -213,7 +240,7 @@ const closeNotification = async (notificationId) => {
     try {
         console.log('marking', notificationId)
         await axios.delete(route('technician.notifications.marked', notificationId))
-        notifications.value = notifications.value.filter(notification => notification.notification.id !== notificationId);
+        notifications.value = notifications.value.filter(notification => notification.id !== notificationId);
     } catch (err) {
         console.error(err)
     }

@@ -2,10 +2,8 @@
 
 namespace App\Notifications;
 
-use App\Models\AssignedTickets;
 use App\Models\Ticket;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -18,6 +16,9 @@ class UpdateTechnicianReplace extends Notification
      */
     public function __construct(
         private Ticket $ticket,
+        private $name,
+        private $department,
+        private $office,
     ) {
         //
     }
@@ -58,6 +59,9 @@ class UpdateTechnicianReplace extends Notification
             'service' => $this->ticket->service,
             'status' => $this->ticket->status,
             'resolved_at' => $this->ticket->resolved_at,
+            'name' => $this->name,
+            'department' => $this->department,
+            'office' => $this->office,
         ];
     }
 }

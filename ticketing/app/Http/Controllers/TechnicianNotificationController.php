@@ -12,23 +12,9 @@ class TechnicianNotificationController extends Controller
     {
         $user = $request->user();
         $notifications = $user->notifications()->where('marked_at', 0)->get();
-        $notifications_with_user = [];
-
-        foreach($notifications as $notification) {
-            $data = $notification->data;
-
-            $employee = Employee::where('employee_id', $data['employee'])->with('user')->firstOrFail();
-
-            $notifications_with_user[] = [
-                'notification' => $notification,
-                'name' => $employee->user->name,
-                'department' => $employee->department,
-                'office' => $employee->office,
-            ];
-        }
 
         return response()->json([
-            'notifications' => $notifications_with_user,
+            'notifications' => $notifications,
         ]);
     }
 
@@ -36,7 +22,7 @@ class TechnicianNotificationController extends Controller
     {
         $user = Auth::user();
         $notification = $user->notifications()->findOrFail($notificationId);
-        $notification->update(['marked_at' => 1]); 
+        $notification->update(['marked_at' => 1]);
     }
 
 
@@ -46,5 +32,4 @@ class TechnicianNotificationController extends Controller
         $user = Auth::user();
         $user->notifications->markAsRead();
     }
-
 }

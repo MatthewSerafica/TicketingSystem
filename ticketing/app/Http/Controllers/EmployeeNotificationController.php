@@ -9,7 +9,7 @@ class EmployeeNotificationController extends Controller
 {
     public function index(Request $request) 
     {
-        $notifications = $request->user()->Notifications()->get();
+        $notifications = $request->user()->notifications()->get();
         return response()->json(['notifications' => $notifications]);
     }
 
