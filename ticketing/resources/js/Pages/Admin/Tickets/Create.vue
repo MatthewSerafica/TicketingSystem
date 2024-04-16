@@ -333,7 +333,6 @@ let show = ref(true);
 
 const form = useForm({
   rs_no: props.new_rs,
-  issue: null,
   service: null,
   problem: null,
   description: null,

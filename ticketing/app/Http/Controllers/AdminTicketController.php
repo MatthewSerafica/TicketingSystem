@@ -175,7 +175,7 @@ class AdminTicketController extends Controller
             $request->validate([
                 'description' => 'required',
                 'employee' => 'required',
-                'issue' => 'required',
+                'problem' => 'required',
                 'service' => 'required',
                 'rs_no' => 'nullable|numeric',
             ]);
@@ -195,7 +195,7 @@ class AdminTicketController extends Controller
             $ticket_data = [
                 'rs_no' => $request->rs_no,
                 'employee' => $request->employee,
-                'issue' => $request->issue,
+                'issue' => $request->problem,
                 'description' => $request->description,
                 'service' => $request->service,
                 'status' => 'Pending',
