@@ -55,7 +55,7 @@
               </td>
               <td class="text-center">{{ formatDate(office.created_at) }}</td>
               <td class="text-center">{{ formatDate(office.updated_at) }}</td>
-              <td><button type="button" as="button" class="btn btn-danger" @click="showDelete(office)">Delete</button></td>
+              <td><button type="button" as="button" class="btn btn-danger" @click="showDelete">Delete</button></td>
             </tr>
           </tbody>
         </table>
