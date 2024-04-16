@@ -21,7 +21,10 @@ class TechnicianForumController extends Controller
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where('title', 'like', '%' . $search . '%')
-                    ->orWhere('content', 'like', '%' . $search . '%');
+                    ->orWhere('content', 'like', '%' . $search . '%')
+                    ->orWhereHas('user', function ($subquery) use ($search) {
+                        $subquery->where('name', 'like', '%' . $search . '%');
+                    });
             })
             ->orderBy('created_at', 'desc')
             ->get();

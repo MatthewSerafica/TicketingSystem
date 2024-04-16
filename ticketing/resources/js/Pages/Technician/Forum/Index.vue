@@ -4,6 +4,12 @@
 
         <div class="container justify-content-center mt-4 col-6">
             <div class="row g-2">
+
+                <div class="input-group mt-3">
+                    <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
+                        placeholder="Search for posts..." aria-label="searchIcon" aria-describedby="searchIcon" />
+                </div>
                 <div class="p-4 text-center bg-white border-bottom">
                     <div class="p-4 d-flex flex-column gap-2">
                         <button class="p-2 px-4 rounded-pill form-control btn btn-outline-secondary d-flex"
@@ -32,9 +38,10 @@
                         <p class="text-secondary-emphasis"> {{ post.content }} </p>
 
                         <div class="d-flex justify-content-between text-dark">
-                            <div class="d-flex align-items-center justify-content-center gap-2 rounded-pill p-2 comment" style="width: 4rem;">
+                            <div class="d-flex align-items-center justify-content-center gap-2 rounded-pill p-2 comment"
+                                style="width: 4rem;">
                                 <i class="bi bi-chat-left-dots"></i>
-                                <span class="text-xs">{{post.comment_count}}</span>
+                                <span class="text-xs">{{ post.comment_count }}</span>
                             </div>
                         </div>
                     </div>
@@ -49,8 +56,8 @@
 import Button from '@/Components/Button.vue';
 import Post from '@/Components/PostModal.vue';
 import Header from '@/Pages/Layouts/TechnicianHeader.vue';
-import { Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Link, router } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
     posts: Object,
@@ -70,6 +77,49 @@ function showPost() {
         isShowPost.value = true;
     }
 }
+
+let search = ref(props.filters.search);
+let sortColumn = ref("created_at");
+let sortDirection = ref("asc");
+let timeoutId = null;
+
+const fetchData = () => {
+    router.get(
+        route('technician.forum'),
+        {
+            search: search.value,
+            sort: sortColumn.value,
+            direction: sortDirection.value,
+        },
+        {
+            preserveState: true,
+            replace: true,
+        }
+    )
+}
+
+const resetSorting = () => {
+    console.log("Reset Sorting");
+    sortColumn.value = "created_at"
+    sortDirection.value = "asc"
+}
+
+const debouncedFetchData = () => {
+    if (timeoutId) {
+        clearTimeout(timeoutId)
+    }
+    timeoutId = setTimeout(() => {
+        fetchData()
+    }, 500)
+}
+
+watch(search, () => {
+    if (!search.value) {
+        resetSorting()
+    }
+    debouncedFetchData();
+})
+
 </script>
 
 <style scoped>
