@@ -23,29 +23,32 @@
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Tickets</h1>
           <p class="fs-5"> Manage and Track all TMDD Tickets</p>
-          <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5 shadow">
+          <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">
           Create New Ticket
           </Link>
-          <div class="d-flex gap-2 rounded w-50">
+          <div class="d-flex gap-2 rounded w-100">
             <div class="input-group date" id="datepicker">
-              <input type="month" v-model="month_filter" class="form-control">
+              <input type="date" v-model="from_date_filter" class="form-control">
+            </div>
+            <div class="input-group date" id="datepicker">
+              <input type="date" v-model="to_date_filter" class="form-control">
             </div>
           </div>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
-            <Button :name="'All'" :color="'secondary'" class="btn-options shadow"
+            <Button :name="'All'" :color="'secondary'" class="btn-options"
               @click="filterTickets('all')"></Button>
-            <Button :name="'New'" :color="'danger'" class="btn-options shadow" @click="filterTickets('new')"></Button>
-            <Button :name="'Pending'" :color="'warning'" class="btn-options shadow"
+            <Button :name="'New'" :color="'danger'" class="btn-options" @click="filterTickets('new')"></Button>
+            <Button :name="'Pending'" :color="'warning'" class="btn-options"
               @click="filterTickets('pending')"></Button>
-            <Button :name="'Ongoing'" :color="'info'" class="btn-options shadow"
+            <Button :name="'Ongoing'" :color="'info'" class="btn-options"
               @click="filterTickets('ongoing')"></Button>
-            <Button :name="'Resolved'" :color="'success'" class="btn-options shadow"
+            <Button :name="'Resolved'" :color="'success'" class="btn-options"
               @click="filterTickets('resolved')"></Button>
           </div>
         </div>
         <div class="input-group mt-3 mb-2">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
-          <input type="text" class="form-control py-2 shadow-sm" id="search" name="search" v-model="search"
+          <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
             placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
@@ -84,12 +87,12 @@
                 <th class="text-center text-muted">MS</th>
                 <th class="text-center text-muted">RS</th>
                 <th class="text-muted">Client</th>
-                <th class="text-muted">Request</th>
+                <th class="text-muted">Problem</th>
                 <th class="text-muted text-center">Service</th>
                 <th class="text-start text-muted">Complexity</th>
-                <th class="text-muted" style="cursor:pointer;" @click="toggleTechnicianCTAs">Technician</th>
+                <th class="text-muted text-center" style="cursor:pointer;" @click="toggleTechnicianCTAs">Technician</th>
                 <th class="text-center text-muted">SR</th>
-                <th class="text-muted">Date Resolved</th>
+                <th class="text-muted">Date Done</th>
                 <th class="text-muted">Remarks</th>
                 <th class="text-center text-muted">Status</th>
               </tr>
@@ -140,12 +143,9 @@
                   <small>{{ ticket.employee.department }} - {{ ticket.employee.office }}</small>
                 </td>
                 <td class="text-start text-truncate ticket-description" style="max-width: 8rem"
-                  data-hover-text="{{ ticket.description }}">
-                  <span :title="ticket.description">
-                    {{ ticket.description }}
-                  </span>
+                  data-hover-text="{{ ticket.issue }}{{ ticket.description }}">
+                  <span :title="ticket.issue + '\n' + ticket.description">{{ ticket.issue }}</span>
                 </td>
-
                 <td class="text-center">
                   <div v-if="ticket.status !== 'Resolved'" class="">
                     <button type="button" class="btn text-center" data-bs-toggle="dropdown" aria-expanded="false"
@@ -197,7 +197,7 @@
                         <div v-if="ticket.status !== 'Resolved'"
                           class="d-flex flex-row justify-content-center align-items-center"
                           v-for="(tech, techIndex) in assignedTech.technician" :key="techIndex">
-                          <button type="button" class="btn text-start" style="width: 10rem;"
+                          <button type="button" class="btn text-start" style="width: 8rem;"
                             @click="toggleTechnicianCTAs">
                             {{ tech.user.name ? tech.user.name : 'N/A' }}
                           </button>
@@ -209,11 +209,11 @@
                         </div>
                         <div v-else class="d-flex flex-row justify-content-center align-items-center"
                           v-for="tech in assignedTech.technician">
-                          <button type="button" class="btn text-start" style="width: 10rem;">
+                          <button type="button" class="btn text-start" style="width: 8rem;">
                             {{ tech.user.name }}
                           </button>
                         </div>
-                        <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto; width: 16rem;">
+                        <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto; width: 8rem;">
                           <div>
                             <h6 class="dropdown-header">Recommended</h6>
                             <div v-for="technicians in recommended">
@@ -269,7 +269,7 @@
                     class="w-100 rounded border border-secondary-subtle text-center">
                 </td>
                 <td class="text-start">
-                  {{ isNaN(new Date(formatDate(ticket.resolved_at))) ? 'Not yet resolved' :
+                  {{ isNaN(new Date(formatDate(ticket.resolved_at))) ? 'Not yet done' :
           formatDate(ticket.resolved_at) }}
                 </td>
                 <td class="text-start text-break" style="max-width: 120px;"
@@ -367,7 +367,8 @@ const props = defineProps({
 
 // Search start
 let search = ref(props.filters.search);
-let month_filter = ref(props.filters.month_filter);
+let from_date_filter = ref(props.filters.from_date_filter);
+let to_date_filter = ref(props.filters.to_date_filter);
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("desc");
 let timeoutId = null;
@@ -378,7 +379,8 @@ const fetchData = (type, all, ne, pending, ongoing, resolved) => {
     route('admin.tickets'),
     {
       search: search.value,
-      month_filter: month_filter.value,
+      from_date_filter: from_date_filter.value,
+      to_date_filter: to_date_filter.value,
       sort: sortColumn.value,
       direction: sortDirection.value,
       filterTickets: type,
@@ -412,8 +414,8 @@ const debouncedFetchData = () => {
   }, 500)
 }
 
-watch([search, month_filter], ([newSearch, newMonthFilter]) => {
-  if (!newSearch && !newMonthFilter) {
+watch([search, from_date_filter, to_date_filter], ([newSearch, newFromDateFilter, newToDateFilter]) => {
+  if (!newSearch && !newFromDateFilter && !newToDateFilter) {
     resetSorting();
   }
   debouncedFetchData();
