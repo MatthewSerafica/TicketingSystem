@@ -168,7 +168,7 @@ class TechnicianTicketController extends Controller
                 'complexity' => 'required',
                 'description' => 'required',
                 'employee' => 'required',
-                'issue' => 'required',
+                'problem' => 'required',
                 'service' => 'required',
                 'user' => 'required',
                 'rs_no' => 'nullable|numeric',
@@ -183,10 +183,11 @@ class TechnicianTicketController extends Controller
             }
 
             $ticketData = [
+                'request_type' => $request->request_type,
                 'complexity' => $request->complexity,
                 'rs_no' => $request->rs_no,
                 'employee' => $request->employee,
-                'issue' => $request->issue,
+                'issue' => $request->problem,
                 'description' => $request->description,
                 'service' => $request->service,
                 'status' => 'Pending',
@@ -302,7 +303,7 @@ class TechnicianTicketController extends Controller
                         'service_id' => $ticket->$field,
                         'ticket_number' => $ticket->ticket_number,
                         'date_done' => now(),
-                        'issue' => $ticket->description,
+                        'problem' => $ticket->description,
 
                     ];
                     ServiceReport::create($serviceData);
