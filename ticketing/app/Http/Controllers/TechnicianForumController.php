@@ -28,7 +28,7 @@ class TechnicianForumController extends Controller
                     });
             })
             ->orderBy('created_at', 'desc')
-            ->cursorPaginate(5);
+            ->cursorPaginate(15);
 
         $posts->each(function ($post) {
             $post->time_since_posted = $post->created_at->diffForHumans();
