@@ -63,7 +63,7 @@
             <div class="row mb-4">
               <div class="col-md-4">
                 <label for="problemEncountered" class="form-label">Problem Encountered:</label>
-                <input type="text" class="form-control" id="problemEncountered" v-model="form.issue">
+                <input type="text" class="form-control" id="problemEncountered" v-model="form.problem">
               </div>
               <div class="col-md-4">
                 <label for="action" class="form-label">Action Taken:</label>
@@ -91,7 +91,7 @@
               </div>
             </div>
 
-            <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" @confirm="create" @closeModal="closeSubmitService = false" />
+            <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" @confirm="create" @closeSubmitService="closeSubmitService = false" />
 
             <div class="row justify-content-end">
               <div class="col-md-4">
@@ -119,7 +119,7 @@ import { ref, watch, computed, onMounted } from "vue";
 const props = defineProps({
   technicians: Object,
   new_service_id: String,
-  ticket_id: String,
+  ticket_id: Number,
   service_report: Object,
   tickets: Object,
   date_done: String,
@@ -138,7 +138,7 @@ const form = useForm({
   technician: [],
   requesting_office: null,
   equipment_no: null,
-  issue: null,
+  problem: null,
   action: null,
   recommendation: null,
   date_done: props.date_done,
@@ -178,21 +178,21 @@ onMounted(async () => {
   
 });
 
-/* const create = async () => {
+ const create = () => {
   if (!/^\d+$/.test(form.ticket_number)) {
     form.errors.ticket_number = 'Ticket number should contain only numeric characters.';
     return;
   }
 
   form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false });
-} */
+} 
 
 watch(() => form.ticket_number, async (newValue) => {
   const selectedTicket = props.tickets.find(ticket => ticket.ticket_number === newValue);
 
   if (selectedTicket) {
     form.action = selectedTicket.service;
-    form.issue = selectedTicket.description;
+    form.problem = selectedTicket.description;
     form.requesting_office = selectedTicket.employee.department + ' - ' + selectedTicket.employee.office;
 
     const response = await fetch(route('technician.tickets.assigned', { id: selectedTicket.ticket_number }));
@@ -221,7 +221,7 @@ function submitServiceReport(sr) {
   }
 }
 
-function closeSubmitService(sr) {
+function closeSubmitService() {
   if(showConfirmationModal.value) {
     selectedServiceReport.value = null
     showConfirmationModal.value = false;
