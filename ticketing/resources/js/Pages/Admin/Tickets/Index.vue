@@ -26,22 +26,15 @@
           <Link :href="route('admin.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">
           Create New Ticket
           </Link>
-          <div class="d-flex gap-2 rounded w-100">
-            <div class="input-group date" id="datepicker">
-              <input type="date" v-model="from_date_filter" class="form-control">
-            </div>
-            <div class="input-group date" id="datepicker">
-              <input type="date" v-model="to_date_filter" class="form-control">
-            </div>
+          <div class="d-flex gap-2 rounded">
+            <VueDatePicker v-model="date" range multi-calendars :max-date="new Date()" teleport-center
+              placeholder="Select date..." :enable-time-picker="false" class="border rounded border-1" />
           </div>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
-            <Button :name="'All'" :color="'secondary'" class="btn-options"
-              @click="filterTickets('all')"></Button>
+            <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
             <Button :name="'New'" :color="'danger'" class="btn-options" @click="filterTickets('new')"></Button>
-            <Button :name="'Pending'" :color="'warning'" class="btn-options"
-              @click="filterTickets('pending')"></Button>
-            <Button :name="'Ongoing'" :color="'info'" class="btn-options"
-              @click="filterTickets('ongoing')"></Button>
+            <Button :name="'Pending'" :color="'warning'" class="btn-options" @click="filterTickets('pending')"></Button>
+            <Button :name="'Ongoing'" :color="'info'" class="btn-options" @click="filterTickets('ongoing')"></Button>
             <Button :name="'Resolved'" :color="'success'" class="btn-options"
               @click="filterTickets('resolved')"></Button>
           </div>
@@ -367,8 +360,8 @@ const props = defineProps({
 
 // Search start
 let search = ref(props.filters.search);
-let from_date_filter = ref(props.filters.from_date_filter);
-let to_date_filter = ref(props.filters.to_date_filter);
+let from_date_filter = ref(null);
+let to_date_filter = ref(null);
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("desc");
 let timeoutId = null;
@@ -379,8 +372,8 @@ const fetchData = (type, all, ne, pending, ongoing, resolved) => {
     route('admin.tickets'),
     {
       search: search.value,
-      from_date_filter: from_date_filter.value,
-      to_date_filter: to_date_filter.value,
+      from_date_filter: from_date_filter,
+      to_date_filter: to_date_filter,
       sort: sortColumn.value,
       direction: sortDirection.value,
       filterTickets: type,
@@ -414,8 +407,19 @@ const debouncedFetchData = () => {
   }, 500)
 }
 
-watch([search, from_date_filter, to_date_filter], ([newSearch, newFromDateFilter, newToDateFilter]) => {
-  if (!newSearch && !newFromDateFilter && !newToDateFilter) {
+const date = ref(null);
+
+watch([search, date], ([newSearch, newDate]) => {
+  if (newDate) {
+    // If newDate is not null or undefined, process it
+    from_date_filter = moment(newDate[0]).format('YYYY-MM-DD');
+    to_date_filter = moment(newDate[1]).format('YYYY-MM-DD');
+  } else {
+    // If newDate is null or undefined, set date filters to null
+    from_date_filter = null;
+    to_date_filter = null;
+  }
+  if (!newSearch && !newDate) {
     resetSorting();
   }
   debouncedFetchData();

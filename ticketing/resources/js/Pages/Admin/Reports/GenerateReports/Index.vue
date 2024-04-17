@@ -178,8 +178,13 @@ const debouncedFetchData = () => {
 const date = ref();
 
 watch(date, (newDate) => {
-    from_date_filter = moment(newDate[0]).format('YYYY-MM-DD');
-    to_date_filter = moment(newDate[1]).format('YYYY-MM-DD');
+    if (newDate) {
+        from_date_filter = moment(newDate[0]).format('YYYY-MM-DD');
+        to_date_filter = moment(newDate[1]).format('YYYY-MM-DD');
+    } else {
+        from_date_filter = null;
+        to_date_filter = null;
+    }
     if (!newDate) {
         return
     }
