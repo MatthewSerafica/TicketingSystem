@@ -22,9 +22,9 @@ class AdminTicketController extends Controller
 {
     public function index(Request $request)
     {
-        $filter = $request->only(['search', 'filterTickets', 'all', 'new', 'pending', 'ongoing', 'resolved', 'month_filter']);
+        $filter = $request->only(['search', 'filterTickets', 'all', 'new', 'pending', 'ongoing', 'resolved', 'from_date_filter', 'to_date_filter']);
 
-        if (!$request->filled('month_filter')) {
+        if (!$request->filled('from_date_filter') && !$request->filled('to_date_filter')) {
             $query = Ticket::query()
                 ->with('employee.user', 'assigned.technician.user')
                 ->whereYear('created_at', Carbon::now()->year)
@@ -43,11 +43,13 @@ class AdminTicketController extends Controller
         }
 
 
-        if ($request->filled('month_filter')) {
-            $monthFilter = $request->input('month_filter');
-            list($year, $month) = explode('-', $monthFilter);
+        if ($request->filled('from_date_filter') && $request->filled('to_date_filter')) {
+            $fromDate = $request->input('from_date_filter');
+            $toDate = $request->input('to_date_filter');
+            /* list($year, $month) = explode('-', $monthFilter);
             $query->whereYear('created_at', $year)
-                ->whereMonth('created_at', $month);
+                ->whereMonth('created_at', $month); */
+            $query->whereBetween('created_at', [$fromDate . ' 00:00:00', $toDate . ' 23:59:59']);
         }
 
 
@@ -237,7 +239,7 @@ class AdminTicketController extends Controller
     {
         $technician = Technician::where('technician_id', $technician_id)->firstOrFail();
         $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
-        
+
         $employee = Employee::findOrFail($ticket->employee);
         $technician->user->notify(
             new UpdateTicketTechnician($ticket, $employee->user->name, $employee->department, $employee->office)
@@ -487,7 +489,7 @@ class AdminTicketController extends Controller
                 'technician' => $new->technician_id,
             ]);
 
-            
+
             $employee = Employee::findOrFail($ticket->employee);
             $old->user->notify(
                 new UpdateTechnicianReplace($ticket, $employee->user->name, $employee->department, $employee->office,)
