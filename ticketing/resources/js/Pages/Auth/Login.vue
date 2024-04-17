@@ -4,8 +4,7 @@
             <div class="container">
                 <div class="row justify-content-center align-items-center">
                     <div class="col-md-6">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                            class="img-fluid" alt="Sample image">
+                        <Logo/>
                     </div>
                     <div class="card p-4 col-md-5" :class="{'col-10': isMobile}">
                         <div class="card-body">
@@ -48,6 +47,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useForm, Link } from '@inertiajs/vue3'
 import Footer from '@/Pages/Layouts/Footer.vue'
 import Button from '@/Components/Button.vue'
+import Logo from '../../Components/Image.vue';
 
 const form = useForm({
     email: '',

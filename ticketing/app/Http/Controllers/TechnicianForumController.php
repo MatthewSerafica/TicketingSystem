@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
@@ -27,15 +28,19 @@ class TechnicianForumController extends Controller
                     });
             })
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->cursorPaginate(5);
 
         $posts->each(function ($post) {
             $post->time_since_posted = $post->created_at->diffForHumans();
         });
 
+        if ($request->wantsJson()) {
+            return PostResource::collection($posts);
+        }
+
         $filters = $request->only(['search']);
         return inertia('Technician/Forum/Index', [
-            'posts' => $posts,
+            'posts' => PostResource::collection($posts),
             'filters' => $filters,
         ]);
     }

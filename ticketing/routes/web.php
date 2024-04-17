@@ -132,7 +132,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/technician/service-report/service-report/{id}/assigned-technicians', [TechnicianServiceController::class, 'assigned'])->name('technician.tickets.assigned');
 
         Route::get('/technician/forum', [TechnicianForumController::class, 'index'])->name('technician.forum');
-        Route::get('/technician/forum/post/{post_id}/{title}', [TechnicianForumController::class, 'show'])->name('technician.forum.post');
+        Route::get('/technician/forum/post/{post_id}', [TechnicianForumController::class, 'show'])->name('technician.forum.post');
         Route::post('/technician/forum/store', [TechnicianForumController::class, 'store'])->name('technician.forum.store');
         Route::post('/technician/forum/comment/{post_id}/{title}', [TechnicianForumController::class, 'comment'])->name('technician.forum.comment');
         Route::post('/technician/forum/comment/{post_id}/{title}/reply/{comment_id}', [TechnicianForumController::class, 'reply'])->name('technician.forum.reply');

@@ -16,6 +16,7 @@
     "dependencies": {
         "@inertiajs/vue3": "^1.0.14",
         "@popperjs/core": "^2.11.8",
+        "@vueuse/core": "^10.9.0",
         "alpinejs": "^3.13.5",
         "bootstrap": "^5.3.3",
         "chart.js": "^4.4.1",

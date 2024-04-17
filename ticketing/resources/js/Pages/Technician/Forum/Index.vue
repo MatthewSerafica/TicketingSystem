@@ -4,21 +4,21 @@
 
         <div class="container justify-content-center mt-4 col-6">
             <div class="row g-2">
-
-                <div class="input-group mt-3">
-                    <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
-                        placeholder="Search for posts..." aria-label="searchIcon" aria-describedby="searchIcon" />
+                <div class="input-group">
+                    <span class="input-group-text rounded-start-pill shadow" id="searchIcon"><i
+                            class="bi bi-search"></i></span>
+                    <input type="text" class="form-control shadow rounded-end-pill py-2" id="search" name="search"
+                        v-model="search" placeholder="Search for posts..." aria-label="searchIcon"
+                        aria-describedby="searchIcon" />
                 </div>
-                <div class="p-4 text-center bg-white border-bottom">
+                <div class="px-4 text-center bg-white border-bottom">
                     <div class="p-4 d-flex flex-column gap-2">
                         <button class="p-2 px-4 rounded-pill form-control btn btn-outline-secondary d-flex"
                             @click="showPost">What are you thinking about?</button>
                     </div>
                     <Post v-if="isShowPost" @closeDelete="closePost" />
                 </div>
-                <div class="bg-white border-bottom pb-2 mb-2" v-for="post in posts" v-bind:key="post.id">
-                    <Link :href="route('technician.forum.post', [post.id, post.title])" class="text-decoration-none">
+                <div class="bg-white border-bottom pb-2 mb-2" v-for="post in posts.data" v-bind:key="post.id">
                     <div class="post rounded p-2">
                         <div class="d-flex align-items-center gap-2">
                             <div class="d-flex align-items-center justify-content-center gap-4">
@@ -38,14 +38,20 @@
                         <p class="text-secondary-emphasis"> {{ post.content }} </p>
 
                         <div class="d-flex justify-content-between text-dark">
+
+                            <Link :href="route('technician.forum.post', [post.id])" class="text-decoration-none">
                             <div class="d-flex align-items-center justify-content-center gap-2 rounded-pill p-2 comment"
                                 style="width: 4rem;">
                                 <i class="bi bi-chat-left-dots"></i>
                                 <span class="text-xs">{{ post.comment_count }}</span>
                             </div>
+                            </Link>
                         </div>
                     </div>
-                    </Link>
+                </div>
+                <div ref="last" class="translate"></div>
+                <div v-if="loading" class="text-center">
+                    <span>Loading...</span>
                 </div>
             </div>
         </div>
@@ -57,6 +63,8 @@ import Button from '@/Components/Button.vue';
 import Post from '@/Components/PostModal.vue';
 import Header from '@/Pages/Layouts/TechnicianHeader.vue';
 import { Link, router } from '@inertiajs/vue3';
+import { useIntersectionObserver } from '@vueuse/core';
+import axios from 'axios';
 import { ref, watch } from 'vue';
 
 const props = defineProps({
@@ -120,6 +128,31 @@ watch(search, () => {
     debouncedFetchData();
 })
 
+
+const last = ref(null)
+
+const { stop } = useIntersectionObserver(last, ([{ isIntersecting }]) => {
+    if (!isIntersecting) {
+        return
+    }
+
+    axios.get(`${props.posts.meta.path}?cursor=${props.posts.meta.next_cursor}`).then((response) => {
+        props.posts.data = [...props.posts.data, ...response.data.data]
+        props.posts.meta = response.data.meta
+
+        if (!response.data.meta.next_cursor) {
+            stop()
+        }
+    })
+
+    /* router.reload({
+        data: { page: props.posts.current_page + 1 },
+
+        onSuccess: () => {
+            postsState.value = [...postsState.value, ...props.posts.data]
+        }
+    }) */
+});
 </script>
 
 <style scoped>
