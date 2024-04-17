@@ -4,19 +4,55 @@
         <div class="d-flex flex-row justify-content-end">
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closePrint"></button>
         </div>
-        <div>
-          <h2 class="mt-2">Saint Louis University</h2>
-          <h2 class="mt-2">Technology Management and</h2>
-          <h2 class="mt-2">Development Department</h2>
-  
-          <p v-if="service_report">SERVICE REPORT FORM <strong>{{ service_report.service_report }}</strong></p>
+
+        <div class="d-flex flex-column justify-content-center align-items-center">
+          <div class="parent-content mt-2 d-flex justify-content-between w-75 align-items-center">
+          <div>
+            <SchoolLogo></SchoolLogo>
+          </div>
+
+            <div class="mt-2 d-flex flex-column">
+              <h2 >Saint Louis University</h2>
+              <h2 >Technology Management and</h2>
+              <h2 >Development Department</h2>
+              <div class="d-flex justify-content-between" v-if="service_report">
+                <p>SERVICE REPORT FORM</p>
+              <strong>{{ service_report.service_report }}</strong>
+              </div>
+            </div>
+
+            <div>
+            <table class="bordered-table">
+                <tr>
+                    <td>Document code</td>
+                    <td>FM-TMD-001</td>
+                </tr>
+                <tr>
+                    <td>Revision No.</td>
+                    <td>00</td>
+                </tr>
+                <tr>
+                    <td>Effectivity</td>
+                    <td>Feb 01, 2021</td>
+                </tr>
+                <tr>
+                    <td>Page</td>
+                    <td>1 of 1</td>
+                </tr>
+            </table>
+          </div>
         </div>
-        <div class="report-content">
+
+
+        <div class="report-content w-100">
           <div class="row justify-content-center mb-4">
             <div class="col-md-6">
-                <h3 class="section-title">Service Details SR-A- {{ props.service_report.service_id }}</h3>
+                <p v-if="service_report" class="d-flex justify-content-end">
+                    <!-- <span>SERVICE REPORT FORM</span>  -->
+                    <span>SR-A-{{ props.service_report.service_id }}</span>
+                </p>
+
               <div class="bordered-section">
-                
                 <div class="content-group">
                   <span class="content-group-text bordered-column"><Strong>Date Started:</Strong>{{ moment(props.service_report.date_started).format("MMM DD, YYYY") }}</span>
                   <span class="content-group-text bordered-column"><Strong>Time Started:</Strong>{{ moment(props.service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</span>
@@ -68,7 +104,8 @@
               </div>
             </div>
           </div>
-        </div>
+        </div></div>
+        
         <div class="d-flex flex-row gap-2 justify-content-end mt-2">
           <button @click="printDocument" type="button" class="btn btn-primary btn-print">Print</button>
           <button @click="closePrint" type="button" as="button" class="btn btn-outline-secondary btn-print ">Cancel</button>
@@ -82,6 +119,7 @@
     import { defineEmits } from 'vue';
     import { defineProps } from 'vue';
     import moment from "moment";
+    import SchoolLogo from '@/Components/SchoolLogo.vue'
   
     const emit = defineEmits(['closePrint']);
   
@@ -179,5 +217,16 @@
       display: none;
     }
   }
+
+  .bordered-table {
+  border-collapse: collapse;
+}
+
+.bordered-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+
   </style>
   
