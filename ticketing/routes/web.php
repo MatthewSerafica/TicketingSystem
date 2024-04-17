@@ -65,6 +65,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/reports/service-report/{id}/assigned-technicians', [AdminServiceReportController::class, 'assigned'])->name('admin.tickets.assigned');
 
         Route::get('/admin/reports/generate-report', [AdminGenerateReportController::class, 'index'])->name('admin.reports.generate-report');
+        Route::get('/admin/reports/generate-report/show/{from}/{to}', [AdminGenerateReportController::class, 'show'])->name('admin.reports.generate-report.show');
         Route::get('/admin/reports/generate-report/{year}/{month}/print', [AdminGenerateReportController::class, 'print'])->name('admin.reports.generate-report.print');
 
         Route::get('/admin/department', [AdminDepartmentController::class, 'index'])->name('admin.department');
@@ -132,7 +133,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/technician/service-report/service-report/{id}/assigned-technicians', [TechnicianServiceController::class, 'assigned'])->name('technician.tickets.assigned');
 
         Route::get('/technician/forum', [TechnicianForumController::class, 'index'])->name('technician.forum');
-        Route::get('/technician/forum/post/{post_id}/{title}', [TechnicianForumController::class, 'show'])->name('technician.forum.post');
+        Route::get('/technician/forum/post/{post_id}', [TechnicianForumController::class, 'show'])->name('technician.forum.post');
         Route::post('/technician/forum/store', [TechnicianForumController::class, 'store'])->name('technician.forum.store');
         Route::post('/technician/forum/comment/{post_id}/{title}', [TechnicianForumController::class, 'comment'])->name('technician.forum.comment');
         Route::post('/technician/forum/comment/{post_id}/{title}/reply/{comment_id}', [TechnicianForumController::class, 'reply'])->name('technician.forum.reply');
