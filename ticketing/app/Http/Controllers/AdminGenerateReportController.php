@@ -17,6 +17,7 @@ class AdminGenerateReportController extends Controller
 
         $tickets = Ticket::select('*')
             ->selectRaw('MONTH(created_at) as month, YEAR(created_at) as year')
+            ->with('employee.user')
             ->orderByDesc('year')
             ->orderByDesc('month')
             ->get();

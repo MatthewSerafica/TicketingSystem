@@ -14,7 +14,10 @@
                 <span class="print-hidden">Back</span>
                 </Link>
             </div>
-            <div class="print-hidden">
+            <div class="print-hidden d-flex gap-2 h-25">
+                <button class="btn btn-outline-primary" @click="download(from, to)">
+                    <i class="bi bi-download"></i>
+                </button>
                 <button class="btn btn-primary print-hidden" @click="printPage">
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                         class="bi bi-printer-fill" viewBox="0 0 16 16">
@@ -27,8 +30,7 @@
             </div>
         </div>
         <div class="text-center fw-bold mb-2">
-            RS System (Monitoring) <br> {{ moment(from).format("MMM DD, YYYY") }} - {{ moment(to).format("MMM DD, YYYY")
-            }}
+            RS System (Monitoring) <br> {{ moment(from).format("MMM DD, YYYY") }} - {{ moment(to).format("MMM DD, YYYY") }}
         </div>
 
         <div class="table-responsive px-3 rounded pt-2 px-2">
@@ -81,6 +83,7 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 import moment from "moment";
+import Button from '@/Components/Button.vue';
 
 const props = defineProps({
     tickets: Object,
@@ -88,10 +91,62 @@ const props = defineProps({
     to: Object,
 })
 
-const monthName = (month) => {
-    const date = new Date(2000, month - 1, 1);
-    return date.toLocaleString('en-US', { month: 'long' });
-};
+
+function download(from, to) {
+    const fromDate = moment(`${from}`).format('MMM DD, YYYY');
+    const toDate = moment(`${to}`).format('MMM DD, YYYY');
+    const data = props.tickets;
+    const csvContent = convertToCSV(data);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `RS System ${fromDate}-${toDate}.csv`);
+    link.click();
+}
+
+function convertToCSV(data) {
+    const headerMap = {
+        ticket_number: 'Ticket No.',
+        created_at: 'Date',
+        rr_no: 'RR No.',
+        ms_no: 'MS No.',
+        rs_no: 'RS No.',
+        employee: 'Employee',
+        department: 'Office',
+        issue: 'Issue',
+        technicians: 'Technician',
+        sr_no: 'SR No.',
+        resolved_at: 'Date Done',
+        remarks: 'Remarks'
+    };
+
+    const headers = Object.keys(headerMap);
+    const rows = data.map(ticket => headers.map(header => {
+        if (header === 'employee') {
+            // Retrieve employee.user.name if it exists
+            const employeeName = ticket.employee?.user?.name || '';
+            return employeeName;
+        } else if (header === 'department') {
+            return `${ticket.employee.department} - ${ticket.employee.office}`;
+        } else if (header === 'created_at' || header === 'resolved_at') {
+            const value = ticket[header];
+            if (value) {
+                const formatted = moment(value).format('MM/DD/YYYY');
+                return formatted;
+            } else {
+                return value;
+            }
+        } else {
+            const value = ticket[header];
+            return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
+        }
+    }));
+
+    const headerRow = headers.map(header => headerMap[header]).join(',');
+    const csvRows = [headerRow, ...rows.map(row => row.join(','))];
+    return csvRows.join('\n');
+}
 
 const printPage = () => {
     window.print();
