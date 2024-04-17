@@ -46,9 +46,6 @@ class AdminTicketController extends Controller
         if ($request->filled('from_date_filter') && $request->filled('to_date_filter')) {
             $fromDate = $request->input('from_date_filter');
             $toDate = $request->input('to_date_filter');
-            /* list($year, $month) = explode('-', $monthFilter);
-            $query->whereYear('created_at', $year)
-                ->whereMonth('created_at', $month); */
             $query->whereBetween('created_at', [$fromDate . ' 00:00:00', $toDate . ' 23:59:59']);
         }
 

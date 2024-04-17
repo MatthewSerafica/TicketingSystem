@@ -411,11 +411,9 @@ const date = ref(null);
 
 watch([search, date], ([newSearch, newDate]) => {
   if (newDate) {
-    // If newDate is not null or undefined, process it
     from_date_filter = moment(newDate[0]).format('YYYY-MM-DD');
     to_date_filter = moment(newDate[1]).format('YYYY-MM-DD');
   } else {
-    // If newDate is null or undefined, set date filters to null
     from_date_filter = null;
     to_date_filter = null;
   }

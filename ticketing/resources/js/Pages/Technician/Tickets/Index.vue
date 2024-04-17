@@ -26,10 +26,9 @@
           <Link :href="route('technician.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New
           Ticket
           </Link>
-          <div class="d-flex gap-2 rounded w-50">
-            <div class="input-group date" id="datepicker">
-              <input type="month" v-model="month_filter" class="form-control">
-            </div>
+          <div class="d-flex gap-2 rounded">
+            <VueDatePicker v-model="date" range multi-calendars :max-date="new Date()" teleport-center
+              placeholder="Select date..." :enable-time-picker="false" class="border rounded border-1" />
           </div>
           <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
             <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
@@ -246,7 +245,8 @@ const props = defineProps({
 
 // Search start
 let search = ref(props.filters.search);
-let month_filter = ref(props.filters.month_filter);
+let from_date_filter = ref(null);
+let to_date_filter = ref(null);
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
 let timeoutId = null;
@@ -256,7 +256,8 @@ const fetchData = (type, all, ne, pending, ongoing, resolved) => {
     route('technician.tickets'),
     {
       search: search.value,
-      month_filter: month_filter.value,
+      from_date_filter: from_date_filter,
+      to_date_filter: to_date_filter,
       sort: sortColumn.value,
       direction: sortDirection.value,
       filterTickets: type,
@@ -289,8 +290,17 @@ const debouncedFetchData = () => {
   }, 500)
 }
 
-watch([search, month_filter], ([newSearch, newMonthFilter]) => {
-  if (!newSearch && !newMonthFilter) {
+const date = ref(null);
+
+watch([search, date], ([newSearch, newDate]) => {
+  if (newDate) {
+    from_date_filter = moment(newDate[0]).format('YYYY-MM-DD');
+    to_date_filter = moment(newDate[1]).format('YYYY-MM-DD');
+  } else {
+    from_date_filter = null;
+    to_date_filter = null;
+  }
+  if (!newSearch && !newDate) {
     resetSorting();
   }
   debouncedFetchData();
