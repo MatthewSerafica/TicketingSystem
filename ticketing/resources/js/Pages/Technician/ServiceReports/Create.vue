@@ -2,7 +2,6 @@
   <div>
     <Header></Header>
     <div class="mt-2 pt-5">
-      <form @submit.prevent="create">
         <br />
         <div class="container">
           <div class="title-container text-center">
@@ -92,27 +91,30 @@
               </div>
             </div>
 
+            <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" @confirm="create" @closeModal="closeSubmitService = false" />
 
             <div class="row justify-content-end">
               <div class="col-md-4">
                 <div class="d-flex justify-content-end gap-2">
-                  <Button :name="'Submit'" :color="'primary'"></Button>
+                  <Button :name="'Submit'" :color="'primary'" @click="submitServiceReport"></Button>
                   <Link :href="'/technician/service-report'" class="btn btn-outline-primary">Cancel</Link>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </form>
+      <!-- <form @submit.prevent="create">
+      </form> -->
     </div>
   </div>
 </template>
 
 <script setup>
+import ConfirmModal from '@/Components/ConfirmModal.vue';
 import Header from '@/Pages/Layouts/TechnicianHeader.vue'
 import { Link, router, useForm, usePage } from '@inertiajs/vue3';
 import Button from '@/Components/Button.vue';
-import { ref, watch, computed,onMounted } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 
 const props = defineProps({
   technicians: Object,
@@ -176,14 +178,14 @@ onMounted(async () => {
   
 });
 
-const create = async () => {
+/* const create = async () => {
   if (!/^\d+$/.test(form.ticket_number)) {
     form.errors.ticket_number = 'Ticket number should contain only numeric characters.';
     return;
   }
 
   form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false });
-}
+} */
 
 watch(() => form.ticket_number, async (newValue) => {
   const selectedTicket = props.tickets.find(ticket => ticket.ticket_number === newValue);
@@ -208,6 +210,25 @@ watch(() => form.ticket_number, async (newValue) => {
     console.log(form.technician);
   }
 })
+
+let selectedServiceReport = ref(null);
+const showConfirmationModal = ref(false);
+
+function submitServiceReport(sr) {
+  if(!showConfirmationModal.value) {
+    selectedServiceReport.value = sr
+    showConfirmationModal.value = true;
+  }
+}
+
+function closeSubmitService(sr) {
+  if(showConfirmationModal.value) {
+    selectedServiceReport.value = null
+    showConfirmationModal.value = false;
+  }
+}
+
+
 
 </script>
 
