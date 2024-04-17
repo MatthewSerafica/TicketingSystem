@@ -20,10 +20,25 @@ class AdminGenerateReportController extends Controller
             ->orderByDesc('year')
             ->orderByDesc('month')
             ->get();
-            
+
         return inertia('Admin/Reports/GenerateReports/Index', [
             'monthsAndYears' => $monthsAndYears,
             'tickets' => $tickets,
+        ]);
+    }
+
+    public function show($from, $to)
+    {
+        $tickets = Ticket::select('*')
+            ->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
+            ->orderByDesc('created_at')
+            ->with('employee.user', 'assigned.technician.user')
+            ->get();
+
+        return inertia('Admin/Reports/GenerateReports/Show', [
+            'tickets' => $tickets,
+            'from' => $from,
+            'to' => $to,
         ]);
     }
 

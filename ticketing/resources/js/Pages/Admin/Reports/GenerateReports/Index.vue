@@ -20,12 +20,17 @@
         <!--Main Content-->
         <div class="d-flex justify-content-center flex-column align-content-center align-items-center main-content">
             <!--CTAs and Search-->
-            <div class="text-center justify-content-center align-items-center d-flex mt-3 flex-column">
+            <div class="text-center justify-content-center align-items-center d-flex mt-3 flex-column gap-3">
                 <div class="d-flex flex-column justify-content-center align-items-center gap-2">
                     <h1 class="fw-bold">Generate Reports</h1>
                 </div>
 
-                <div v-if="monthsAndYears.length > 0" class="table-responsive rounded shadow pt-2 px-2" style="width: 50rem;">
+                <div class="d-flex gap-2 rounded w-50">
+                    <VueDatePicker v-model="date" range multi-calendars :max-date="new Date()" teleport-center placeholder="Select Date"/>
+                </div>
+
+                <div v-if="monthsAndYears.length > 0" class="table-responsive rounded shadow pt-2 px-2"
+                    style="width: 50rem;">
                     <div class="">
                         <table class="table table-hover custom-rounded-table">
                             <thead>
@@ -72,8 +77,10 @@ import Button from '@/Components/Button.vue';
 import EmptyCard from '@/Components/EmptyState/Table.vue';
 import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { Link } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import moment from "moment";
+import { onMounted, ref, watch } from 'vue';
+
 
 const props = defineProps({
     monthsAndYears: Object,
@@ -102,7 +109,6 @@ function download(month, year) {
 
 
 function convertToCSV(data) {
-    // Mapping headers to desired names
     const headerMap = {
         ticket_number: 'Ticket No.',
         created_at: 'Date',
@@ -135,5 +141,42 @@ function convertToCSV(data) {
     const csvRows = [headerRow, ...rows.map(row => row.join(','))];
     return csvRows.join('\n');
 }
+
+let from_date_filter = ref(null)
+let to_date_filter = ref(null)
+let timeoutId = null;
+
+function fetchData() {
+    const url = route('admin.reports.generate-report.show', {
+        from: from_date_filter,
+        to: to_date_filter,
+    })
+
+    router.visit(url);
+
+}
+
+const debouncedFetchData = () => {
+    if (timeoutId) {
+        clearTimeout(timeoutId)
+    }
+    timeoutId = setTimeout(() => {
+        fetchData()
+    }, 500)
+}
+
+const date = ref();
+
+watch(date, (newDate) => {
+    from_date_filter = moment(newDate[0]).format('YYYY-MM-DD');
+    to_date_filter = moment(newDate[1]).format('YYYY-MM-DD');
+    console.log(from_date_filter, to_date_filter + ' new ')
+    if (!newDate) {
+        return
+    }
+    debouncedFetchData();
+});
+
+
 
 </script>

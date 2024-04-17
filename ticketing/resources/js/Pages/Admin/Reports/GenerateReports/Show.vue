@@ -26,7 +26,10 @@
                 </button>
             </div>
         </div>
-        <div class="text-center fw-bold mb-2"> RS System (Monitoring) <br> {{ monthName(month) }} {{ year }} </div>
+        <div class="text-center fw-bold mb-2">
+            RS System (Monitoring) <br> {{ moment(from).format("MMM DD, YYYY") }} - {{ moment(to).format("MMM DD, YYYY")
+            }}
+        </div>
 
         <div class="table-responsive px-3 rounded pt-2 px-2">
             <table class="table table-hover custom-rounded-table border shadow-sm">
@@ -67,7 +70,7 @@
                         <td class="text-start">
                             {{ ticket.resolved_at ? moment(ticket.resolved_at).format("MM/DD/YYYY") : null }}
                         </td>
-                        <td class="text-start">{{ ticket.remarks }}</td>
+                        <td class="text-start" style="max-width: 10rem;">{{ ticket.remarks }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -81,8 +84,8 @@ import moment from "moment";
 
 const props = defineProps({
     tickets: Object,
-    month: Object,
-    year: Object,
+    from: Object,
+    to: Object,
 })
 
 const monthName = (month) => {
