@@ -16,7 +16,7 @@
                 @close="handleClose">
             </Toast>
         </div>
-        <div class="w-25">
+        <div class="w-100">
             <Link :href="route('admin.users')"
                 class="btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center back-button"
                 style="width: 6rem;">
@@ -29,8 +29,9 @@
             </Link>
         </div>
         <div class="container gap-5 justify-content-center mt-3 align-items-center mb-3">
-            <div class="row row-cols-2">
-                <div v-if="users.employee" class="card shadow p-2 w-25">
+            <div class="row row-cols-1 row-cols-md-2">
+                <div v-if="users.employee">
+                <div class="card shadow p-2" style="height: 100%; ">
                     <div class="card-body d-flex flex-column gap-4">
                         <div class="card-title fw-bold fs-3">
                             User Details
@@ -112,8 +113,11 @@
                             </div>
                         </div>
                     </div>
+                
                 </div>
-                <div v-if="users.technician" class="card shadow p-2 w-25">
+                </div>
+                <div v-if="users.technician">
+                <div class="card shadow p-2" style="height: 100%;">
                     <div class="card-body d-flex flex-column gap-4">
                         <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
                             <h3 class="mt-1">User Details</h3>
@@ -180,6 +184,7 @@
                                     </ul>
                                 </div>
                             </div>
+                            
                             <div class="d-flex flex-row gap-5">
                                 <div class="d-flex flex-column">
                                     <div class="card-subtitle fw-medium fs-6">
@@ -193,21 +198,26 @@
                                     </div>
                                     <p class="card-text text-center">{{ users.technician.tickets_resolved }}</p>
                                 </div>
+                            
                             </div>
                         </div>
                     </div>
+                    
+                </div>    
                 </div>
-                <div class="d-flex flex-row align-items-center justify-content-center card-row w-75">
-                    <div
-                        class="flex-grow-1 d-flex flex-column justify-content-center align-items-center card p-5 gap-5 shadow">
+                <div class="col">
+                <div class="d-flex flex-column align-items-center justify-content-center card p-5 shadow h-100">
+                    <div class="overflow-auto">
                         <div class="">
-                            <Doughnut :service="service" style="width: 30rem;"></Doughnut>
+                            <Doughnut :service="service"  style="width: 100%; max-width: 30rem;"></Doughnut>
                         </div>
                         <div class="">
                             
-                            <Bar :yearly="yearly" style="width: 45rem;"></Bar>
+                            <Bar :yearly="yearly" style="width: 100%; max-width: 45rem;"></Bar>
                         </div>
-                    </div>
+                        </div>
+                </div>
+                
                 </div>
             </div>
         </div>

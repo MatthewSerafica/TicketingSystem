@@ -11,7 +11,7 @@
         </div>
 
         <div class="create-department">
-          <div class="d-flex flex-row gap-5 justify-content-center mb-4">
+          <div class="d-flex flex-row gap-5 justify-content-center align-items-center mb-4">
             <div class="d-flex flex-column flex-shrink-0 w-25">
               <label for="issue" class="fw-semibold">Department</label>
               <input id="issue" class="form-control h-100 rounded border-secondary-subtle" type="text" placeholder="Enter Department Abbreviation..." v-model="form.department" required/>
@@ -22,9 +22,9 @@
         </div>
 
         <div class="container">
-          <div class="row justify-content-end">
+          <div class="row justify-content-end ">
             <div class="col-md-6">
-              <div class="d-flex gap-2">
+              <div class="d-flex gap-2 align-items-center">
                 <Button :name="'Add'" :color="'primary'" class="submit-btn"></button>
                 <Link :href="`/admin/department`" class=" btn btn-outline-primary">Cancel</Link>
               </div>

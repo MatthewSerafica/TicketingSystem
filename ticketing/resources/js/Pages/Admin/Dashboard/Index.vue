@@ -132,8 +132,51 @@ watch(myData, (newValue, oldValue) => {
 
 @media (max-width: 768px) {
     .main-content {
-        padding-left: 20rem;
-        width: 50%;
+        padding-left: 0;
+        
+        width: 80%;
+    }
+
+    .recent {
+        padding-left: 4rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cta {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-left: 3rem;
+    }
+
+
+    .statistics {
+        padding-left: 6rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-label {
+        padding-left: 6rem;
+    }
+
+    .doughnut {
+        width: 30rem
+    }
+
+    .bar {
+        padding: 2rem
+    }
+
+}
+
+@media (max-width: 600px) {
+    .main-content {
+        padding-left: 0;
+        padding-right: 10rem;
+        width: 80%;
     }
 
     .recent {
@@ -173,7 +216,7 @@ watch(myData, (newValue, oldValue) => {
 
 @media (max-width: 425px) {
     .main-content {
-        padding-left: 16.5rem;
+        padding-left: 10rem;
         width: 25%;
     }
 
@@ -212,44 +255,6 @@ watch(myData, (newValue, oldValue) => {
 
 }
 
-@media (max-width: 375px) {
-    .main-content {
-        padding-left: 15.5rem;
-    }
-
-    .recent {
-        padding-left: 4rem;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .cta {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding-left: 3rem;
-    }
-
-    .statistics {
-        padding-left: 6rem;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .stat-label {
-        padding-left: 6rem;
-    }
-
-    .doughnut {
-        width: 30rem
-    }
-
-    .bar {
-        width: 30rem
-    }
-
-}
 
 @media (max-width: 375px) {
     .main-content {

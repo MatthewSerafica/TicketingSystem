@@ -221,7 +221,7 @@ function showPrint(service_report) {
   }
 
   .content {
-    width: 96%;
+    width: 100%;
   }
 
   .table-responsive {
