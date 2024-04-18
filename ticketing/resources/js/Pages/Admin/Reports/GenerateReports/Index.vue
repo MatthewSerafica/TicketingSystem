@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div >
         <Header></Header>
         <!--Toast Render-->
         <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
@@ -137,3 +137,8 @@ function convertToCSV(data) {
 }
 
 </script>
+
+<style scoped>
+
+
+</style>

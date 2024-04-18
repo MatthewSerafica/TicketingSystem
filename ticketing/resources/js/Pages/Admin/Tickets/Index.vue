@@ -825,6 +825,7 @@ const validateNumericInput = (inputValue, propName) => {
 }
 
 @media (max-width: 768px) {
+
   .custom-rounded-table {
     font-size: 12px;
   }
@@ -847,6 +848,33 @@ const validateNumericInput = (inputValue, propName) => {
     white-space: nowrap;
     font-size: 16px;
   }
+}
+
+
+@media (max-width: 768px) {
+
+.custom-rounded-table {
+  font-size: 10px;
+}
+
+.pagination {
+  width: 30rem;
+}
+
+.table-responsive {
+  width: 30rem;
+  overflow-x: auto;
+}
+
+.btn-options {
+  width: 70px;
+}
+
+.custom-rounded-table th,
+.custom-rounded-table td {
+  white-space: nowrap;
+  font-size: 14px;
+}
 }
 
 @media (max-width: 425px) {

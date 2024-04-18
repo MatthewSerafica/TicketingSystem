@@ -30,7 +30,7 @@
           </div>
         </div>
   
-        <div class="w-75">
+        <div class="w-75 table-responsive">
           <div v-if="services.data.length" class="d-flex justify-content-end mb-2">
             <pagination :links="services.links" :key="'services'" />
             <br>

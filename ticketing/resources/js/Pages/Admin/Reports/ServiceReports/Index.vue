@@ -198,7 +198,7 @@ watch(search, () => {
   }
 
   .content {
-    width: 96%;
+    width: 100%;
   }
 
   .table-responsive {

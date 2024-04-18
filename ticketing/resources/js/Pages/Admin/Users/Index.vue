@@ -69,7 +69,7 @@
           </div>
         </div>
       </div>
-      <div class="w-75">
+      <div class="w-75 table-responsive">
         <div v-if="users.data.length" class="d-flex justify-content-end mb-2">
           <Pagination :links="users.links" :filter="filter" :key="'users'" />
         </div>
@@ -345,4 +345,6 @@ const formatDate = (date) => {
   font-size: 20px;
   cursor: pointer;
 }
+
+   
 </style>

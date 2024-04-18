@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      <div class="w-75">
+      <div class="w-75 table-responsive">
         <div v-if="departments.data.length" class="d-flex justify-content-end mb-2">
           <Pagination :links="departments.links" :key="'departments'" />
           <br>
