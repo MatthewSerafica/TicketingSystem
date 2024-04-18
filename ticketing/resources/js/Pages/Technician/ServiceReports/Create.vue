@@ -36,7 +36,7 @@
                 <label for="ticketNumber" class="form-label">Ticket Number:</label>
                 <select class="form-select" id="ticketNumber" v-model="form.ticket_number" required>
                   <option value="">Select a ticket number</option>
-                  <option v-for="ticket in tickets" :value="ticket.ticket_number">{{ ticket.ticket_number }}</option>
+                  <option v-for="ticket in tickets" :value="ticket.ticket_number" @click="ticketDetails(ticket)">{{ ticket.ticket_number }}</option>
                 </select>
                 <span v-if="form.errors.ticket_number" class="error-message">{{ form.errors.ticket_number }}</span>
               </div>
@@ -63,7 +63,7 @@
             <div class="row mb-4">
               <div class="col-md-4">
                 <label for="problemEncountered" class="form-label">Problem Encountered:</label>
-                <input type="text" class="form-control" id="problemEncountered" v-model="form.issue">
+                <input type="text" class="form-control" id="problemEncountered" v-model="form.problem">
               </div>
               <div class="col-md-4">
                 <label for="action" class="form-label">Action Taken:</label>
@@ -91,13 +91,13 @@
               </div>
             </div>
 
-            <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" @confirm="create" @closeModal="closeSubmitService = false" />
+            <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" @confirm="create" @closeSubmitService="closeSubmitService" />
 
             <div class="row justify-content-end">
               <div class="col-md-4">
                 <div class="d-flex justify-content-end gap-2">
-                  <Button :name="'Submit'" :color="'primary'" @click="submitServiceReport"></Button>
-                  <Link :href="'/technician/service-report'" class="btn btn-outline-primary">Cancel</Link>
+                  <Button :name="'Submit'" :color="'primary'" @click="submitServiceReport(form, selectedTicket)"></Button>
+                  <Button :name="'Cancel'" :color="'light'" @click="back(props.new_service_id)" class="btn btn-outline-primary"></Button>
                 </div>
               </div>
             </div>
@@ -119,7 +119,7 @@ import { ref, watch, computed, onMounted } from "vue";
 const props = defineProps({
   technicians: Object,
   new_service_id: String,
-  ticket_id: String,
+  ticket_id: Number,
   service_report: Object,
   tickets: Object,
   date_done: String,
@@ -138,7 +138,7 @@ const form = useForm({
   technician: [],
   requesting_office: null,
   equipment_no: null,
-  issue: null,
+  problem: null,
   action: null,
   recommendation: null,
   date_done: props.date_done,
@@ -178,21 +178,21 @@ onMounted(async () => {
   
 });
 
-/* const create = async () => {
+ const create = () => {
   if (!/^\d+$/.test(form.ticket_number)) {
     form.errors.ticket_number = 'Ticket number should contain only numeric characters.';
     return;
   }
 
   form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false });
-} */
+} 
 
 watch(() => form.ticket_number, async (newValue) => {
   const selectedTicket = props.tickets.find(ticket => ticket.ticket_number === newValue);
 
   if (selectedTicket) {
     form.action = selectedTicket.service;
-    form.issue = selectedTicket.description;
+    form.problem = selectedTicket.description;
     form.requesting_office = selectedTicket.employee.department + ' - ' + selectedTicket.employee.office;
 
     const response = await fetch(route('technician.tickets.assigned', { id: selectedTicket.ticket_number }));
@@ -211,21 +211,48 @@ watch(() => form.ticket_number, async (newValue) => {
   }
 })
 
+let selectedTicket = ref([]);
 let selectedServiceReport = ref(null);
 const showConfirmationModal = ref(false);
 
-function submitServiceReport(sr) {
-  if(!showConfirmationModal.value) {
-    selectedServiceReport.value = sr
-    showConfirmationModal.value = true;
+const ticketDetails = (ticket) => {
+  if(ticket){
+    selectedTicket.value = ticket;
+    console.log('Selected Ticket ID:', ticket.ticket_number);
   }
 }
 
-function closeSubmitService(sr) {
+const submitServiceReport = (sr, ticket) => {
+  if (!showConfirmationModal.value) {
+    console.log('Form data in Create.vue:', form);
+    console.log('Selected service report:', sr);
+    console.log('showConfirmationModal before opening:', showConfirmationModal.value);
+
+    selectedServiceReport.value = sr;
+    showConfirmationModal.value = true;
+
+    console.log('showConfirmationModal after opening:', showConfirmationModal.value);
+  }
+};
+
+
+function closeSubmitService() {
   if(showConfirmationModal.value) {
     selectedServiceReport.value = null
     showConfirmationModal.value = false;
   }
+}
+
+const back = async (id) => {
+    try {
+        // Perform any necessary operations before redirection
+        
+        // Redirect to the service report back route with the service ID
+        /* router.post({ name: 'technician.service-reports.back', params: { service_id: props.new_service_id } }); */
+        router.post(route('technician.service-reports.back', { service_id: id}));
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 

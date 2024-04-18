@@ -65,6 +65,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/reports/service-report/{id}/assigned-technicians', [AdminServiceReportController::class, 'assigned'])->name('admin.tickets.assigned');
 
         Route::get('/admin/reports/generate-report', [AdminGenerateReportController::class, 'index'])->name('admin.reports.generate-report');
+        Route::get('/admin/reports/generate-report/show/{from}/{to}', [AdminGenerateReportController::class, 'show'])->name('admin.reports.generate-report.show');
         Route::get('/admin/reports/generate-report/{year}/{month}/print', [AdminGenerateReportController::class, 'print'])->name('admin.reports.generate-report.print');
 
         Route::get('/admin/department', [AdminDepartmentController::class, 'index'])->name('admin.department');
@@ -126,6 +127,7 @@ Route::middleware(['web'])->group(function () {
         Route::put('/technician/tickets/update/{field}/{ticket_id}', [TechnicianTicketController::class, 'update'])->name('technician.tickets.update');
 
         Route::get('/technician/service-report', [TechnicianServiceController::class, 'index'])->name('technician.service-reports');
+        Route::post('/technician/service-report/back/{service_id}', [TechnicianServiceController::class, 'back'])->name('technician.service-reports.back');
         Route::get('/technician/service-report/create', [TechnicianServiceController::class, 'create'])->name('technician.service-report.create');
         Route::get('/technician/service-report/update', [TechnicianServiceController::class, 'update'])->name('technician.service-report.update');
         Route::post('/technician/service-report/create/store', [TechnicianServiceController::class, 'store'])->name('technician.service-report.store');
