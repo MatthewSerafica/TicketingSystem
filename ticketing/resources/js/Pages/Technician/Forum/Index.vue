@@ -1,13 +1,12 @@
 <template>
     <div class="">
         <Header class="sticky-top" style="z-index: 110;"></Header>
-
         <div class="container justify-content-center mt-4 col-6">
-            <div class="row g-2">
-                <div class="input-group">
-                    <span class="input-group-text rounded-start-pill shadow" id="searchIcon"><i
+            <div class="row g-2 justify-content-center">
+                <div class="input-group w-50">
+                    <span class="input-group-text rounded-start-pill" id="searchIcon"><i
                             class="bi bi-search"></i></span>
-                    <input type="text" class="form-control shadow rounded-end-pill py-2" id="search" name="search"
+                    <input type="text" class="form-control rounded-end-pill py-2" id="search" name="search"
                         v-model="search" placeholder="Search for posts..." aria-label="searchIcon"
                         aria-describedby="searchIcon" />
                 </div>
@@ -61,7 +60,7 @@
 import Button from '@/Components/Button.vue';
 import Post from '@/Components/PostModal.vue';
 import Header from '@/Pages/Layouts/TechnicianHeader.vue';
-import { Link, router } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import { useIntersectionObserver } from '@vueuse/core';
 import axios from 'axios';
 import { ref, watch } from 'vue';
@@ -131,6 +130,11 @@ watch(search, () => {
 const last = ref(null)
 
 const { stop } = useIntersectionObserver(last, ([{ isIntersecting }]) => {
+    if (props.posts.data.length < 15) {
+        stop();
+        return;
+    }
+
     if (!isIntersecting) {
         return
     }
@@ -143,14 +147,6 @@ const { stop } = useIntersectionObserver(last, ([{ isIntersecting }]) => {
             stop()
         }
     })
-
-    /* router.reload({
-        data: { page: props.posts.current_page + 1 },
-
-        onSuccess: () => {
-            postsState.value = [...postsState.value, ...props.posts.data]
-        }
-    }) */
 });
 </script>
 

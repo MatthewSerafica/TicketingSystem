@@ -25,9 +25,9 @@ class TechnicianTicketController extends Controller
         $user_id = auth()->id();
         $technician = Technician::where('user_id', $user_id)->with('user')->first();
 
-        $filter = $request->only(['search', 'filterTickets', 'all', 'new', 'pending', 'ongoing', 'resolved', 'month_filter']);
+        $filter = $request->only(['search', 'filterTickets', 'all', 'new', 'pending', 'ongoing', 'resolved', 'from_date_filter', 'to_date_filter']);
 
-        if (!$request->filled('month_filter')) {
+        if (!$request->filled('from_date_filter') && !$request->filled('to_date_filter')) {
             $query = Ticket::query()
                 ->with('employee.user', 'assigned.technician.user')
                 ->whereHas('assigned.technician.user', function ($query) use ($technician) {
@@ -46,11 +46,10 @@ class TechnicianTicketController extends Controller
         }
 
 
-        if ($request->filled('month_filter')) {
-            $monthFilter = $request->input('month_filter');
-            list($year, $month) = explode('-', $monthFilter);
-            $query->whereYear('created_at', $year)
-                ->whereMonth('created_at', $month);
+        if ($request->filled('from_date_filter') && $request->filled('to_date_filter')) {
+            $fromDate = $request->input('from_date_filter');
+            $toDate = $request->input('to_date_filter');
+            $query->whereBetween('created_at', [$fromDate . ' 00:00:00', $toDate . ' 23:59:59']);
         }
 
         if ($request->filled('search')) {

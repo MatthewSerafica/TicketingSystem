@@ -65,6 +65,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/reports/service-report/{id}/assigned-technicians', [AdminServiceReportController::class, 'assigned'])->name('admin.tickets.assigned');
 
         Route::get('/admin/reports/generate-report', [AdminGenerateReportController::class, 'index'])->name('admin.reports.generate-report');
+        Route::get('/admin/reports/generate-report/show/{from}/{to}', [AdminGenerateReportController::class, 'show'])->name('admin.reports.generate-report.show');
         Route::get('/admin/reports/generate-report/{year}/{month}/print', [AdminGenerateReportController::class, 'print'])->name('admin.reports.generate-report.print');
 
         Route::get('/admin/department', [AdminDepartmentController::class, 'index'])->name('admin.department');
