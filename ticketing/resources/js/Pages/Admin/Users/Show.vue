@@ -117,7 +117,7 @@
                 </div>
                 </div>
                 <div v-if="users.technician">
-                <div class="card shadow p-2 w-50" style="height: 100%;">
+                <div class="card shadow p-2" style="height: 100%;">
                     <div class="card-body d-flex flex-column gap-4">
                         <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
                             <h3 class="mt-1">User Details</h3>
