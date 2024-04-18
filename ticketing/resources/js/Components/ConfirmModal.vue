@@ -8,22 +8,23 @@
       <div class="modal-body">
         <p>Are you sure you want to submit this service report?</p>
         <ul>
-          <li><strong>Ticket Number:</strong> {{ props.form.ticket_number || 'N/A'  }}</li>
-          <li><strong>Date Started:</strong> {{ props.form.date_started || 'N/A'  }}</li>
-          <li><strong>Time Started:</strong> {{ props.form.time_started || 'N/A'  }}</li>
-          <li><strong>Technician Name:</strong> {{ props.form.technician || 'N/A'  }}</li>
-          <li><strong>Requesting Office:</strong> {{ props.form.requesting_office || 'N/A'  }}</li>
-          <li><strong>Equipment, Property Tag/Serial No.:</strong> {{ props.form.equipment_no || 'N/A'  }}</li>
-          <li><strong>Problem Encountered:</strong> {{ props.form.issue || 'N/A'  }}</li>
-          <li><strong>Action Taken:</strong> {{ props.form.action || 'N/A'  }}</li>
-          <li><strong>Recommendation:</strong> {{ props.form.recommendation || 'N/A'  }}</li>
-          <li><strong>Date Done:</strong> {{ props.form.date_done || 'N/A'  }}</li>
-          <li><strong>Time Done:</strong> {{ props.form.time_done || 'N/A'  }}</li>
-          <li><strong>Remarks:</strong> {{ props.form.remarks || 'N/A'  }}</li>
+          <li><strong>Service ID:</strong> {{ form.service_id }}</li>
+          <li><strong>Date Started:</strong> {{ form.date_started }}</li>
+          <li><strong>Time Started:</strong> {{ form.time_started }}</li>
+          <li><strong>Ticket Number:</strong> {{ form.ticket_number }}</li>
+          <li><strong>Technician Name:</strong> {{ form.technician }}</li>
+          <li><strong>Requesting Office:</strong> {{ form.requesting_office }}</li>
+          <li><strong>Equipment, Property Tag/Serial No.:</strong> {{ form.equipment_no }}</li>
+          <li><strong>Problem Encountered:</strong> {{ form.problem }}</li>
+          <li><strong>Action Taken:</strong> {{ form.action }}</li>
+          <li><strong>Recommendation:</strong> {{ form.recommendation }}</li>
+          <li><strong>Date Done:</strong> {{ form.date_done }}</li>
+          <li><strong>Time Done:</strong> {{ form.time_done }}</li>
+          <li><strong>Remarks:</strong> {{ form.remarks }}</li>
         </ul>
       </div>
       <div class="modal-footer">
-        <button type="button" as="button"  class="btn btn-outline-secondary " @click="closeSubmitService">Cancel</button>
+        <button type="button" class="btn btn-outline-secondary" @click="closeSubmitService">Cancel</button>
         <button type="button" class="btn btn-primary" @click="submitServiceReport">Confirm Submission</button>
       </div>
     </div>
@@ -31,7 +32,6 @@
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/vue3';
 import { defineProps, ref,  defineEmits } from 'vue';
 
 const props = defineProps({
@@ -47,7 +47,13 @@ const closeSubmitService = () => {
 
 const submitServiceReport = () => {
   // Implement your logic to submit the service report here
+  console.log('Props in ConfirmModal.vue:', props);
+
+  form.post(route('technician.service-report.create'), { preserveScroll: false, preserveState: false });
 };
+
+
+
 </script>
 
 <style scoped>
