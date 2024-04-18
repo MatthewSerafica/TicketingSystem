@@ -12,9 +12,9 @@
           </div>
 
             <div class="mt-2 d-flex flex-column">
-              <h2 >Saint Louis University</h2>
-              <h2 >Technology Management and</h2>
-              <h2 >Development Department</h2>
+              <div class="">
+                <h2 >Saint Louis University Technology Management and Development Department</h2>
+              </div>
               <div class="d-flex justify-content-between" v-if="service_report">
                 <p>SERVICE REPORT FORM</p>
               <strong>{{ service_report.service_report }}</strong>
@@ -22,7 +22,7 @@
             </div>
 
             <div>
-            <table class="bordered-table">
+            <table class="bordered-table w-100 h-65">
                 <tr>
                     <td>Document code</td>
                     <td>FM-TMD-001</td>
@@ -149,6 +149,26 @@
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
     }
+    
+    @media print{
+      .modal-content{
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+        font-size: 70%;
+      }
+
+      .btn-print {
+      display: none;
+    }
+     .parent-content{
+      margin-left: -10rem;
+      gap: 3rem;
+      font-size: 10px;
+     }
+    }
   
     .modal-content {
       background-color: #fff;
@@ -211,12 +231,6 @@
       padding-right: 0;
       margin-right: 0;
     }
-  
-    @media print {
-    .btn-print {
-      display: none;
-    }
-  }
 
   .bordered-table {
   border-collapse: collapse;
@@ -224,7 +238,7 @@
 
 .bordered-table td {
   border: 1px solid #ccc;
-  padding: 8px;
+  padding: 1px;
 }
 
 
