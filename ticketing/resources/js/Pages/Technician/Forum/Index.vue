@@ -19,15 +19,26 @@
                 </div>
                 <div class="bg-white border-bottom pb-2 mb-2" v-for="post in posts.data" v-bind:key="post.id">
                     <a :href="route('technician.forum.post', [post.id])" class="text-decoration-none">
-                        <div class="post rounded p-2">
+                        <div class="post rounded px-3">
                             <div class="d-flex align-items-center gap-2">
-                                <div class="d-flex align-items-center justify-content-center gap-4">
-                                    <p class="fw-semibold text-dark"><small>{{ post.user.name }}</small></p>
+                                <div>
+                                    <img v-if="post.user.avatar !== 'http://127.0.0.1:8000/storage'"
+                                        @click="openFileInput" :src="post.user.avatar" alt="User profile picture"
+                                        class="avatar rounded-circle shadow">
+                                    <EmptyProfile v-else @click="openFileInput" class="avatar rounded-circle shadow">
+                                    </EmptyProfile>
                                 </div>
-                                <p class="text-secondary">
-                                    •
-                                </p>
-                                <p class="text-secondary"><small>{{ post.time_since_posted }}</small></p>
+                                <div class="d-flex flex-row gap-2 mt-3">
+                                    <div class="d-flex align-items-center justify-content-center gap-4">
+                                        <p class="fw-semibold text-dark"><small>{{ post.user.name }}</small></p>
+                                    </div>
+                                    <div class="d-flex flex-row gap-2">
+                                        <p class="text-secondary">
+                                            •
+                                        </p>
+                                        <p class="text-secondary"><small>{{ post.time_since_posted }}</small></p>
+                                    </div>
+                                </div>
                             </div>
                             <div v-if="post.tagged_user">
                                 <p><small>Tagged: {{ post.tagged_user }}</small></p>
@@ -169,5 +180,15 @@ const { stop } = useIntersectionObserver(last, ([{ isIntersecting }]) => {
     transition: transform 0.1s ease-in-out;
     cursor: pointer;
     background-color: #c6c6c3;
+}
+
+.avatar {
+    width: 2rem;
+    /* Width of the avatar */
+    height: 2rem;
+    /* Height of the avatar */
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    cursor: pointer;
 }
 </style>

@@ -44,7 +44,9 @@
                             </span>
                         </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
+                        <img v-if="page.props.user.avatar !== 'http://127.0.0.1:8000/storage'" @click="openFileInput" :src="page.props.user.avatar" alt="User profile picture"
+                            class="avatar rounded-circle shadow border-3">
+                        <svg v-else xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
                             class="bi bi-person-circle" viewBox="0 0 16 16">
                             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
                             <path fill-rule="evenodd"
@@ -87,8 +89,8 @@
                 <div class="container mt-4">
                     <div class="card mt-3" v-for="notification in notifications.slice(0, 9)" :key="notification.id">
                         <button class="close-icon btn" @click="closeNotification(notification.id)">
-                                <i class="bi bi-x-circle"></i>
-                            </button>
+                            <i class="bi bi-x-circle"></i>
+                        </button>
                         <div class="card-body d-flex flex-column gap-2"
                             v-if="notification.type === 'App\\Notifications\\UpdateTicketTechnician'">
                             <div class="d-flex flex-column gap-2">
@@ -162,7 +164,8 @@
                         </div>
                         <div class="card-body" v-if="notification.type === 'App\\Notifications\\ReplyMade'">
                             <p class="card-title w-75">
-                                <strong>{{ notification.data.name }}</strong> replied to your comment on the post, <strong>{{ notification.data.ttile }}</strong>, in the
+                                <strong>{{ notification.data.name }}</strong> replied to your comment on the post,
+                                <strong>{{ notification.data.ttile }}</strong>, in the
                                 <strong>Forum</strong>
                             </p>
                             <small class="card-text fst-italic text-muted">
@@ -308,5 +311,15 @@ const handleBadge = (status) => {
 
 .nav-item.active .nav-link::after {
     width: 100%;
+}
+
+.avatar {
+    width: 3rem;
+    /* Width of the avatar */
+    height: 3rem;
+    /* Height of the avatar */
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    cursor: pointer;
 }
 </style>

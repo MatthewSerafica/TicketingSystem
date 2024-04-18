@@ -13,6 +13,7 @@ use App\Models\Technician;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TechnicianDashboardController extends Controller
 {
@@ -125,7 +126,30 @@ class TechnicianDashboardController extends Controller
         ]);
     }
 
-    
+    public function avatar(Request $request, $id)
+    {
+        // Check if a file is uploaded
+        if ($request->hasFile('avatar')) {
+            $previousPath = $request->user()->getRawOriginal('avatar');
+            // Save the file to storage and get the path
+            $link = Storage::put('/profile', $request->file('avatar'));
+
+            $request->user()->update(['avatar' => $link]);
+
+            Storage::delete($previousPath);
+            
+            return redirect()->back()
+                ->with('success', 'Profile Updated')
+                ->with('message', 'File uploaded successfully. Path: ' . $link);
+        }
+
+        // If no file is uploaded, return an error message
+        return redirect()->back()
+            ->with('error', 'No File Uploaded');
+    }
+
+
+
     public function updateStatus($is_working)
     {
         $user = Auth::user();
@@ -180,7 +204,4 @@ class TechnicianDashboardController extends Controller
         }
         return $typeCounts;
     }
-
-    
-
 }

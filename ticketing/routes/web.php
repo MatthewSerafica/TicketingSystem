@@ -117,6 +117,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/technician/change', [TechnicianDashboardController::class, 'password'])->name('technician.change');
         Route::post('/technician/change-password/{user_id}', [TechnicianDashboardController::class, 'changePassword'])->name('technician.change-password');
         Route::get('/technician/profile', [TechnicianDashboardController::class, 'profile'])->name('technician.profile');
+        Route::post('/technician/profile/{user_id}/avatar', [TechnicianDashboardController::class, 'avatar'])->name('technician.profile.avatar');
 
         Route::get('/technician/tickets', [TechnicianTicketController::class, 'index'])->name('technician.tickets');
         Route::get('/technician/tickets/create', [TechnicianTicketController::class, 'create'])->name('technician.tickets.create');

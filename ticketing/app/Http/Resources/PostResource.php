@@ -19,6 +19,7 @@ class PostResource extends JsonResource
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
+                'avatar' => $this->user->avatar,
             ],
             'title' => $this->title,
             'content' => $this->content,
