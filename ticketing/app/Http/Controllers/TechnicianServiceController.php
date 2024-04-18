@@ -182,4 +182,38 @@ class TechnicianServiceController extends Controller
         $assigned = AssignedTickets::where('ticket_number', $id)->with('technician.user')->get();
         return response()->json($assigned);
     }
+
+    public function back(Request $request, $service_id)
+    {
+        $request->validate([
+            'service_id' => 'required',
+        ]);
+
+        $service_id = $request->service_id;
+
+        // Find the existing ServiceReport with the given service_id
+        $existingServiceReport = ServiceReport::where('service_id', $service_id)->first();
+
+        if ($existingServiceReport) {
+            // Find the related Ticket using the ticket_number from ServiceReport
+            $ticket = Ticket::where('ticket_number', $existingServiceReport->ticket_number)->first();
+
+            // Update Ticket values or set them to null as needed
+            $ticket->update([
+                'sr_no' => null, // Set sr_no to null or delete it from the ticket table
+                'remarks' => null, // Set remarks to null or delete it from the ticket table
+                'status' => 'Pending',
+                'resolved_at' =>null,
+            ]);
+
+            // Delete the ServiceReport
+            $existingServiceReport->delete();
+
+            return redirect()->to('/technician/service-report')->with('success', 'Report Deleted Successfully');
+        } else {
+            return redirect()->to('/technician/service-report')->with('error', 'Report Not Found');
+        }
+    }
+
+
 }
