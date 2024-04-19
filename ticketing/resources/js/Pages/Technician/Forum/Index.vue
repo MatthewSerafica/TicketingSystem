@@ -19,13 +19,12 @@
                 </div>
                 <div class="bg-white border-bottom pb-2 mb-2" v-for="post in posts.data" v-bind:key="post.id">
                     <a :href="route('technician.forum.post', [post.id])" class="text-decoration-none">
-                        <div class="post rounded px-3">
+                        <div class="post rounded px-3 pb-1">
                             <div class="d-flex align-items-center gap-2">
                                 <div>
-                                    <img v-if="post.user.avatar !== 'http://127.0.0.1:8000/storage'"
-                                        @click="openFileInput" :src="post.user.avatar" alt="User profile picture"
-                                        class="avatar rounded-circle shadow">
-                                    <EmptyProfile v-else @click="openFileInput" class="avatar rounded-circle shadow">
+                                    <img v-if="post.user.avatar !== 'http://127.0.0.1:8000/storage'" :src="post.user.avatar" alt="User profile picture"
+                                        class="avatar rounded-circle">
+                                    <EmptyProfile v-else class="avatar rounded-circle">
                                     </EmptyProfile>
                                 </div>
                                 <div class="d-flex flex-row gap-2 mt-3">
@@ -70,6 +69,7 @@
 <script setup>
 import Button from '@/Components/Button.vue';
 import Post from '@/Components/PostModal.vue';
+import EmptyProfile from '@/Components/EmptyState/Profile.vue';
 import Header from '@/Pages/Layouts/TechnicianHeader.vue';
 import { router } from '@inertiajs/vue3';
 import { useIntersectionObserver } from '@vueuse/core';

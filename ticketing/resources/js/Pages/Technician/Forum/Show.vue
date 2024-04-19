@@ -21,11 +21,11 @@
                 <div class="row">
                     <!-- Post Section -->
                     <div class="pb-2 d-flex flex-column gap-2">
-                        <div class="post rounded p-2">
+                        <div class="post rounded px-2">
                             <div class="d-flex align-items-center gap-2">
                                 <div class="d-flex align-items-center justify-content-center gap-2"
                                     style="margin-left: -2.5rem;">
-                                    <div>
+                                    <div class="mt-3">
                                         <Link :href="route('technician.forum')"
                                             class="btn btn-outline-secondary rounded-pill d-flex flex-row justify-content-center align-items-center"
                                             style="width: 2rem; height: 2rem;">
@@ -33,11 +33,20 @@
                                         </Link>
                                     </div>
                                     <div class="mt-3 d-flex align-items-center gap-2">
-                                        <p class="fw-semibold text-dark"><small>{{ post.user.name }}</small></p>
-                                        <p class="text-secondary">
-                                            •
-                                        </p>
-                                        <p class="text-secondary"><small>{{ post.time_since_posted }}</small></p>
+                                        <div class="">
+                                            <img v-if="post.user.avatar !== 'http://127.0.0.1:8000/storage'"
+                                                :src="post.user.avatar" alt="User profile picture"
+                                                class="avatar rounded-circle">
+                                            <EmptyProfile v-else class="avatar rounded-circle">
+                                            </EmptyProfile>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2 mt-3">
+                                            <p class="fw-semibold text-dark"><small>{{ post.user.name }}</small></p>
+                                            <p class="text-secondary">
+                                                •
+                                            </p>
+                                            <p class="text-secondary"><small>{{ post.time_since_posted }}</small></p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -84,12 +93,23 @@
                             <div class="post rounded px-2">
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="d-flex align-items-center justify-content-center gap-2">
-                                        <div class="mt-3 d-flex align-items-center gap-2">
-                                            <p class="fw-semibold text-dark"><small>{{ comment.user.name }}</small></p>
-                                            <p class="text-secondary">
-                                                •
-                                            </p>
-                                            <p class="text-secondary"><small>{{ comment.time_since_posted }}</small></p>
+                                        <div class="mt-1 d-flex align-items-center gap-2">
+                                            <div class="">
+                                                <img v-if="comment.user.avatar !== 'http://127.0.0.1:8000/storage'"
+                                                    :src="comment.user.avatar" alt="User profile picture"
+                                                    class="avatar rounded-circle">
+                                                <EmptyProfile v-else class="avatar rounded-circle">
+                                                </EmptyProfile>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2 mt-3">
+                                                <p class="fw-semibold text-dark"><small>{{ comment.user.name }}</small>
+                                                </p>
+                                                <p class="text-secondary">
+                                                    •
+                                                </p>
+                                                <p class="text-secondary"><small>{{ comment.time_since_posted }}</small>
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -141,16 +161,25 @@
                                     <div v-if="reply.parent_comment_id === comment.id" class="post rounded">
                                         <div class="d-flex align-items-center gap-2">
                                             <div class="d-flex align-items-center justify-content-center gap-2">
-                                                <div class="mt-3 d-flex align-items-center gap-2">
-                                                    <p class="fw-semibold text-dark"><small>{{ reply.user.name
-                                                            }}</small>
-                                                    </p>
-                                                    <p class="text-secondary">
-                                                        •
-                                                    </p>
-                                                    <p class="text-secondary"><small>{{ reply.time_since_posted
-                                                            }}</small>
-                                                    </p>
+                                                <div class="mt-2 d-flex align-items-center gap-2">
+                                                    <div class="">
+                                                        <img v-if="reply.user.avatar !== 'http://127.0.0.1:8000/storage'"
+                                                            :src="reply.user.avatar" alt="User profile picture"
+                                                            class="avatar rounded-circle">
+                                                        <EmptyProfile v-else class="avatar rounded-circle">
+                                                        </EmptyProfile>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2 mt-3">
+                                                        <p class="fw-semibold text-dark"><small>{{ reply.user.name
+                                                                }}</small>
+                                                        </p>
+                                                        <p class="text-secondary">
+                                                            •
+                                                        </p>
+                                                        <p class="text-secondary"><small>{{ reply.time_since_posted
+                                                                }}</small>
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -193,37 +222,48 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <!-- More Replies Section -->
-                                    <div v-if="repliesVisibility[reply.id]" class="replies-container">
-                                        <div v-for="more in replies" v-bind:key="more.id" class="mx-5">
-                                            <div v-if="more.parent_comment_id === reply.id" class="post rounded">
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <div class="d-flex align-items-center justify-content-center gap-2">
-                                                        <div class="mt-3 d-flex align-items-center gap-2">
-                                                            <p class="fw-semibold text-dark">
-                                                                <small>
-                                                                    {{ more.user.name }}
-                                                                </small>
-                                                            </p>
-                                                            <p class="text-secondary">
-                                                                •
-                                                            </p>
-                                                            <p class="text-secondary">
-                                                                <small>
-                                                                    {{ more.time_since_posted }}
-                                                                </small>
-                                                            </p>
+                                        <!-- More Replies Section -->
+                                        <div v-if="repliesVisibility[reply.id]" class="replies-container">
+                                            <div v-for="more in replies" v-bind:key="more.id" class="mx-5">
+                                                <div v-if="more.parent_comment_id === reply.id" class="post rounded">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <div
+                                                            class="d-flex align-items-center justify-content-center gap-2">
+                                                            <div class="mt-1 d-flex align-items-center gap-2">
+                                                                <div class="">
+                                                                    <img v-if="more.user.avatar !== 'http://127.0.0.1:8000/storage'"
+                                                                        :src="more.user.avatar"
+                                                                        alt="User profile picture"
+                                                                        class="avatar rounded-circle">
+                                                                    <EmptyProfile v-else class="avatar rounded-circle">
+                                                                    </EmptyProfile>
+                                                                </div>
+                                                                <div class="d-flex align-items-center gap-2 mt-2">
+                                                                    <p class="fw-semibold text-dark">
+                                                                        <small>
+                                                                            {{ more.user.name }}
+                                                                        </small>
+                                                                    </p>
+                                                                    <p class="text-secondary">
+                                                                        •
+                                                                    </p>
+                                                                    <p class="text-secondary">
+                                                                        <small>
+                                                                            {{ more.time_since_posted }}
+                                                                        </small>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="">
-                                                    <div v-if="more.tagged_user">
-                                                        <p><small>Tagged: {{ more.tagged_user }}</small></p>
+                                                    <div class="">
+                                                        <div v-if="more.tagged_user">
+                                                            <p><small>Tagged: {{ more.tagged_user }}</small></p>
+                                                        </div>
+                                                        <p class="text-secondary-emphasis"> {{ more.content }} </p>
                                                     </div>
-                                                    <p class="text-secondary-emphasis"> {{ more.content }} </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -242,6 +282,7 @@
 import Button from '@/Components/Button.vue';
 import Toast from '@/Components/Toast.vue';
 import Header from '@/Pages/Layouts/TechnicianHeader.vue';
+import EmptyProfile from '@/Components/EmptyState/Profile.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 import Alpine from 'alpinejs';
 import { onMounted, ref, watchEffect } from 'vue';
@@ -387,5 +428,15 @@ onMounted(() => {
 
 .btn:hover {
     transform: scale(1.1);
+}
+
+.avatar {
+    width: 2rem;
+    /* Width of the avatar */
+    height: 2rem;
+    /* Height of the avatar */
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    cursor: pointer;
 }
 </style>

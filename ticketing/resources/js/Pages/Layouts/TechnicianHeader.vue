@@ -44,7 +44,7 @@
                             </span>
                         </button>
 
-                        <img v-if="page.props.user.avatar !== 'http://127.0.0.1:8000/storage'" @click="openFileInput" :src="page.props.user.avatar" alt="User profile picture"
+                        <img v-if="page.props.user.avatar !== 'http://127.0.0.1:8000/storage'" :src="page.props.user.avatar" alt="User profile picture"
                             class="avatar rounded-circle shadow border-3">
                         <svg v-else xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
                             class="bi bi-person-circle" viewBox="0 0 16 16">
