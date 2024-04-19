@@ -38,7 +38,7 @@
                     <div class="card p-5 shadow-sm">
                         <Doughnut :service="service" class="doughnut"></Doughnut>
                     </div>
-                    <div class="card p-5 shadow-sm">
+                    <div class="card shadow-sm">
                         <Bar :yearly_data="yearly_data" class="bar"></Bar>
                     </div>
                 </div>
@@ -107,7 +107,8 @@ watch(myData, (newValue, oldValue) => {
 }
 
 .bar {
-    width: 40rem;
+    width: 50rem;
+    padding: 1rem;
 }
 
 @media (max-width: 1024px) {
@@ -121,19 +122,19 @@ watch(myData, (newValue, oldValue) => {
     }
 
     .doughnut {
-        width: 30rem
+        width: 30rem;
     }
 
     .bar {
-        width: 30rem;
+        width: 50rem;
+        padding: 2px;
     }
 
 }
 
 @media (max-width: 768px) {
     .main-content {
-        padding-left: 0;
-        
+        margin-left: 2rem;
         width: 80%;
     }
 
@@ -163,60 +164,19 @@ watch(myData, (newValue, oldValue) => {
     }
 
     .doughnut {
-        width: 30rem
+        width: 30rem;
     }
 
     .bar {
-        padding: 2rem
-    }
-
-}
-
-@media (max-width: 600px) {
-    .main-content {
-        padding-left: 0;
-        padding-right: 10rem;
-        width: 80%;
-    }
-
-    .recent {
-        padding-left: 4rem;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .cta {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding-left: 3rem;
-    }
-
-
-    .statistics {
-        padding-left: 6rem;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .stat-label {
-        padding-left: 6rem;
-    }
-
-    .doughnut {
-        width: 30rem
-    }
-
-    .bar {
-        padding: 2rem
+        width: 40rem;
+        padding: 2px;
     }
 
 }
 
 @media (max-width: 425px) {
     .main-content {
-        padding-left: 10rem;
+        padding-left: 14rem;
         width: 25%;
     }
 
@@ -246,7 +206,7 @@ watch(myData, (newValue, oldValue) => {
     }
 
     .doughnut {
-        width: 30rem
+        width: 20rem;
     }
 
     .bar {
@@ -258,7 +218,7 @@ watch(myData, (newValue, oldValue) => {
 
 @media (max-width: 375px) {
     .main-content {
-        padding-left: 14rem;
+        padding-left: 13.5rem;
     }
 
     .recent {
@@ -286,11 +246,49 @@ watch(myData, (newValue, oldValue) => {
     }
 
     .doughnut {
-        width: 30rem
+        width: 20rem;
     }
 
     .bar {
-        width: 30rem
+        width: 30rem;
+    }
+
+}
+@media (max-width: 320px) {
+    .main-content {
+        padding-left: 12.4rem;
+    }
+
+    .recent {
+        padding-left: 4rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cta {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-left: 3rem;
+    }
+
+    .statistics {
+        padding-left: 6rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-label {
+        padding-left: 6rem;
+    }
+
+    .doughnut {
+        width: 20rem;
+    }
+
+    .bar {
+        width: 30rem;
     }
 
 }

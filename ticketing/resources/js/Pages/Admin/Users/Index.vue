@@ -69,7 +69,7 @@
           </div>
         </div>
       </div>
-      <div class="w-75 table-responsive">
+      <div class="w-75 table-responsive mt-2">
         <div v-if="users.data.length" class="d-flex justify-content-end mb-2">
           <Pagination :links="users.links" :filter="filter" :key="'users'" />
         </div>

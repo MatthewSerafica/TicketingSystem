@@ -82,12 +82,12 @@
                 <th class="text-muted">Client</th>
                 <th class="text-muted">Problem</th>
                 <th class="text-muted text-center">Service</th>
-                <th class="text-start text-muted">Complexity</th>
+                <th class="text-center text-muted">Complexity</th>
                 <th class="text-muted text-center" style="cursor:pointer;" @click="toggleTechnicianCTAs">Technician</th>
                 <th class="text-center text-muted">SR</th>
                 <th class="text-muted">Date Done</th>
                 <th class="text-muted">Remarks</th>
-                <th class="text-center text-muted">Status</th>
+                <th class="text-start text-muted">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -177,7 +177,7 @@
                     </button>
                   </div>
                 </td>
-                <td class="text-start">
+                <td class="text-center">
                   <div class="d-flex flex-column justify-content-center align-items-center">
                     <div v-for="(assignedTech, index) in ticket.assigned" :key="index">
                       <div class="btn-group position-static">
@@ -190,8 +190,7 @@
                         <div v-if="ticket.status !== 'Resolved'"
                           class="d-flex flex-row justify-content-center align-items-center"
                           v-for="(tech, techIndex) in assignedTech.technician" :key="techIndex">
-                          <button type="button" class="btn text-start" style="width: 8rem;"
-                            @click="toggleTechnicianCTAs">
+                          <button type="button" class="btn text-start tech-btn" @click="toggleTechnicianCTAs">
                             {{ tech.user.name ? tech.user.name : 'N/A' }}
                           </button>
                           <button v-if="technicianCTAs"
@@ -202,7 +201,7 @@
                         </div>
                         <div v-else class="d-flex flex-row justify-content-center align-items-center"
                           v-for="tech in assignedTech.technician">
-                          <button type="button" class="btn text-start" style="width: 8rem;">
+                          <button type="button" class="btn text-start tech-btn">
                             {{ tech.user.name }}
                           </button>
                         </div>
@@ -734,8 +733,6 @@ const validateNumericInput = (inputValue, propName) => {
   }
 }
 
-
-
 .service-dropdown-toggle {
   border-color: transparent;
   background-color: transparent;
@@ -743,13 +740,13 @@ const validateNumericInput = (inputValue, propName) => {
 }
 
 .table-responsive {
-  width: 90%;
+  width: 95%;
   overflow-x: auto;
 
 }
 
 .pagination {
-  width: 90%;
+  width: 95%;
 
 }
 
@@ -786,6 +783,10 @@ const validateNumericInput = (inputValue, propName) => {
     overflow-x: auto;
   }
 
+  .table {
+    margin-left: 7rem;
+  }
+
   .pagination {
     width: 85rem;
   }
@@ -812,6 +813,10 @@ const validateNumericInput = (inputValue, propName) => {
     overflow-x: auto;
   }
 
+  .table {
+    margin-left: 37rem;
+  }
+
   .pagination {
     width: 55rem;
   }
@@ -843,6 +848,10 @@ const validateNumericInput = (inputValue, propName) => {
     overflow-x: auto;
   }
 
+  .table {
+    margin-left: 58.5rem;
+  }
+
   .btn-options {
     width: 80px;
   }
@@ -857,28 +866,28 @@ const validateNumericInput = (inputValue, propName) => {
 
 @media (max-width: 768px) {
 
-.custom-rounded-table {
-  font-size: 10px;
-}
+  .custom-rounded-table {
+    font-size: 10px;
+  }
 
-.pagination {
-  width: 30rem;
-}
+  .pagination {
+    width: 30rem;
+  }
 
-.table-responsive {
-  width: 30rem;
-  overflow-x: auto;
-}
+  .table-responsive {
+    width: 30rem;
+    overflow-x: auto;
+  }
 
-.btn-options {
-  width: 70px;
-}
+  .btn-options {
+    width: 70px;
+  }
 
-.custom-rounded-table th,
-.custom-rounded-table td {
-  white-space: nowrap;
-  font-size: 14px;
-}
+  .custom-rounded-table th,
+  .custom-rounded-table td {
+    white-space: nowrap;
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 425px) {
