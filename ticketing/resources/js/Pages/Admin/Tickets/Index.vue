@@ -206,6 +206,7 @@
                           </button>
                         </div>
                         <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto; width: 8rem;">
+                          <!--Recommended-->
                           <div>
                             <h6 class="dropdown-header">Recommended</h6>
                             <div v-for="technicians in recommended">
@@ -225,6 +226,7 @@
                           <li>
                             <hr class="dropdown-divider">
                           </li>
+                          <!--All-->
                           <div>
                             <h6 class="dropdown-header">All</h6>
                             <li v-for="technician in technicians" class="btn dropdown-item"

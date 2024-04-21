@@ -42,7 +42,7 @@
                     <input id="issue" class="form-control rounded border-secondary-subtle" type="text"
                       placeholder="Enter Ticket Title..." v-model="form.issue" required />
                   </div> -->
-                  
+
 
                   <div class="flex-grow-1 w-50 d-flex flex-column">
                     <label for="Title" class="fw-semibold">Title</label>
@@ -57,8 +57,8 @@
                       </button>
                       <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
                         <li v-if="problems" v-for="problem in problems" class="btn dropdown-item"
-                            @click="selectProblem(problem)" style="width: 400px;">
-                            <span class="fw-semibold">{{ problem.problem }}</span>
+                          @click="selectProblem(problem)" style="width: 400px;">
+                          <span class="fw-semibold">{{ problem.problem }}</span>
                         </li>
                         <li v-else-if="!problems">No problems found...</li>
                       </ul>
@@ -95,7 +95,7 @@
                   <div class="flex-grow-1 w-50 d-flex flex-column">
                     <label for="deptOffice" class="fw-semibold">Department & Office</label>
                     <input id="deptOffice" class="form-control rounded border-secondary-subtle" type="text"
-                    placeholder=" " v-model="form.department" disabled/>
+                      placeholder=" " v-model="form.department_office" disabled />
                   </div>
 
                 </div>
@@ -132,7 +132,7 @@
                         <li v-else-if="!services">No results found...</li>
                       </ul>
                     </div>
-                  </div>         
+                  </div>
                   <div class="w-50 d-flex flex-column justify-content-start align-items-start">
                     <label for="" class="fw-semibold">Technicians</label>
                     <div class="d-flex flex-column justify-content-center align-items-center gap-2 w-100">
@@ -141,23 +141,57 @@
                           <div class="btn-group">
                             <button type="button"
                               class="btn btn-outline-secondary text-start text-secondary-emphasis w-100"
-                              data-bs-toggle="dropdown" aria-expanded="false">
+                              aria-expanded="false">
                               {{ dropdown.selectedTechnician ? dropdown.selectedTechnician : 'Assign a technician...'
                               }}
                             </button>
                             <button type="button"
                               class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
-                              data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                              data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent"
+                              @click="fetchRecommended(form.department)">
                               <span class="visually-hidden">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                              <li v-for="technician in technicians" :key="technician.technician_id"
+                              <div>
+                                <h6 class="dropdown-header">Recommended</h6>
+                                <div v-for="technicians in recommended">
+                                  <li v-for="technician in technicians" class="btn dropdown-item"
+                                    @click="assignTechnician(ticket, index, technician)"
+                                    :class="{ 'disabled': technician.tickets_assigned >= 5 }">
+                                    <div class="d-flex justify-content-between">
+                                      <div>
+                                        <span class="fw-semibold">{{ technician.user.name }}</span>
+                                        <br> <small>{{ technician.assigned_department }}</small>
+                                      </div>
+                                      <span>{{ technician.tickets_assigned }}</span>
+                                    </div>
+                                  </li>
+                                </div>
+                              </div>
+                              <li>
+                                <hr class="dropdown-divider">
+                              </li>
+                              <div>
+                                <h6 class="dropdown-header">All</h6>
+                                <li v-for="technician in technicians" class="btn dropdown-item"
+                                  @click="assignTechnician(ticket, index, technician)"
+                                  :class="{ 'disabled': technician.tickets_assigned >= 5 }">
+                                  <div class="d-flex justify-content-between">
+                                    <div>
+                                      <span class="fw-semibold">{{ technician.user.name }}</span>
+                                      <br> <small>{{ technician.assigned_department }}</small>
+                                    </div>
+                                    <span>{{ technician.tickets_assigned }}</span>
+                                  </div>
+                                </li>
+                                <li v-if="!technicians || technicians.length === 0">No technicians available</li>
+                              </div>
+                              <!-- <li v-for="technician in technicians" :key="technician.technician_id"
                                 class="btn dropdown-item" @click="selectTechnician(technician, index)">
                                 <span class="fw-semibold">{{ technician.user.name }}</span>
                                 <br>
                                 <small>{{ technician.assigned_department }}</small>
-                              </li>
-                              <li v-if="!technicians || technicians.length === 0">No technicians available</li>
+                              </li> -->
                             </ul>
                           </div>
                           <button type="button"
@@ -203,6 +237,7 @@ import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link, router, useForm, usePage } from "@inertiajs/vue3";
 import Alpine from 'alpinejs';
+import axios from 'axios';
 import { ref, watch, watchEffect } from "vue";
 
 
@@ -272,7 +307,7 @@ const selectTechnician = (technician, index) => {
   // Check if the technician ID has been selected before in the current selection array
   if (techniciansData.value.some(item => item.technicianId === technician.technician_id)) {
     form.errors.technician = 'Technician is already selected.';
-    return; 
+    return;
   }
 
   // Update techniciansData with selected technician's name and ID
@@ -328,7 +363,8 @@ const selectEmployee = (employee) => {
   selectedEmployee.value = employee.user.name;
   form.employee = employee.employee_id;
 
-  form.department = `${employee.department}-${employee.office}`;
+  form.department_office = `${employee.department}-${employee.office}`;
+  form.department = `${employee.department}`;
 
   document.getElementById('employeeDropdown').classList.remove('show');
 }
@@ -345,6 +381,26 @@ const selectProblem = (problem) => {
 
   document.getElementById('titleDropdown').classList.remove('show');
 }
+
+let recommended = ref([]);
+
+const fetchRecommended = async (department) => {
+  try {
+    const response = await axios.get(route('admin.recommended', department))
+
+    if (response.status !== 200) {
+      throw new Error('Failed to fetch recommended technicians');
+    }
+
+    recommended.value = response.data;
+
+
+  } catch (error) {
+    console.error('Error fetching recommended technicians:', error);
+    return null;
+  }
+}
+
 
 let show = ref(true);
 
