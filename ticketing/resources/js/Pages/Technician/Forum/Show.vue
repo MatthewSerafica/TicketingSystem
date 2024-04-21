@@ -17,6 +17,15 @@
             </Toast>
         </div>
         <div>
+            <div v-if="fullscreenImage" class="fullscreen-modal d-flex flex-column">
+                <div class="d-flex flex-row justify-content-end w-100 px-5">
+                    <button type="button" class="btn-close btn btn-secondary bg-white rounded-circle p-2"
+                        data-bs-dismiss="modal" aria-label="Close" @click="closeFullscreenImage"></button>
+                </div>
+                <div class="modal-content d-flex justify-content-center align-items-center ">
+                    <img :src="fullscreenImage" alt="Fullscreen Image" class="rounded">
+                </div>
+            </div>
             <div class="container justify-content-center mt-4 col-6">
                 <div class="row">
                     <!-- Post Section -->
@@ -50,13 +59,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <div v-if="post.tagged_user">
-                                <p><small>Tagged: {{ post.tagged_user }}</small></p>
+                            <div>
+                                <div v-if="post.tagged_user">
+                                    <p><small>Tagged: {{ post.tagged_user }}</small></p>
+                                </div>
+
+                                <h4 class="text-dark"><strong>{{ post.title }}</strong></h4>
+
+                                <div v-if="post.image" class="card mb-2">
+                                    <div class="position-absolute" style="right: 10px; top: 10px; z-index: 100;">
+                                        <div class="btn text-light rounded-circle"
+                                            data-bs-dismiss="modal" aria-label="Close"
+                                            @click="handleImageClick('http://127.0.0.1:8000/storage/' + post.image)">
+                                            <i class="bi bi-arrows-angle-expand"></i>
+                                        </div>
+                                    </div>
+                                    <img :src="'http://127.0.0.1:8000/storage/' + post.image" alt=""
+                                        class="rounded image"
+                                        @click="handleImageClick('http://127.0.0.1:8000/storage/' + post.image)">
+                                </div>
+
+                                <p class="text-secondary-emphasis"> {{ post.content }} </p>
                             </div>
-
-                            <h4 class="text-dark"><strong>{{ post.title }}</strong></h4>
-
-                            <p class="text-secondary-emphasis"> {{ post.content }} </p>
 
                             <div class="d-flex justify-content-between text-dark">
                                 <div class="d-flex align-items-center justify-content-center gap-2 rounded-pill p-2 comment"
@@ -396,10 +420,24 @@ function adjustLineConnectorSideways() {
     lineConnectorSideways.style.left = `${desiredLeft}px`;
 }
 
-// Call this function to adjust the position when the component is mounted
 onMounted(() => {
     adjustLineConnectorSideways();
 });
+
+
+const fullscreenImage = ref(null);
+
+const openFullscreenImage = (imageSrc) => {
+    fullscreenImage.value = imageSrc;
+};
+
+const closeFullscreenImage = () => {
+    fullscreenImage.value = null;
+};
+
+const handleImageClick = (imageSrc) => {
+    openFullscreenImage(imageSrc);
+};
 
 </script>
 
@@ -432,11 +470,32 @@ onMounted(() => {
 
 .avatar {
     width: 2rem;
-    /* Width of the avatar */
     height: 2rem;
-    /* Height of the avatar */
     object-fit: cover;
     transition: transform 0.5s ease;
     cursor: pointer;
+}
+
+
+.fullscreen-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    max-width: 100%;
+    max-height: 90%;
+}
+
+.modal-content img {
+    max-width: 100%;
+    max-height: 100%;
 }
 </style>

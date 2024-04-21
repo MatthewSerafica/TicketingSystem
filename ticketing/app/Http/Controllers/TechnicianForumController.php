@@ -11,6 +11,7 @@ use App\Notifications\PostMade;
 use App\Notifications\ReplyMade;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TechnicianForumController extends Controller
 {
@@ -53,16 +54,22 @@ class TechnicianForumController extends Controller
             'title' => 'nullable',
             'content' => 'required',
             'tagged_user' => 'nullable',
+            'image' => 'nullable', 
         ]);
 
-        $post = [
+        $post = new Post([
             'user_id' => $user_id,
             'title' => $request->title,
             'content' => $request->content,
             'tagged_user' => $request->tagged_user,
-        ];
+        ]);
 
-        $post = Post::create($post);
+        if ($request->hasFile('image')) {
+            $link = Storage::put('/posts', $request->file('image'));
+            $post->image = $link;
+        }
+
+        $post->save();
 
         $techs = User::where('user_type', 'technician')->whereNot('id', $user_id)->get();
         foreach ($techs as $tech) {
@@ -71,7 +78,7 @@ class TechnicianForumController extends Controller
             );
         }
 
-        return redirect()->back()->with('success', 'Posted!')->with('message', 'Message posted successfully!');
+        return redirect()->to(route('technician.forum'))->with('success', 'Post created successfully.');
     }
 
     public function show($id)

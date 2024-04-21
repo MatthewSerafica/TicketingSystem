@@ -1,6 +1,21 @@
 <template>
     <div class="">
         <Header class="sticky-top" style="z-index: 110;"></Header>
+        <div class="position-absolute end-0">
+            <Toast
+                x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+                x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
+                v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
+                @close="handleClose">
+            </Toast>
+
+            <Toast
+                x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+                x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
+                v-if="showErrorToast" :error="page.props.flash.error" :error_message="page.props.flash.error_message"
+                @close="handleClose">
+            </Toast>
+        </div>
         <div class="container justify-content-center mt-4 col-6">
             <div class="row g-2 justify-content-center">
                 <div class="input-group w-50">
@@ -22,7 +37,8 @@
                         <div class="post rounded px-3 pb-1">
                             <div class="d-flex align-items-center gap-2">
                                 <div>
-                                    <img v-if="post.user.avatar !== 'http://127.0.0.1:8000/storage'" :src="post.user.avatar" alt="User profile picture"
+                                    <img v-if="post.user.avatar !== 'http://127.0.0.1:8000/storage'"
+                                        :src="post.user.avatar" alt="User profile picture"
                                         class="avatar rounded-circle">
                                     <EmptyProfile v-else class="avatar rounded-circle">
                                     </EmptyProfile>
@@ -44,6 +60,10 @@
                             </div>
 
                             <p class="text-dark"><strong>{{ post.title }}</strong></p>
+
+                            <div v-if="post.image" class="card mb-2">
+                                <img :src="'http://127.0.0.1:8000/storage/'+post.image" alt="" class="rounded image">
+                            </div>
 
                             <p class="text-secondary-emphasis"> {{ post.content }} </p>
 
@@ -67,14 +87,36 @@
 </template>
 
 <script setup>
+import Toast from '@/Components/Toast.vue';
 import Button from '@/Components/Button.vue';
 import Post from '@/Components/PostModal.vue';
 import EmptyProfile from '@/Components/EmptyState/Profile.vue';
 import Header from '@/Pages/Layouts/TechnicianHeader.vue';
-import { router } from '@inertiajs/vue3';
+import { router, usePage } from '@inertiajs/vue3';
 import { useIntersectionObserver } from '@vueuse/core';
 import axios from 'axios';
-import { ref, watch } from 'vue';
+import { ref, watch, watchEffect } from 'vue';
+import Alpine from 'alpinejs';
+
+Alpine.start()
+
+const page = usePage();
+
+let showSuccessToast = ref(false);
+let showErrorToast = ref(false);
+
+watchEffect(() => {
+    showSuccessToast.value = !!page.props.flash.success;
+    showErrorToast.value = !!page.props.flash.error;
+})
+
+const handleClose = () => {
+    page.props.flash.success = null;
+    page.props.flash.error = null;
+    showSuccessToast.value = false;
+    showErrorToast.value = false;
+}
+
 
 const props = defineProps({
     posts: Object,

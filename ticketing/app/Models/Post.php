@@ -29,6 +29,7 @@ class Post extends Model
         'title',
         'content',
         'tagged_user',
+        'image',
     ];
 
     protected static function boot()

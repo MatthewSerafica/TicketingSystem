@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header></Header>
+        <Header class="sticky-top" style="z-index: 110;"></Header>
         <div class="position-absolute end-0">
             <Toast
                 x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
@@ -300,16 +300,14 @@ const handleFileChange = async (event) => {
 
 .avatar {
     width: 10rem;
-    /* Width of the avatar */
     height: 10rem;
-    /* Height of the avatar */
     object-fit: cover;
     transition: transform 0.5s ease;
     cursor: pointer;
 }
 
 .avatar:hover {
-    opacity: 0.90;
+    opacity: 0.95;
     border-color: blue;
 }
 </style>

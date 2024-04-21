@@ -314,9 +314,9 @@ const handleBadge = (status) => {
 }
 
 .avatar {
-    width: 3rem;
+    width: 2rem;
     /* Width of the avatar */
-    height: 3rem;
+    height: 2rem;
     /* Height of the avatar */
     object-fit: cover;
     transition: transform 0.5s ease;
