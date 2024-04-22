@@ -9,8 +9,6 @@
           </div>
 
           <div class="create-report mb-3">
-
-
             <div class="row justify-content-center mb-4">
               <div class="col-md-6">
                 <div class="input-group">
@@ -20,7 +18,6 @@
                 <span v-if="form.errors.service_id" class="error-message">{{ form.errors.service_id }}</span>
               </div>
             </div>
-
 
             <div class="row mb-4">
               <div class="col-md-4">
@@ -34,15 +31,14 @@
 
               <div class="col-md-4">
                 <label for="ticketNumber" class="form-label">Ticket Number:</label>
-                <select class="form-select" id="ticketNumber" v-model="form.ticket_number" required>
+                <select class="form-select" id="ticketNumber" v-model="form.ticket_number" required @change="ticketDetails($event.target.value)">
                   <option value="">Select a ticket number</option>
-                  <option v-for="ticket in tickets" :value="ticket.ticket_number" @click="ticketDetails(ticket)">{{ ticket.ticket_number }}</option>
+                  <option v-for="ticket in tickets" :value="ticket.ticket_number">{{ ticket.ticket_number }}</option>
                 </select>
+
                 <span v-if="form.errors.ticket_number" class="error-message">{{ form.errors.ticket_number }}</span>
               </div>
-
             </div>
-
 
             <div class="row mb-4">
               <div class="col-md-4">
@@ -91,8 +87,8 @@
               </div>
             </div>
 
-            <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" @confirm="create" @closeSubmitService="closeSubmitService" />
-
+            <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" :ticket="selectedTicket" @confirm="create" @closeSubmitService="closeSubmitService" />
+              {{ selectedTicket }}
             <div class="row justify-content-end">
               <div class="col-md-4">
                 <div class="d-flex justify-content-end gap-2">
@@ -103,8 +99,6 @@
             </div>
           </div>
         </div>
-      <!-- <form @submit.prevent="create">
-      </form> -->
     </div>
   </div>
 </template>
@@ -122,6 +116,7 @@ const props = defineProps({
   ticket_id: Number,
   service_report: Object,
   tickets: Object,
+  problem: String,
   date_done: String,
 })
 
@@ -138,7 +133,7 @@ const form = useForm({
   technician: [],
   requesting_office: null,
   equipment_no: null,
-  problem: null,
+  problem: props.problem,
   action: null,
   recommendation: null,
   date_done: props.date_done,
@@ -148,7 +143,7 @@ const form = useForm({
 
 const fillFormWithTicket = (ticket) => {
   form.action = ticket.service;
-  form.problemEncountered = ticket.description;
+  form.problem = ticket.description;
   form.requesting_office = `${ticket.employee.department} - ${ticket.employee.office}`;
   // Fill other form fields as needed
 };
@@ -168,7 +163,6 @@ onMounted(async () => {
         technicianNames.push(data[i].technician[0].user.name);
         technicianId.push(data[i].technician[0].technician_id);
       }
-
       const formattedTechnicianNames = technicianNames.join(' / ');
       form.technician = formattedTechnicianNames;
       console.log(form.technician);
@@ -183,7 +177,6 @@ onMounted(async () => {
     form.errors.ticket_number = 'Ticket number should contain only numeric characters.';
     return;
   }
-
   form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false });
 } 
 
@@ -194,17 +187,14 @@ watch(() => form.ticket_number, async (newValue) => {
     form.action = selectedTicket.service;
     form.problem = selectedTicket.description;
     form.requesting_office = selectedTicket.employee.department + ' - ' + selectedTicket.employee.office;
-
     const response = await fetch(route('technician.tickets.assigned', { id: selectedTicket.ticket_number }));
     const data = await response.json();
     const technicianNames = [];
     const technicianId = [];
-
     for (let i = 0; i < data.length; i++) {
       technicianNames.push(data[i].technician[0].user.name);
       technicianId.push(data[i].technician[0].technician_id);
     }
-
     const formattedTechnicianNames = technicianNames.join(' / ');
     form.technician = formattedTechnicianNames;
     console.log(form.technician);
@@ -227,10 +217,8 @@ const submitServiceReport = (sr, ticket) => {
     console.log('Form data in Create.vue:', form);
     console.log('Selected service report:', sr);
     console.log('showConfirmationModal before opening:', showConfirmationModal.value);
-
     selectedServiceReport.value = sr;
     showConfirmationModal.value = true;
-
     console.log('showConfirmationModal after opening:', showConfirmationModal.value);
   }
 };
@@ -245,18 +233,14 @@ function closeSubmitService() {
 
 const back = async (id) => {
     try {
-        // Perform any necessary operations before redirection
-        
-        // Redirect to the service report back route with the service ID
+      console.log("cancel button clicked");
         /* router.post({ name: 'technician.service-reports.back', params: { service_id: props.new_service_id } }); */
-        router.post(route('technician.service-reports.back', { service_id: id}));
+        router.post(route('technician.service-reports.back', id));
+        console.log("cancel routing");
     } catch (err) {
         console.error(err);
     }
 }
-
-
-
 </script>
 
 <style scoped>

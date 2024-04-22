@@ -2,26 +2,48 @@
   <div class="custom-modal" @close="closeSubmitService">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Confirm Submission</h5>
-        <button type="button" class="btn-close" aria-label="Close" @click="closeSubmitService"></button>
+        <h5 class="modal-title  text-center">Are you sure you want to submit this service report?</h5>
+        <button type="button" class="btn-close ms-auto" aria-label="Close" @click="closeSubmitService"></button>
+
       </div>
       <div class="modal-body">
-        <p>Are you sure you want to submit this service report?</p>
-        <ul>
-          <li><strong>Service ID:</strong> {{ form.service_id }}</li>
-          <li><strong>Date Started:</strong> {{ form.date_started }}</li>
-          <li><strong>Time Started:</strong> {{ form.time_started }}</li>
-          <li><strong>Ticket Number:</strong> {{ form.ticket_number }}</li>
-          <li><strong>Technician Name:</strong> {{ form.technician }}</li>
-          <li><strong>Requesting Office:</strong> {{ form.requesting_office }}</li>
-          <li><strong>Equipment, Property Tag/Serial No.:</strong> {{ form.equipment_no }}</li>
-          <li><strong>Problem Encountered:</strong> {{ form.problem }}</li>
-          <li><strong>Action Taken:</strong> {{ form.action }}</li>
-          <li><strong>Recommendation:</strong> {{ form.recommendation }}</li>
-          <li><strong>Date Done:</strong> {{ form.date_done }}</li>
-          <li><strong>Time Done:</strong> {{ form.time_done }}</li>
-          <li><strong>Remarks:</strong> {{ form.remarks }}</li>
-        </ul>
+        <div>
+          <div class="card">
+            <div class="card-body">
+              <p class="modal-title  text-center"><strong>Ticket Details:</strong></p>
+              <p><strong>Ticket Number:</strong> {{ ticket.ticket_number }}</p>
+              <p><strong>Date Created:</strong> {{ ticket.date_created }}</p>
+              <p><strong>Request Type:</strong> {{ ticket.request_type }}</p>
+              <p><strong>Complexity:</strong> {{ ticket.complexity }}</p>
+              <p><strong>RR No:</strong> {{ ticket.rr_no }}</p>
+              <p><strong>MS No:</strong> {{ ticket.ms_no }}</p>
+              <p><strong>RS No:</strong> {{ ticket.rs_no }}</p>
+              <p><strong>Issue:</strong> {{ ticket.issue }}</p>
+              <p><strong>Description:</strong> {{ ticket.description }}</p>
+              <p><strong>Service:</strong> {{ ticket.service }}</p>
+            </div>
+          </div>
+        </div>
+        <div v-if="form">
+          <div class="card">
+            <div class="card-body">
+              <p class="modal-title  text-center"><strong>Service Report Details:</strong></p>
+              <p><strong>Service ID:</strong> {{ form.service_id }}</p>
+              <p><strong>Date Started:</strong> {{ form.date_started }}</p>
+              <p><strong>Time Started:</strong> {{ form.time_started }}</p>
+              <p><strong>Ticket Number:</strong> {{ form.ticket_number }}</p>
+              <p><strong>Technician Name:</strong> {{ form.technician }}</p>
+              <p><strong>Requesting Office:</strong> {{ form.requesting_office }}</p>
+              <p><strong>Equipment, Property Tag/Serial No.:</strong> {{ form.equipment_no }}</p>
+              <p><strong>Problem Encountered:</strong> {{ form.problem }}</p>
+              <p><strong>Action Taken:</strong> {{ form.action }}</p>
+              <p><strong>Recommendation:</strong> {{ form.recommendation }}</p>
+              <p><strong>Date Done:</strong> {{ form.date_done }}</p>
+              <p><strong>Time Done:</strong> {{ form.time_done }}</p>
+              <p><strong>Remarks:</strong> {{ form.remarks }}</p>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" @click="closeSubmitService">Cancel</button>
@@ -36,6 +58,7 @@ import { defineProps, ref,  defineEmits } from 'vue';
 
 const props = defineProps({
   form: Object, // Pass the form object to the modal
+  ticket: Object,
 });
 
 const emit = defineEmits(['closeSubmitService'])
@@ -73,8 +96,14 @@ const submitServiceReport = () => {
   background-color: #fff;
   padding: 30px;
   border-radius: 8px;
-  text-align: center;
-  width: 25%;
+  text-align: left;
+  width: 80%;
+}
+
+.modal-title {
+  border-radius: 8px;
+  text-align: left;
+  width: 100%;
 }
 
 .close {

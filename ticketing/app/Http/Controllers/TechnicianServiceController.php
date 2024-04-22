@@ -53,6 +53,7 @@ class TechnicianServiceController extends Controller
             $new_service_id = $this->incrementServiceId($latest_report->service_id);
             $ticket_id = $latest_report->ticket_number;
             $date_done = $latest_report->date_done;
+            $problem = $latest_report->issue;
         } else {
             $new_service_id = '0001';
             $ticket_id = null;
@@ -66,6 +67,7 @@ class TechnicianServiceController extends Controller
             'tickets' => $tickets,
             'ticket_id' => $ticket_id ? $ticket_id : null,
             'date_done' => $date_done,
+            'problem'=> $problem,
 
         ]);
     }
@@ -185,11 +187,6 @@ class TechnicianServiceController extends Controller
 
     public function back(Request $request, $service_id)
     {
-        $request->validate([
-            'service_id' => 'required',
-        ]);
-
-        $service_id = $request->service_id;
 
         // Find the existing ServiceReport with the given service_id
         $existingServiceReport = ServiceReport::where('service_id', $service_id)->first();
@@ -209,9 +206,9 @@ class TechnicianServiceController extends Controller
             // Delete the ServiceReport
             $existingServiceReport->delete();
 
-            return redirect()->to('/technician/service-report')->with('success', 'Report Deleted Successfully');
+            return redirect()->to('/technician/service-report');
         } else {
-            return redirect()->to('/technician/service-report')->with('error', 'Report Not Found');
+            return redirect()->to('/technician/service-report');
         }
     }
 
