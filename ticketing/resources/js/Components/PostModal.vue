@@ -112,7 +112,7 @@ const form = useForm({
 const post = async () => {
     // Append form data to FormData
     formData.append('title', form.title);
-    formData.append('content', form.content);
+    formData.append('content', form.content ?? '');
     formData.append('tagged_user', form.tagged_user ?? '');
 
     try {
