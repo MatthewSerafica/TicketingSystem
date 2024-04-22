@@ -159,7 +159,6 @@ watch(search, () => {
     }
   };
   
-  // Method to save the edited service name
   const saveService = (serviceId) => {
     if (serviceId && editedService[serviceId] !== null) {
       const form = useForm({

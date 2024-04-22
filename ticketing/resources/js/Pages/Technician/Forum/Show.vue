@@ -35,11 +35,11 @@
                                 <div class="d-flex align-items-center justify-content-center gap-2"
                                     style="margin-left: -2.5rem;">
                                     <div class="mt-3">
-                                        <Link :href="route('technician.forum')"
+                                        <a :href="route('technician.forum')"
                                             class="btn btn-outline-secondary rounded-pill d-flex flex-row justify-content-center align-items-center"
                                             style="width: 2rem; height: 2rem;">
-                                        <i class="bi bi-arrow-left"></i>
-                                        </Link>
+                                            <i class="bi bi-arrow-left"></i>
+                                        </a>
                                     </div>
                                     <div class="mt-3 d-flex align-items-center gap-2">
                                         <div class="">
@@ -68,8 +68,8 @@
 
                                 <div v-if="post.image" class="card mb-2">
                                     <div class="position-absolute" style="right: 10px; top: 10px; z-index: 100;">
-                                        <div class="btn text-light rounded-circle"
-                                            data-bs-dismiss="modal" aria-label="Close"
+                                        <div class="btn text-light rounded-circle" data-bs-dismiss="modal"
+                                            aria-label="Close"
                                             @click="handleImageClick('http://127.0.0.1:8000/storage/' + post.image)">
                                             <i class="bi bi-arrows-angle-expand"></i>
                                         </div>
@@ -178,20 +178,181 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="comment-line-connector-container">
+                                    <div class="comment-line-connector"></div>
+                                    <div class="comment-line-connector-sideways"></div>
+                                    <!-- Comment Content -->
+                                    <div>
+                                        <div v-if="comment.tagged_user">
+                                            <p><small>Tagged: {{ comment.tagged_user }}</small></p>
+                                        </div>
 
-                                <!-- Reply Section -->
-                                <div v-if="repliesVisibility[comment.id]" class="reply-container">
-                                    <div v-for="reply in replies" v-bind:key="reply.id" class="mx-5 replyy">
-                                        <div v-if="reply.parent_comment_id === comment.id" class="post rounded">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="d-flex align-items-center justify-content-center gap-2">
-                                                    <div class="mt-2 d-flex align-items-center gap-2">
-                                                        <div class="">
-                                                            <img v-if="reply.user.avatar !== 'http://127.0.0.1:8000/storage'"
-                                                                :src="reply.user.avatar" alt="User profile picture"
-                                                                class="avatar rounded-circle">
-                                                            <EmptyProfile v-else class="avatar rounded-circle">
-                                                            </EmptyProfile>
+                                        <p v-if="!isShowEdit || selectedComment.id !== comment.id"
+                                            class="text-secondary-emphasis"> {{ comment.content }}
+                                        </p>
+                                        <div v-if="isShowEdit && selectedComment.id === comment.id" class="">
+                                            <form @submit.prevent="edit(comment.id)">
+                                                <textarea class="p-2 px-4 rounded-4 form-control"
+                                                    v-model="editComment.content">
+                                                </textarea>
+                                                <div class="d-flex justify-content-end py-1 px-3 gap-2">
+                                                    <Button :name="'Cancel'" :color="'secondary'" @click="closeEdit"
+                                                        class="rounded-pill" style="font-size: 12px;"></Button>
+                                                    <button type="submit" class="rounded-pill btn btn-primary"
+                                                        style="font-size: 12px;">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div class="d-flex justify-content-start align-items-center text-dark"
+                                            style="margin-left: -2rem;">
+                                            <button @click="toggleRepliesVisibility(comment.id)" class="btn">
+                                                <i
+                                                    :class="repliesVisibility[comment.id] ? 'bi bi-dash-circle' : 'bi bi-plus-circle'">
+                                                </i>
+                                            </button>
+                                            <div class="d-flex align-items-center justify-content-center gap-2 rounded-pill p-2 reply"
+                                                @click="showReply(comment.id)" style="width: 5rem;">
+                                                <i class="bi bi-chat-left-dots"></i>
+                                                <span style="font-size: 12px;" class="fw-semibold">Reply</span>
+                                            </div>
+                                            <div v-if="page.props.user.id === comment.user.id"
+                                                class="mt-1 ellipsis rounded-circle dropdown">
+                                                <button data-bs-toggle="dropdown" aria-expanded="false"
+                                                    class="btn rounded-circle">
+                                                    <i class="bi bi-three-dots-vertical text-dark"></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <div class="dropdown-item" @click="showEdit(comment)">
+                                                            Edit
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="dropdown-item" @click="showDelete(comment)">
+                                                            Delete
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div v-if="isShowReply && selectedComment && selectedComment === comment.id"
+                                            class="d-flex flex-column gap-2 border rounded-4 p-2">
+                                            <form @submit.prevent="reply(comment.id)">
+                                                <textarea ref="commentTextarea"
+                                                    class="p-2 px-4 rounded-4 form-control border-0"
+                                                    v-model="commentForm.content"></textarea>
+                                                <div class="d-flex justify-content-end py-1 px-3 gap-2">
+                                                    <Button :name="'Cancel'" :color="'secondary'" @click="closeReply"
+                                                        class="rounded-pill" style="font-size: 12px;"></Button>
+                                                    <button type="submit" class="rounded-pill btn btn-primary"
+                                                        style="font-size: 12px;">Comment</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reply Section -->
+                            <div v-if="repliesVisibility[comment.id]" class="reply-container">
+                                <div v-for="reply in replies" v-bind:key="reply.id" class="mx-5 replyy">
+                                    <div v-if="reply.parent_comment_id === comment.id" class="post rounded">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                                <div class="mt-2 d-flex align-items-center gap-2">
+                                                    <div class="">
+                                                        <img v-if="reply.user.avatar !== 'http://127.0.0.1:8000/storage'"
+                                                            :src="reply.user.avatar" alt="User profile picture"
+                                                            class="avatar rounded-circle">
+                                                        <EmptyProfile v-else class="avatar rounded-circle">
+                                                        </EmptyProfile>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2 mt-3">
+                                                        <p class="fw-semibold text-dark"><small>{{ reply.user.name
+                                                                }}</small>
+                                                        </p>
+                                                        <p class="text-secondary">
+                                                            •
+                                                        </p>
+                                                        <p class="text-secondary"><small>{{ reply.time_since_posted
+                                                                }}</small>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Reply Content -->
+                                        <div class="line-connector-container">
+                                            <div class="line-connector"></div>
+                                            <div class="line-connector-sideways"></div>
+                                            <div>
+                                                <div v-if="reply.tagged_user">
+                                                    <p><small>Tagged: {{ reply.tagged_user }}</small></p>
+                                                </div>
+
+                                                <p v-if="!isShowEdit || selectedComment.id !== reply.id"
+                                                    class="text-secondary-emphasis"> {{ reply.content }}
+                                                </p>
+                                                <div v-if="isShowEdit && selectedComment.id === reply.id" class="">
+                                                    <form @submit.prevent="edit(reply.id)">
+                                                        <textarea class="p-2 px-4 rounded-4 form-control"
+                                                            v-model="editComment.content">
+                                                </textarea>
+                                                        <div class="d-flex justify-content-end py-1 px-3 gap-2">
+                                                            <Button :name="'Cancel'" :color="'secondary'"
+                                                                @click="closeEdit" class="rounded-pill"
+                                                                style="font-size: 12px;"></Button>
+                                                            <button type="submit" class="rounded-pill btn btn-primary"
+                                                                style="font-size: 12px;">Submit</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+                                                <div class="d-flex justify-content-start align-items-center text-dark"
+                                                    style="margin-left: -2rem;">
+                                                    <button @click="toggleRepliesVisibility(reply.id)" class="btn">
+                                                        <i
+                                                            :class="repliesVisibility[reply.id] ? 'bi bi-dash-circle' : 'bi bi-plus-circle'">
+                                                        </i>
+                                                    </button>
+                                                    <div class="d-flex align-items-center justify-content-center gap-2 rounded-pill p-2 reply"
+                                                        @click="showReply(reply.id)" style="width: 5rem;">
+                                                        <i class="bi bi-chat-left-dots"></i>
+                                                        <span style="font-size: 12px;" class="fw-semibold">Reply</span>
+                                                    </div>
+                                                    <div v-if="page.props.user.id === reply.user.id"
+                                                        class="mt-1 ellipsis rounded-circle dropdown">
+                                                        <button data-bs-toggle="dropdown" aria-expanded="false"
+                                                            class="btn rounded-circle">
+                                                            <i class="bi bi-three-dots-vertical text-dark"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li>
+                                                                <div class="dropdown-item" @click="showEdit(reply)">
+                                                                    Edit
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <div class="dropdown-item" @click="showDelete(reply)">
+                                                                    Delete
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div v-if="isShowReply && selectedComment && selectedComment === reply.id"
+                                                    class="d-flex flex-column gap-2 border rounded-4 p-2">
+                                                    <form @submit.prevent="replyMore(reply.id)">
+                                                        <textarea class="p-2 px-4 rounded-4 form-control border-0"
+                                                            v-model="commentForm.content"></textarea>
+                                                        <div class="d-flex justify-content-end py-1 px-3 gap-2">
+                                                            <Button :name="'Cancel'" :color="'secondary'"
+                                                                @click="closeReply" class="rounded-pill"
+                                                                style="font-size: 12px;"></Button>
+                                                            <button type="submit" class="rounded-pill btn btn-primary"
+                                                                style="font-size: 12px;">Comment</button>
                                                         </div>
                                                         <div class="d-flex align-items-center gap-2 mt-3">
                                                             <p class="fw-semibold text-dark"><small>{{ reply.user.name
@@ -204,7 +365,7 @@
                                                                     }}</small>
                                                             </p>
                                                         </div>
-                                                    </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                             <!-- Reply Content -->
@@ -279,6 +440,30 @@
                                                                         </p>
                                                                     </div>
                                                                 </div>
+
+                                                                <div v-if="page.props.user.id === more.user.id"
+                                                                    class="ellipsis rounded-circle dropdown">
+                                                                    <button data-bs-toggle="dropdown"
+                                                                        aria-expanded="false"
+                                                                        class="btn rounded-circle">
+                                                                        <i
+                                                                            class="bi bi-three-dots-vertical text-dark"></i>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu">
+                                                                        <li>
+                                                                            <div class="dropdown-item"
+                                                                                @click="showEdit(more)">
+                                                                                Edit
+                                                                            </div>
+                                                                        </li>
+                                                                        <li>
+                                                                            <div class="dropdown-item"
+                                                                                @click="showDelete(more)">
+                                                                                Delete
+                                                                            </div>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
                                                             </div>
                                                         </div>
 
@@ -288,7 +473,28 @@
                                                             </div>
                                                             <p class="text-secondary-emphasis"> {{ more.content }} </p>
                                                         </div>
+                                                        <p v-if="!isShowEdit || selectedComment.id !== more.id"
+                                                            class="text-secondary-emphasis"> {{ more.content }}
+                                                        </p>
+                                                        <div v-if="isShowEdit && selectedComment.id === more.id"
+                                                            class="">
+                                                            <form @submit.prevent="edit(more.id)">
+                                                                <textarea class="p-2 px-4 rounded-4 form-control"
+                                                                    v-model="editComment.content">
+                                                                </textarea>
+                                                                <div class="d-flex justify-content-end py-1 px-3 gap-2">
+                                                                    <Button :name="'Cancel'" :color="'secondary'"
+                                                                        @click="closeEdit" class="rounded-pill"
+                                                                        style="font-size: 12px;"></Button>
+                                                                    <button type="submit"
+                                                                        class="rounded-pill btn btn-primary"
+                                                                        style="font-size: 12px;">Submit</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -296,23 +502,24 @@
                                 </div>
                             </div>
                     </div>
-                    <EmptyCard :title="'No Comments yet...'" v-else class="mt-2 w-75" style="height:20rem;">
-                    </EmptyCard>
-
+                    <EmptyCard :title="'No Comments yet...'" class="mt-2 w-75" style="height:20rem;"/>
                 </div>
             </div>
         </div>
+
+        <Delete v-if="isShowDelete" :comment="selectedComment" @closeDelete="closeDelete" />
     </div>
 </template>
 
 <script setup>
 import Button from '@/Components/Button.vue';
+import Delete from "@/Components/DeleteModal.vue";
+import EmptyProfile from '@/Components/EmptyState/Profile.vue';
 import Toast from '@/Components/Toast.vue';
 import Header from '@/Pages/Layouts/TechnicianHeader.vue';
-import EmptyProfile from '@/Components/EmptyState/Profile.vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import Alpine from 'alpinejs';
-import { onMounted, ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 import EmptyCard from '@/Components/EmptyState/Comments.vue';
 
 // Toast Start
@@ -407,27 +614,6 @@ const replyMore = (comment) => {
     commentForm.post(route('technician.forum.reply', [props.post.id, props.post.title, selectedComment.value]), { preserveScroll: false, preserveState: false })
 }
 
-const commenterNameElement = ref(null);
-
-// Function to adjust the position of the line-connector-sideways
-function adjustLineConnectorSideways() {
-    // Get the bounding box of the commenter's name element
-    const rect = commenterNameElement.value.getBoundingClientRect();
-
-    // Calculate the desired top and left positions based on the commenter's name
-    const desiredTop = rect.top; // Adjust this based on your layout
-    const desiredLeft = rect.left; // Adjust this based on your layout
-
-    // Set the new CSS properties for the line-connector-sideways
-    const lineConnectorSideways = document.querySelector('.line-connector-sideways');
-    lineConnectorSideways.style.top = `${desiredTop}px`;
-    lineConnectorSideways.style.left = `${desiredLeft}px`;
-}
-
-onMounted(() => {
-    adjustLineConnectorSideways();
-});
-
 
 const fullscreenImage = ref(null);
 
@@ -443,6 +629,47 @@ const handleImageClick = (imageSrc) => {
     openFullscreenImage(imageSrc);
 };
 
+let isShowEdit = ref(false);
+
+function closeEdit() {
+    if (isShowEdit.value) {
+        selectedComment.value = null;
+        isShowEdit.value = false;
+    }
+}
+
+function showEdit(comment) {
+    if (!isShowEdit.value) {
+        selectedComment.value = comment;
+        editComment.content = comment.content;
+        isShowEdit.value = true;
+    }
+}
+
+
+const editComment = useForm({
+    content: null,
+    tagged_user: null,
+})
+
+const edit = (comment) => editComment.put(route('technician.forum.edit.comment', [comment]), { preserveScroll: false, preserveState: false });
+
+
+const isShowDelete = ref(false);
+
+function closeDelete() {
+    if (isShowDelete.value) {
+        selectedComment.value = null
+        isShowDelete.value = false;
+    }
+}
+
+function showDelete(post) {
+    if (!isShowDelete.value) {
+        selectedComment.value = post;
+        isShowDelete.value = true;
+    }
+}
 </script>
 
 <style scoped>

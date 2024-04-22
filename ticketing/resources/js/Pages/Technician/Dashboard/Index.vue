@@ -1,5 +1,5 @@
 <template>
-    <div class="justify-content-center">
+    <div>
         <Header></Header>
         <div class="justify-content-center align-items-center d-flex flex-column mt-5 pt-5 gap-5 main-content">
             <div class="gap-5 justify-content-center align-items-center recent flex-wrap">
@@ -47,7 +47,6 @@
     </div>
 </template>
 
-
 <script setup>
 import Button from '@/Components/Button.vue';
 import Card from '@/Components/Cards.vue';
@@ -70,7 +69,6 @@ const formatDate = (date) => {
 </script>
 
 <style scoped>
-
 .hover:hover {
     background-color: white;
     transition: transform 0.5s ease;
@@ -99,36 +97,30 @@ const formatDate = (date) => {
     width: 40rem;
 }
 
-
-
-
-@media (max-width: 425px) {
+@media (max-width: 768px) {
     .main-content {
-        width: 50%;
-    }
-
-
-    .btn-width {
-        width: 100%;
-        margin-bottom: 5px; 
-    }
-
-    .recent {
-        flex-direction: column; 
-        align-items: center; 
-        flex: 1;
-    }
-
-    .statistics {
-        flex-direction: column; 
-        align-items: center; 
-    }
-
-    .bar,
-    .doughnut {
-       
-        margin-bottom: 20px;
+        width: 80%;
     }
 }
 
+@media (max-width: 425px) {
+    .main-content {
+        width: 90%;
+    }
+}
+
+@media (max-width: 320px) {
+    .main-content {
+        width: 100%;
+    }
+    .statistics {
+        flex-direction: column;
+    }
+    .bar {
+        width: 100%;
+    }
+    .doughnut {
+        width: 100%;
+    }
+}
 </style>

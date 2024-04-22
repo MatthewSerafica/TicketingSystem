@@ -34,8 +34,8 @@
             </div>
                 <div v-if="posts.data.length" class="table-responsive rounded shadow pt-2 px-2 mb-3">
                 <div class="bg-white border-bottom pb-2 mb-2" v-for="post in posts.data" v-bind:key="post.id">
-                    <a :href="route('technician.forum.post', [post.id])" class="text-decoration-none">
-                        <div class="post rounded px-3 pb-1">
+                    <div class="post rounded px-3 pb-1">
+                        <div class="d-flex align-items-center justify-content-between gap-2">
                             <div class="d-flex align-items-center gap-2">
                                 <div>
                                     <img v-if="post.user.avatar !== 'http://127.0.0.1:8000/storage'"
@@ -56,6 +56,17 @@
                                     </div>
                                 </div>
                             </div>
+                            <div v-if="page.props.user.id === post.user.id"
+                                class="mt-1 ellipsis rounded-circle dropdown">
+                                <button data-bs-toggle="dropdown" aria-expanded="false" class="btn rounded-circle">
+                                    <i class="bi bi-three-dots-vertical text-dark"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><div class="dropdown-item" @click="showDelete(post)">Delete</div></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <a :href="route('technician.forum.post', [post.id])" class="text-decoration-none">
                             <div v-if="post.tagged_user">
                                 <p><small>Tagged: {{ post.tagged_user }}</small></p>
                             </div>
@@ -63,7 +74,7 @@
                             <p class="text-dark"><strong>{{ post.title }}</strong></p>
 
                             <div v-if="post.image" class="card mb-2">
-                                <img :src="'http://127.0.0.1:8000/storage/'+post.image" alt="" class="rounded image">
+                                <img :src="'http://127.0.0.1:8000/storage/' + post.image" alt="" class="rounded image">
                             </div>
 
                             <p class="text-secondary-emphasis"> {{ post.content }} </p>
@@ -75,8 +86,9 @@
                                     <span class="text-xs text-dark">{{ post.comment_count }}</span>
                                 </div>
                             </div>
-                        </div>
-                    </a>
+
+                        </a>
+                    </div>
                 </div>
             </div>
             <EmptyCard :title="'No Post yet...'" v-else class="mt-2 w-75" style="height:20rem;">
@@ -87,6 +99,8 @@
                 </div>
             </div>
         </div>
+
+        <Delete v-if="isShowDelete" :post="selectedPost" @closeDelete="closeDelete" />
     </div>
 </template>
 
@@ -94,6 +108,7 @@
 import Toast from '@/Components/Toast.vue';
 import EmptyCard from '@/Components/EmptyState/Post.vue';
 import Button from '@/Components/Button.vue';
+import Delete from "@/Components/DeleteModal.vue";
 import Post from '@/Components/PostModal.vue';
 import EmptyProfile from '@/Components/EmptyState/Profile.vue';
 import Header from '@/Pages/Layouts/TechnicianHeader.vue';
@@ -120,6 +135,24 @@ const handleClose = () => {
     page.props.flash.error = null;
     showSuccessToast.value = false;
     showErrorToast.value = false;
+}
+
+let selectedPost = ref(null);
+
+const isShowDelete = ref(false);
+
+function closeDelete() {
+    if (isShowDelete.value) {
+        selectedPost.value = null
+        isShowDelete.value = false;
+    }
+}
+
+function showDelete(post) {
+    if (!isShowDelete.value) {
+        selectedPost.value = post;
+        isShowDelete.value = true;
+    }
 }
 
 

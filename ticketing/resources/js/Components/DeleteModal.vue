@@ -15,6 +15,8 @@
         <h2 class="mt-2">Confirm Deletion</h2>
         <p v-if="department">Are you sure you want to delete <strong>{{ department.department }}</strong>?</p>
         <p v-if="office">Are you sure you want to delete <strong>{{ office.office }}</strong>?</p>
+        <p v-if="post">Are you sure you want to delete your post?</p>
+        <p v-if="comment">Are you sure you want to delete your comment?</p>
       </div>
       <div class="d-flex flex-row gap-2 justify-content-end mt-2">
         <Link v-if="department" method="delete" type="button" as="button" :href="route('admin.department.delete', { id: department.id })"
@@ -22,6 +24,10 @@
         <Link v-if="office" method="delete" type="button" as="button" :href="route('admin.office.delete', { id: office.id })"
           @click="closeDelete" class="btn btn-danger">Delete</Link>
         <Link v-if="service" method="delete" type="button" as="button" :href="route('admin.services.delete', { id: service.id })"
+          @click="closeDelete" class="btn btn-danger">Delete</Link>
+        <Link v-if="post" method="delete" type="button" as="button" :href="route('technician.forum.delete', { id: post.id })"
+          @click="closeDelete" class="btn btn-danger">Delete</Link>
+        <Link v-if="comment" method="delete" type="button" as="button" :href="route('technician.forum.delete.comment', { id: comment.id })"
           @click="closeDelete" class="btn btn-danger">Delete</Link>
         <button @click="closeDelete" type="button" as="button" class="btn btn-outline-secondary ">Cancel</button>
       </div>
@@ -43,6 +49,8 @@ const props = defineProps({
   department: Object,
   office: Object,
   service: Object,
+  post: Object,
+  comment: Object,
 })
 
 </script>

@@ -18,8 +18,11 @@ class TechnicianForumController extends Controller
     public function index(Request $request)
     {
         $posts = Post::query()
+            ->whereNot('is_deleted', 1)
             ->with('user')
-            ->withCount('comment')
+            ->withCount(['comment' => function ($query) {
+                $query->where('is_deleted', '!=', 1);
+            }])
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where('title', 'like', '%' . $search . '%')
@@ -54,7 +57,7 @@ class TechnicianForumController extends Controller
             'title' => 'nullable',
             'content' => 'required',
             'tagged_user' => 'nullable',
-            'image' => 'nullable', 
+            'image' => 'nullable',
         ]);
 
         $post = new Post([
@@ -85,7 +88,9 @@ class TechnicianForumController extends Controller
     {
         $post = Post::where('id', $id)
             ->with('user')
-            ->withCount('comment')
+            ->withCount(['comment' => function ($query) {
+                $query->where('is_deleted', '!=', 1);
+            }])
             ->first();
 
         if ($post) {
@@ -93,6 +98,7 @@ class TechnicianForumController extends Controller
         }
 
         $comments = Comment::where('post_id', $post->id)
+            ->whereNot('is_deleted', 1)
             ->whereNull('parent_comment_id')
             ->with('user')
             ->orderBy('created_at', 'desc')
@@ -104,6 +110,7 @@ class TechnicianForumController extends Controller
         });
 
         $replies = Comment::where('post_id', $post->id)
+            ->whereNot('is_deleted', 1)
             ->whereNotNull('parent_comment_id')
             ->with('user')
             ->orderBy('created_at', 'desc')
@@ -192,5 +199,53 @@ class TechnicianForumController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $comment = Comment::findOrFail($id);
+
+        $request->validate([
+            'content' => 'required',
+            'tagged_user' => 'nullable',
+        ]);
+        $comment->content = $request->content;
+        $comment->save();
+
+        return redirect()->back()->with('success', 'Comment successfully updated');
+    }
+
+    public function deleteComment($id)
+    {
+        $comment = Comment::findOrFail($id);
+        $comment->is_deleted = 1;
+        $comment->save();
+
+        $children = Comment::where('parent_comment_id', $id)->get();
+
+        if ($children) {
+            foreach ($children as $child) {
+                $child->is_deleted = 1;
+                $child->save();
+                $grandChildren = Comment::where('parent_comment_id', $child->id)->get();
+                if ($grandChildren) {
+                    foreach ($grandChildren as $grandChild) {
+                        $grandChild->is_deleted = 1;
+                        $grandChild->save();
+                    }
+                }
+            }
+        }
+
+        return redirect()->back()->with('success', 'Comment successfully deleted');
+    }
+
+    public function delete($id)
+    {
+        $post = Post::findOrFail($id);
+        $post->is_deleted = 1;
+        $post->save();
+
+        return redirect()->back()->with('success', 'Post Deleted!')->with('message', 'Your post has been deleted');
     }
 }

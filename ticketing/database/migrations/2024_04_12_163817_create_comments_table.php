@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('user')->onUpdate('cascade')->onDelete('cascade');
             $table->text('content');
             $table->string('tagged_user')->nullable();
+            $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
     }
