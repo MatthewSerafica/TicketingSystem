@@ -15,6 +15,16 @@
                     <div class="p-4 d-flex flex-column gap-2">
                         <input type="text" class="p-2 px-4 rounded form-control" v-model="form.title"
                             placeholder="Title">
+                            <div class="position-relative">
+                                <input type="text" class="p-2 px-4 rounded form-control" v-model="form.tagged_user_name" placeholder="Type to search">
+                                <ul v-if="showAutocomplete" class="autocomplete-dropdown">
+                                    <li v-for="technician in filteredTechnicians" :key="technician.id" @click="selectTechnician(technician)">
+                                        {{ technician.user.name }}
+                                    </li>
+                                </ul>
+                            </div>
+
+
                         <textarea class="w-full p-4 rounded form-control" placeholder="What are you thinking about?"
                             v-model="form.content"></textarea>
                         <div v-if="isUploadImageShown" class="card p-2 rounded border">
@@ -61,24 +71,59 @@
 </template>
 
 <script setup>
-import { defineEmits, ref } from 'vue';
+import { defineEmits, ref, computed, watch } from 'vue';
 import Button from '@/Components/Button.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 
+const props = defineProps({
+    technicians: Object,
+});
 
 const page = usePage();
 
+const form = useForm({
+    title: null,
+    content: null,
+    tagged_user: null,
+    tagged_user_name: '',
+});
+
+let showAutocomplete = ref(false);
 let showSuccessToast = ref(false);
 let showErrorToast = ref(false);
+let isUploadImageShown = ref(false);
+const uploadedPicture = ref(null);
+const fileInput = ref(null);
+const formData = new FormData();
 
-const emit = defineEmits(['closeDelete'])
+const filteredTechnicians = computed(() => {
+    let searchTerm = form.tagged_user_name;
+    if (!searchTerm) {
+        return []; // Return an empty array if the search term is empty
+    }
+    searchTerm = searchTerm.trim().toLowerCase(); // Trim whitespace and convert to lowercase
+    return props.technicians.filter(technician => technician.user.name.toLowerCase().includes(searchTerm));
+});
+
+const selectTechnician = (technician) => {
+    form.tagged_user = technician.id;
+    form.tagged_user_name = technician.user.name;
+    showAutocomplete.value = false;
+};
+
+// Watch for changes in the text input to show/hide autocomplete dropdown
+watch(() => form.tagged_user_name, (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+        showAutocomplete.value = true;
+    }
+});
+
+const emit = defineEmits(['closeDelete']);
 
 const closeDelete = () => {
-    emit('closeDelete')
-}
-
-let isUploadImageShown = ref(false);
+    emit('closeDelete');
+};
 
 function closeUploadImage() {
     if (isUploadImageShown.value) {
@@ -94,20 +139,9 @@ function showUploadImage() {
     }
 }
 
-const fileInput = ref(null);
-
 const openFileInput = () => {
     fileInput.value.click();
-
-}
-
-const formData = new FormData();
-
-const form = useForm({
-    title: null,
-    content: null,
-    tagged_user: null,
-})
+};
 
 const post = async () => {
     formData.append('title', form.title);
@@ -148,21 +182,17 @@ const post = async () => {
     }
 };
 
-
-
-const uploadedPicture = ref(null);
-
 const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (!file) {
-        console.log('No File')
+        console.log('No File');
         return;
     }
     uploadedPicture.value = URL.createObjectURL(file);
-
     formData.append('image', file);
 };
 </script>
+
 
 <style scoped>
 .custom-modal {

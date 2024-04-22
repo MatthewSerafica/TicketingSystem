@@ -30,8 +30,8 @@
                         <button class="p-2 px-4 rounded-pill form-control btn btn-outline-secondary d-flex"
                             @click="showPost">What are you thinking about?</button>
                     </div>
-                    <Post v-if="isShowPost" @closeDelete="closePost" />
-            </div>
+                    <Post v-if="isShowPost" :technicians="technicians" @closeDelete="closePost" />
+                </div>
                 <div v-if="posts.data.length" class="table-responsive rounded shadow pt-2 px-2 mb-3">
                 <div class="bg-white border-bottom pb-2 mb-2" v-for="post in posts.data" v-bind:key="post.id">
                     <div class="post rounded px-3 pb-1">
@@ -159,6 +159,7 @@ function showDelete(post) {
 const props = defineProps({
     posts: Object,
     filters: Object,
+    technicians: Object,
 })
 
 const isShowPost = ref(false);

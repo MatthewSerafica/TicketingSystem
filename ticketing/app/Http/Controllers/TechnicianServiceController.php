@@ -39,9 +39,11 @@ class TechnicianServiceController extends Controller
             ->orderBy('service_id')
             ->paginate(10);
         $filters = $request->only(['search']);
+        $tickets = Ticket::all();
         return inertia('Technician/ServiceReports/Index', [
             'service_report' => $service_report,
             'filters' => $filters,
+            'tickets' => $tickets,
         ]);
     }
 
