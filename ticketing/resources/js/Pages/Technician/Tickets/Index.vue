@@ -665,7 +665,7 @@ const validateNumericInput = (inputValue, propName) => {
 
 @media (max-width: 325px) {
   .main-content {
-    margin-left: 0; /* Remove any left margin */
+    margin-left: 0; 
   }
 
   .custom-rounded-table {
@@ -673,12 +673,12 @@ const validateNumericInput = (inputValue, propName) => {
   }
 
   .pagination {
-    width: 100%; /* Ensure pagination spans full width */
+    width: 100%; 
     overflow-x: auto;
   }
 
   .table-responsive {
-    width: 100%; /* Ensure table container spans full width */
+    width: 100%; 
     overflow-x: auto;
   }
 
@@ -693,9 +693,9 @@ const validateNumericInput = (inputValue, propName) => {
 
   /* Adjust header styles */
   .sticky-top {
-    width: 100%; /* Make the header span full width */
-    left: 0; /* Position it at the left edge of the screen */
-    right: 0; /* Position it at the right edge of the screen */
+    width: 100%; 
+    left: 0; 
+    right: 0; 
   }
 }
 
