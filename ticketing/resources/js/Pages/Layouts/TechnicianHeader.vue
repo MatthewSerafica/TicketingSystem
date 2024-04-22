@@ -30,7 +30,7 @@
                                 @click="setActiveLink('forum')">Forum</a>
                         </li>
                     </ul>
-                   
+
                     <div class="d-flex gap-2 align-items-center">
                         <button class="btn p-2" type="button" data-bs-toggle="offcanvas"
                             data-bs-target="#notificationBar" aria-controls="notificationBar"
@@ -44,37 +44,38 @@
                             </span>
                         </button>
 
-                        <div class="d-flex align-items-center">
-                        <img v-if="page.props.user.avatar !== 'http://127.0.0.1:8000/storage'" :src="page.props.user.avatar" alt="User profile picture"
-                            class="avatar rounded-circle shadow border-3">
-                        <svg v-else xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
-                            class="bi bi-person-circle" viewBox="0 0 16 16">
-                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                            <path fill-rule="evenodd"
-                                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                        </svg>
-                        <div class="dropdown-center">
-                            <a class="text-decoration-none dropdown-toggle text-white" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                {{ page.props.user.name }}
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <Link :href="route('technician.profile')" v-if="page.props.user"
-                                        class="text-decoration-none dropdown-item">
-                                    Profile
-                                    </Link>
-                                    <Link :href="route('technician.change', page.props.user.id)" v-if="page.props.user"
-                                        class="text-decoration-none dropdown-item">
-                                    Change password
-                                    </Link>
-                                    <Link :href="route('logout')" method="delete" v-if="page.props.user"
-                                        class="text-decoration-none dropdown-item">
-                                    Logout
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <img v-if="page.props.user.avatar !== 'http://127.0.0.1:8000/storage'"
+                                :src="page.props.user.avatar" alt="User profile picture"
+                                class="avatar rounded-circle shadow border-3">
+                            <svg v-else xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
+                                class="bi bi-person-circle" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                                <path fill-rule="evenodd"
+                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                            </svg>
+                            <div class="dropdown-center">
+                                <a class="text-decoration-none dropdown-toggle text-white" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ page.props.user.name }}
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <Link :href="route('technician.profile')" v-if="page.props.user"
+                                            class="text-decoration-none dropdown-item">
+                                        Profile
+                                        </Link>
+                                        <Link :href="route('technician.change', page.props.user.id)"
+                                            v-if="page.props.user" class="text-decoration-none dropdown-item">
+                                        Change password
+                                        </Link>
+                                        <Link :href="route('logout')" method="delete" v-if="page.props.user"
+                                            class="text-decoration-none dropdown-item">
+                                        Logout
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

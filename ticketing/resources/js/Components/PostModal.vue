@@ -52,7 +52,7 @@
                                     d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z" />
                             </svg>
                         </button>
-                        <Button :name="'Post'" :color="'primary'" :width="'25'"></Button>
+                        <Button :name="'Post'" :color="'primary'" :width="'25'" :disabled="!form.content"></Button>
                     </div>
                 </form>
             </div>
@@ -110,21 +110,17 @@ const form = useForm({
 })
 
 const post = async () => {
-    // Append form data to FormData
     formData.append('title', form.title);
     formData.append('content', form.content ?? '');
     formData.append('tagged_user', form.tagged_user ?? '');
 
     try {
-        // Post form data along with image
         const response = await axios.post(route('technician.forum.store'), formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         });
 
-        // Handle response
-        console.log(response);
 
         if (response.status === 200) {
             page.props.flash.success = response.data.success;
@@ -139,7 +135,6 @@ const post = async () => {
         closeDelete();
         window.location.reload();
     } catch (error) {
-        // Handle error
         console.error('Error during form submission:', error);
         page.props.flash.error = true;
         if (error.response?.data?.message) {

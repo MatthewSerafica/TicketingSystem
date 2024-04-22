@@ -2,103 +2,112 @@
   <div>
     <Header></Header>
     <div class="mt-2 pt-5">
-        <br />
-        <div class="container">
-          <div class="title-container text-center">
-            <h1 class="fw-bold">Create Service Reports</h1>
+      <br />
+      <div class="container">
+        <div class="title-container text-center">
+          <h1 class="fw-bold">Create Service Reports</h1>
+        </div>
+
+        <div class="create-report mb-3">
+          <div class="row justify-content-center mb-4">
+            <div class="col-md-6">
+              <div class="input-group">
+                <span class="input-group-text">SR-A:</span>
+                <input type="text" class="form-control" id="service_id" v-model="form.service_id" required>
+              </div>
+              <span v-if="form.errors.service_id" class="error-message">{{ form.errors.service_id }}</span>
+            </div>
           </div>
 
-          <div class="create-report mb-3">
-            <div class="row justify-content-center mb-4">
-              <div class="col-md-6">
-                <div class="input-group">
-                  <span class="input-group-text">SR-A:</span>
-                  <input type="text" class="form-control" id="service_id" v-model="form.service_id" required>
-                </div>
-                <span v-if="form.errors.service_id" class="error-message">{{ form.errors.service_id }}</span>
-              </div>
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <label for="dateStarted" class="form-label">Date Started:</label>
+              <input type="date" class="form-control" id="dateStarted" v-model="form.date_started" required>
+            </div>
+            <div class="col-md-4">
+              <label for="timeStarted" class="form-label">Time Started:</label>
+              <input type="time" class="form-control" id="timeStarted" v-model="form.time_started" required>
             </div>
 
-            <div class="row mb-4">
-              <div class="col-md-4">
-                <label for="dateStarted" class="form-label">Date Started:</label>
-                <input type="date" class="form-control" id="dateStarted" v-model="form.date_started" required>
-              </div>
-              <div class="col-md-4">
-                <label for="timeStarted" class="form-label">Time Started:</label>
-                <input type="time" class="form-control" id="timeStarted" v-model="form.time_started" required>
+            <div class="col-md-4">
+              <label for="ticketNumber" class="form-label">Ticket Number:</label>
+              <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  {{ form.ticket_number ? form.ticket_number : 'Select a ticket number...' }}
+                </button>
+                <ul class="dropdown-menu">
+                  <li v-for="ticket in tickets">
+                    <div class="dropdown-item" @click="ticketDetails(ticket)">{{ ticket.ticket_number }}</div>
+                  </li>
+                </ul>
               </div>
 
-              <div class="col-md-4">
-                <label for="ticketNumber" class="form-label">Ticket Number:</label>
-                <select class="form-select" id="ticketNumber" v-model="form.ticket_number" required @change="ticketDetails($event.target.value)">
-                  <option value="">Select a ticket number</option>
-                  <option v-for="ticket in tickets" :value="ticket.ticket_number">{{ ticket.ticket_number }}</option>
-                </select>
-
-                <span v-if="form.errors.ticket_number" class="error-message">{{ form.errors.ticket_number }}</span>
-              </div>
+              <span v-if="form.errors.ticket_number" class="error-message">{{ form.errors.ticket_number }}</span>
             </div>
+          </div>
 
-            <div class="row mb-4">
-              <div class="col-md-4">
-                <label for="technicianName" class="form-label">Technician Name:</label>
-                <textarea class="form-control" id="technicianName" v-model="form.technician" readonly> </textarea>
-              </div>
-              <div class="col-md-4">
-                <label for="requestingOffice" class="form-label">Requesting Office:</label>
-                <input type="text" class="form-control" id="requestingOffice" v-model="form.requesting_office">
-              </div>
-              <div class="col-md-4">
-                <label for="equipment_no" class="form-label">Equipment, Property Tag/Serial No.:</label>
-                <input type="text" class="form-control" id="equipment_no" v-model="form.equipment_no">
-              </div>
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <label for="technicianName" class="form-label">Technician Name:</label>
+              <textarea class="form-control" id="technicianName" v-model="form.technician" readonly> </textarea>
             </div>
-
-
-            <div class="row mb-4">
-              <div class="col-md-4">
-                <label for="problemEncountered" class="form-label">Problem Encountered:</label>
-                <input type="text" class="form-control" id="problemEncountered" v-model="form.problem">
-              </div>
-              <div class="col-md-4">
-                <label for="action" class="form-label">Action Taken:</label>
-                <input type="text" class="form-control" id="action" v-model="form.action">
-              </div>
-              <div class="col-md-4">
-                <label for="recommendation" class="form-label">Recommendation:</label>
-                <input type="text" class="form-control" id="recommendation" v-model="form.recommendation">
-              </div>
+            <div class="col-md-4">
+              <label for="requestingOffice" class="form-label">Requesting Office:</label>
+              <input type="text" class="form-control" id="requestingOffice" v-model="form.requesting_office">
             </div>
-
-
-            <div class="row mb-4">
-              <div class="col-md-4">
-                <label for="dateDone" class="form-label">Date Done:</label>
-                <input type="date" class="form-control" id="dateDone" v-model="form.date_done" :min="minDate">
-              </div>
-              <div class="col-md-4">
-                <label for="timeDone" class="form-label">Time Done:</label>
-                <input type="time" class="form-control" id="timeDone" v-model="form.time_done">
-              </div>
-              <div class="col-md-4">
-                <label for="remarks" class="form-label">Remarks</label>
-                <textarea class="form-control" id="remarks" v-model="form.remarks"></textarea>
-              </div>
+            <div class="col-md-4">
+              <label for="equipment_no" class="form-label">Equipment, Property Tag/Serial No.:</label>
+              <input type="text" class="form-control" id="equipment_no" v-model="form.equipment_no">
             </div>
+          </div>
 
-            <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" :ticket="selectedTicket" @confirm="create" @closeSubmitService="closeSubmitService" />
-              {{ selectedTicket }}
-            <div class="row justify-content-end">
-              <div class="col-md-4">
-                <div class="d-flex justify-content-end gap-2">
-                  <Button :name="'Submit'" :color="'primary'" @click="submitServiceReport(form, selectedTicket)"></Button>
-                  <Button :name="'Cancel'" :color="'light'" @click="back(props.new_service_id)" class="btn btn-outline-primary"></Button>
-                </div>
+
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <label for="problemEncountered" class="form-label">Problem Encountered:</label>
+              <input type="text" class="form-control" id="problemEncountered" v-model="form.problem">
+            </div>
+            <div class="col-md-4">
+              <label for="action" class="form-label">Action Taken:</label>
+              <input type="text" class="form-control" id="action" v-model="form.action">
+            </div>
+            <div class="col-md-4">
+              <label for="recommendation" class="form-label">Recommendation:</label>
+              <input type="text" class="form-control" id="recommendation" v-model="form.recommendation">
+            </div>
+          </div>
+
+
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <label for="dateDone" class="form-label">Date Done:</label>
+              <input type="date" class="form-control" id="dateDone" v-model="form.date_done" :min="minDate">
+            </div>
+            <div class="col-md-4">
+              <label for="timeDone" class="form-label">Time Done:</label>
+              <input type="time" class="form-control" id="timeDone" v-model="form.time_done">
+            </div>
+            <div class="col-md-4">
+              <label for="remarks" class="form-label">Remarks</label>
+              <textarea class="form-control" id="remarks" v-model="form.remarks"></textarea>
+            </div>
+          </div>
+
+          <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" :ticket="selectedTicket"
+            @confirm="create" @closeSubmitService="closeSubmitService" />
+          {{ selectedTicket }}
+          <div class="row justify-content-end">
+            <div class="col-md-4">
+              <div class="d-flex justify-content-end gap-2">
+                <Button :name="'Submit'" :color="'primary'" @click="submitServiceReport(form, selectedTicket)"></Button>
+                <Button :name="'Cancel'" :color="'light'" @click="back(props.new_service_id)"
+                  class="btn btn-outline-primary"></Button>
               </div>
             </div>
           </div>
         </div>
+      </div>
     </div>
   </div>
 </template>
@@ -148,13 +157,16 @@ const fillFormWithTicket = (ticket) => {
   // Fill other form fields as needed
 };
 
+let selectedTicket = ref([]);
+
 onMounted(async () => {
   // Check if props.ticket_id is present
   if (props.ticket_id) {
-    const selectedTicket = props.tickets.find(ticket => ticket.ticket_number === props.ticket_id);
-    if (selectedTicket) {
-      fillFormWithTicket(selectedTicket);
-      const response = await fetch(route('technician.tickets.assigned', { id: selectedTicket.ticket_number }));
+    const ticketSelected = props.tickets.find(ticket => ticket.ticket_number === props.ticket_id);
+    selectedTicket = ticketSelected;
+    if (ticketSelected) {
+      fillFormWithTicket(ticketSelected);
+      const response = await fetch(route('technician.tickets.assigned', { id: ticketSelected.ticket_number }));
       const data = await response.json();
       const technicianNames = [];
       const technicianId = [];
@@ -166,19 +178,19 @@ onMounted(async () => {
       const formattedTechnicianNames = technicianNames.join(' / ');
       form.technician = formattedTechnicianNames;
       console.log(form.technician);
-      }
     }
+  }
 
-  
+
 });
 
- const create = () => {
+const create = () => {
   if (!/^\d+$/.test(form.ticket_number)) {
     form.errors.ticket_number = 'Ticket number should contain only numeric characters.';
     return;
   }
   form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false });
-} 
+}
 
 watch(() => form.ticket_number, async (newValue) => {
   const selectedTicket = props.tickets.find(ticket => ticket.ticket_number === newValue);
@@ -201,13 +213,14 @@ watch(() => form.ticket_number, async (newValue) => {
   }
 })
 
-let selectedTicket = ref([]);
 let selectedServiceReport = ref(null);
 const showConfirmationModal = ref(false);
 
 const ticketDetails = (ticket) => {
-  if(ticket){
-    selectedTicket.value = ticket;
+  if (ticket) {
+    selectedTicket = null;
+    form.ticket_number = ticket.ticket_number;
+    selectedTicket = ticket;
     console.log('Selected Ticket ID:', ticket.ticket_number);
   }
 }
@@ -225,21 +238,21 @@ const submitServiceReport = (sr, ticket) => {
 
 
 function closeSubmitService() {
-  if(showConfirmationModal.value) {
+  if (showConfirmationModal.value) {
     selectedServiceReport.value = null
     showConfirmationModal.value = false;
   }
 }
 
 const back = async (id) => {
-    try {
-      console.log("cancel button clicked");
-        /* router.post({ name: 'technician.service-reports.back', params: { service_id: props.new_service_id } }); */
-        router.post(route('technician.service-reports.back', id));
-        console.log("cancel routing");
-    } catch (err) {
-        console.error(err);
-    }
+  try {
+    console.log("cancel button clicked");
+    /* router.post({ name: 'technician.service-reports.back', params: { service_id: props.new_service_id } }); */
+    router.post(route('technician.service-reports.back', id));
+    console.log("cancel routing");
+  } catch (err) {
+    console.error(err);
+  }
 }
 </script>
 

@@ -29,7 +29,8 @@
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="rs_no" class="fw-semibold">RS No.</label>
                   <input id="rs_no" class="form-control h-100 rounded border-secondary-subtle" type="text"
-                    placeholder="Enter RS No..." v-model="form.rs_no" :disabled="form.request_type !== 'Requisition Slip'" />
+                    placeholder="Enter RS No..." v-model="form.rs_no"
+                    :disabled="form.request_type !== 'Requisition Slip'" />
 
                   <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
                 </div>
@@ -43,25 +44,25 @@
                 </div>
               </div> -->
               <div class="flex-grow-1 w-50 d-flex flex-column">
-                    <label for="Title" class="fw-semibold">Title</label>
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ form.problem ? form.problem : 'Select a Title...' }}
-                      </button>
-                      <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
-                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                        <span class="visually-hidden">Toggle Dropdown</span>
-                      </button>
-                      <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                        <li v-if="problems" v-for="problem in problems" class="btn dropdown-item"
-                            @click="selectProblem(problem)" style="width: 400px;">
-                            <span class="fw-semibold">{{ problem.problem }}</span>
-                        </li>
-                        <li v-else-if="!problems">No problems found...</li>
-                      </ul>
-                    </div>
-                  </div>
+                <label for="Title" class="fw-semibold">Title</label>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ form.problem ? form.problem : 'Select a Title...' }}
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                  </button>
+                  <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                    <li v-if="problems" v-for="problem in problems" class="btn dropdown-item"
+                      @click="selectProblem(problem)" style="width: 400px;">
+                      <span class="fw-semibold">{{ problem.problem }}</span>
+                    </li>
+                    <li v-else-if="!problems">No problems found...</li>
+                  </ul>
+                </div>
+              </div>
 
 
               <div class="flex-grow-1 w-30">
@@ -75,7 +76,7 @@
                   </select>
                 </div>
               </div>
-             
+
             </div>
 
 
@@ -115,13 +116,13 @@
                     <li v-else-if="!employees">No results found...</li>
                   </ul>
                 </div>
-                
+
               </div>
               <div class="flex-grow-1 w-50 d-flex flex-column">
-                    <label for="deptOffice" class="fw-semibold">Department & Office</label>
-                    <input id="deptOffice" class="form-control rounded border-secondary-subtle" type="text"
-                    placeholder=" " v-model="form.department" disabled/>
-                  </div>
+                <label for="deptOffice" class="fw-semibold">Department & Office</label>
+                <input id="deptOffice" class="form-control rounded border-secondary-subtle" type="text" placeholder=" "
+                  v-model="form.department" disabled />
+              </div>
               <div class="flex-grow-1 w-50">
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="service" class="fw-semibold">Service</label>
@@ -135,7 +136,7 @@
                 </div>
               </div>
 
-              
+
             </div>
 
             <div class="row justify-content-center">
