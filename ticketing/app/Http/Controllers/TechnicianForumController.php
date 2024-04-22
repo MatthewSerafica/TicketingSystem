@@ -6,6 +6,7 @@ use App\Http\Resources\PostResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Technician;
 use App\Notifications\CommentMade;
 use App\Notifications\PostMade;
 use App\Notifications\ReplyMade;
@@ -41,11 +42,14 @@ class TechnicianForumController extends Controller
         if ($request->wantsJson()) {
             return PostResource::collection($posts);
         }
+        $technicians = Technician::with('user')
+            ->get();
 
         $filters = $request->only(['search']);
         return inertia('Technician/Forum/Index', [
             'posts' => PostResource::collection($posts),
             'filters' => $filters,
+            'technicians' => $technicians,
         ]);
     }
 
