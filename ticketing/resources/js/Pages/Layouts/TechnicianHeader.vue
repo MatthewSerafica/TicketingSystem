@@ -11,8 +11,8 @@
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse gap-5  " id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                <div class="collapse navbar-collapse gap-5" id="navbarNav">
+                    <ul class="navbar-nav">
                         <li class="nav-item" :class="{ 'active': activeLink === 'dashboard' }">
                             <a class="nav-link text-white" aria-current="page" href="/technician"
                                 @click="setActiveLink('dashboard')">Dashboard</a>
@@ -30,8 +30,8 @@
                                 @click="setActiveLink('forum')">Forum</a>
                         </li>
                     </ul>
-
-                    <div class="d-flex gap-2 pe-5 me-5 justify-content-center align-items-center">
+                   
+                    <div class="d-flex gap-2 align-items-center">
                         <button class="btn p-2" type="button" data-bs-toggle="offcanvas"
                             data-bs-target="#notificationBar" aria-controls="notificationBar"
                             @click="fetchNotifications">
@@ -44,6 +44,7 @@
                             </span>
                         </button>
 
+                        <div class="d-flex align-items-center">
                         <img v-if="page.props.user.avatar !== 'http://127.0.0.1:8000/storage'" :src="page.props.user.avatar" alt="User profile picture"
                             class="avatar rounded-circle shadow border-3">
                         <svg v-else xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
@@ -73,6 +74,7 @@
                                     </Link>
                                 </li>
                             </ul>
+                        </div>
                         </div>
                     </div>
                 </div>
