@@ -111,182 +111,183 @@
                     </div>
 
                     <!-- Comment Section -->
-                    <div class="comment-container">
-                        <div class="pb-2 d-flex flex-column commentt" v-for="comment in comments"
-                            v-bind:key="comment.id">
-                            <div class="post rounded px-2">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="d-flex align-items-center justify-content-center gap-2">
-                                        <div class="mt-1 d-flex align-items-center gap-2">
-                                            <div class="">
-                                                <img v-if="comment.user.avatar !== 'http://127.0.0.1:8000/storage'"
-                                                    :src="comment.user.avatar" alt="User profile picture"
-                                                    class="avatar rounded-circle">
-                                                <EmptyProfile v-else class="avatar rounded-circle">
-                                                </EmptyProfile>
+                    <div v-if="comments.data" class="comment-container">
+                            <div class="pb-2 d-flex flex-column commentt" v-for="comment in comments"
+                                v-bind:key="comment.id">
+                                <div class="post rounded px-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="d-flex align-items-center justify-content-center gap-2">
+                                            <div class="mt-1 d-flex align-items-center gap-2">
+                                                <div class="">
+                                                    <img v-if="comment.user.avatar !== 'http://127.0.0.1:8000/storage'"
+                                                        :src="comment.user.avatar" alt="User profile picture"
+                                                        class="avatar rounded-circle">
+                                                    <EmptyProfile v-else class="avatar rounded-circle">
+                                                    </EmptyProfile>
+                                                </div>
+                                                <div class="d-flex align-items-center gap-2 mt-3">
+                                                    <p class="fw-semibold text-dark"><small>{{ comment.user.name }}</small>
+                                                    </p>
+                                                    <p class="text-secondary">
+                                                        •
+                                                    </p>
+                                                    <p class="text-secondary"><small>{{ comment.time_since_posted }}</small>
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div class="d-flex align-items-center gap-2 mt-3">
-                                                <p class="fw-semibold text-dark"><small>{{ comment.user.name }}</small>
-                                                </p>
-                                                <p class="text-secondary">
-                                                    •
-                                                </p>
-                                                <p class="text-secondary"><small>{{ comment.time_since_posted }}</small>
-                                                </p>
+                                        </div>
+                                    </div>
+                                    <div class="comment-line-connector-container">
+                                        <div class="comment-line-connector"></div>
+                                        <div class="comment-line-connector-sideways"></div>
+                                        <!-- Comment Content -->
+                                        <div>
+                                            <div v-if="comment.tagged_user">
+                                                <p><small>Tagged: {{ comment.tagged_user }}</small></p>
+                                            </div>
+                                            <p class="text-secondary-emphasis"> {{ comment.content }} </p>
+
+                                            <div class="d-flex justify-content-start align-items-center text-dark"
+                                                style="margin-left: -2rem;">
+                                                <button @click="toggleRepliesVisibility(comment.id)" class="btn">
+                                                    <i
+                                                        :class="repliesVisibility[comment.id] ? 'bi bi-dash-circle' : 'bi bi-plus-circle'">
+                                                    </i>
+                                                </button>
+                                                <div class="d-flex align-items-center justify-content-center gap-2 rounded-pill p-2 reply"
+                                                    @click="showReply(comment.id)" style="width: 5rem;">
+                                                    <i class="bi bi-chat-left-dots"></i>
+                                                    <span style="font-size: 12px;" class="fw-semibold">Reply</span>
+                                                </div>
+                                            </div>
+
+                                            <div v-if="isShowReply && selectedComment && selectedComment === comment.id"
+                                                class="d-flex flex-column gap-2 border rounded-4 p-2">
+                                                <form @submit.prevent="reply(comment.id)">
+                                                    <textarea ref="commentTextarea"
+                                                        class="p-2 px-4 rounded-4 form-control border-0"
+                                                        v-model="commentForm.content"></textarea>
+                                                    <div class="d-flex justify-content-end py-1 px-3 gap-2">
+                                                        <Button :name="'Cancel'" :color="'secondary'" @click="closeReply"
+                                                            class="rounded-pill" style="font-size: 12px;"></Button>
+                                                        <button type="submit" class="rounded-pill btn btn-primary"
+                                                            style="font-size: 12px;">Comment</button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="comment-line-connector-container">
-                                    <div class="comment-line-connector"></div>
-                                    <div class="comment-line-connector-sideways"></div>
-                                    <!-- Comment Content -->
-                                    <div>
-                                        <div v-if="comment.tagged_user">
-                                            <p><small>Tagged: {{ comment.tagged_user }}</small></p>
-                                        </div>
-                                        <p class="text-secondary-emphasis"> {{ comment.content }} </p>
 
-                                        <div class="d-flex justify-content-start align-items-center text-dark"
-                                            style="margin-left: -2rem;">
-                                            <button @click="toggleRepliesVisibility(comment.id)" class="btn">
-                                                <i
-                                                    :class="repliesVisibility[comment.id] ? 'bi bi-dash-circle' : 'bi bi-plus-circle'">
-                                                </i>
-                                            </button>
-                                            <div class="d-flex align-items-center justify-content-center gap-2 rounded-pill p-2 reply"
-                                                @click="showReply(comment.id)" style="width: 5rem;">
-                                                <i class="bi bi-chat-left-dots"></i>
-                                                <span style="font-size: 12px;" class="fw-semibold">Reply</span>
-                                            </div>
-                                        </div>
-
-                                        <div v-if="isShowReply && selectedComment && selectedComment === comment.id"
-                                            class="d-flex flex-column gap-2 border rounded-4 p-2">
-                                            <form @submit.prevent="reply(comment.id)">
-                                                <textarea ref="commentTextarea"
-                                                    class="p-2 px-4 rounded-4 form-control border-0"
-                                                    v-model="commentForm.content"></textarea>
-                                                <div class="d-flex justify-content-end py-1 px-3 gap-2">
-                                                    <Button :name="'Cancel'" :color="'secondary'" @click="closeReply"
-                                                        class="rounded-pill" style="font-size: 12px;"></Button>
-                                                    <button type="submit" class="rounded-pill btn btn-primary"
-                                                        style="font-size: 12px;">Comment</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Reply Section -->
-                            <div v-if="repliesVisibility[comment.id]" class="reply-container">
-                                <div v-for="reply in replies" v-bind:key="reply.id" class="mx-5 replyy">
-                                    <div v-if="reply.parent_comment_id === comment.id" class="post rounded">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="d-flex align-items-center justify-content-center gap-2">
-                                                <div class="mt-2 d-flex align-items-center gap-2">
-                                                    <div class="">
-                                                        <img v-if="reply.user.avatar !== 'http://127.0.0.1:8000/storage'"
-                                                            :src="reply.user.avatar" alt="User profile picture"
-                                                            class="avatar rounded-circle">
-                                                        <EmptyProfile v-else class="avatar rounded-circle">
-                                                        </EmptyProfile>
-                                                    </div>
-                                                    <div class="d-flex align-items-center gap-2 mt-3">
-                                                        <p class="fw-semibold text-dark"><small>{{ reply.user.name
-                                                                }}</small>
-                                                        </p>
-                                                        <p class="text-secondary">
-                                                            •
-                                                        </p>
-                                                        <p class="text-secondary"><small>{{ reply.time_since_posted
-                                                                }}</small>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Reply Content -->
-                                        <div class="line-connector-container">
-                                            <div class="line-connector"></div>
-                                            <div class="line-connector-sideways"></div>
-                                            <div>
-                                                <div v-if="reply.tagged_user">
-                                                    <p><small>Tagged: {{ reply.tagged_user }}</small></p>
-                                                </div>
-                                                <p class="text-secondary-emphasis"> {{ reply.content }} </p>
-
-                                                <div class="d-flex justify-content-start align-items-center text-dark"
-                                                    style="margin-left: -2rem;">
-                                                    <button @click="toggleRepliesVisibility(reply.id)" class="btn">
-                                                        <i
-                                                            :class="repliesVisibility[reply.id] ? 'bi bi-dash-circle' : 'bi bi-plus-circle'">
-                                                        </i>
-                                                    </button>
-                                                    <div class="d-flex align-items-center justify-content-center gap-2 rounded-pill p-2 reply"
-                                                        @click="showReply(reply.id)" style="width: 5rem;">
-                                                        <i class="bi bi-chat-left-dots"></i>
-                                                        <span style="font-size: 12px;" class="fw-semibold">Reply</span>
-                                                    </div>
-                                                </div>
-                                                <div v-if="isShowReply && selectedComment && selectedComment === reply.id"
-                                                    class="d-flex flex-column gap-2 border rounded-4 p-2">
-                                                    <form @submit.prevent="replyMore(reply.id)">
-                                                        <textarea class="p-2 px-4 rounded-4 form-control border-0"
-                                                            v-model="commentForm.content"></textarea>
-                                                        <div class="d-flex justify-content-end py-1 px-3 gap-2">
-                                                            <Button :name="'Cancel'" :color="'secondary'"
-                                                                @click="closeReply" class="rounded-pill"
-                                                                style="font-size: 12px;"></Button>
-                                                            <button type="submit" class="rounded-pill btn btn-primary"
-                                                                style="font-size: 12px;">Comment</button>
+                                <!-- Reply Section -->
+                                <div v-if="repliesVisibility[comment.id]" class="reply-container">
+                                    <div v-for="reply in replies" v-bind:key="reply.id" class="mx-5 replyy">
+                                        <div v-if="reply.parent_comment_id === comment.id" class="post rounded">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="d-flex align-items-center justify-content-center gap-2">
+                                                    <div class="mt-2 d-flex align-items-center gap-2">
+                                                        <div class="">
+                                                            <img v-if="reply.user.avatar !== 'http://127.0.0.1:8000/storage'"
+                                                                :src="reply.user.avatar" alt="User profile picture"
+                                                                class="avatar rounded-circle">
+                                                            <EmptyProfile v-else class="avatar rounded-circle">
+                                                            </EmptyProfile>
                                                         </div>
-                                                    </form>
+                                                        <div class="d-flex align-items-center gap-2 mt-3">
+                                                            <p class="fw-semibold text-dark"><small>{{ reply.user.name
+                                                                    }}</small>
+                                                            </p>
+                                                            <p class="text-secondary">
+                                                                •
+                                                            </p>
+                                                            <p class="text-secondary"><small>{{ reply.time_since_posted
+                                                                    }}</small>
+                                                            </p>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                            <!-- Reply Content -->
+                                            <div class="line-connector-container">
+                                                <div class="line-connector"></div>
+                                                <div class="line-connector-sideways"></div>
+                                                <div>
+                                                    <div v-if="reply.tagged_user">
+                                                        <p><small>Tagged: {{ reply.tagged_user }}</small></p>
+                                                    </div>
+                                                    <p class="text-secondary-emphasis"> {{ reply.content }} </p>
 
-                                        <!-- More Replies Section -->
-                                        <div v-if="repliesVisibility[reply.id]" class="replies-container">
-                                            <div v-for="more in replies" v-bind:key="more.id" class="mx-5">
-                                                <div v-if="more.parent_comment_id === reply.id" class="post rounded">
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <div
-                                                            class="d-flex align-items-center justify-content-center gap-2">
-                                                            <div class="mt-1 d-flex align-items-center gap-2">
-                                                                <div class="">
-                                                                    <img v-if="more.user.avatar !== 'http://127.0.0.1:8000/storage'"
-                                                                        :src="more.user.avatar"
-                                                                        alt="User profile picture"
-                                                                        class="avatar rounded-circle">
-                                                                    <EmptyProfile v-else class="avatar rounded-circle">
-                                                                    </EmptyProfile>
-                                                                </div>
-                                                                <div class="d-flex align-items-center gap-2 mt-2">
-                                                                    <p class="fw-semibold text-dark">
-                                                                        <small>
-                                                                            {{ more.user.name }}
-                                                                        </small>
-                                                                    </p>
-                                                                    <p class="text-secondary">
-                                                                        •
-                                                                    </p>
-                                                                    <p class="text-secondary">
-                                                                        <small>
-                                                                            {{ more.time_since_posted }}
-                                                                        </small>
-                                                                    </p>
+                                                    <div class="d-flex justify-content-start align-items-center text-dark"
+                                                        style="margin-left: -2rem;">
+                                                        <button @click="toggleRepliesVisibility(reply.id)" class="btn">
+                                                            <i
+                                                                :class="repliesVisibility[reply.id] ? 'bi bi-dash-circle' : 'bi bi-plus-circle'">
+                                                            </i>
+                                                        </button>
+                                                        <div class="d-flex align-items-center justify-content-center gap-2 rounded-pill p-2 reply"
+                                                            @click="showReply(reply.id)" style="width: 5rem;">
+                                                            <i class="bi bi-chat-left-dots"></i>
+                                                            <span style="font-size: 12px;" class="fw-semibold">Reply</span>
+                                                        </div>
+                                                    </div>
+                                                    <div v-if="isShowReply && selectedComment && selectedComment === reply.id"
+                                                        class="d-flex flex-column gap-2 border rounded-4 p-2">
+                                                        <form @submit.prevent="replyMore(reply.id)">
+                                                            <textarea class="p-2 px-4 rounded-4 form-control border-0"
+                                                                v-model="commentForm.content"></textarea>
+                                                            <div class="d-flex justify-content-end py-1 px-3 gap-2">
+                                                                <Button :name="'Cancel'" :color="'secondary'"
+                                                                    @click="closeReply" class="rounded-pill"
+                                                                    style="font-size: 12px;"></Button>
+                                                                <button type="submit" class="rounded-pill btn btn-primary"
+                                                                    style="font-size: 12px;">Comment</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- More Replies Section -->
+                                            <div v-if="repliesVisibility[reply.id]" class="replies-container">
+                                                <div v-for="more in replies" v-bind:key="more.id" class="mx-5">
+                                                    <div v-if="more.parent_comment_id === reply.id" class="post rounded">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <div
+                                                                class="d-flex align-items-center justify-content-center gap-2">
+                                                                <div class="mt-1 d-flex align-items-center gap-2">
+                                                                    <div class="">
+                                                                        <img v-if="more.user.avatar !== 'http://127.0.0.1:8000/storage'"
+                                                                            :src="more.user.avatar"
+                                                                            alt="User profile picture"
+                                                                            class="avatar rounded-circle">
+                                                                        <EmptyProfile v-else class="avatar rounded-circle">
+                                                                        </EmptyProfile>
+                                                                    </div>
+                                                                    <div class="d-flex align-items-center gap-2 mt-2">
+                                                                        <p class="fw-semibold text-dark">
+                                                                            <small>
+                                                                                {{ more.user.name }}
+                                                                            </small>
+                                                                        </p>
+                                                                        <p class="text-secondary">
+                                                                            •
+                                                                        </p>
+                                                                        <p class="text-secondary">
+                                                                            <small>
+                                                                                {{ more.time_since_posted }}
+                                                                            </small>
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div class="">
-                                                        <div v-if="more.tagged_user">
-                                                            <p><small>Tagged: {{ more.tagged_user }}</small></p>
+                                                        <div class="">
+                                                            <div v-if="more.tagged_user">
+                                                                <p><small>Tagged: {{ more.tagged_user }}</small></p>
+                                                            </div>
+                                                            <p class="text-secondary-emphasis"> {{ more.content }} </p>
                                                         </div>
-                                                        <p class="text-secondary-emphasis"> {{ more.content }} </p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -294,8 +295,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
                     </div>
+                    <EmptyCard :title="'No Comments yet...'" v-else class="mt-2 w-75" style="height:20rem;">
+                    </EmptyCard>
+
                 </div>
             </div>
         </div>
@@ -310,6 +313,7 @@ import EmptyProfile from '@/Components/EmptyState/Profile.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 import Alpine from 'alpinejs';
 import { onMounted, ref, watchEffect } from 'vue';
+import EmptyCard from '@/Components/EmptyState/Comments.vue';
 
 // Toast Start
 Alpine.start()
