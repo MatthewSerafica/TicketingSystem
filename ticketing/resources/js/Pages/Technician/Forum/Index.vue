@@ -32,6 +32,7 @@
                     </div>
                     <Post v-if="isShowPost" :technicians="technicians" @closeDelete="closePost" />
                 </div>
+                <div v-if="posts.data.length" class="table-responsive rounded shadow pt-2 px-2 mb-3">
                 <div class="bg-white border-bottom pb-2 mb-2" v-for="post in posts.data" v-bind:key="post.id">
                     <div class="post rounded px-3 pb-1">
                         <div class="d-flex align-items-center justify-content-between gap-2">
@@ -89,6 +90,9 @@
                         </a>
                     </div>
                 </div>
+            </div>
+            <EmptyCard :title="'No Post yet...'" v-else class="mt-2 w-75" style="height:20rem;">
+      </EmptyCard>
                 <div ref="last" class="translate"></div>
                 <div v-if="loading" class="text-center">
                     <span>Loading...</span>
@@ -102,6 +106,7 @@
 
 <script setup>
 import Toast from '@/Components/Toast.vue';
+import EmptyCard from '@/Components/EmptyState/Post.vue';
 import Button from '@/Components/Button.vue';
 import Delete from "@/Components/DeleteModal.vue";
 import Post from '@/Components/PostModal.vue';

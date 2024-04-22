@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header class="sticky-top" style="z-index: 110;"></Header>
+    <Header class="sticky-top" style="z-index: 110; width: 100%;"></Header>
     <!--Toast Render-->
     <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
       <Toast
@@ -664,9 +664,39 @@ const validateNumericInput = (inputValue, propName) => {
 }
 
 @media (max-width: 325px) {
-
   .main-content {
-    margin-left: 15rem;
+    margin-left: 0; 
+  }
+
+  .custom-rounded-table {
+    font-size: 12px;
+  }
+
+  .pagination {
+    width: 100%; 
+    overflow-x: auto;
+  }
+
+  .table-responsive {
+    width: 100%; 
+    overflow-x: auto;
+  }
+
+  .btn-options {
+    width: 80px;
+  }
+
+  .custom-rounded-table th,
+  .custom-rounded-table td {
+    white-space: nowrap;
+  }
+
+  /* Adjust header styles */
+  .sticky-top {
+    width: 100%; 
+    left: 0; 
+    right: 0; 
   }
 }
+
 </style>
