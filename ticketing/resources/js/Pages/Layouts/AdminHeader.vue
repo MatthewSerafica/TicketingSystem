@@ -247,7 +247,7 @@ const determineActiveLink = () => {
         setActiveLink('tickets');
     } else if (currentPath.includes('service-report') || currentPath.includes('generate-report')) {
         setActiveLink('reports');
-    } else if (currentPath.includes('users') || currentPath.includes('department') || currentPath.includes('office') || currentPath.includes('services')) {
+    } else if (currentPath.includes('users') || currentPath.includes('department') || currentPath.includes('office') || currentPath.includes('services') || currentPath.includes('problems')) {
         setActiveLink('settings');
 
     } else {
