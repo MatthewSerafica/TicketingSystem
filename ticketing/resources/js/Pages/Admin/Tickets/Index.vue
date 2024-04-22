@@ -895,7 +895,9 @@ const validateNumericInput = (inputValue, propName) => {
 @media (max-width: 425px) {
 
   .main-content {
-    margin-left: 12rem;
+    padding-left: 0;
+    width: 100%;
+    
   }
 
   .custom-rounded-table {
@@ -924,13 +926,31 @@ const validateNumericInput = (inputValue, propName) => {
 }
 
 @media (max-width: 375px) {
-
   .main-content {
-    margin-left: 13rem;
+    padding-left: 0; 
+    width: 100%; 
+  }
+
+  .table-responsive {
+    width: 100%; 
+    overflow-x: auto; 
+  }
+
+  .pagination {
+    width: 100%; 
+  }
+
+  .btn-options {
+    width: auto; 
+  }
+
+  .custom-rounded-table th,
+  .custom-rounded-table td {
+    font-size: 14px; 
   }
 }
 
-@media (max-width: 325px) {
+@media (max-width: 320px) {
 
   .main-content {
     margin-left: 15rem;

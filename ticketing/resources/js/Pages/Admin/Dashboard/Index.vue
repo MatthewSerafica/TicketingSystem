@@ -176,91 +176,103 @@ watch(myData, (newValue, oldValue) => {
 
 @media (max-width: 425px) {
     .main-content {
-        padding-left: 14rem;
-        width: 25%;
+        padding-left: 0;
+        margin-left: 0;
+        width: 100%;
     }
 
     .recent {
-        padding-left: 4rem;
+        padding-left: 0;
         display: flex;
         flex-direction: column;
+        align-items: center; /* Center the content horizontally */
     }
 
     .cta {
+        padding-left: 0;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding-left: 3rem;
     }
 
-
     .statistics {
-        padding-left: 6rem;
+        padding-left: 0;
         display: flex;
         flex-direction: column;
+        align-items: center; 
     }
 
     .stat-label {
-        padding-left: 6rem;
+        padding-left: 0;
     }
 
     .doughnut {
-        width: 20rem;
+        width: 100%;
     }
 
     .bar {
-        width: 30rem;
+        width: 100%; 
+        padding: 2px;
     }
-
 }
+
 
 
 @media (max-width: 375px) {
     .main-content {
-        padding-left: 13.5rem;
+        padding-left: 0;
+        margin-left: 0;
+        width: 100%;
     }
 
     .recent {
-        padding-left: 4rem;
+        padding-left: 0;
         display: flex;
         flex-direction: column;
+        align-items: center; 
     }
 
     .cta {
+        padding-left: 0;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding-left: 3rem;
     }
 
     .statistics {
-        padding-left: 6rem;
+        padding-left: 0;
         display: flex;
         flex-direction: column;
+        align-items: center; 
     }
 
     .stat-label {
-        padding-left: 6rem;
+        padding-left: 0;
     }
 
     .doughnut {
-        width: 20rem;
+        width: 100%;
     }
 
     .bar {
-        width: 30rem;
+        width: 100%;
+        padding: 2px;
     }
-
 }
+
+
 @media (max-width: 320px) {
     .main-content {
-        padding-left: 12.4rem;
+        padding-left: 0; 
+        margin-left: 0; 
+        width: 100%; 
+        
     }
 
     .recent {
-        padding-left: 4rem;
+        padding-left: 0;
         display: flex;
         flex-direction: column;
     }
@@ -270,25 +282,25 @@ watch(myData, (newValue, oldValue) => {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding-left: 3rem;
+        padding-left: 0;
     }
 
     .statistics {
-        padding-left: 6rem;
+        padding-left: 0;
         display: flex;
         flex-direction: column;
     }
 
     .stat-label {
-        padding-left: 6rem;
+        padding-left: 0;
     }
 
     .doughnut {
-        width: 20rem;
+        width: 100%;
     }
 
     .bar {
-        width: 30rem;
+        width: 10%;
     }
 
 }

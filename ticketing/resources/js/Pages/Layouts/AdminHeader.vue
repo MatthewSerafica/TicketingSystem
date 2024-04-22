@@ -47,6 +47,7 @@
                                 <li><a class="dropdown-item" href="/admin/department">Departments</a></li>
                                 <li><a class="dropdown-item" href="/admin/office">Offices</a></li>
                                 <li><a class="dropdown-item" href="/admin/services">Services</a></li>
+                                <li><a class="dropdown-item" href="/admin/problems">Problem Encountered</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -246,7 +247,7 @@ const determineActiveLink = () => {
         setActiveLink('tickets');
     } else if (currentPath.includes('service-report') || currentPath.includes('generate-report')) {
         setActiveLink('reports');
-    } else if (currentPath.includes('users') || currentPath.includes('department') || currentPath.includes('office') || currentPath.includes('services')) {
+    } else if (currentPath.includes('users') || currentPath.includes('department') || currentPath.includes('office') || currentPath.includes('services') || currentPath.includes('problems')) {
         setActiveLink('settings');
 
     } else {

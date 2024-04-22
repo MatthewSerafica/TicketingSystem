@@ -302,7 +302,7 @@ class TechnicianTicketController extends Controller
                         'service_id' => $ticket->$field,
                         'ticket_number' => $ticket->ticket_number,
                         'date_done' => now(),
-                        'problem' => $ticket->description,
+                        'issue' => $ticket->description,
 
                     ];
                     ServiceReport::create($serviceData);
