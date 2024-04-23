@@ -118,7 +118,7 @@
                                             <ul class="dropdown-menu">
                                                 <li class="dropdown-item disabled">Select a department</li>
                                                 <li v-for="department in departments" class="btn dropdown-item"
-                                                    @click="showInput(department.department), updateData(department.department, users.technician.technician_id, 'assigned_department', false, true), console.log('Dropdown item clicked:', department.department)">
+                                                    @click="showInput(department.department), updateData(department.department, users.technician.technician_id, 'assigned_department', true), console.log('Dropdown item clicked:', department.department)">
                                                     {{ department.department }}
                                                 </li>
                                             </ul>
@@ -219,6 +219,20 @@ const openFileInput = () => {
     fileInput.value.click();
 
 }
+const updateData = async (data, id, updateField, isTechnician) => {
+    if (selectedInput.value === data) {
+        const routeName = isTechnician ? 'technician.tech.update' : 'technician.update';
+        const form = useForm({
+            [updateField]: editData[data],
+        });
+        console.log(routeName)
+
+        await form.put(route(routeName, { user_id: id, field: updateField }));
+
+        selectedInput.value = null;
+        editData[data] = '';
+    }
+};
 
 const profilePictureUrl = ref(null);
 

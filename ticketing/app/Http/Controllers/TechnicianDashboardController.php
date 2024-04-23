@@ -137,7 +137,7 @@ class TechnicianDashboardController extends Controller
             if ($previousPath) {
                 Storage::delete($previousPath);
             }
-            
+
             return redirect()->back()
                 ->with('success', 'Profile Updated')
                 ->with('message', 'File uploaded successfully. Path: ' . $link);
@@ -202,5 +202,33 @@ class TechnicianDashboardController extends Controller
             $typeCounts[$type] = $count;
         }
         return $typeCounts;
+    }
+    public function update(Request $request, $id, $field)
+    {
+        $request->validate([
+            $field => 'required',
+        ]);
+
+        $user = User::where('id', $id)->first();
+        $old = $user->$field;
+        $user->$field = $request->$field;
+        $user->save();
+        $input = ucfirst($field);
+
+        return redirect()->back()->with('success', $input . ' Update!')->with('message', $old . ' is updated to ' . $request->$field);
+    }
+    public function technician(Request $request, $id, $field)
+    {
+        $request->validate([
+            $field => 'required',
+        ]);
+
+        $technician = Technician::where('technician_id', $id)->first();
+        $old = $technician->$field;
+        $technician->$field = $request->$field;
+        $technician->save();
+        $input = ucfirst($field);
+
+        return redirect()->back()->with('success', $input . ' Update!')->with('message', $old . ' is updated to ' . $request->$field);
     }
 }
