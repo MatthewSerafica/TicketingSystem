@@ -17,6 +17,7 @@
         <p v-if="office">Are you sure you want to delete <strong>{{ office.office }}</strong>?</p>
         <p v-if="post">Are you sure you want to delete your post?</p>
         <p v-if="comment">Are you sure you want to delete your comment?</p>
+        <p v-if="problem">Are you sure you want to delete <strong>{{ problem.problem }}</strong>?</p>
       </div>
       <div class="d-flex flex-row gap-2 justify-content-end mt-2">
         <Link v-if="department" method="delete" type="button" as="button" :href="route('admin.department.delete', { id: department.id })"
