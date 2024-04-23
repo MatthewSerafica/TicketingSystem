@@ -290,7 +290,7 @@
             <div class="align-items-center justify-content-center gap-4 statistics">
                 <div class="card text-left border-0 shadow">
                     <h5 class="card-header text-secondary">
-                        Tickets by services
+                        Tickets by Services
                     </h5>
                     <div class="card-body">
                         <Doughnut :service="service" class="doughnut"></Doughnut>
@@ -298,7 +298,7 @@
                 </div>
                 <div class="card text-left border-0 shadow">
                     <h5 class="card-header text-secondary">
-                        Tickets for this year
+                        Tickets for this Year
                     </h5>
                     <div class="card-body">
                         <Bar :yearly="yearly" class="bar"></Bar>
