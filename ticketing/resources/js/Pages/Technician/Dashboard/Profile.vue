@@ -468,5 +468,148 @@ const handleFileChange = async (event) => {
         flex-direction: column;
 }
 
+@media (max-width: 1440px) {
+    .statistics {
+        width: 90%;
+    }
 
+    .doughnut {
+        width: 65rem;
+    }
+
+    .bar {
+        width: 70rem;
+    }
+}
+
+@media (max-width: 1440px) {
+    .statistics {
+        width: 90%;
+    }
+
+    .doughnut {
+        width: 65rem;
+    }
+
+    .bar {
+        width: 70rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .detail-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .statistics {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .doughnut {
+        width: 150%;
+    }
+
+    .bar {
+        width: 250%;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .detail-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .doughnut {
+        width: 100%;
+    }
+
+    .bar {
+        width: 200%;
+    }
+
+}
+
+@media (max-width: 425px) {
+    .main-content {
+        margin-left: 12rem;
+    }
+    .detail-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .statistics {
+        width: 250%;
+    }
+
+    .doughnut {
+        width: 100%;
+    }
+
+    .bar {
+        width: 200%;
+    }
+
+    .data-container {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .data-bottom {
+        display: flex;
+        flex-direction: column;
+    }
+    .data-top {
+        display: flex;
+        flex-direction: column;
+    }
+
+}
+
+@media (max-width: 375px) {
+    .main-content {
+        margin-left: 13rem;
+    }
+    .detail-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .statistics {
+        width: 280%;
+    }
+
+    .doughnut {
+        width: 100%;
+    }
+
+    .bar {
+        width: 200%;
+    }
+}
+@media (max-width: 320px)    {
+    .main-content {
+        margin-left: 15rem;
+    }
+    .detail-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .statistics {
+        width: 300%;
+    }
+
+    .doughnut {
+        width: 100%;
+    }
+
+    .bar {
+        width: 200%;
+    }
+}
 </style>
