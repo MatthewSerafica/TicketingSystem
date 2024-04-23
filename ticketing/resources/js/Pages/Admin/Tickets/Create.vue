@@ -156,7 +156,7 @@
                                 <h6 class="dropdown-header">Recommended</h6>
                                 <div v-for="technicians in recommended">
                                   <li v-for="technician in technicians" class="btn dropdown-item"
-                                    @click="assignTechnician(ticket, index, technician)"
+                                    @click="selectTechnician(technician, index)"
                                     :class="{ 'disabled': technician.tickets_assigned >= 5 }">
                                     <div class="d-flex justify-content-between">
                                       <div>
@@ -174,7 +174,7 @@
                               <div>
                                 <h6 class="dropdown-header">All</h6>
                                 <li v-for="technician in technicians" class="btn dropdown-item"
-                                  @click="assignTechnician(ticket, index, technician)"
+                                  @click="selectTechnician(technician, index)"
                                   :class="{ 'disabled': technician.tickets_assigned >= 5 }">
                                   <div class="d-flex justify-content-between">
                                     <div>
@@ -297,24 +297,19 @@ const removeDropdown = (index) => {
 }
 
 const selectTechnician = (technician, index) => {
-  // Check if the technician ID has been selected before
   if (form.technicians.includes(technician.technician_id)) {
-    // Technician ID has been selected before, set error message
     form.errors.technician = 'Technician is already selected.';
-    return; // Exit the function early
+    return;
   }
 
-  // Check if the technician ID has been selected before in the current selection array
   if (techniciansData.value.some(item => item.technicianId === technician.technician_id)) {
     form.errors.technician = 'Technician is already selected.';
     return;
   }
 
-  // Update techniciansData with selected technician's name and ID
   techniciansData.value[index].selectedTechnician = technician.user.name;
   techniciansData.value[index].technicianId = technician.technician_id;
 
-  // Store the selected technicianId in the form.technicians array
   form.technicians.push(technician.technician_id);
 
   form.errors.technician = null;
