@@ -60,6 +60,7 @@ class TechnicianServiceController extends Controller
             $new_service_id = '0001';
             $ticket_id = null;
             $date_done = null;
+            $problem = null;
         }
         $tickets = Ticket::with('employee.user')->get();
         $technicians = Technician::all();
