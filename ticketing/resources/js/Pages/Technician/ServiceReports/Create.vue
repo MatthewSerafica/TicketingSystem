@@ -96,7 +96,7 @@
 
           <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" :ticket="selectedTicket"
             @confirm="create" @closeSubmitService="closeSubmitService" />
-          {{ selectedTicket }}
+         <!--  {{ selectedTicket }} -->
           <div class="row justify-content-end">
             <div class="col-md-4">
               <div class="d-flex justify-content-end gap-2">
