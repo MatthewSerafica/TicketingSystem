@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="whole-content">
         <Header class="sticky-top" style="z-index: 110;"></Header>
         <div class="position-absolute end-0">
             <Toast
@@ -28,10 +28,10 @@
             <span>Back</span>
             </Link>
         </div>
-        <div class="container justify-content-center mt-3 align-items-center mb-3">
-            <div class="row row-cols-2">
-                <div class="card shadow p-2 w-25">
-                    <div class="card-body d-flex flex-column gap-1">
+        <div class="d-flex flex-column gap-4 justify-content-center align-items-center mt-3 mb-3 main-content">
+            <div class="d-flex gap-5 justify-content-between align-items-center detail-container">
+                <div class="card shadow p-2 user-container" >
+                    <div class="card-body d-flex flex-row gap-5 align-items-center">
                         <div class="d-flex flex-column justify-content-center align-items-center mb-3">
                             <div class="mb-2 text-center">
                                 <!-- AVATAR -->
@@ -55,8 +55,8 @@
                                 <p class="card-text text-capitalize">{{ users.user_type }}</p>
                             </div>
                         </div>
-                        <div class="d-flex flex-column justify-content-center gap-2">
-                            <div class="card-title fw-bold d-flex flex-row align-items-center gap-4">
+                        <div class="d-flex flex-column justify-content-center gap-2" style="flex: 1;">
+                            <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
                                 <h3 class="mt-1">User Details</h3>
                                 <span v-if="users.technician.is_working == 1" class="badge bg-success rounded-circle"
                                     style="width: 2em; height: 2em;"><span
@@ -124,37 +124,132 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="d-flex flex-row gap-5">
-                                        <div class="d-flex flex-column">
-                                            <div class="card-subtitle fw-medium fs-6">
-                                                Total Assigned
-                                            </div>
-                                            <p class="card-text text-center">{{ users.technician.tickets_assigned }}</p>
+    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                
+                <div class="gap-3 data-container">
+                    <div class="d-flex gap-3 data-top">
+                        <div class="assigned-total card border-3 border-primary p-2 shadow"
+                            style="border-top: 1px; border-left: 1px; border-right: 1px;">
+                            <div class="card-body d-flex flex-column gap-4">
+                                <div class="d-flex flex-column gap-3">
+                                    <div class="fs-5 text-secondary">
+                                        Assigned (Total)
+                                    </div>
+                                    <div class="fw-semibold fs-2">
+                                        {{ users.technician.tickets_assigned }} <span
+                                            class="fw-normal text-secondary fs-6">assigned</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resolved-total card border-3 border-success p-2 shadow"
+                            style="border-top: 1px; border-left: 1px; border-right: 1px;">
+                            <div class="card-body d-flex flex-column gap-4">
+                                <div class="d-flex flex-column gap-3">
+                                    <div class="fs-5 text-secondary">
+                                        Resolved (Total)
+                                    </div>
+                                    <div class="fw-semibold fs-2">
+                                        {{ users.technician.tickets_resolved }} <span
+                                            class="fw-normal text-secondary fs-6">resolved</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resolved-total card border-3 border-info p-2 shadow"
+                            style="border-top: 1px; border-left: 1px; border-right: 1px;">
+                            <div class="card-body d-flex flex-column gap-4">
+                                <div class="d-flex flex-column gap-1">
+                                    <div class="fs-5 text-secondary">
+                                        Complexity (Total)
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <div class="fw-semibold fs-4">5
+
+                                            <span class="fw-normal text-secondary fs-6">Simple</span>
                                         </div>
-                                        <div class="d-flex flex-column">
-                                            <div class="card-subtitle fw-medium fs-6">
-                                                Total Resolved
-                                            </div>
-                                            <p class="card-text text-center">{{ users.technician.tickets_resolved }}</p>
+                                        <div class="fw-semibold fs-4">4
+                                            
+                                            <span class="fw-normal text-secondary fs-6">Complex</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="d-flex flex-row align-items-center justify-content-center card-row w-75">
-                    <div
-                        class="flex-grow-1 d-flex flex-column justify-content-center align-items-center card p-5 gap-5 shadow">
-                        <div class="">
-                            <Doughnut :service="service" style="width: 30rem;"></Doughnut>
+                    <div class="d-flex gap-3 data-bottom">
+                        <div class="assigned-today card border-3 border-danger p-2 shadow"
+                            style="border-top: 1px; border-left: 1px; border-right: 1px;">
+                            <div class="card-body d-flex flex-column gap-4">
+                                <div class="d-flex flex-column gap-3">
+                                    <div class="fs-5 text-secondary">
+                                        Assigned (Today)
+                                    </div>
+                                    <div class="fw-semibold fs-2 ">3
+                                        
+                                        <span class="fw-normal text-secondary fs-6">assigned</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="">
-                            <Bar :yearly="yearly" style="width: 45rem;"></Bar>
+                        <div class="resolved-today card border-3 border-success p-2 shadow"
+                            style="border-top: 1px; border-left: 1px; border-right: 1px;">
+                            <div class="card-body d-flex flex-column gap-4">
+                                <div class="d-flex flex-column gap-3">
+                                    <div class="fs-5 text-secondary">
+                                        Resolved (Today)
+                                    </div>
+                                    <div class="fw-semibold fs-2">2
+                                        
+                                        <span class="fw-normal text-secondary fs-6">resolved</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resolved-today card border-3 border-warning p-2 shadow"
+                            style="border-top: 1px; border-left: 1px; border-right: 1px;">
+                            <div class="card-body d-flex flex-column gap-4">
+                                <div class="d-flex flex-column gap-1">
+                                    <div class="fs-5 text-secondary">
+                                        Average Resolution Time
+                                    </div>
+                                    <div class="fw-semibold fs-3">1
+                                        
+                                        <span class="fw-normal text-secondary fs-6">Hour(s)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    
+                    
+                </div>
+                <div class="align-items-center justify-content-center gap-4 statistics" >
+                    <div class="card text-left border-0 shadow" >
+                        <h5 class="card-header text-secondary">
+                            Tickets by Services
+                        </h5>
+                        <div class="card-body">
+                            <Doughnut :service="service" class="doughnut"></Doughnut>
+                        </div>
+                    </div>
+                    <div class="card text-left border-0 shadow" >
+                        <h5 class="card-header text-secondary">
+                            Tickets for this Year
+                        </h5>
+                        <div class="card-body">
+                            <Bar :yearly="yearly" class="bar"></Bar>
                         </div>
                     </div>
                 </div>
-            </div>
+                
+            
         </div>
     </div>
 </template>
@@ -279,6 +374,9 @@ const handleFileChange = async (event) => {
 </script>
 
 <style scoped>
+
+
+
 .dropdown-menu {
     display: none;
     opacity: 0;
@@ -324,4 +422,51 @@ const handleFileChange = async (event) => {
     opacity: 0.95;
     border-color: blue;
 }
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+.statistics {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.doughnut {
+    width: 25rem;
+}
+
+.bar {
+    width: 50rem;
+}
+
+
+.assigned-total {
+    width: 13rem;
+}
+
+.resolved-total {
+    width: 13rem;
+}
+
+.assigned-today {
+    width: 13rem;
+}
+
+.resolved-today {
+    width: 13rem;
+}
+
+.data-container {
+        display: flex;
+        flex-direction: column;
+}
+
+
 </style>

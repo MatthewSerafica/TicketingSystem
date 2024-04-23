@@ -202,7 +202,7 @@ const determineActiveLink = () => {
     } else if (currentPath.includes('service-report')) {
         setActiveLink('service-report');
     } else if (currentPath.includes('forum')) {
-        setActiveLink('forum');
+        setActiveLink('forum');    
     } else {
         setActiveLink('dashboard');
     }
