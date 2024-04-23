@@ -169,11 +169,11 @@
                                         Complexity (Total)
                                     </div>
                                     <div class="d-flex flex-column">
-                                        <div class="fw-semibold fs-4">5
+                                        <div class="fw-semibold fs-4">{{ complexity ? complexity.simple : '0' }}
 
                                             <span class="fw-normal text-secondary fs-6">Simple</span>
                                         </div>
-                                        <div class="fw-semibold fs-4">4
+                                        <div class="fw-semibold fs-4">{{ complexity ? complexity.complex : '0' }}
                                             
                                             <span class="fw-normal text-secondary fs-6">Complex</span>
                                         </div>
@@ -190,7 +190,7 @@
                                     <div class="fs-5 text-secondary">
                                         Assigned (Today)
                                     </div>
-                                    <div class="fw-semibold fs-2 ">3
+                                    <div class="fw-semibold fs-2 ">{{ assigned_today ? assigned_today : '0' }}
                                         
                                         <span class="fw-normal text-secondary fs-6">assigned</span>
                                     </div>
@@ -204,7 +204,7 @@
                                     <div class="fs-5 text-secondary">
                                         Resolved (Today)
                                     </div>
-                                    <div class="fw-semibold fs-2">2
+                                    <div class="fw-semibold fs-2">{{ resolved_today ? resolved_today : '0' }}
                                         
                                         <span class="fw-normal text-secondary fs-6">resolved</span>
                                     </div>
@@ -218,7 +218,7 @@
                                     <div class="fs-5 text-secondary">
                                         Average Resolution Time
                                     </div>
-                                    <div class="fw-semibold fs-3">1
+                                    <div class="fw-semibold fs-3">{{ time ? time : '0' }}
                                         
                                         <span class="fw-normal text-secondary fs-6">Hour(s)</span>
                                     </div>
@@ -289,6 +289,10 @@ const props = defineProps({
     departments: Object,
     service: Object,
     yearly: Object,
+    assigned_today: Object,
+    resolved_today: Object,
+    time: Object,
+    complexity: Object,
 })
 
 let selectedInput = ref(null);
