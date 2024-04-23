@@ -15,6 +15,7 @@ class AdminOfficeController extends Controller
                 $query->where('id', 'like', '%' . $search . '%')
                     ->orWhere('office', 'like', '%' . $search . '%');
             })
+            ->orderByDesc('id')
             ->paginate(10);
         $filters = $request->only(['search']);
         return inertia('Admin/Office/Index', [

@@ -15,7 +15,7 @@ class AdminServiceController extends Controller
                 $query->where('id', 'like', '%' . $search . '%')
                     ->orWhere('service', 'like', '%' . $search . '%');
             })
-            ->orderByDesc('created_at')
+            ->orderByDesc('id')
             ->paginate(10);
         $filters = $request->only(['search']);
         return inertia('Admin/Services/Index', [

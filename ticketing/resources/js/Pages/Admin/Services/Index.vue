@@ -104,7 +104,7 @@
 
   let search = ref(props.filters.search);
   let sortColumn = ref("id");
-  let sortDirection = ref("asc");
+  let sortDirection = ref("desc");
   let timeoutId = null;
   
   const fetchData = () => {
@@ -125,7 +125,7 @@
 const resetSorting = () => {
   console.log("Reset Sorting");
   sortColumn.value = "id"
-  sortDirection.value = "asc"
+  sortDirection.value = "desc"
 }
 
 const debouncedFetchData = () => {

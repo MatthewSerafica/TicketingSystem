@@ -19,6 +19,7 @@ class AdminDepartmentController extends Controller
                 $query->where('id', 'like', '%' . $search . '%')
                     ->orWhere('department', 'like', '%' . $search . '%');
             })
+            ->orderByDesc('id')
             ->paginate(10);
         $filters = $request->only(['search']);
         return inertia('Admin/Department/Index', [

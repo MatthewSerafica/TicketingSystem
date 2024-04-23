@@ -13,9 +13,9 @@ class AdminProblemController extends Controller
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
                 $query->where('id', 'like', '%' . $search . '%')
-                    ->orWhere('service', 'like', '%' . $search . '%');
+                    ->orWhere('problem', 'like', '%' . $search . '%');
             })
-            ->orderByDesc('created_at')
+            ->orderByDesc('id')
             ->paginate(10);
         $filters = $request->only(['search']);
         return inertia('Admin/Problems/Index', [
