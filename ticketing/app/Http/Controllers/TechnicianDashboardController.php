@@ -118,11 +118,19 @@ class TechnicianDashboardController extends Controller
         $departments = Department::all();
         $yearly = $this->getYearlyData($user);
         $service = $this->getType($user);
+        $assigned_today = $this->getAssignedToday($user->id);
+        $resolved_today = $this->getResolvedToday($user->id);
+        $time = $this->getAverageResolutionTime($user->id);
+        $complexity = $this->getComplexityCounts($user->id);
         return inertia('Technician/Dashboard/Profile', [
             'users' => $user,
             'departments' => $departments,
             'service' => $service,
             'yearly' => $yearly,
+            'assigned_today' => $assigned_today,
+            'resolved_today' => $resolved_today,
+            'time' => $time,
+            'complexity' => $complexity,
         ]);
     }
 
@@ -158,6 +166,77 @@ class TechnicianDashboardController extends Controller
 
         return redirect()->back()->with('success', 'Status updated successfully.');
     }
+
+    private function getAssignedToday($user)
+    {
+        $todayStart = Carbon::today();
+        $todayEnd = Carbon::today()->endOfDay();
+        $ticket = Ticket::with('assigned.technician.user')
+            ->whereHas('assigned.technician.user', function ($query) use ($user) {
+                $query->where('id', $user);
+            })
+            ->whereIn('status', ['New', 'Pending', 'Ongoing'])
+            ->whereBetween('created_at', [$todayStart, $todayEnd])
+            ->count();
+        return $ticket;
+    }
+    private function getResolvedToday($user)
+    {
+        $todayStart = Carbon::today();
+        $todayEnd = Carbon::today()->endOfDay();
+        $ticket = Ticket::with('assigned.technician.user')
+            ->whereHas('assigned.technician.user', function ($query) use ($user) {
+                $query->where('id', $user);
+            })
+            ->where('status', 'resolved')
+            ->whereBetween('created_at', [$todayStart, $todayEnd])
+            ->count();
+        return $ticket;
+    }
+
+    private function getComplexityCounts($user)
+    {
+        $ticketCounts = Ticket::with('assigned.technician.user')
+            ->whereHas('assigned.technician.user', function ($query) use ($user) {
+                $query->where('id', $user);
+            })
+            ->selectRaw('complexity, COUNT(*) as count')
+            ->groupBy('complexity')
+            ->get();
+
+        $counts = [
+            'simple' => 0,
+            'complex' => 0
+        ];
+
+        foreach ($ticketCounts as $ticket) {
+            if ($ticket->complexity === 'Simple') {
+                $counts['simple'] = $ticket->count;
+            } elseif ($ticket->complexity === 'Complex') {
+                $counts['complex'] = $ticket->count;
+            }
+        }
+
+        return $counts;
+    }
+
+    private function getAverageResolutionTime($user)
+    {
+        $time = Ticket::with('assigned.technician.user')
+            ->whereHas('assigned.technician.user', function ($query) use ($user) {
+                $query->where('id', $user);
+            })
+            ->whereNotNull('resolved_at')
+            ->selectRaw('AVG(TIMESTAMPDIFF(SECOND, created_at, resolved_at)) AS average_resolution_time')
+            ->value('average_resolution_time');
+
+        $timeInHours = $time / 3600;
+
+        $timeInDecimal = round($timeInHours, 2);
+
+        return $timeInDecimal;
+    }
+
     private function getYearlyData($user)
     {
         $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
