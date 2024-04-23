@@ -83,7 +83,7 @@
             <div class="row justify-content-end">
               <div class="col-md-4">
                 <div class="d-flex justify-content-end gap-2">
-                  <Button :name="'Submit'" :color="'primary'"></Button>
+                  <Button :name="'Submit'" :color="'primary'" :disabled="!form.service_id || !form.date_started || !form.time_started || !form.ticket_number || !form.technicians.length || !form.requesting_office || !form.equipment_no || !form.issue || !form.action || !form.recommendation || !form.date_done || !form.time_done || !form.remarks"></Button>
                   <Link :href="'/admin/reports/service-report'" class="btn btn-outline-primary">Cancel</Link>
                 </div>
               </div>
@@ -98,8 +98,8 @@
 <script setup>
 import Button from '@/Components/Button.vue';
 import Header from '@/Pages/Layouts/AdminHeader.vue';
-import { Link, router, useForm } from '@inertiajs/vue3';
-import { ref, watch } from "vue";
+import { Link, useForm } from '@inertiajs/vue3';
+import { watch } from "vue";
 
 const props = defineProps({
   technicians: Object,
