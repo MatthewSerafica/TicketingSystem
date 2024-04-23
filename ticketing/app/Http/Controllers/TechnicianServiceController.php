@@ -53,9 +53,9 @@ class TechnicianServiceController extends Controller
         $new_service_id = $latest_report ? $this->incrementServiceId($latest_report->service_id) : '0001';
         if ($latest_report) {
             $new_service_id = $this->incrementServiceId($latest_report->service_id);
-            $ticket_id = $latest_report->ticket_number;
-            $date_done = $latest_report->date_done;
-            $problem = $latest_report->issue;
+            $ticket_id = $latest_report ? $latest_report->ticket_number : null;
+            $date_done = $latest_report ? $latest_report->date_done : null;
+            $problem = $latest_report ? $latest_report->issue : null;
         } else {
             $new_service_id = '0001';
             $ticket_id = null;
