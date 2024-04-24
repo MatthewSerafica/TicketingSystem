@@ -6,21 +6,23 @@
         <button type="button" class="btn-close ms-auto" aria-label="Close" @click="closeSubmitService"></button>
 
       </div>
-      <div class="modal-body">
+      <div class="modal-body d-flex gap-3">
         <div>
           <div class="card">
+
             <div class="card-body">
-              <p class="modal-title  text-center"><strong>Ticket Details:</strong></p>
-              <p><strong>Ticket Number:</strong> {{ ticket.ticket_number }}</p>
-              <p><strong>Date Created:</strong> {{ ticket.date_created }}</p>
-              <p><strong>Request Type:</strong> {{ ticket.request_type }}</p>
-              <p><strong>Complexity:</strong> {{ ticket.complexity }}</p>
-              <p><strong>RR No:</strong> {{ ticket.rr_no }}</p>
-              <p><strong>MS No:</strong> {{ ticket.ms_no }}</p>
-              <p><strong>RS No:</strong> {{ ticket.rs_no }}</p>
-              <p><strong>Issue:</strong> {{ ticket.issue }}</p>
-              <p><strong>Description:</strong> {{ ticket.description }}</p>
-              <p><strong>Service:</strong> {{ ticket.service }}</p>
+              
+              <p class="card-title  text-center"><strong>Ticket Details:</strong></p>
+              <p class="card-text"><strong>Ticket Number:</strong> {{   ticket.ticket_number }}</p>
+              <p class="card-text"><strong>Date Created:</strong> {{ formattedDate(ticket.created_at) }}</p>
+              <p class="card-text"><strong>Request Type:</strong> {{ ticket.request_type ?? "Not available"}}</p>
+              <p class="card-text"><strong>Complexity:</strong> {{ ticket.complexity ?? "Not available"}}</p>
+              <p class="card-text"><strong>RR No:</strong> {{ ticket.rr_no ?? "Not available"}}</p>
+              <p class="card-text"><strong>MS No:</strong> {{ ticket.ms_no ?? "Not available"}}</p>
+              <p class="card-text"><strong>RS No:</strong> {{ ticket.rs_no ?? "Not available"}}</p>
+              <p class="card-text"><strong>Issue:</strong> {{ ticket.issue ?? "Not available"}}</p>
+              <p class="card-text"><strong>Description:</strong> {{ ticket.description ?? "Not available"}}</p>
+              <p class="card-text"><strong>Service:</strong> {{ ticket.service ?? "Not available"}}</p>
             </div>
           </div>
         </div>
@@ -28,19 +30,19 @@
           <div class="card">
             <div class="card-body">
               <p class="modal-title  text-center"><strong>Service Report Details:</strong></p>
-              <p><strong>Service ID:</strong> {{ form.service_id }}</p>
-              <p><strong>Date Started:</strong> {{ form.date_started }}</p>
-              <p><strong>Time Started:</strong> {{ form.time_started }}</p>
-              <p><strong>Ticket Number:</strong> {{ form.ticket_number }}</p>
-              <p><strong>Technician Name:</strong> {{ form.technician }}</p>
-              <p><strong>Requesting Office:</strong> {{ form.requesting_office }}</p>
-              <p><strong>Equipment, Property Tag/Serial No.:</strong> {{ form.equipment_no }}</p>
-              <p><strong>Problem Encountered:</strong> {{ form.problem }}</p>
-              <p><strong>Action Taken:</strong> {{ form.action }}</p>
-              <p><strong>Recommendation:</strong> {{ form.recommendation }}</p>
-              <p><strong>Date Done:</strong> {{ form.date_done }}</p>
-              <p><strong>Time Done:</strong> {{ form.time_done }}</p>
-              <p><strong>Remarks:</strong> {{ form.remarks }}</p>
+              <p class="card-text"><strong>Service ID:</strong> {{ form.service_id ?? "Not available"}}</p>
+              <p class="card-text"><strong>Date Started:</strong> {{ form.date_started ?? "Not available"}}</p>
+              <p class="card-text"><strong>Time Started:</strong> {{ form.time_started ?? "Not available"}}</p>
+              <p class="card-text"><strong>Ticket Number:</strong> {{ form.ticket_number ?? "Not available"}}</p>
+              <p class="card-text"><strong>Technician Name:</strong> {{ form.technician ?? "Not available"}}</p>
+              <p class="card-text"><strong>Requesting Office:</strong> {{ form.requesting_office ?? "Not available"}}</p>
+              <p class="card-text"><strong>Equipment, Property Tag/Serial No.:</strong> {{ form.equipment_no ?? "Not available"}}</p>
+              <p class="card-text"><strong>Problem Encountered:</strong> {{ form.problem ?? "Not available"}}</p>
+              <p class="card-text"><strong>Action Taken:</strong> {{ form.action ?? "Not available"}}</p>
+              <p class="card-text"><strong>Recommendation:</strong> {{ form.recommendation ?? "Not available"}}</p>
+              <p class="card-text"><strong>Date Done:</strong> {{ form.date_done ?? "Not available"}}</p>
+              <p class="card-text"><strong>Time Done:</strong> {{ form.time_done ?? "Not available"}}</p>
+              <p class="card-text"><strong>Remarks:</strong> {{ form.remarks ?? "Not available"}}</p>
             </div>
           </div>
         </div>
@@ -60,6 +62,12 @@ const props = defineProps({
   form: Object, // Pass the form object to the modal
   ticket: Object,
 });
+
+const formattedDate = (dateString) => {
+  const date = new Date(dateString);
+  const options = { month: 'short', day: '2-digit', year: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
+};
 
 const emit = defineEmits(['closeSubmitService'])
 
@@ -96,16 +104,30 @@ const submitServiceReport = () => {
   background-color: #fff;
   padding: 30px;
   border-radius: 8px;
-  text-align: left;
-  width: 80%;
+  text-align: left; 
+  width: 50%;
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
 }
 
 .modal-title {
   border-radius: 8px;
-  text-align: left;
+  text-align: center; 
   width: 100%;
+  margin-bottom: 20px; 
 }
 
+.card {
+  flex: 1;
+  width: 100%; 
+  max-width: 400px; 
+  margin-bottom: 20px; 
+}
+
+.card-body {
+  padding: 20px;
+}
 .close {
   position: absolute;
   top: 10px;
