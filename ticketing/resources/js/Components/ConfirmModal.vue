@@ -9,7 +9,6 @@
       <div class="modal-body d-flex gap-3">
         <div>
           <div class="card">
-
             <div class="card-body">
               
               <p class="card-title  text-center"><strong>Ticket Details:</strong></p>
@@ -31,7 +30,7 @@
             <div class="card-body">
               <p class="modal-title  text-center"><strong>Service Report Details:</strong></p>
               <p class="card-text"><strong>Service ID:</strong> {{ form.service_id ?? "Not available"}}</p>
-              <p class="card-text"><strong>Date Started:</strong> {{ form.date_started ?? "Not available"}}</p>
+              <p class="card-text"><strong>Date Started:</strong> {{ formattedDate(form.date_started) ?? "Not available"}}</p>
               <p class="card-text"><strong>Time Started:</strong> {{ form.time_started ?? "Not available"}}</p>
               <p class="card-text"><strong>Ticket Number:</strong> {{ form.ticket_number ?? "Not available"}}</p>
               <p class="card-text"><strong>Technician Name:</strong> {{ form.technician ?? "Not available"}}</p>
@@ -40,27 +39,44 @@
               <p class="card-text"><strong>Problem Encountered:</strong> {{ form.problem ?? "Not available"}}</p>
               <p class="card-text"><strong>Action Taken:</strong> {{ form.action ?? "Not available"}}</p>
               <p class="card-text"><strong>Recommendation:</strong> {{ form.recommendation ?? "Not available"}}</p>
-              <p class="card-text"><strong>Date Done:</strong> {{ form.date_done ?? "Not available"}}</p>
+              <p class="card-text"><strong>Date Done:</strong> {{ formattedDate(form.date_done) ?? "Not available"}}</p>
               <p class="card-text"><strong>Time Done:</strong> {{ form.time_done ?? "Not available"}}</p>
               <p class="card-text"><strong>Remarks:</strong> {{ form.remarks ?? "Not available"}}</p>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" @click="closeSubmitService">Cancel</button>
-        <button type="button" class="btn btn-primary" @click="submitServiceReport">Confirm Submission</button>
-      </div>
+        <div class="modal-footer d-flex gap-2">
+          <button type="button" class="btn btn-outline-secondary" @click="closeSubmitService">Cancel</button>
+          <button type="button" class="btn btn-primary" @click="submitServiceReport">Confirm Submission</button>
+        </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { router, useForm } from '@inertiajs/vue3';
 import { defineProps, ref,  defineEmits } from 'vue';
 
 const props = defineProps({
   form: Object, // Pass the form object to the modal
   ticket: Object,
+});
+
+const form = useForm({
+  service_id: props.form.service_id,
+  date_started: props.form.date_started,
+  time_started: props.form.time_started,
+  ticket_number: props.form.ticket_number,
+  technician: props.form.technician,
+  requesting_office: props.form.requesting_office,
+  equipment_no: props.form. equipment_no,
+  problem: props.form.problem,
+  action: props.form.action,
+  recommendation: props.form.recommendation,
+  date_done: props.form.date_done,
+  time_done: props.form.time_done,
+  remarks: props.form.remarks,
 });
 
 const formattedDate = (dateString) => {
@@ -80,7 +96,7 @@ const submitServiceReport = () => {
   // Implement your logic to submit the service report here
   console.log('Props in ConfirmModal.vue:', props);
 
-  form.post(route('technician.service-report.create'), { preserveScroll: false, preserveState: false });
+  form.post(route('technician.service-report.store'), { preserveScroll: false, preserveState: false });
 };
 
 
@@ -109,6 +125,12 @@ const submitServiceReport = () => {
   display: flex; 
   flex-direction: column; 
   align-items: center; 
+}
+.modal-footer {
+  border-radius: 8px;
+  width: 100%;
+  flex-direction: row; 
+  align-items: right; 
 }
 
 .modal-title {
