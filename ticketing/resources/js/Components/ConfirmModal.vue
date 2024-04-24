@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title  text-center">Are you sure you want to submit this service report?</h5>
-        <button type="button" class="btn-close ms-auto" aria-label="Close" @click="closeSubmitService"></button>
+        <button type="button" class="btn-close ms-auto close" aria-label="Close" @click="closeSubmitService"></button>
 
       </div>
       <div class="modal-body d-flex gap-3">
@@ -152,8 +152,8 @@ const submitServiceReport = () => {
 }
 .close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 30px;
+  right: 25px;
   font-size: 20px;
   cursor: pointer;
 }
