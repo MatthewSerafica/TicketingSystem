@@ -37,6 +37,9 @@
                   {{ form.ticket_number ? form.ticket_number : 'Select a ticket number...' }}
                 </button>
                 <ul class="dropdown-menu">
+                  <li class="dropdown-item">
+                    Select a Ticket No.
+                  </li>
                   <li v-for="ticket in tickets">
                     <div class="dropdown-item" @click="ticketDetails(ticket)">{{ ticket.ticket_number }}</div>
                   </li>

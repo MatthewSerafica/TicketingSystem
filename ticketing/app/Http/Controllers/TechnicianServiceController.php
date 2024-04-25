@@ -62,7 +62,7 @@ class TechnicianServiceController extends Controller
             $date_done = null;
             $problem = null;
         }
-        $tickets = Ticket::with('employee.user')->get();
+        $tickets = Ticket::with('employee.user')->whereNull('sr_no')->get();
         $technicians = Technician::all();
         return inertia('Technician/ServiceReports/Create', [
             'technicians' => $technicians,
@@ -195,17 +195,6 @@ class TechnicianServiceController extends Controller
         $existingServiceReport = ServiceReport::where('service_id', $service_id)->first();
 
         if ($existingServiceReport) {
-            // Find the related Ticket using the ticket_number from ServiceReport
-            $ticket = Ticket::where('ticket_number', $existingServiceReport->ticket_number)->first();
-
-            // Update Ticket values or set them to null as needed
-            $ticket->update([
-                'sr_no' => null, // Set sr_no to null or delete it from the ticket table
-                'remarks' => null, // Set remarks to null or delete it from the ticket table
-                'status' => 'Pending',
-                'resolved_at' =>null,
-            ]);
-
             // Delete the ServiceReport
             $existingServiceReport->delete();
 
