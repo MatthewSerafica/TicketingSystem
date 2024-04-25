@@ -248,16 +248,22 @@ let search = ref(props.filters.search);
 let from_date_filter = ref(null);
 let to_date_filter = ref(null);
 let sortColumn = ref("ticket_number");
-let sortDirection = ref("asc");
+let sortDirection = ref("desc");
 let timeoutId = null;
 
 const fetchData = (type, all, ne, pending, ongoing, resolved) => {
+  if (!from_date_filter.value) {
+    from_date_filter.value = new Date().toISOString().split('T')[0];
+  }
+  if (!to_date_filter.value) {
+    to_date_filter.value = new Date().toISOString().split('T')[0];
+  }
   router.get(
     route('technician.tickets'),
     {
       search: search.value,
-      from_date_filter: from_date_filter,
-      to_date_filter: to_date_filter,
+      from_date_filter: from_date_filter.value,
+      to_date_filter: to_date_filter.value,
       sort: sortColumn.value,
       direction: sortDirection.value,
       filterTickets: type,
@@ -278,7 +284,7 @@ const fetchData = (type, all, ne, pending, ongoing, resolved) => {
 const resetSorting = () => {
   console.log("Reset Sorting");
   sortColumn.value = "ticket_number"
-  sortDirection.value = "asc"
+  sortDirection.value = "desc"
 }
 
 const debouncedFetchData = () => {
@@ -294,11 +300,11 @@ const date = ref(null);
 
 watch([search, date], ([newSearch, newDate]) => {
   if (newDate) {
-    from_date_filter = moment(newDate[0]).format('YYYY-MM-DD');
-    to_date_filter = moment(newDate[1]).format('YYYY-MM-DD');
+    from_date_filter.value = moment(newDate[0]).format('YYYY-MM-DD');
+    to_date_filter.value = moment(newDate[1]).format('YYYY-MM-DD');
   } else {
-    from_date_filter = null;
-    to_date_filter = null;
+    from_date_filter.value = null;
+    to_date_filter.value = null;
   }
   if (!newSearch && !newDate) {
     resetSorting();
@@ -665,7 +671,7 @@ const validateNumericInput = (inputValue, propName) => {
 
 @media (max-width: 325px) {
   .main-content {
-    margin-left: 0; 
+    margin-left: 0;
   }
 
   .custom-rounded-table {
@@ -673,12 +679,12 @@ const validateNumericInput = (inputValue, propName) => {
   }
 
   .pagination {
-    width: 100%; 
+    width: 100%;
     overflow-x: auto;
   }
 
   .table-responsive {
-    width: 100%; 
+    width: 100%;
     overflow-x: auto;
   }
 
@@ -693,10 +699,9 @@ const validateNumericInput = (inputValue, propName) => {
 
   /* Adjust header styles */
   .sticky-top {
-    width: 100%; 
-    left: 0; 
-    right: 0; 
+    width: 100%;
+    left: 0;
+    right: 0;
   }
 }
-
 </style>
