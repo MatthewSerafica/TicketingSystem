@@ -3,12 +3,13 @@
 namespace App\Notifications;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PostMade extends Notification
+class UserTaggedPost extends Notification
 {
     use Queueable;
 
@@ -16,7 +17,8 @@ class PostMade extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        private Post $post, private $name
+        private User $user,
+        private Post $post,
     )
     {
         //
@@ -51,13 +53,11 @@ class PostMade extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'user_id' => $this->post->user_id,
             'post_id' => $this->post->id,
-            'title' => $this->post->title,
-            'content' => $this->post->content,
-            'tagged_user' => $this->post->tagged_user,
-            'created_at' => $this->post->created_at,
-            'name' => $this->name,
+            'post_title' => $this->post->title,
+            'post_content' => $this->post->content,
+            'post_user' => $this->post->user,
+            'tagged_user' => $this->user,
         ];
     }
 }

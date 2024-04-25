@@ -148,32 +148,71 @@
                             </small>
                         </div>
                         <div class="card-body" v-if="notification.type === 'App\\Notifications\\PostMade'">
-                            <p class="card-title" style="width: 90%;">
-                                <strong>{{ notification.data.name }}</strong> posted <strong>{{ notification.data.title
-                                    }}</strong> in the <strong>Forum</strong>
+                            <a :href="route('technician.forum.post', [notification.data.post_id])"
+                                class="text-decoration-none">
+                            <p class="card-title text-dark" style="width: 90%;">
+                                <strong>{{ notification.data.name }}</strong> posted in the <strong>Forum</strong>
                             </p>
                             <small class="card-text fst-italic text-muted">
                                 {{ formatDateTime(notification.created_at) }}
                             </small>
+                            </a>
+                        </div>
+                        <div class="card-body" v-if="notification.type === 'App\\Notifications\\UserTaggedPost'">
+                            <a :href="route('technician.forum.post', [notification.data.post_id])"
+                                class="text-decoration-none">
+                            <p class="card-title text-dark" style="width: 90%;">
+                                <strong>{{ notification.data.post_user.name }}</strong> mentioned you in a post.
+                            </p>
+                            <small class="card-text fst-italic text-muted">
+                                {{ formatDateTime(notification.created_at) }}
+                            </small>
+                            </a>
                         </div>
                         <div class="card-body" v-if="notification.type === 'App\\Notifications\\CommentMade'">
-                            <p class="card-title" style="width: 90%;">
+                            <a :href="route('technician.forum.post', [notification.data.post_id])"
+                                class="text-decoration-none">
+                            <p class="card-title text-dark" style="width: 90%;">
                                 <strong>{{ notification.data.name }}</strong> commented on your post, <strong>{{
                             notification.data.title }}</strong>, in the <strong>Forum</strong>
                             </p>
                             <small class="card-text fst-italic text-muted">
                                 {{ formatDateTime(notification.created_at) }}
                             </small>
+                            </a>
                         </div>
-                        <div class="card-body" v-if="notification.type === 'App\\Notifications\\ReplyMade'">
-                            <p class="card-title w-75">
-                                <strong>{{ notification.data.name }}</strong> replied to your comment on the post,
-                                <strong>{{ notification.data.ttile }}</strong>, in the
-                                <strong>Forum</strong>
+                        <div class="card-body" v-if="notification.type === 'App\\Notifications\\UserTaggedComment'">
+                            <a :href="route('technician.forum.post', [notification.data.post_id])"
+                                class="text-decoration-none">
+                            <p class="card-title text-dark" style="width: 90%;">
+                                <strong>{{ notification.data.comment_user.name }}</strong> mentioned you in a comment.
                             </p>
                             <small class="card-text fst-italic text-muted">
                                 {{ formatDateTime(notification.created_at) }}
                             </small>
+                            </a>
+                        </div>
+                        <div class="card-body" v-if="notification.type === 'App\\Notifications\\ReplyMade'">
+                            <Link :href="route('technician.forum.post', [notification.data.post_id])"
+                                class="text-decoration-none">
+                            <p class="card-title w-75 text-dark">
+                                <strong>{{ notification.data.name }}</strong> replied to your comment.
+                            </p>
+                            <small class="card-text fst-italic text-muted">
+                                {{ formatDateTime(notification.created_at) }}
+                            </small>
+                            </Link>
+                        </div>
+                        <div class="card-body" v-if="notification.type === 'App\\Notifications\\UserTaggedReply'">
+                            <a :href="route('technician.forum.post', [notification.data.post_id])"
+                                class="text-decoration-none">
+                            <p class="card-title text-dark" style="width: 90%;">
+                                <strong>{{ notification.data.comment_user.name }}</strong> mentioned you in a reply to a comment.
+                            </p>
+                            <small class="card-text fst-italic text-muted">
+                                {{ formatDateTime(notification.created_at) }}
+                            </small>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -202,7 +241,7 @@ const determineActiveLink = () => {
     } else if (currentPath.includes('service-report')) {
         setActiveLink('service-report');
     } else if (currentPath.includes('forum')) {
-        setActiveLink('forum');    
+        setActiveLink('forum');
     } else {
         setActiveLink('dashboard');
     }

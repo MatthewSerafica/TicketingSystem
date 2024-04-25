@@ -11,6 +11,9 @@ use App\Models\Technician;
 use App\Notifications\CommentMade;
 use App\Notifications\PostMade;
 use App\Notifications\ReplyMade;
+use App\Notifications\UserTaggedComment;
+use App\Notifications\UserTaggedPost;
+use App\Notifications\UserTaggedReply;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -86,9 +89,16 @@ class TechnicianForumController extends Controller
                 'post_id' => $post->id,
                 'user_id' => $user,
             ]);
+            $user = User::findOrFail($user);
+            $user->notify(
+                new UserTaggedPost($user, $post)
+            );
         }
 
-        $techs = User::where('user_type', 'technician')->whereNot('id', $user_id)->get();
+        $techs = User::where('user_type', 'technician')
+            ->whereNotIn('id', $tagged)
+            ->where('id', '!=', $user_id)
+            ->get();
         foreach ($techs as $tech) {
             $tech->notify(
                 new PostMade($post, $poster->name)
@@ -171,6 +181,11 @@ class TechnicianForumController extends Controller
                     'comment_id' => $comment->id,
                     'user_id' => $user,
                 ]);
+
+                $user = User::findOrFail($user);
+                $user->notify(
+                    new UserTaggedComment($user, $comment)
+                );
             }
 
             if ($user_id !== $post->user_id) {
@@ -214,15 +229,14 @@ class TechnicianForumController extends Controller
                     'comment_id' => $reply->id,
                     'user_id' => $user,
                 ]);
+
+                $user = User::findOrFail($user);
+                $user->notify(
+                    new UserTaggedReply($user, $reply)
+                );
             }
 
             $originalComment = Comment::with('user')->find($reply->parent_comment_id);
-
-            if ($user_id !== $post->user_id) {
-                if ($originalComment->user->id !== $post->user_id) {
-                    $post->user->notify(new ReplyMade($reply, $replier->name, $post->title));
-                }
-            }
 
             if ($user_id !== $originalComment->user->id) {
                 $originalComment->user->notify(new ReplyMade($reply, $replier->name, $post->title));
