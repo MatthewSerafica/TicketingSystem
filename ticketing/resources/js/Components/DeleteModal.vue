@@ -17,6 +17,7 @@
         <p v-if="office">Are you sure you want to delete <strong>{{ office.office }}</strong>?</p>
         <p v-if="post">Are you sure you want to delete your post?</p>
         <p v-if="comment">Are you sure you want to delete your comment?</p>
+        <p v-if="problem">Are you sure you want to delete <strong>{{ problem.problem }}</strong>?</p>
       </div>
       <div class="d-flex flex-row gap-2 justify-content-end mt-2">
         <Link v-if="department" method="delete" type="button" as="button" :href="route('admin.department.delete', { id: department.id })"
@@ -24,6 +25,8 @@
         <Link v-if="office" method="delete" type="button" as="button" :href="route('admin.office.delete', { id: office.id })"
           @click="closeDelete" class="btn btn-danger">Delete</Link>
         <Link v-if="service" method="delete" type="button" as="button" :href="route('admin.services.delete', { id: service.id })"
+          @click="closeDelete" class="btn btn-danger">Delete</Link>
+        <Link v-if="problem" method="delete" type="button" as="button" :href="route('admin.problems.delete', { id: problem.id })"
           @click="closeDelete" class="btn btn-danger">Delete</Link>
         <Link v-if="post" method="delete" type="button" as="button" :href="route('technician.forum.delete', { id: post.id })"
           @click="closeDelete" class="btn btn-danger">Delete</Link>
@@ -51,6 +54,7 @@ const props = defineProps({
   service: Object,
   post: Object,
   comment: Object,
+  problem: Object,
 })
 
 </script>

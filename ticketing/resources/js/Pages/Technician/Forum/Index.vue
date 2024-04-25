@@ -18,7 +18,7 @@
         </div>
         <div class="container justify-content-center mt-4 col-6">
             <div class="row g-2 justify-content-center">
-                <div class="input-group w-50">
+                <div class="input-group w-50 ">
                     <span class="input-group-text rounded-start-pill" id="searchIcon"><i
                             class="bi bi-search"></i></span>
                     <input type="text" class="form-control rounded-end-pill py-2" id="search" name="search"
@@ -279,5 +279,64 @@ const { stop } = useIntersectionObserver(last, ([{ isIntersecting }]) => {
     object-fit: cover;
     transition: transform 0.5s ease;
     cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 0 15px;
+    }
+
+    .input-group {
+        width: 100%;
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+
+@media (max-width: 375px)    {
+    .container {
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        .input-group {
+            width: 100%;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+        }
+
+        #search {
+            width: 100%; /* Make the input full width */
+        }
+
+}
+
+@media (max-width: 320px)    {
+    .container {
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        .input-group {
+            width: 100%;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+        }
+
+        #search {
+            width: 50%; /* Make the input full width */
+        }
+
 }
 </style>

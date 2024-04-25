@@ -287,20 +287,17 @@ class TechnicianTicketController extends Controller
 
             $ticket = Ticket::where('ticket_number', $id)->first();
 
-            $ticket->$field = $request->$field;
-
             // If the SR number is present in the request, update it in the tickets table
             if ($field === 'sr_no') {
-                $ticket->save();
                 $serviceReport = ServiceReport::where('ticket_number', $ticket->ticket_number)->first();
                 if ($serviceReport) {
-                    $serviceReport->service_id = $ticket->$field;
+                    $serviceReport->service_id = $request->$field;
                     $serviceReport->save();
                 } else {
                     // If no service report exists, create a new one with the updated SR number
                     $serviceData = [
-                        'service_id' => $ticket->$field,
-                        'ticket_number' => $ticket->ticket_number,
+                        'service_id' => $request->$field,
+                        
                         'date_done' => now(),
                         'issue' => $ticket->description,
 
