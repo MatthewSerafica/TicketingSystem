@@ -13,12 +13,17 @@ class Comment extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function post(): BelongsTo
     {
-        return $this->belongsTo(Post::class, 'post_id');
+        return $this->belongsTo(Post::class, 'post_id', 'id');
+    }
+
+    public function tagged()
+    {
+        return $this->hasMany(TaggedUser::class, 'comment_id', 'id');
     }
 
     protected $keyType = 'string';

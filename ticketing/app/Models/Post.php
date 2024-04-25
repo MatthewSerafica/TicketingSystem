@@ -14,13 +14,19 @@ class Post extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function comment(): HasMany 
+    public function comment(): HasMany
     {
-        return $this->hasMany(Comment::class, 'post_id');
+        return $this->hasMany(Comment::class, 'post_id', 'id');
     }
+
+    public function tagged()
+    {
+        return $this->hasMany(TaggedUser::class, 'post_id', 'id');
+    }
+    
     protected $keyType = 'string';
     public $incrementing = false;
     protected $table = 'posts';

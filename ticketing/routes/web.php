@@ -138,6 +138,7 @@ Route::middleware(['web'])->group(function () {
 
         Route::get('/technician/forum', [TechnicianForumController::class, 'index'])->name('technician.forum');
         Route::get('/technician/forum/post/{post_id}', [TechnicianForumController::class, 'show'])->name('technician.forum.post');
+        Route::get('/technician/forum/post/users/{term}', [TechnicianForumController::class, 'getUsers'])->name('technician.forum.post.users');
         Route::delete('/technician/forum/delete/{post_id}', [TechnicianForumController::class, 'delete'])->name('technician.forum.delete');
         Route::post('/technician/forum/store', [TechnicianForumController::class, 'store'])->name('technician.forum.store');
         Route::post('/technician/forum/comment/{post_id}/{title}', [TechnicianForumController::class, 'comment'])->name('technician.forum.comment');

@@ -15,18 +15,33 @@
                     <div class="p-4 d-flex flex-column gap-2">
                         <input type="text" class="p-2 px-4 rounded form-control" v-model="form.title"
                             placeholder="Title">
-                            <div class="position-relative">
-                                <input type="text" class="p-2 px-4 rounded form-control" v-model="form.tagged_user_name" placeholder="Type to search">
-                                <ul v-if="showAutocomplete" class="autocomplete-dropdown">
-                                    <li v-for="technician in filteredTechnicians" :key="technician.id" @click="selectTechnician(technician)">
-                                        {{ technician.user.name }}
-                                    </li>
-                                </ul>
-                            </div>
-
 
                         <textarea class="w-full p-4 rounded form-control" placeholder="What are you thinking about?"
-                            v-model="form.content"></textarea>
+                            v-model="form.content" @input="handleContentChange(form.content)">
+                        </textarea>
+
+                        <div class="position-relative">
+                            <div class="d-flex gap-2">
+                                <div class="d-flex gap-1 align-items-center"
+                                    v-for="(mention, index) in form.tagged_user_name">
+                                    <span style="font-size: 11px;">{{ mention }}</span>
+                                    <button type="button" class="btn btn-sm rounded-circle"
+                                        @click="removeMention(index)"
+                                        style="--bs-btn-padding-y: .07rem; --bs-btn-padding-x: .20rem; --bs-btn-font-size: .75rem;">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <ul v-if="showAutocomplete"
+                                class="autocomplete-dropdown bg-white border-secondary border p-2 rounded shadow  w-50 position-absolute"
+                                style="top: -0.5rem;z-index: 100; list-style-type: none; cursor: pointer;">
+                                <li class="text-decoration-none" v-for="user in userData" :key="user.id"
+                                    @click="selectUser(user)">
+                                    {{ user.name }}
+                                </li>
+                            </ul>
+                        </div>
+
                         <div v-if="isUploadImageShown" class="card p-2 rounded border">
                             <div class="position-absolute" style="right: 10px; top: 10px; z-index: 100;">
                                 <button type="button" class="btn-close btn btn-secondary rounded-circle p-2"
@@ -71,10 +86,10 @@
 </template>
 
 <script setup>
-import { defineEmits, ref, computed, watch } from 'vue';
 import Button from '@/Components/Button.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
+import { defineEmits, ref, watch } from 'vue';
 
 const props = defineProps({
     technicians: Object,
@@ -85,8 +100,8 @@ const page = usePage();
 const form = useForm({
     title: null,
     content: null,
-    tagged_user: null,
-    tagged_user_name: '',
+    tagged_user: [],
+    tagged_user_name: [],
 });
 
 let showAutocomplete = ref(false);
@@ -96,28 +111,75 @@ let isUploadImageShown = ref(false);
 const uploadedPicture = ref(null);
 const fileInput = ref(null);
 const formData = new FormData();
+let userData = ref([]);
 
-const filteredTechnicians = computed(() => {
-    let searchTerm = form.tagged_user_name;
-    if (!searchTerm) {
-        return []; // Return an empty array if the search term is empty
+const selectUser = (user) => {
+    const userIndex = userData.value.findIndex((data) => !data.selectedUser);
+    if (userIndex !== -1) {
+        userData.value[userIndex].selectedUser = user.name;
+        userData.value[userIndex].userId = user.id;
+        form.tagged_user_name.push(user.name);
+        form.tagged_user.push(user.id);
+
+        const content = form.content;
+        const lastIndex = content.lastIndexOf('@');
+        form.content = content.substring(0, lastIndex) + '';
+
+        showAutocomplete.value = false;
+
+        userData.value = userData.value.filter((data, index) => index !== userIndex);
     }
-    searchTerm = searchTerm.trim().toLowerCase(); // Trim whitespace and convert to lowercase
-    return props.technicians.filter(technician => technician.user.name.toLowerCase().includes(searchTerm));
-});
-
-const selectTechnician = (technician) => {
-    form.tagged_user = technician.id;
-    form.tagged_user_name = technician.user.name;
-    showAutocomplete.value = false;
 };
 
-// Watch for changes in the text input to show/hide autocomplete dropdown
+const removeMention = (index) => {
+    form.tagged_user_name.splice(index, 1);
+    form.tagged_user.splice(index, 1);
+};
+
 watch(() => form.tagged_user_name, (newValue, oldValue) => {
     if (newValue !== oldValue) {
         showAutocomplete.value = true;
     }
+
+    userData.value.push({
+        selectedUser: ref(''),
+        userId: null,
+    });
 });
+
+watch(() => form.content, (newValue, oldValue) => {
+    console.log(newValue, oldValue);
+    if (oldValue && newValue.length < oldValue.length) {
+        const removedWord = oldValue.substring(0, newValue.lastIndexOf('@'));
+        console.log('removed word: ' + removedWord + '  ' + oldValue.substring(0, newValue.lastIndexOf('@')))
+        const index = form.tagged_user_name.lastIndexOf(removedWord.trim());
+        if (index !== -1) {
+            const userId = form.tagged_user[index];
+            form.tagged_user.splice(index, 1);
+            form.tagged_user_name.splice(index, 1);
+            userData.value = userData.value.filter(user => user.userId !== userId);
+            console.log(form.tagged_user, form.tagged_user_name)
+        }
+    }
+});
+
+const handleContentChange = async (content) => {
+    if (content.includes('@')) {
+        const searchTerm = content.split('@').pop().trim();
+        if (searchTerm.length > 0) {
+            try {
+                const response = await axios.get(`/technician/forum/post/users/${searchTerm}`);
+                userData.value = response.data.users;
+                showAutocomplete.value = true;
+            } catch (error) {
+                console.error('Error fetching user suggestions:', error);
+            }
+        }
+    } else {
+        showAutocomplete.value = false;
+    }
+};
+
 
 const emit = defineEmits(['closeDelete']);
 
@@ -146,7 +208,9 @@ const openFileInput = () => {
 const post = async () => {
     formData.append('title', form.title);
     formData.append('content', form.content ?? '');
-    formData.append('tagged_user', form.tagged_user ?? '');
+
+    const taggedUserArray = Array.isArray(form.tagged_user) ? form.tagged_user : [form.tagged_user];
+    formData.append('tagged_user', JSON.stringify(taggedUserArray));
 
     try {
         const response = await axios.post(route('technician.forum.store'), formData, {

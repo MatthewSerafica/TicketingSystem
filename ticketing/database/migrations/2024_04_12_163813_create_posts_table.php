@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('title');
             $table->text('content');
             $table->string('image')->nullable();
-            $table->string('tagged_user')->nullable();
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });

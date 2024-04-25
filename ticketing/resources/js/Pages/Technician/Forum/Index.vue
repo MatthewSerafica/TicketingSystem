@@ -32,67 +32,75 @@
                     </div>
                     <Post v-if="isShowPost" :technicians="technicians" @closeDelete="closePost" />
                 </div>
-                <div v-if="posts.data.length" class="table-responsive rounded shadow pt-2 px-2 mb-3">
-                <div class="bg-white border-bottom pb-2 mb-2" v-for="post in posts.data" v-bind:key="post.id">
-                    <div class="post rounded px-3 pb-1">
-                        <div class="d-flex align-items-center justify-content-between gap-2">
-                            <div class="d-flex align-items-center gap-2">
-                                <div>
-                                    <img v-if="post.user.avatar !== 'http://127.0.0.1:8000/storage'"
-                                        :src="post.user.avatar" alt="User profile picture"
-                                        class="avatar rounded-circle">
-                                    <EmptyProfile v-else class="avatar rounded-circle">
-                                    </EmptyProfile>
+                <div v-if="posts.data.length" class="table-responsive rounded pt-2 px-2 mb-3">
+                    <div class="bg-white border-bottom pb-2 mb-2" v-for="post in posts.data" v-bind:key="post.id">
+                        <div class="post rounded px-3 pb-1">
+                            <div class="d-flex align-items-center justify-content-between gap-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div>
+                                        <img v-if="post.user.avatar !== 'http://127.0.0.1:8000/storage'"
+                                            :src="post.user.avatar" alt="User profile picture"
+                                            class="avatar rounded-circle">
+                                        <EmptyProfile v-else class="avatar rounded-circle">
+                                        </EmptyProfile>
+                                    </div>
+                                    <div class="d-flex flex-row gap-2 mt-3">
+                                        <div class="d-flex align-items-center justify-content-center gap-4">
+                                            <p class="fw-semibold text-dark"><small>{{ post.user.name }}</small></p>
+                                        </div>
+                                        <div class="d-flex flex-row gap-2">
+                                            <p class="text-secondary">
+                                                •
+                                            </p>
+                                            <p class="text-secondary"><small>{{ post.time_since_posted }}</small></p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="d-flex flex-row gap-2 mt-3">
-                                    <div class="d-flex align-items-center justify-content-center gap-4">
-                                        <p class="fw-semibold text-dark"><small>{{ post.user.name }}</small></p>
-                                    </div>
-                                    <div class="d-flex flex-row gap-2">
-                                        <p class="text-secondary">
-                                            •
-                                        </p>
-                                        <p class="text-secondary"><small>{{ post.time_since_posted }}</small></p>
-                                    </div>
+                                <div v-if="page.props.user.id === post.user.id"
+                                    class="mt-1 ellipsis rounded-circle dropdown">
+                                    <button data-bs-toggle="dropdown" aria-expanded="false" class="btn rounded-circle">
+                                        <i class="bi bi-three-dots-vertical text-dark"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <div class="dropdown-item" @click="showDelete(post)">Delete</div>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
-                            <div v-if="page.props.user.id === post.user.id"
-                                class="mt-1 ellipsis rounded-circle dropdown">
-                                <button data-bs-toggle="dropdown" aria-expanded="false" class="btn rounded-circle">
-                                    <i class="bi bi-three-dots-vertical text-dark"></i>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><div class="dropdown-item" @click="showDelete(post)">Delete</div></li>
-                                </ul>
-                            </div>
+                            <a :href="route('technician.forum.post', [post.id])" class="text-decoration-none">
+                                <div class="text-dark fw-light fst-italic" v-if="post.tagged.length">
+                                    <p><small>Tagged:
+                                            <span v-for="tag in post.tagged" class="me-2">
+                                                {{ tag.user.name }}
+                                            </span>
+                                        </small>
+                                    </p>
+                                </div>
+
+                                <p class="text-dark"><strong>{{ post.title }}</strong></p>
+
+                                <div v-if="post.image" class="card mb-2">
+                                    <img :src="'http://127.0.0.1:8000/storage/' + post.image" alt=""
+                                        class="rounded image">
+                                </div>
+
+                                <p class="text-secondary-emphasis"> {{ post.content }} </p>
+
+                                <div class="d-flex justify-content-between text-dark">
+                                    <div class="d-flex align-items-center justify-content-center gap-2 rounded-pill p-2 comment"
+                                        style="width: 4rem;">
+                                        <i class="bi bi-chat-left-dots text-dark"></i>
+                                        <span class="text-xs text-dark">{{ post.comment_count }}</span>
+                                    </div>
+                                </div>
+
+                            </a>
                         </div>
-                        <a :href="route('technician.forum.post', [post.id])" class="text-decoration-none">
-                            <div v-if="post.tagged_user">
-                                <p><small>Tagged: {{ post.tagged_user }}</small></p>
-                            </div>
-
-                            <p class="text-dark"><strong>{{ post.title }}</strong></p>
-
-                            <div v-if="post.image" class="card mb-2">
-                                <img :src="'http://127.0.0.1:8000/storage/' + post.image" alt="" class="rounded image">
-                            </div>
-
-                            <p class="text-secondary-emphasis"> {{ post.content }} </p>
-
-                            <div class="d-flex justify-content-between text-dark">
-                                <div class="d-flex align-items-center justify-content-center gap-2 rounded-pill p-2 comment"
-                                    style="width: 4rem;">
-                                    <i class="bi bi-chat-left-dots text-dark"></i>
-                                    <span class="text-xs text-dark">{{ post.comment_count }}</span>
-                                </div>
-                            </div>
-
-                        </a>
                     </div>
                 </div>
-            </div>
-            <EmptyCard :title="'No Post yet...'" v-else class="mt-2 w-75" style="height:20rem;">
-      </EmptyCard>
+                <EmptyCard :title="'No Post yet...'" v-else class="mt-2 w-75" style="height:20rem;">
+                </EmptyCard>
                 <div ref="last" class="translate"></div>
                 <div v-if="loading" class="text-center">
                     <span>Loading...</span>

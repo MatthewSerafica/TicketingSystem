@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PostResource;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\TaggedUser;
 use App\Models\User;
 use App\Models\Technician;
 use App\Notifications\CommentMade;
@@ -20,7 +21,9 @@ class TechnicianForumController extends Controller
     {
         $posts = Post::query()
             ->whereNot('is_deleted', 1)
-            ->with('user')
+            ->with(['user', 'tagged' => function ($query) {
+                $query->whereNull('comment_id');
+            }, 'tagged.user'])
             ->withCount(['comment' => function ($query) {
                 $query->where('is_deleted', '!=', 1);
             }])
@@ -60,7 +63,6 @@ class TechnicianForumController extends Controller
         $request->validate([
             'title' => 'nullable',
             'content' => 'required',
-            'tagged_user' => 'nullable',
             'image' => 'nullable',
         ]);
 
@@ -68,7 +70,6 @@ class TechnicianForumController extends Controller
             'user_id' => $user_id,
             'title' => $request->title,
             'content' => $request->content,
-            'tagged_user' => $request->tagged_user,
         ]);
 
         if ($request->hasFile('image')) {
@@ -77,6 +78,15 @@ class TechnicianForumController extends Controller
         }
 
         $post->save();
+
+        $tagged = json_decode($request->tagged_user);
+
+        foreach ($tagged as $user) {
+            $tagged = TaggedUser::create([
+                'post_id' => $post->id,
+                'user_id' => $user,
+            ]);
+        }
 
         $techs = User::where('user_type', 'technician')->whereNot('id', $user_id)->get();
         foreach ($techs as $tech) {
@@ -91,11 +101,14 @@ class TechnicianForumController extends Controller
     public function show($id)
     {
         $post = Post::where('id', $id)
-            ->with('user')
+            ->with(['user', 'tagged' => function ($query) {
+                $query->whereNull('comment_id');
+            }, 'tagged.user'])
             ->withCount(['comment' => function ($query) {
                 $query->where('is_deleted', '!=', 1);
             }])
             ->first();
+
 
         if ($post) {
             $post->time_since_posted = $post->created_at->diffForHumans();
@@ -104,7 +117,7 @@ class TechnicianForumController extends Controller
         $comments = Comment::where('post_id', $post->id)
             ->whereNot('is_deleted', 1)
             ->whereNull('parent_comment_id')
-            ->with('user')
+            ->with('user', 'tagged.user')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -116,7 +129,7 @@ class TechnicianForumController extends Controller
         $replies = Comment::where('post_id', $post->id)
             ->whereNot('is_deleted', 1)
             ->whereNotNull('parent_comment_id')
-            ->with('user')
+            ->with('user', 'tagged.user')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -140,17 +153,25 @@ class TechnicianForumController extends Controller
 
             $request->validate([
                 'content' => 'required',
-                'tagged_user' => 'nullable',
             ]);
 
             $comment = [
                 'post_id' => $post->id,
                 'user_id' => $user_id,
                 'content' => $request->content,
-                'tagged_user' => $request->tagged_user,
             ];
 
             $comment = Comment::create($comment);
+
+            $tagged = $request->tagged_user;
+
+            foreach ($tagged as $user) {
+                $tagged = TaggedUser::create([
+                    'post_id' => $post->id,
+                    'comment_id' => $comment->id,
+                    'user_id' => $user,
+                ]);
+            }
 
             if ($user_id !== $post->user_id) {
                 $post->user->notify(
@@ -174,7 +195,6 @@ class TechnicianForumController extends Controller
             $request->validate([
                 'parent_comment_id' => 'nullable',
                 'content' => 'required',
-                'tagged_user' => 'nullable',
             ]);
 
             $comment = [
@@ -182,10 +202,19 @@ class TechnicianForumController extends Controller
                 'parent_comment_id' => $comment_id,
                 'user_id' => $user_id,
                 'content' => $request->content,
-                'tagged_user' => $request->tagged_user,
             ];
 
             $reply = Comment::create($comment);
+
+            $tagged = $request->tagged_user;
+
+            foreach ($tagged as $user) {
+                $tagged = TaggedUser::create([
+                    'post_id' => $post->id,
+                    'comment_id' => $reply->id,
+                    'user_id' => $user,
+                ]);
+            }
 
             $originalComment = Comment::with('user')->find($reply->parent_comment_id);
 
@@ -211,10 +240,25 @@ class TechnicianForumController extends Controller
 
         $request->validate([
             'content' => 'required',
-            'tagged_user' => 'nullable',
         ]);
         $comment->content = $request->content;
         $comment->save();
+
+        $tagged = TaggedUser::where('comment_id', $id)->get();
+
+        foreach ($tagged as $tag) {
+            $tag->delete();
+        }
+
+        $tagged = $request->tagged_user;
+
+        foreach ($tagged as $user) {
+            $tagged = TaggedUser::create([
+                'post_id' => $comment->post_id,
+                'comment_id' => $comment->id,
+                'user_id' => $user,
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Comment successfully updated');
     }
@@ -251,5 +295,13 @@ class TechnicianForumController extends Controller
         $post->save();
 
         return redirect()->back()->with('success', 'Post Deleted!')->with('message', 'Your post has been deleted');
+    }
+
+    public function getUsers($term)
+    {
+        $users = User::where('user_type', 'technician')
+            ->where('name', 'like', '%' . $term . '%')
+            ->get();
+        return response()->json(['users' => $users]);
     }
 }

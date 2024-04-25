@@ -83,7 +83,7 @@
             <div class="row justify-content-end">
               <div class="col-md-4">
                 <div class="d-flex justify-content-end gap-2">
-                  <Button :name="'Submit'" :color="'primary'" :disabled="!form.service_id || !form.date_started || !form.time_started || !form.ticket_number || !form.technicians.length || !form.requesting_office || !form.equipment_no || !form.issue || !form.action || !form.recommendation || !form.date_done || !form.time_done || !form.remarks"></Button>
+                  <Button :name="'Submit'" :color="'primary'" :disabled="!form.service_id || !form.date_started || !form.time_started || !form.ticket_number || !form.requesting_office || !form.equipment_no || !form.issue || !form.action || !form.recommendation || !form.date_done || !form.time_done"></Button>
                   <Link :href="'/admin/reports/service-report'" class="btn btn-outline-primary">Cancel</Link>
                 </div>
               </div>

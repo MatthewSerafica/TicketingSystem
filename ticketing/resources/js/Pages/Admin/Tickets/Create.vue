@@ -186,12 +186,6 @@
                                 </li>
                                 <li v-if="!technicians || technicians.length === 0">No technicians available</li>
                               </div>
-                              <!-- <li v-for="technician in technicians" :key="technician.technician_id"
-                                class="btn dropdown-item" @click="selectTechnician(technician, index)">
-                                <span class="fw-semibold">{{ technician.user.name }}</span>
-                                <br>
-                                <small>{{ technician.assigned_department }}</small>
-                              </li> -->
                             </ul>
                           </div>
                           <button type="button"

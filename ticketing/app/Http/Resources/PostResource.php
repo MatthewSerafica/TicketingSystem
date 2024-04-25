@@ -23,7 +23,7 @@ class PostResource extends JsonResource
             ],
             'title' => $this->title,
             'content' => $this->content,
-            'tagged_user' => $this->tagged_user,
+            'tagged' => $this->tagged,
             'image' => $this->image,
             'created_at' => $this->created_at,
             'comment_count' => $this->comment_count,
