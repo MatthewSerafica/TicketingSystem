@@ -26,6 +26,7 @@ class AdminServiceReportController extends Controller
                     ->orWhere('issue', 'like', '%' . $search . '%')
                     ->orWhere('technician', 'like', '%' . $search . '%');
             })
+            ->orderBy('service_id', 'desc')
             ->paginate(10);
 
         $filters = $request->only(['search']);
