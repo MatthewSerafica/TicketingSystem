@@ -11,15 +11,16 @@
             <SchoolLogo></SchoolLogo>
           </div>
 
-            <div class="mt-2 d-flex flex-column">
-              <div class="">
-                <h2 >Saint Louis University Technology Management and Development Department</h2>
-              </div>
-              <div class="d-flex justify-content-between" v-if="service_report">
-                <p>SERVICE REPORT FORM</p>
-              <strong>{{ service_report.service_report }}</strong>
-              </div>
+          <div class="mt-2 d-flex flex-column">
+            <div class="text-center">
+              <h2><strong>Saint Louis University</strong><br><strong>Technology Management and</strong><br><strong>Development Department</strong></h2>
             </div>
+            <div class="d-flex justify-content-between" v-if="service_report">
+              <p>SERVICE REPORT FORM</p>
+              <strong>{{ service_report.service_report }}</strong>
+            </div>
+          </div>
+
 
             <div>
             <table class="bordered-table w-100 h-65">
