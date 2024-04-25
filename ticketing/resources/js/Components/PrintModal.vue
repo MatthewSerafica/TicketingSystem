@@ -65,13 +65,13 @@
                   <span class="content-group-text bordered-column" colspan="2"><Strong>Requesting Office:</Strong> {{ props.service_report.requesting_office }}</span>
                 </div>
                 <div class="content-group">
-                  <span class="content-group-text bordered-column" colspan="2"><Strong>Equipment, Property Tag/Serial No.:</Strong> {{ props.service_report.equiptment_no }}</span>
+                  <span class="content-group-text bordered-column" colspan="2"><Strong>Equipment, Property Tag/Serial No.:</Strong> {{ props.service_report.equipment_no }}</span>
                 </div>
                 <div class="content-group">
-                  <span class="content-group-text bordered-column" colspan="2"><Strong>Problem Encountered:</Strong> {{ props.service_report.issue }}</span>
+                  <span class="content-group-text bordered-column" colspan="2"><Strong>Problem Encountered:</Strong> {{ props.service_report.issue}}</span>
                 </div>
                 <div class="content-group">
-                  <span class="content-group-text bordered-column" colspan="2"><Strong>Action Taken:</Strong> {{ props.service_report.service }}</span>
+                  <span class="content-group-text bordered-column" colspan="2"><Strong>Action Taken:</Strong> {{ props.service_report.action }}</span>
                 </div>
                 <div class="content-group">
                   <span class="content-group-text bordered-column" colspan="2"><Strong>Recommendation:</Strong> {{ props.service_report.recommendation }}</span>

@@ -69,7 +69,7 @@
           <div class="row mb-4">
             <div class="col-md-4">
               <label for="problemEncountered" class="form-label">Problem Encountered:</label>
-              <input type="text" class="form-control" id="problemEncountered" v-model="form.problem">
+              <input type="text" class="form-control" id="problemEncountered" v-model="form.issue">
             </div>
             <div class="col-md-4">
               <label for="action" class="form-label">Action Taken:</label>
@@ -128,7 +128,7 @@ const props = defineProps({
   ticket_id: Number,
   service_report: Object,
   tickets: Object,
-  problem: String,
+  issue: String,
   date_done: String,
 })
 
@@ -145,7 +145,7 @@ const form = useForm({
   technician: [],
   requesting_office: null,
   equipment_no: null,
-  problem: props.problem,
+  issue: props.issue,
   action: null,
   recommendation: null,
   date_done: props.date_done,
@@ -155,7 +155,7 @@ const form = useForm({
 
 const fillFormWithTicket = (ticket) => {
   form.action = ticket.service;
-  form.problem = ticket.description;
+  form.issue = ticket.issue;
   form.requesting_office = `${ticket.employee.department} - ${ticket.employee.office}`;
   // Fill other form fields as needed
 };
@@ -200,7 +200,7 @@ watch(() => form.ticket_number, async (newValue) => {
 
   if (selectedTicket) {
     form.action = selectedTicket.service;
-    form.problem = selectedTicket.description;
+    form.issue = selectedTicket.issue;
     form.requesting_office = selectedTicket.employee.department + ' - ' + selectedTicket.employee.office;
     const response = await fetch(route('technician.tickets.assigned', { id: selectedTicket.ticket_number }));
     const data = await response.json();
