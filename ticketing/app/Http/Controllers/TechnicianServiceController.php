@@ -60,7 +60,14 @@ class TechnicianServiceController extends Controller
             $ticket_id = null;
             $date_done = null;
         }
-        $tickets = Ticket::with('employee.user')->whereNull('sr_no')->get();
+        
+        $user_id = auth()->id();
+        $technician = Technician::where('user_id', $user_id)->with('user')->first();
+        $tickets = Ticket::with('employee.user', 'assigned.technician.user')
+            ->whereHas('assigned.technician.user', function ($query) use ($technician) {
+                $query->where('id', $technician->user->id);
+            })
+            ->whereNull('sr_no')->get();
         $technicians = Technician::all();
         return inertia('Technician/ServiceReports/Create', [
             'technicians' => $technicians,
@@ -200,6 +207,4 @@ class TechnicianServiceController extends Controller
             return redirect()->to('/technician/service-report');
         }
     }
-
-
 }
