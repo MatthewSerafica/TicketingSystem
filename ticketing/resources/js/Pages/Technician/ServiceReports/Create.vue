@@ -69,7 +69,7 @@
           <div class="row mb-4">
             <div class="col-md-4">
               <label for="problemEncountered" class="form-label">Problem Encountered:</label>
-              <input type="text" class="form-control" id="problemEncountered" v-model="form.issue">
+              <input type="text" class="form-control" id="problemEncountered" v-model="form.problem">
             </div>
             <div class="col-md-4">
               <label for="action" class="form-label">Action Taken:</label>
