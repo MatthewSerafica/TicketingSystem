@@ -165,7 +165,7 @@ watch(() => form.ticket_number, async (newValue) => {
   console.log(selectedTicket.ticket_number)
   if (selectedTicket) {
     form.action = selectedTicket.service;
-    form.issue = selectedTicket.description;
+    form.issue = selectedTicket.issue;
     form.requesting_office = selectedTicket.employee.department + ' - ' + selectedTicket.employee.office;
 
     const response = await fetch(route('admin.tickets.assigned', { id: selectedTicket.ticket_number }));
