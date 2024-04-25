@@ -25,6 +25,7 @@
                   </select>
                 </div>
               </div>
+
               <div class=" flex-shrink-1 w-25">
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="rs_no" class="fw-semibold">RS No.</label>
@@ -36,13 +37,6 @@
                 </div>
               </div>
 
-              <!-- <div class="flex-grow-1 w-50">
-                <div class="d-flex flex-column flex-shrink-0">
-                  <label for="issue" class="fw-semibold">Title</label>
-                  <input id="issue" class="form-control border-secondary-subtle" type="text"
-                    placeholder="Enter Ticket Title..." v-model="form.issue" required />
-                </div>
-              </div> -->
               <div class="flex-grow-1 w-50 d-flex flex-column">
                 <label for="Title" class="fw-semibold">Title</label>
                 <div class="btn-group">
@@ -63,7 +57,6 @@
                   </ul>
                 </div>
               </div>
-
 
               <div class="flex-grow-1 w-30">
                 <div class="d-flex flex-column flex-shrink-0">
@@ -215,13 +208,12 @@ const fetchData = () => {
 }
 
 const toggleRSNoField = () => {
-  // If the selected request type is "Requisition Slip," allow filling the RS No. field
   if (form.request_type === 'Requisition Slip') {
-    form.rs_no = props.new_rs; // Clear RS No. if previously filled for other request types
-    document.getElementById('rs_no').disabled = false; // Enable the RS No. field
+    form.rs_no = props.new_rs;
+    document.getElementById('rs_no').disabled = false;
   } else {
-    form.rs_no = null; // Clear RS No. for non-"Requisition Slip" types as well (optional)
-    document.getElementById('rs_no').disabled = true; // Disable the RS No. field
+    form.rs_no = null;
+    document.getElementById('rs_no').disabled = true;
   }
 }
 

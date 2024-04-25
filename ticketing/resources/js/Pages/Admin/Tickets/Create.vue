@@ -25,25 +25,32 @@
           </div>
 
           <div class="create-ticket">
-
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
-                <div class="d-flex flex-row gap-3">
+                <div class="d-flex flex-row gap-3 mb-2">
+                  <div class="flex-grow-1 w-50">
+                    <div class="flex-grow-1 w-80 d-flex flex-column">
+                      <label for="request_type" class="fw-semibold">Request Type</label>
+                      <select id="request_type" class="h-100 rounded border-secondary-subtle form-select"
+                        placeholder="Select Request Type..." v-model="form.request_type" @change="toggleRSNoField">
+                        <option disabled>Select Type</option>
+                        <option value="Requisition Slip">RS</option>
+                        <option value="Phone Call">Phone Call</option>
+                        <option value="Text">Text</option>
+                        <option value="Verbal">Verbal</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <div class="flex-grow-1 w-50">
                     <label for="rs_no" class="fw-semibold">Requisition Slip No.</label>
                     <input id="rs_no" class="form-control rounded border-secondary-subtle" type="text"
-                      placeholder="Enter RS No..." v-model="form.rs_no" />
+                      placeholder="Enter RS No..." v-model="form.rs_no" :disabled="form.request_type !== 'Requisition Slip'"/>
                     <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
                   </div>
 
-
-                  <!-- <div class="flex-grow-1 w-50">
-                    <label for="issue" class="fw-semibold">Title</label>
-                    <input id="issue" class="form-control rounded border-secondary-subtle" type="text"
-                      placeholder="Enter Ticket Title..." v-model="form.issue" required />
-                  </div> -->
-
-
+                </div>
+                <div class="d-flex flex-row gap-3">
                   <div class="flex-grow-1 w-50 d-flex flex-column">
                     <label for="Title" class="fw-semibold">Title</label>
                     <div class="btn-group">
@@ -92,12 +99,12 @@
                       </ul>
                     </div>
                   </div>
+
                   <div class="flex-grow-1 w-50 d-flex flex-column">
                     <label for="deptOffice" class="fw-semibold">Department & Office</label>
                     <input id="deptOffice" class="form-control rounded border-secondary-subtle" type="text"
                       placeholder=" " v-model="form.department_office" disabled />
                   </div>
-
                 </div>
               </div>
             </div>
@@ -214,7 +221,8 @@
           <div class="row justify-content-center">
             <div class="col-md-8">
               <div class="d-flex justify-content-end gap-2">
-                <Button :name="'Submit'" :color="'primary'" :disabled="!form.problem || !form.employee || !form.description || !form.service || !form.technicians.length"></Button>
+                <Button :name="'Submit'" :color="'primary'"
+                  :disabled="!form.problem || !form.employee || !form.description || !form.service || !form.technicians.length"></Button>
                 <Link :href="`/admin/tickets`" class="btn btn-outline-primary">Cancel</Link>
               </div>
             </div>
@@ -387,6 +395,16 @@ const fetchRecommended = async (department) => {
   } catch (error) {
     console.error('Error fetching recommended technicians:', error);
     return null;
+  }
+}
+
+const toggleRSNoField = () => {
+  if (form.request_type === 'Requisition Slip') {
+    form.rs_no = props.new_rs; 
+    document.getElementById('rs_no').disabled = false;
+  } else {
+    form.rs_no = null;
+    document.getElementById('rs_no').disabled = true;
   }
 }
 
