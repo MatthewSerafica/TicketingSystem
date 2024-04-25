@@ -367,14 +367,19 @@ let sortColumn = ref("ticket_number");
 let sortDirection = ref("desc");
 let timeoutId = null;
 
-
 const fetchData = (type, all, ne, pending, ongoing, resolved) => {
+  if (!from_date_filter.value) {
+    from_date_filter.value = new Date().toISOString().split('T')[0];
+  }
+  if (!to_date_filter.value) {
+    to_date_filter.value = new Date().toISOString().split('T')[0];
+  }
   router.get(
     route('admin.tickets'),
     {
       search: search.value,
-      from_date_filter: from_date_filter,
-      to_date_filter: to_date_filter,
+      from_date_filter: from_date_filter.value,
+      to_date_filter: to_date_filter.value,
       sort: sortColumn.value,
       direction: sortDirection.value,
       filterTickets: type,
@@ -412,11 +417,11 @@ const date = ref(null);
 
 watch([search, date], ([newSearch, newDate]) => {
   if (newDate) {
-    from_date_filter = moment(newDate[0]).format('YYYY-MM-DD');
-    to_date_filter = moment(newDate[1]).format('YYYY-MM-DD');
+    from_date_filter.value = moment(newDate[0]).format('YYYY-MM-DD');
+    to_date_filter.value = moment(newDate[1]).format('YYYY-MM-DD');
   } else {
-    from_date_filter = null;
-    to_date_filter = null;
+    from_date_filter.value = null;
+    to_date_filter.value = null;
   }
   if (!newSearch && !newDate) {
     resetSorting();

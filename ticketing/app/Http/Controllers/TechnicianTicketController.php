@@ -35,14 +35,17 @@ class TechnicianTicketController extends Controller
                 })
                 ->whereYear('created_at', Carbon::now()->year)
                 ->whereMonth('created_at', Carbon::now()->month)
-                ->orderBy($request->input('sort', 'ticket_number'), $request->input('direction', 'asc'));
+                ->orderBy(
+                    $request->input('sort', 'ticket_number'),
+                    $request->input('direction', 'desc')
+                );
         } else {
             $query = Ticket::query()
                 ->with('employee.user', 'assigned.technician.user')
                 ->whereHas('assigned.technician.user', function ($query) use ($technician) {
                     $query->where('id', $technician->user->id);
                 })
-                ->orderBy($request->input('sort', 'ticket_number'), $request->input('direction', 'asc'));
+                ->orderBy($request->input('sort', 'ticket_number'), $request->input('direction', 'desc'));
         }
 
 
@@ -297,7 +300,7 @@ class TechnicianTicketController extends Controller
                     // If no service report exists, create a new one with the updated SR number
                     $serviceData = [
                         'service_id' => $request->$field,
-                        
+
                         'date_done' => now(),
                         'issue' => $ticket->description,
 
