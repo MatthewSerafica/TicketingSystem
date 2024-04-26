@@ -153,7 +153,7 @@
             <div class="d-flex-row justify-content-end mb-4 w-50">
               <div class="d-flex justify-content-end gap-2">
                 <Button :name="'Submit'" :color="'primary'" class="submit-btn" :disabled="!form.problem || !form.employee || !form.description || !form.service || !form.complexity || !form.request_type"></Button>
-                <Link :href="`/technician/tickets`" class="btn btn-outline-primary">Cancel</Link>
+                <Link :href="`/technician/tickets`" class="btn btn-outline-secondary">Cancel</Link>
               </div>
             </div>
           </div>

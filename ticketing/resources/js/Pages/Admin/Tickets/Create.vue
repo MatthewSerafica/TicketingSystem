@@ -215,7 +215,7 @@
             <div class="col-md-8">
               <div class="d-flex justify-content-end gap-2">
                 <Button :name="'Submit'" :color="'primary'" :disabled="!form.problem || !form.employee || !form.description || !form.service || !form.technicians.length"></Button>
-                <Link :href="`/admin/tickets`" class="btn btn-outline-primary">Cancel</Link>
+                <Link :href="`/admin/tickets`" class="btn btn-outline-secondary">Cancel</Link>
               </div>
             </div>
           </div>

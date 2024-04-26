@@ -105,7 +105,7 @@
               <div class="d-flex justify-content-end gap-2">
                 <Button :name="'Submit'" :color="'primary'" @click="submitServiceReport(form, selectedTicket)"></Button>
                 <Button :name="'Cancel'" :color="'light'" @click="back(props.new_service_id)"
-                  class="btn btn-outline-primary"></Button>
+                  class="btn btn-outline-secondary"></Button>
               </div>
             </div>
           </div>

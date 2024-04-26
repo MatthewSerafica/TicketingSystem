@@ -25,7 +25,7 @@
               <div class="col-md-6">
                 <div class="d-flex gap-2">
                   <Button :name="'Add'" :color="'primary'" class="submit-btn"></button>
-                  <Link :href="`/admin/problems`" class=" btn btn-outline-primary">Cancel</Link>
+                  <Link :href="`/admin/problems`" class=" btn btn-outline-secondary">Cancel</Link>
                 </div>
               </div>
             </div>

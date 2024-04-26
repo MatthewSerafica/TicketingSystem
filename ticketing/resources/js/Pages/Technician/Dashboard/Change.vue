@@ -37,7 +37,7 @@
               <div class="col-md-6">
                 <div class="d-flex justify-content-center gap-2 mt-4">
                   <Button :name="'Submit'" :color="'primary'" :disabled="!isFormValid"></Button>
-                  <Link :href="`/technician`" class=" btn btn-outline-primary">Cancel</Link>
+                  <Link :href="`/technician`" class=" btn btn-outline-secondary">Cancel</Link>
                 </div>
               </div>
             </div>

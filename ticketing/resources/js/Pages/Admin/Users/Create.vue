@@ -128,7 +128,7 @@
                         <div class="col-md-6">
                             <div class="d-flex justify-content-end gap-2">
                                 <Button :name="'Submit'" :color="'primary'" class="submit-btn"></button>
-                                <Link :href="`/admin/users`" class=" btn btn-outline-primary">Cancel</Link>
+                                <Link :href="`/admin/users`" class=" btn btn-outline-secondary">Cancel</Link>
                             </div>
                         </div>
                     </div>
