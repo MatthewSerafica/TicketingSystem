@@ -59,8 +59,9 @@
                             <span v-if="notificationCount" class="position-relative">
                                 <span class=" position-absolute translate-middle badge rounded-pill bg-danger"
                                     id="count"
-                                    style="font-size: small; top: -5px; right: -5px; padding: 2px 5px 2px 5px;">{{
-                            notificationCount }}</span>
+                                    style="font-size: small; top: 0px; right: -14px; padding: 2px 5px 2px 5px;">
+                                    {{ notificationCount }}
+                                </span>
                             </span>
                         </button>
                         <div class="d-flex flex-row gap-2 justify-content-center align-items-center">
@@ -108,7 +109,7 @@
                             </button>
                             <div class="card-body d-flex flex-column gap-2"
                                 v-if="notification.notification.type === 'App\\Notifications\\ResolvedTicket'">
-                                
+
                                 <div class="d-flex flex-row">
                                     <div class="d-flex flex-column gap-2">
                                         <h5 class="card-title fw-bold text d-flex gap-2 align-items-center">
@@ -198,12 +199,13 @@
                                         </h5>
                                         <div class="card-subtitle ">
                                             <p>{{ notification.notification.data.message }}</p>
-                                            <p class="fw-bold text-uppercase">{{ formatMonthYear(notification.notification.data.date) }}</p>
+                                            <p class="fw-bold text-uppercase">{{
+                            formatMonthYear(notification.notification.data.date) }}</p>
                                         </div>
                                         <p class="card-subtitle text-danger fw-bold">
                                             {{ notification.notification.data.message_two }}
                                         </p>
-                                        
+
                                         <p class="card-subtitle">Click
                                             <a href="/admin/reports/generate-report">
                                                 here
@@ -319,34 +321,33 @@ const closeNotification = async (notificationId) => {
 
 
 onMounted(() => {
-    determineActiveLink(); 
+    determineActiveLink();
 });
 
 </script>
 
 
 <style scoped>
-
 .close-icon {
     position: absolute;
-    top: 10px; 
-    right: 10px; 
+    top: 10px;
+    right: 10px;
     cursor: pointer;
     transition: transform 0.5s ease;
 }
 
 .close-icon i {
-    font-size: 20px; 
-    color: #FFB6C1; 
-    
+    font-size: 20px;
+    color: #FFB6C1;
+
 }
 
 .close-icon:hover i {
-    color: #ff0000; 
+    color: #ff0000;
 }
 
 .close-icon:hover {
-    transform: scale(1.2); 
+    transform: scale(1.2);
 }
 
 .nav-link.dashboard::after,

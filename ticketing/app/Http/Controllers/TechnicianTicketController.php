@@ -300,10 +300,8 @@ class TechnicianTicketController extends Controller
                     // If no service report exists, create a new one with the updated SR number
                     $serviceData = [
                         'service_id' => $request->$field,
-
                         'date_done' => now(),
                         'issue' => $ticket->description,
-
                     ];
                     ServiceReport::create($serviceData);
                 }

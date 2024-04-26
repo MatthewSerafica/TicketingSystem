@@ -11,15 +11,16 @@
             <SchoolLogo></SchoolLogo>
           </div>
 
-            <div class="mt-2 d-flex flex-column">
-              <div class="">
-                <h2 >Saint Louis University Technology Management and Development Department</h2>
-              </div>
-              <div class="d-flex justify-content-between" v-if="service_report">
-                <p>SERVICE REPORT FORM</p>
-              <strong>{{ service_report.service_report }}</strong>
-              </div>
+          <div class="mt-2 d-flex flex-column">
+            <div class="text-center">
+              <h2><strong>Saint Louis University</strong><br><strong>Technology Management and</strong><br><strong>Development Department</strong></h2>
             </div>
+            <div class="d-flex justify-content-between" v-if="service_report">
+              <p>SERVICE REPORT FORM</p>
+              <strong>{{ service_report.service_report }}</strong>
+            </div>
+          </div>
+
 
             <div>
             <table class="bordered-table w-100 h-65">
@@ -65,13 +66,13 @@
                   <span class="content-group-text bordered-column" colspan="2"><Strong>Requesting Office:</Strong> {{ props.service_report.requesting_office }}</span>
                 </div>
                 <div class="content-group">
-                  <span class="content-group-text bordered-column" colspan="2"><Strong>Equipment, Property Tag/Serial No.:</Strong> {{ props.service_report.equiptment_no }}</span>
+                  <span class="content-group-text bordered-column" colspan="2"><Strong>Equipment, Property Tag/Serial No.:</Strong> {{ props.service_report.equipment_no }}</span>
                 </div>
                 <div class="content-group">
-                  <span class="content-group-text bordered-column" colspan="2"><Strong>Problem Encountered:</Strong> {{ props.service_report.issue }}</span>
+                  <span class="content-group-text bordered-column" colspan="2"><Strong>Problem Encountered:</Strong> {{ props.service_report.issue}}</span>
                 </div>
                 <div class="content-group">
-                  <span class="content-group-text bordered-column" colspan="2"><Strong>Action Taken:</Strong> {{ props.service_report.service }}</span>
+                  <span class="content-group-text bordered-column" colspan="2"><Strong>Action Taken:</Strong> {{ props.service_report.action }}</span>
                 </div>
                 <div class="content-group">
                   <span class="content-group-text bordered-column" colspan="2"><Strong>Recommendation:</Strong> {{ props.service_report.recommendation }}</span>

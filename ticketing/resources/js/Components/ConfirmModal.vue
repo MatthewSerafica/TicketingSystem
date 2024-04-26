@@ -3,15 +3,16 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title  text-center">Are you sure you want to submit this service report?</h5>
-        <button type="button" class="btn-close ms-auto close" aria-label="Close" @click="closeSubmitService"></button>
+        <button type="button" class="btn-close position-absolute top-0 end-0 mt-3 me-2" aria-label="Close" @click="closeSubmitService"></button>
 
       </div>
-      <div class="modal-body d-flex gap-3">
+      <div class="modal-body d-flex gap-3 justify-content-center">
         <div>
           <div class="card">
             <div class="card-body">
               
               <p class="card-title  text-center"><strong>Ticket Details:</strong></p>
+              <div class="text">
               <p class="card-text"><strong>Ticket Number:</strong> {{   ticket.ticket_number }}</p>
               <p class="card-text"><strong>Date Created:</strong> {{ formattedDate(ticket.created_at) }}</p>
               <p class="card-text"><strong>Request Type:</strong> {{ ticket.request_type ?? "Not available"}}</p>
@@ -22,33 +23,45 @@
               <p class="card-text"><strong>Issue:</strong> {{ ticket.issue ?? "Not available"}}</p>
               <p class="card-text"><strong>Description:</strong> {{ ticket.description ?? "Not available"}}</p>
               <p class="card-text"><strong>Service:</strong> {{ ticket.service ?? "Not available"}}</p>
+              </div>
             </div>
           </div>
         </div>
         <div v-if="form">
           <div class="card">
-            <div class="card-body">
-              <p class="modal-title  text-center"><strong>Service Report Details:</strong></p>
-              <p class="card-text"><strong>Service ID:</strong> {{ form.service_id ?? "Not available"}}</p>
-              <p class="card-text"><strong>Date Started:</strong> {{ formattedDate(form.date_started) ?? "Not available"}}</p>
-              <p class="card-text"><strong>Time Started:</strong> {{ form.time_started ?? "Not available"}}</p>
-              <p class="card-text"><strong>Ticket Number:</strong> {{ form.ticket_number ?? "Not available"}}</p>
-              <p class="card-text"><strong>Technician Name:</strong> {{ form.technician ?? "Not available"}}</p>
-              <p class="card-text"><strong>Requesting Office:</strong> {{ form.requesting_office ?? "Not available"}}</p>
-              <p class="card-text"><strong>Equipment, Property Tag/Serial No.:</strong> {{ form.equipment_no ?? "Not available"}}</p>
-              <p class="card-text"><strong>Problem Encountered:</strong> {{ form.problem ?? "Not available"}}</p>
-              <p class="card-text"><strong>Action Taken:</strong> {{ form.action ?? "Not available"}}</p>
-              <p class="card-text"><strong>Recommendation:</strong> {{ form.recommendation ?? "Not available"}}</p>
-              <p class="card-text"><strong>Date Done:</strong> {{ formattedDate(form.date_done) ?? "Not available"}}</p>
-              <p class="card-text"><strong>Time Done:</strong> {{ form.time_done ?? "Not available"}}</p>
-              <p class="card-text"><strong>Remarks:</strong> {{ form.remarks ?? "Not available"}}</p>
+            <div class="card-body row">
+             
+                <div class="col-md-6">
+                  <p class="modal-title text-center"><strong>Service Report Details:</strong></p>
+                  <div class="text">
+                  <p class="card-text"><strong>Service ID:</strong> {{ form.service_id ?? "Not available"}}</p>
+                  <p class="card-text"><strong>Date Started:</strong> {{ formattedDate(form.date_started) ?? "Not available"}}</p>
+                  <p class="card-text"><strong>Time Started:</strong> {{ form.time_started ?? "Not available"}}</p>
+                  <p class="card-text"><strong>Ticket Number:</strong> {{ form.ticket_number ?? "Not available"}}</p>
+                  <p class="card-text"><strong>Technician Name:</strong> {{ form.technician ?? "Not available"}}</p>
+                  <p class="card-text"><strong>Requesting Office:</strong> {{ form.requesting_office ?? "Not available"}}</p>
+                  <p class="card-text"><strong>Equipment, Property Tag/Serial No.:</strong> {{ form.equipment_no ?? "Not available"}}</p>
+                </div>
+              </div>
+
+              <!-- Second Column -->
+              <div class="col-md-6">
+                <div class="text">
+                <p class="card-text"><strong>Problem Encountered:</strong> {{ form.problem ?? "Not available"}}</p>
+                <p class="card-text"><strong>Action Taken:</strong> {{ form.action ?? "Not available"}}</p>
+                <p class="card-text"><strong>Recommendation:</strong> {{ form.recommendation ?? "Not available"}}</p>
+                <p class="card-text"><strong>Date Done:</strong> {{ formattedDate(form.date_done) ?? "Not available"}}</p>
+                <p class="card-text"><strong>Time Done:</strong> {{ form.time_done ?? "Not available"}}</p>
+                <p class="card-text"><strong>Remarks:</strong> {{ form.remarks ?? "Not available"}}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+        </div>
         <div class="modal-footer d-flex gap-2">
-          <button type="button" class="btn btn-outline-secondary" @click="closeSubmitService">Cancel</button>
-          <button type="button" class="btn btn-primary" @click="submitServiceReport">Confirm Submission</button>
+          <Button :name="'Confirm Submission'" class="btn btn-primary" @click="submitServiceReport">Confirm Submission</Button>
+          <Button :name="'Cancel'" class="btn btn-outline-secondary" @click="closeSubmitService">Cancel</Button>
         </div>
     </div>
   </div>
@@ -57,6 +70,7 @@
 <script setup>
 import { router, useForm } from '@inertiajs/vue3';
 import { defineProps, ref,  defineEmits } from 'vue';
+import Button from '@/Components/Button.vue';
 
 const props = defineProps({
   form: Object, // Pass the form object to the modal
@@ -115,46 +129,33 @@ const submitServiceReport = () => {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
 }
+.text{
+  text-align: left;
+}
 
 .modal-content {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  text-align: left; 
-  width: 50%;
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-}
-.modal-footer {
-  border-radius: 8px;
-  width: 100%;
-  flex-direction: row; 
-  align-items: right; 
-}
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+      max-width: 75%;
+      max-height: 90%;
+      overflow: auto;
+      font-size: 12;  
+    }
 
 .modal-title {
-  border-radius: 8px;
+  border-radius: 2px;
   text-align: center; 
   width: 100%;
-  margin-bottom: 20px; 
+  margin-bottom: 10px; 
 }
 
 .card {
-  flex: 1;
-  width: 100%; 
+  width: 90%; 
   max-width: 400px; 
-  margin-bottom: 20px; 
+  margin-bottom: 10px; 
 }
 
-.card-body {
-  padding: 20px;
-}
-.close {
-  position: absolute;
-  top: 30px;
-  right: 25px;
-  font-size: 20px;
-  cursor: pointer;
-}
+
 </style>

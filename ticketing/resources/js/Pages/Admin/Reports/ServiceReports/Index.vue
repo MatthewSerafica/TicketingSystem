@@ -72,7 +72,7 @@
               <td class="text-start" style="width: 7rem;">{{ moment(service_report.date_done).format("MMM DD, YYYY") }}</td>
               <td class="text-start" style="width: 6rem;">{{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}</td>
               <td class="text-start">{{ service_report.remarks }} </td>
-              <td><button type="button" as="button" class="btn btn-danger" @click="showPrint(service_report)">Print</button></td>
+              <td><button type="button" as="button" class="btn btn-secondary" @click="showPrint(service_report)">Print</button></td>
             </tr>
           </tbody>
         </table>

@@ -38,7 +38,7 @@
                             <i class="bi bi-bell text-white me-3" style="font-size: 20px;"></i>
                             <span v-if="notificationCount" class="position-relative">
                                 <span class="position-absolute translate-middle badge rounded-pill bg-danger"
-                                    style="font-size: small; top: -5px; right: -5px; padding: 2px 5px 2px 5px;">
+                                    style="font-size: small; top: 1px; right: 1px; padding: 2px 5px 2px 5px;">
                                     {{ notificationCount }}
                                 </span>
                             </span>

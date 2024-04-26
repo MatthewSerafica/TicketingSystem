@@ -99,11 +99,12 @@
 
           <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" :ticket="selectedTicket"
             @confirm="create" @closeSubmitService="closeSubmitService" />
-         <!--  {{ selectedTicket }} -->
+          <!--  {{ selectedTicket }} -->
           <div class="row justify-content-end">
             <div class="col-md-4">
               <div class="d-flex justify-content-end gap-2">
-                <Button :name="'Submit'" :color="'primary'" @click="submitServiceReport(form, selectedTicket)"></Button>
+                <Button :name="'Submit'" :color="'primary'" @click="submitServiceReport(form, selectedTicket)"
+                  :disabled="!form.service_id || !form.date_started || !form.time_started || !form.ticket_number || !form.requesting_office || !form.equipment_no || !form.problem || !form.action || !form.recommendation || !form.date_done || !form.time_done"></Button>
                 <Button :name="'Cancel'" :color="'light'" @click="back(props.new_service_id)"
                   class="btn btn-outline-secondary"></Button>
               </div>
@@ -116,11 +117,11 @@
 </template>
 
 <script setup>
-import ConfirmModal from '@/Components/ConfirmModal.vue';
-import Header from '@/Pages/Layouts/TechnicianHeader.vue'
-import { Link, router, useForm, usePage } from '@inertiajs/vue3';
 import Button from '@/Components/Button.vue';
-import { ref, watch, computed, onMounted } from "vue";
+import ConfirmModal from '@/Components/ConfirmModal.vue';
+import Header from '@/Pages/Layouts/TechnicianHeader.vue';
+import { router, useForm, usePage } from '@inertiajs/vue3';
+import { onMounted, ref, watch } from "vue";
 
 const props = defineProps({
   technicians: Object,
@@ -128,7 +129,6 @@ const props = defineProps({
   ticket_id: Number,
   service_report: Object,
   tickets: Object,
-  problem: String,
   date_done: String,
 })
 
@@ -145,7 +145,7 @@ const form = useForm({
   technician: [],
   requesting_office: null,
   equipment_no: null,
-  problem: props.problem,
+  problem: null,
   action: null,
   recommendation: null,
   date_done: props.date_done,
@@ -155,7 +155,7 @@ const form = useForm({
 
 const fillFormWithTicket = (ticket) => {
   form.action = ticket.service;
-  form.problem = ticket.description;
+  form.problem = ticket.issue;
   form.requesting_office = `${ticket.employee.department} - ${ticket.employee.office}`;
   // Fill other form fields as needed
 };
@@ -200,7 +200,7 @@ watch(() => form.ticket_number, async (newValue) => {
 
   if (selectedTicket) {
     form.action = selectedTicket.service;
-    form.problem = selectedTicket.description;
+    form.problem = selectedTicket.issue;
     form.requesting_office = selectedTicket.employee.department + ' - ' + selectedTicket.employee.office;
     const response = await fetch(route('technician.tickets.assigned', { id: selectedTicket.ticket_number }));
     const data = await response.json();

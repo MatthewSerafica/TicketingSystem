@@ -36,7 +36,7 @@ class TechnicianServiceController extends Controller
                         $subquery->where('name', 'like', '%' . $search . '%');
                     });
             })
-            ->orderBy('service_id')
+            ->orderBy('service_id', 'desc')
             ->paginate(10);
         $filters = $request->only(['search']);
         $tickets = Ticket::all();
@@ -55,14 +55,19 @@ class TechnicianServiceController extends Controller
             $new_service_id = $this->incrementServiceId($latest_report->service_id);
             $ticket_id = $latest_report->ticket_number;
             $date_done = $latest_report->date_done;
-            $problem = $latest_report->issue;
         } else {
             $new_service_id = '0001';
             $ticket_id = null;
             $date_done = null;
-            $problem = null;
         }
-        $tickets = Ticket::with('employee.user')->whereNull('sr_no')->get();
+        
+        $user_id = auth()->id();
+        $technician = Technician::where('user_id', $user_id)->with('user')->first();
+        $tickets = Ticket::with('employee.user', 'assigned.technician.user')
+            ->whereHas('assigned.technician.user', function ($query) use ($technician) {
+                $query->where('id', $technician->user->id);
+            })
+            ->whereNull('sr_no')->get();
         $technicians = Technician::all();
         return inertia('Technician/ServiceReports/Create', [
             'technicians' => $technicians,
@@ -70,7 +75,6 @@ class TechnicianServiceController extends Controller
             'tickets' => $tickets,
             'ticket_id' => $ticket_id ? $ticket_id : null,
             'date_done' => $date_done,
-            'problem'=> $problem ? $problem : null,
 
         ]);
     }
@@ -147,14 +151,14 @@ class TechnicianServiceController extends Controller
                 'technician' => $request->technician,
                 'requesting_office' => $request->requesting_office,
                 'equipment_no' => $request->equipment_no,
-                'issue' => $request->issue,
+                'issue' => $request->problem,
                 'action' => $request->action,
                 'recommendation' => $request->recommendation,
                 'date_done' => $request->date_done,
                 'time_done' => $request->time_done,
                 'remarks' => $request->remarks,
             ];
-            $service = ServiceReport::create($serviceData);
+            ServiceReport::create($serviceData);
         }
 
         $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
@@ -203,6 +207,4 @@ class TechnicianServiceController extends Controller
             return redirect()->to('/technician/service-report');
         }
     }
-
-
 }
