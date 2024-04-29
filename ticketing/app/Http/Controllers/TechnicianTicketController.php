@@ -105,11 +105,19 @@ class TechnicianTicketController extends Controller
             ->get();
 
         $services = Service::all();
+        $latest_rs = HistoryNumber::select('rs_no')->whereNotNull('rs_no')->orderByDesc('rs_no')->first();
+        $latest_ms = HistoryNumber::select('ms_no')->whereNotNull('ms_no')->orderByDesc('ms_no')->first();
+        $latest_rr = HistoryNumber::select('rr_no')->whereNotNull('rr_no')->orderByDesc('rr_no')->first();
+        $latest_sr = HistoryNumber::select('sr_no')->whereNotNull('sr_no')->orderByDesc('sr_no')->first();
         return inertia('Technician/Tickets/Index', [
             'tickets' => $tickets,
             'technicians' => $technicians,
             'services' => $services,
             'filters' => $filters,
+            'rs' => $latest_rs,
+            'ms' => $latest_ms,
+            'rr' => $latest_rr,
+            'sr' => $latest_sr,
         ]);
     }
 

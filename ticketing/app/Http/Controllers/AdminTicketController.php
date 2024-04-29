@@ -96,12 +96,14 @@ class AdminTicketController extends Controller
         $request->session()->put('filter', $filter);
 
         $technicians = Technician::with('user')
+            ->where('is_working', '=', 1)
             ->get();
 
         $services = Service::all();
         $latest_rs = HistoryNumber::select('rs_no')->whereNotNull('rs_no')->orderByDesc('rs_no')->first();
         $latest_ms = HistoryNumber::select('ms_no')->whereNotNull('ms_no')->orderByDesc('ms_no')->first();
         $latest_rr = HistoryNumber::select('rr_no')->whereNotNull('rr_no')->orderByDesc('rr_no')->first();
+        $latest_sr = HistoryNumber::select('sr_no')->whereNotNull('sr_no')->orderByDesc('sr_no')->first();
         return inertia('Admin/Tickets/Index', [
             'tickets' => $tickets,
             'technicians' => $technicians,
@@ -110,6 +112,7 @@ class AdminTicketController extends Controller
             'rs' => $latest_rs,
             'ms' => $latest_ms,
             'rr' => $latest_rr,
+            'sr' => $latest_sr,
         ]);
     }
 
@@ -119,6 +122,7 @@ class AdminTicketController extends Controller
         $latest = HistoryNumber::whereNotNull('rs_no')->orderByDesc('rs_no')->first();
         $new = $latest ? $this->increment($latest->ticket_number, $latest->rs_no) : '0001';
         $technicians = Technician::with('user')
+            ->where('is_working', '=', 1)
             ->where('tickets_assigned', '!=', 5)
             ->get();
         $services = Service::all();

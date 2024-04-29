@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AssignedTickets;
 use App\Models\Employee;
+use App\Models\HistoryNumber;
 use App\Models\Technician;
 use App\Models\Ticket;
 use App\Models\ServiceReport;
@@ -168,12 +169,18 @@ class TechnicianServiceController extends Controller
             'status' => 'Resolved',
             'resolved_at' => $request->date_done,
         ]);
+
+        $history = HistoryNumber::where('ticket_number', $request->ticket_number)->first();
+        $history->sr_no = $request->service_id;
+        $history->save();
+
         /*  $ticket->save(); */
-        $user_id = auth()->id();
-        $technician = Technician::where('user_id', $user_id)->with('user')->first();
-        $technician->tickets_resolved = $technician->tickets_resolved + 1;
-        $technician->tickets_assigned = $technician->tickets_assigned - 1;
-        $technician->save();
+        foreach ($request->technician_id as $tech) {
+            $technician = Technician::where('technician_id', $tech)->with('user')->first();
+            $technician->tickets_resolved = $technician->tickets_resolved + 1;
+            $technician->tickets_assigned = $technician->tickets_assigned - 1;
+            $technician->save();
+        }
 
         $employee = Employee::find($ticket->employee);
         $employee->user->notify(new UpdateTicketStatus($ticket));
