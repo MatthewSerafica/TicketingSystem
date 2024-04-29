@@ -4,9 +4,10 @@
             <div class="container">
                 <div class="row justify-content-center align-items-center">
                     <div class="col-md-6">
-                        <Logo/>
+                        <Logo class="img-fluid"/> <!-- Added img-fluid class for responsiveness -->
                     </div>
-                    <div class="card p-4 col-md-5" :class="{'col-10': isMobile}">
+                    <div class="card p-4 col-md-5 mb-5" :class="{'col-10': isMobile}">
+                        <!-- Added mb-5 class to add bottom margin -->
                         <div class="card-body">
                             <h3 class="mb-5 text-primary text-center">TMDD Ticketing System</h3>
                             <form @submit.prevent="login">
@@ -60,9 +61,16 @@ const login = () => form.post(route("login.store"));
 </script>
 
 <style scoped>
+
 @media (max-width: 768px) {
+    .col-md-6 {
+        max-width: 80%;
+        text-align: center; 
+        
+    }
+
     .card {
-        margin-bottom: 80px !important;
+        max-width: 80%;
     }
 }
 </style>

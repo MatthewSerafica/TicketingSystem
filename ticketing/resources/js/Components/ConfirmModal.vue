@@ -3,14 +3,12 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title  text-center">Are you sure you want to submit this service report?</h5>
-        <button type="button" class="btn-close position-absolute top-0 end-0 mt-3 me-2" aria-label="Close" @click="closeSubmitService"></button>
-
+        <button type="button" class="btn-close mt-3" aria-label="Close" @click="closeSubmitService"></button>
       </div>
       <div class="modal-body d-flex gap-3 justify-content-center">
         <div>
           <div class="card">
             <div class="card-body">
-              
               <p class="card-title  text-center"><strong>Ticket Details:</strong></p>
               <div class="text">
               <p class="card-text"><strong>Ticket Number:</strong> {{   ticket.ticket_number }}</p>
@@ -30,7 +28,6 @@
         <div v-if="form">
           <div class="card">
             <div class="card-body row">
-             
                 <div class="col-md-6">
                   <p class="modal-title text-center"><strong>Service Report Details:</strong></p>
                   <div class="text">
@@ -129,33 +126,48 @@ const submitServiceReport = () => {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
 }
-.text{
+
+.text {
   text-align: left;
 }
 
 .modal-content {
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 8px;
-      text-align: center;
-      max-width: 75%;
-      max-height: 90%;
-      overflow: auto;
-      font-size: 12;  
-    }
+  background-color: #fff;
+  padding: 20px; /* Reduced padding for smaller screens */
+  border-radius: 8px;
+  text-align: center;
+  width: 90%; /* Adjust width for smaller screens */
+  max-width: 600px; /* Maximum width for larger scrseens */
+  max-height: 90%;
+  overflow: auto;
+  font-size: 12px;
+}
 
 .modal-title {
   border-radius: 2px;
-  text-align: center; 
+  text-align: center;
   width: 100%;
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
 }
 
 .card {
-  width: 90%; 
-  max-width: 400px; 
-  margin-bottom: 10px; 
+  width: 90%;
+  max-width: 100%; /* Adjust max-width for smaller screens */
+  margin-bottom: 10px;
 }
 
+.modal-footer {
+  flex-direction: column; /* Stack buttons vertically on smaller screens */
+  gap: 10px; /* Add spacing between buttons */
+}
 
+@media (min-width: 768px) {
+  .modal-content {
+    padding: 50px; 
+  }
+
+  .card {
+    width: 100%; /* Reset width for larger screens */
+  }
+}
 </style>
