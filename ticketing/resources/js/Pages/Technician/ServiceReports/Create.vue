@@ -54,7 +54,6 @@
             <div class="col-md-4">
               <label for="technicianName" class="form-label">Technician Name:</label>
               <textarea class="form-control" id="technicianName" v-model="form.technician" readonly> </textarea>
-              {{ form.technicianId }}
             </div>
             <div class="col-md-4">
               <label for="requestingOffice" class="form-label">Requesting Office:</label>
