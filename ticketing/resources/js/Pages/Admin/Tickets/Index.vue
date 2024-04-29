@@ -52,7 +52,8 @@
           <div class="d-flex gap-2 border px-3 rounded">
             <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
             <p class="fw-bold text-secondary pt-3">MS - {{ ms ? ms.ms_no : 0 }} |</p>
-            <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }}</p>
+            <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }} |</p>
+            <p class="fw-bold text-secondary pt-3">RR - {{ sr ? sr.sr_no : 0 }}</p>
           </div>
         </div>
         <div class="d-flex flex-grow-1">
@@ -205,7 +206,7 @@
                             {{ tech.user.name }}
                           </button>
                         </div>
-                        <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto; width: 8rem;">
+                        <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto; width: 14rem;">
                           <!--Recommended-->
                           <div>
                             <h6 class="dropdown-header">Recommended</h6>
@@ -356,6 +357,7 @@ const props = defineProps({
   rr: Object,
   ms: Object,
   rs: Object,
+  sr: Object,
 });
 // end
 

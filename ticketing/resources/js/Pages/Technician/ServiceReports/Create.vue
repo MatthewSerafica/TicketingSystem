@@ -54,6 +54,7 @@
             <div class="col-md-4">
               <label for="technicianName" class="form-label">Technician Name:</label>
               <textarea class="form-control" id="technicianName" v-model="form.technician" readonly> </textarea>
+              {{ form.technicianId }}
             </div>
             <div class="col-md-4">
               <label for="requestingOffice" class="form-label">Requesting Office:</label>
@@ -97,8 +98,8 @@
             </div>
           </div>
 
-          <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" :ticket="selectedTicket"
-            @confirm="create" @closeSubmitService="closeSubmitService" />
+          <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" :id="form.technicianId"
+            :ticket="selectedTicket" @confirm="create" @closeSubmitService="closeSubmitService" />
           <!--  {{ selectedTicket }} -->
           <div class="row justify-content-end">
             <div class="col-md-4">
@@ -143,6 +144,7 @@ const form = useForm({
   time_started: null,
   ticket_number: props.ticket_id,
   technician: [],
+  technicianId: [],
   requesting_office: null,
   equipment_no: null,
   problem: null,
@@ -180,6 +182,7 @@ onMounted(async () => {
       }
       const formattedTechnicianNames = technicianNames.join(' / ');
       form.technician = formattedTechnicianNames;
+      form.technicianId = technicianId;
       console.log(form.technician);
     }
   }
@@ -212,6 +215,7 @@ watch(() => form.ticket_number, async (newValue) => {
     }
     const formattedTechnicianNames = technicianNames.join(' / ');
     form.technician = formattedTechnicianNames;
+    form.technicianId = technicianId;
     console.log(form.technician);
   }
 })

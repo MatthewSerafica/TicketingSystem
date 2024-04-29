@@ -47,6 +47,14 @@
       </div>
       <!--Data Table-->
       <div v-if="tickets.data.length" class="d-flex justify-content-end mb-3 mt-3 pagination">
+        <div class="d-flex flex-grow-1 gap-2 w-100">
+          <div class="d-flex gap-2 border px-3 rounded">
+            <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
+            <p class="fw-bold text-secondary pt-3">MS - {{ ms ? ms.ms_no : 0 }} |</p>
+            <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }} |</p>
+            <p class="fw-bold text-secondary pt-3">RR - {{ sr ? sr.sr_no : 0 }}</p>
+          </div>
+        </div>
         <Pagination :links="tickets.links" :key="'tickets'" />
         <br>
       </div>
@@ -240,6 +248,10 @@ const props = defineProps({
   technicians: Object,
   filters: Object,
   services: Object,
+  rr: Object,
+  ms: Object,
+  rs: Object,
+  sr: Object,
 });
 // end
 
