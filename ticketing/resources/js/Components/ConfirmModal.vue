@@ -56,7 +56,7 @@
           </div>
         </div>
         </div>
-        <div class="modal-footer d-flex gap-2">
+        <div class="modal-footer justify-content-end d-flex gap-2">
           <Button :name="'Confirm Submission'" class="btn btn-primary" @click="submitServiceReport">Confirm Submission</Button>
           <Button :name="'Cancel'" class="btn btn-outline-secondary" @click="closeSubmitService">Cancel</Button>
         </div>
@@ -156,11 +156,6 @@ const submitServiceReport = () => {
   width: 90%;
   max-width: 100%; /* Adjust max-width for smaller screens */
   margin-bottom: 10px;
-}
-
-.modal-footer {
-  flex-direction: column; /* Stack buttons vertically on smaller screens */
-  gap: 10px; /* Add spacing between buttons */
 }
 
 @media (min-width: 768px) {
