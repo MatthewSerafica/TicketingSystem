@@ -527,6 +527,15 @@ const handleFileChange = async (event) => {
         flex-direction: column;
     }
 
+    .data-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    margin-top: 3rem; /* Adjust margin top as needed */
+}
+
+
     .doughnut {
         width: 100%;
     }
@@ -541,6 +550,14 @@ const handleFileChange = async (event) => {
     .main-content {
         margin-left: 12rem;
     }
+
+    .data-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    margin-top: 3rem; /* Adjust margin top as needed */
+}
     .detail-container {
         display: flex;
         flex-direction: column;
@@ -578,6 +595,13 @@ const handleFileChange = async (event) => {
     .main-content {
         margin-left: 13rem;
     }
+    .data-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    margin-top: 3rem; /* Adjust margin top as needed */
+}
     .detail-container {
         display: flex;
         flex-direction: column;
@@ -599,10 +623,22 @@ const handleFileChange = async (event) => {
     .main-content {
         margin-left: 15rem;
     }
+
+    .data-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+    margin-top: 3rem; /* Adjust margin top as needed */
+}
+
+
     .detail-container {
         display: flex;
         flex-direction: column;
+        width: 50%;
     }
+
 
     .statistics {
         width: 300%;
@@ -613,7 +649,7 @@ const handleFileChange = async (event) => {
     }
 
     .bar {
-        width: 200%;
+        width: 100%;
     }
 }
 </style>
