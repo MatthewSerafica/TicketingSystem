@@ -98,29 +98,11 @@ const formatDate = (date) => {
 }
 
 @media (max-width: 768px) {
-    .main-content {
-        width: 80%;
+    .card {
+        width: 100%; 
+        max-width: 250px; 
     }
+
 }
 
-@media (max-width: 425px) {
-    .main-content {
-        width: 90%;
-    }
-}
-
-@media (max-width: 320px) {
-    .main-content {
-        width: 100%;
-    }
-    .statistics {
-        flex-direction: column;
-    }
-    .bar {
-        width: 100%;
-    }
-    .doughnut {
-        width: 100%;
-    }
-}
 </style>

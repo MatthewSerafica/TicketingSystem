@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="d-flex justify-content-center align-items-center flex-column"> 
     <Header class="sticky-top" style="z-index: 110;"></Header>
     <!--Toast Render-->
     <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">

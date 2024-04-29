@@ -81,6 +81,7 @@ watch(myData, (newValue, oldValue) => {
 
 <style scoped>
 
+
 .hover:hover {
     background-color: white;
     transition: transform 0.5s ease;
@@ -110,26 +111,26 @@ watch(myData, (newValue, oldValue) => {
     width: 50rem;
     padding: 1rem;
 }
-
 @media (max-width: 1024px) {
     .main-content {
         padding: 2rem;
     }
 
-    .statistics {
+    .statistics,
+    .recent {
         display: flex;
         flex-direction: column;
+        align-items: center; /* Center items horizontally */
+        text-align: center; /* Center text */
     }
 
     .doughnut {
-        width: 30rem;
+        width: 100%; /* Adjust width to fit container */
     }
 
     .bar {
-        width: 50rem;
-        padding: 2px;
+        width: 100%; /* Adjust width to fit container */
     }
-
 }
 
 @media (max-width: 768px) {
@@ -138,41 +139,32 @@ watch(myData, (newValue, oldValue) => {
         width: 80%;
     }
 
+    
+    .card {
+        width: 100%; 
+        max-width: 250px; 
+    }
+
+
     .recent {
-        padding-left: 4rem;
-        display: flex;
-        flex-direction: column;
+        padding-left: 0; /* Remove padding */
     }
 
     .cta {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding-left: 3rem;
+        padding-left: 0; /* Remove padding */
     }
 
-
     .statistics {
-        padding-left: 6rem;
-        display: flex;
-        flex-direction: column;
+        padding-left: 0; /* Remove padding */
     }
 
     .stat-label {
-        padding-left: 6rem;
+        padding-left: 0; /* Remove padding */
     }
 
-    .doughnut {
-        width: 30rem;
-    }
-
+    .doughnut,
     .bar {
-        width: 40rem;
-        padding: 2px;
+        width: 100%; /* Adjust width to fit container */
     }
-
 }
-
-
 </style>
