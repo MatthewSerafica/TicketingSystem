@@ -3,7 +3,6 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title  text-center">Are you sure you want to submit this service report?</h5>
-        <button type="button" class="btn-close mt-3" aria-label="Close" @click="closeSubmitService"></button>
       </div>
       <div class="modal-body d-flex gap-3 justify-content-center">
         <div>
@@ -152,14 +151,11 @@ const submitServiceReport = () => {
 
 .modal-content {
   background-color: #fff;
-  padding: 20px;
-  /* Reduced padding for smaller screens */
+  padding: 20px; 
   border-radius: 8px;
   text-align: center;
-  width: 90%;
-  /* Adjust width for smaller screens */
-  max-width: 600px;
-  /* Maximum width for larger scrseens */
+  width: 90%; 
+  max-width: 1000px; 
   max-height: 90%;
   overflow: auto;
   font-size: 12px;
@@ -174,8 +170,7 @@ const submitServiceReport = () => {
 
 .card {
   width: 90%;
-  max-width: 100%;
-  /* Adjust max-width for smaller screens */
+  max-width: 100%; 
   margin-bottom: 10px;
 }
 
@@ -185,8 +180,7 @@ const submitServiceReport = () => {
   }
 
   .card {
-    width: 100%;
-    /* Reset width for larger screens */
+    width: 100%; 
   }
 }
 </style>
