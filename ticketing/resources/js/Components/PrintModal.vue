@@ -157,8 +157,8 @@
         height: 100%;
         margin: 0;
         padding: 0;
-        overflow: auto;
-        font-size: 70%;
+        font-size: 50%;
+        overflow-y: hidden;
       }
 
       .btn-print {
@@ -168,6 +168,9 @@
       margin-left: -10rem;
       gap: 3rem;
       font-size: 10px;
+     }
+     .h2{
+      font-size: 9px;
      }
     }
   
