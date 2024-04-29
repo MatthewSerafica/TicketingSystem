@@ -31,7 +31,6 @@
                 <div class="col-md-6">
                   <p class="modal-title text-center"><strong>Service Report Details:</strong></p>
                   <div class="text">
-                    {{ id }}
                   <p class="card-text"><strong>Service ID:</strong> {{ form.service_id ?? "Not available"}}</p>
                   <p class="card-text"><strong>Date Started:</strong> {{ formattedDate(form.date_started) ?? "Not available"}}</p>
                   <p class="card-text"><strong>Time Started:</strong> {{ form.time_started ?? "Not available"}}</p>
