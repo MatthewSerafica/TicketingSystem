@@ -58,30 +58,96 @@
           </thead>
           <tbody>
             <tr v-for="service_report in service_reports.data" :key="service_report.service_id" class="align-middle">
-              <td class="text-center">{{ service_report.service_id }}</td>
-              <td class="text-start" style="width:7rem;">{{ moment(service_report.date_started).format("MMM DD, YYYY") }}</td>
-              <td class="text-start" style="width:6rem;">{{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</td>
-              <td class="text-center">{{ service_report.ticket_number }}</td>
-              <td class="text-start" style="width: 12rem;">{{ service_report.technician }}</td>
-              <td class="text-start" style="width:8rem;">{{ service_report.requesting_office }}</td>
-              <td class="text-center">{{ service_report.equipment_no }}</td>
-              <td class="text-start cursor text-truncate" :title="service_report.issue" style="max-width: 8rem;">{{ service_report.issue }}</td>
-              <td class="text-start cursor text-truncate" :title="service_report.action" style="max-width: 8rem;">{{ service_report.action }}</td>
-              <td class="text-start cursor text-truncate" :title="service_report.recommendation" style="max-width: 10rem;">{{ service_report.recommendation }}
+              <td class="text-center">
+                <Link :href="route('admin.reports.service-report.show', [service_report.service_id])"
+                  class="text-decoration-none text-dark">
+                {{ service_report.service_id }}
+                </Link>
               </td>
-              <td class="text-start" style="width: 7rem;">{{ moment(service_report.date_done).format("MMM DD, YYYY") }}</td>
-              <td class="text-start" style="width: 6rem;">{{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}</td>
-              <td class="text-start">{{ service_report.remarks }} </td>
-              <td><button type="button" as="button" class="btn btn-secondary" @click="showPrint(service_report)">Print</button></td>
+              <td class="text-start" style="width:7rem;">
+                <Link :href="route('admin.reports.service-report.show', [service_report.service_id])"
+                  class="text-decoration-none text-dark">
+                {{ moment(service_report.date_started).format("MMM DD, YYYY") }}
+                </Link>
+              </td>
+              <td class="text-start" style="width:6rem;">
+                <Link :href="route('admin.reports.service-report.show', [service_report.service_id])"
+                  class="text-decoration-none text-dark">
+                {{ moment(service_report.time_started, "HH:mm:ss").format("hh:mm A") }}
+                </Link>
+              </td>
+              <td class="text-center">
+                <Link :href="route('admin.reports.service-report.show', [service_report.service_id])"
+                  class="text-decoration-none text-dark">
+                {{ service_report.ticket_number }}
+                </Link>
+              </td>
+              <td class="text-start" style="width: 12rem;">
+                <Link :href="route('admin.reports.service-report.show', [service_report.service_id])"
+                  class="text-decoration-none text-dark">
+                {{ service_report.technician }}
+                </Link>
+              </td>
+              <td class="text-start" style="width:8rem;">
+                <Link :href="route('admin.reports.service-report.show', [service_report.service_id])"
+                  class="text-decoration-none text-dark">
+                {{ service_report.requesting_office }}
+                </Link>
+              </td>
+              <td class="text-center">
+                <Link :href="route('admin.reports.service-report.show', [service_report.service_id])"
+                  class="text-decoration-none text-dark">
+                {{ service_report.equipment_no }}
+                </Link>
+              </td>
+              <td class="text-start cursor text-truncate" :title="service_report.issue" style="max-width: 8rem;">
+                <Link :href="route('admin.reports.service-report.show', [service_report.service_id])"
+                  class="text-decoration-none text-dark">
+                {{ service_report.issue }}
+                </Link>
+              </td>
+              <td class="text-start cursor text-truncate" :title="service_report.action" style="max-width: 8rem;">
+                <Link :href="route('admin.reports.service-report.show', [service_report.service_id])"
+                  class="text-decoration-none text-dark">
+                {{ service_report.action }}
+                </Link>
+              </td>
+              <td class="text-start cursor text-truncate" :title="service_report.recommendation"
+                style="max-width: 10rem;">
+                <Link :href="route('admin.reports.service-report.show', [service_report.service_id])"
+                  class="text-decoration-none text-dark">
+                {{ service_report.recommendation }}
+                </Link>
+              </td>
+              <td class="text-start" style="width: 7rem;">
+                <Link :href="route('admin.reports.service-report.show', [service_report.service_id])"
+                  class="text-decoration-none text-dark">
+                {{ moment(service_report.date_done).format("MMM DD, YYYY") }}
+                </Link>
+              </td>
+              <td class="text-start" style="width: 6rem;">
+                <Link :href="route('admin.reports.service-report.show', [service_report.service_id])"
+                  class="text-decoration-none text-dark">
+                {{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}
+                </Link>
+              </td>
+              <td class="text-start">
+                <Link :href="route('admin.reports.service-report.show', [service_report.service_id])"
+                  class="text-decoration-none text-dark">
+                {{ service_report.remarks }}
+                </Link>
+              </td>
+              <td><button type="button" as="button" class="btn btn-secondary"
+                  @click="showPrint(service_report)">Print</button></td>
             </tr>
           </tbody>
         </table>
       </div>
-      
+
       <EmptyCard :title="'No service reports yet...'" v-else class="mt-2 w-75" style="height:20rem;">
       </EmptyCard>
     </div>
-    <Print v-if="isShowPrint" :service_report="selectedServiceReport" @closePrint="closePrint"/>
+    <Print v-if="isShowPrint" :service_report="selectedServiceReport" @closePrint="closePrint" />
   </div>
 
 </template>
@@ -168,14 +234,14 @@ watch(search, () => {
 const isShowPrint = ref(false);
 
 function closePrint() {
-  if(isShowPrint.value) {
+  if (isShowPrint.value) {
     selectedServiceReport.value = null
     isShowPrint.value = false;
   }
 }
 
 function showPrint(service_report) {
-  if(!isShowPrint.value) {
+  if (!isShowPrint.value) {
     selectedServiceReport.value = service_report;
     isShowPrint.value = true;
   }
@@ -282,6 +348,7 @@ function showPrint(service_report) {
     max-width: 100%;
     overflow-x: auto;
   }
+
   .pagination {
     width: 40rem;
   }
@@ -318,6 +385,7 @@ function showPrint(service_report) {
     width: 30rem;
     overflow-x: auto;
   }
+
   .pagination {
     width: 30rem;
   }
@@ -350,6 +418,7 @@ function showPrint(service_report) {
     max-width: 100%;
     overflow-x: auto;
   }
+
   .pagination {
     width: 25rem;
   }

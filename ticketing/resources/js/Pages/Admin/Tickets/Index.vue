@@ -1,21 +1,21 @@
 <template>
+  <div class="position-absolute end-0 me-3" style="z-index: 100; margin-top: 5rem;">
+    <Toast
+      x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+      x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
+      v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
+      @close="handleClose">
+    </Toast>
+
+    <Toast
+      x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+      x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showErrorToast"
+      :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
+    </Toast>
+  </div>
   <div class="d-flex justify-content-center align-items-center flex-column"> 
     <Header class="sticky-top" style="z-index: 110;"></Header>
     <!--Toast Render-->
-    <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
-      <Toast
-        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
-        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
-        v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
-        @close="handleClose">
-      </Toast>
-
-      <Toast
-        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
-        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showErrorToast"
-        :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
-      </Toast>
-    </div>
     <!--Main Content-->
     <div class="d-flex justify-content-center flex-column align-content-center align-items-center main-content">
       <!--CTAs and Search-->
@@ -53,7 +53,7 @@
             <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
             <p class="fw-bold text-secondary pt-3">MS - {{ ms ? ms.ms_no : 0 }} |</p>
             <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }} |</p>
-            <p class="fw-bold text-secondary pt-3">RR - {{ sr ? sr.sr_no : 0 }}</p>
+            <p class="fw-bold text-secondary pt-3">SR - {{ sr ? sr.sr_no : 0 }}</p>
           </div>
         </div>
         <div class="d-flex flex-grow-1">

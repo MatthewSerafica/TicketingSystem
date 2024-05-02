@@ -419,7 +419,7 @@ const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
 }
 
 .doughnut {
-    width: 25rem;
+    width: 37rem;
 }
 
 .bar {

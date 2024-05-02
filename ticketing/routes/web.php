@@ -60,7 +60,9 @@ Route::middleware(['web'])->group(function () {
 
         Route::get('/admin/reports/service-report', [AdminServiceReportController::class, 'index'])->name('admin.reports.service-reports');
         Route::get('/admin/reports/service-report/create', [AdminServiceReportController::class, 'create'])->name('admin.reports.service-report.create');
+        Route::get('/admin/reports/service-report/{id}', [AdminServiceReportController::class, 'show'])->name('admin.reports.service-report.show');
         Route::post('/admin/reports/service-report/create/store', [AdminServiceReportController::class, 'store'])->name('admin.reports.service-report.store');
+        Route::put('/admin/reports/service-report/{id}/edit', [AdminServiceReportController::class, 'update'])->name('admin.reports.service-report.update');
         Route::get('/admin/check-service-id/{serviceId}', [AdminServiceReportController::class, 'check_service_id']);
         Route::get('/admin/reports/service-report/{id}/assigned-technicians', [AdminServiceReportController::class, 'assigned'])->name('admin.tickets.assigned');
 

@@ -30,23 +30,27 @@
             </div>
 
             <div class="col-md-4">
-              <label for="ticketNumber" class="form-label">Ticket Number:</label>
-              <div class="dropdown">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                  aria-expanded="false">
-                  {{ form.ticket_number ? form.ticket_number : 'Select a ticket number...' }}
-                </button>
-                <ul class="dropdown-menu">
-                  <li class="dropdown-item">
-                    Select a Ticket No.
-                  </li>
-                  <li v-for="ticket in tickets">
-                    <div class="dropdown-item" @click="ticketDetails(ticket)">{{ ticket.ticket_number }}</div>
-                  </li>
-                </ul>
+              <div class="d-flex flex-column">
+                <label for="ticketNumber" class="form-label">Ticket Number:</label>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-outline-secondary" style="width: 70%">
+                    {{ form.ticket_number ? form.ticket_number : 'Select a ticket number...' }}
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li class="dropdown-item">
+                      Select a Ticket No.
+                    </li>
+                    <li v-for="ticket in tickets">
+                      <div class="dropdown-item" @click="ticketDetails(ticket)">{{ ticket.ticket_number }}</div>
+                    </li>
+                  </ul>
+                </div>
+                <span v-if="form.errors.ticket_number" class="error-message">{{ form.errors.ticket_number }}</span>
               </div>
-
-              <span v-if="form.errors.ticket_number" class="error-message">{{ form.errors.ticket_number }}</span>
             </div>
           </div>
 
@@ -99,7 +103,6 @@
 
           <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" :id="form.technicianId"
             :ticket="selectedTicket" @confirm="create" @closeSubmitService="closeSubmitService" />
-          <!--  {{ selectedTicket }} -->
           <div class="row justify-content-end">
             <div class="col-md-4">
               <div class="d-flex justify-content-end gap-2">
@@ -135,8 +138,6 @@ const props = defineProps({
 const today = new Date();
 const minDate = today.toISOString().split('T')[0];
 
-const page = usePage();
-
 const form = useForm({
   service_id: props.new_service_id,
   date_started: null,
@@ -154,22 +155,13 @@ const form = useForm({
   remarks: null,
 });
 
-const fillFormWithTicket = (ticket) => {
-  form.action = ticket.service;
-  form.problem = ticket.issue;
-  form.requesting_office = `${ticket.employee.department} - ${ticket.employee.office}`;
-  // Fill other form fields as needed
-};
-
 let selectedTicket = ref([]);
 
 onMounted(async () => {
-  // Check if props.ticket_id is present
   if (props.ticket_id) {
     const ticketSelected = props.tickets.find(ticket => ticket.ticket_number === props.ticket_id);
     selectedTicket = ticketSelected;
     if (ticketSelected) {
-      fillFormWithTicket(ticketSelected);
       const response = await fetch(route('technician.tickets.assigned', { id: ticketSelected.ticket_number }));
       const data = await response.json();
       const technicianNames = [];
@@ -185,8 +177,6 @@ onMounted(async () => {
       console.log(form.technician);
     }
   }
-
-
 });
 
 const create = () => {

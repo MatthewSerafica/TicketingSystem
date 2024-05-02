@@ -190,9 +190,9 @@ class AdminTicketController extends Controller
             }
 
             $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
-            if ($employee->made_ticket >= 5) {
+            /* if ($employee->made_ticket >= 5) {
                 return redirect()->back()->with('error', 'Error Creating Ticket')->with('message', 'Employee has already met ticket limit!');
-            }
+            } */
 
 
             $ticket_data = [

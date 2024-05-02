@@ -52,7 +52,7 @@
             <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
             <p class="fw-bold text-secondary pt-3">MS - {{ ms ? ms.ms_no : 0 }} |</p>
             <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }} |</p>
-            <p class="fw-bold text-secondary pt-3">RR - {{ sr ? sr.sr_no : 0 }}</p>
+            <p class="fw-bold text-secondary pt-3">SR - {{ sr ? sr.sr_no : 0 }}</p>
           </div>
         </div>
         <Pagination :links="tickets.links" :key="'tickets'" />

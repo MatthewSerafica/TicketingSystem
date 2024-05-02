@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AssignedTickets;
 use App\Models\Employee;
+use App\Models\HistoryNumber;
 use App\Models\Service;
 use App\Models\ServiceReport;
 use App\Models\Technician;
@@ -114,6 +115,11 @@ class AdminServiceReportController extends Controller
 
         $employee = Employee::find($ticket->employee);
         $employee->user->notify(new UpdateTicketStatus($ticket));
+        
+        $history = HistoryNumber::where('ticket_number', $request->ticket_number)->first();
+        $history->sr_no = $request->service_id;
+        $history->save();
+
 
         $technicians = explode(' / ', $request->technician);
         foreach ($technicians as $technicianName) {
@@ -130,6 +136,73 @@ class AdminServiceReportController extends Controller
         }
 
         return redirect()->to('/admin/reports/service-report')->with('success', 'Report Created');
+    }
+
+    public function show($id)
+    {
+        $service_report = ServiceReport::where('service_id', $id)->first();
+        $technicians = Technician::with('user')->get();
+        $services = Service::all();
+        $tickets = Ticket::whereNull('sr_no')
+            ->orWhere('sr_no', $id)
+            ->orWhere('sr_no', '')
+            ->with('employee.user', 'assigned.technician.user')
+            ->get();
+        return inertia('Admin/Reports/ServiceReports/Show', [
+            'technicians' => $technicians,
+            'service_report' => $service_report,
+            'services' => $services,
+            'tickets' => $tickets,
+        ]);
+    }
+
+    public function update(Request $request, $id) {
+        $service_report = ServiceReport::where('service_id', $id)->first();
+
+        $request->validate([
+            'service_id' => 'required',
+            'date_started' => 'required',
+            'time_started' => 'required',
+            'ticket_number' => 'required',
+            'technician' => 'required',
+            'requesting_office' => 'required',
+            'equipment_no' => 'required',
+            'issue' => 'required',
+            'action' => 'required',
+            'recommendation' => 'required',
+            'date_done' => 'required',
+            'time_done' => 'required',
+            'remarks' => 'nullable',
+        ]);
+
+        $serviceData = [
+            'service_id' => $request->service_id,
+            'date_started' => $request->date_started,
+            'time_started' => $request->time_started,
+            'ticket_number' => $request->ticket_number,
+            'technician' => $request->technician,
+            'requesting_office' => $request->requesting_office,
+            'equipment_no' => $request->equipment_no,
+            'issue' => $request->issue,
+            'action' => $request->action,
+            'recommendation' => $request->recommendation,
+            'date_done' => $request->date_done,
+            'time_done' => $request->time_done,
+            'remarks' => $request->remarks,
+        ];
+
+        $service_report->update($serviceData);
+
+        $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
+
+        $ticket->update([
+            'sr_no' => $request->service_id,
+            'status' => 'Resolved',
+            'remarks' => $request->remarks,
+        ]);
+
+
+        return redirect()->to(route('admin.reports.service-reports'))->with('success', 'Service Report updated successfully!');
     }
 
 
