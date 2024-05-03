@@ -90,7 +90,6 @@ class AdminTicketController extends Controller
             }
         }
 
-
         $tickets = $query->paginate(10);
 
         $tickets->appends($filter);
@@ -245,8 +244,33 @@ class AdminTicketController extends Controller
             ->with('employee.user', 'assigned.technician.user')
             ->first();
 
+        $comments = TicketComment::where('ticket_number', $id)
+            ->whereNot('is_deleted', 1)
+            ->whereNull('parent_comment_id')
+            ->with('user', 'tagged.user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+
+        $comments->each(function ($comment) {
+            $comment->time_since_posted = $comment->created_at->diffForHumans();
+        });
+
+        $replies = TicketComment::where('ticket_number', $id)
+            ->whereNot('is_deleted', 1)
+            ->whereNotNull('parent_comment_id')
+            ->with('user', 'tagged.user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $replies->each(function ($reply) {
+            $reply->time_since_posted = $reply->created_at->diffForHumans();
+        });
+
         return inertia('Admin/Tickets/Show', [
             'ticket' => $ticket,
+            'comments' => $comments,
+            'replies' => $replies,
         ]);
     }
 
@@ -294,6 +318,108 @@ class AdminTicketController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
+    }
+
+    public function reply(Request $request, $id, $comment_id)
+    {
+        try {
+            $user_id = auth()->id();
+            $replier = User::findOrFail($user_id);
+            $ticket = Ticket::findOrFail($id);
+
+            $request->validate([
+                'parent_comment_id' => 'nullable',
+                'content' => 'required',
+            ]);
+
+            $comment = [
+                'ticket_number' => $id,
+                'parent_comment_id' => $comment_id,
+                'user_id' => $user_id,
+                'content' => $request->content,
+            ];
+
+            $reply = TicketComment::create($comment);
+
+            /* $tagged = $request->tagged_user;
+
+            foreach ($tagged as $user) {
+                $tagged = TaggedUser::create([
+                    'post_id' => $post->id,
+                    'comment_id' => $reply->id,
+                    'user_id' => $user,
+                ]);
+
+                $user = User::findOrFail($user);
+                $user->notify(
+                    new UserTaggedReply($user, $reply)
+                );
+            }
+
+            $originalComment = Comment::with('user')->find($reply->parent_comment_id);
+
+            if ($user_id !== $originalComment->user->id) {
+                $originalComment->user->notify(new ReplyMade($reply, $replier->name, $post->title));
+            } */
+
+            return redirect()->back()->with('success', 'Replied to the comment!')->with('message', 'Reply successfully posted!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function updateComment(Request $request, $id)
+    {
+        $comment = TicketComment::findOrFail($id);
+
+        $request->validate([
+            'content' => 'required',
+        ]);
+        $comment->content = $request->content;
+        $comment->save();
+
+        /* $tagged = TaggedUser::where('comment_id', $id)->get();
+
+        foreach ($tagged as $tag) {
+            $tag->delete();
+        }
+
+        $tagged = $request->tagged_user;
+
+        foreach ($tagged as $user) {
+            $tagged = TaggedUser::create([
+                'post_id' => $comment->post_id,
+                'comment_id' => $comment->id,
+                'user_id' => $user,
+            ]);
+        } */
+
+        return redirect()->back()->with('success', 'Comment successfully updated');
+    }
+
+    public function deleteComment($id)
+    {
+        $comment = TicketComment::findOrFail($id);
+        $comment->is_deleted = 1;
+        $comment->save();
+
+        $children = TicketComment::where('parent_comment_id', $id)->get();
+
+        if ($children) {
+            foreach ($children as $child) {
+                $child->is_deleted = 1;
+                $child->save();
+                $grandChildren = TicketComment::where('parent_comment_id', $child->id)->get();
+                if ($grandChildren) {
+                    foreach ($grandChildren as $grandChild) {
+                        $grandChild->is_deleted = 1;
+                        $grandChild->save();
+                    }
+                }
+            }
+        }
+
+        return redirect()->back()->with('success', 'Comment successfully deleted');
     }
 
     protected function sendTechnicianNotification($technician_id, $ticket)

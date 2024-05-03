@@ -42,6 +42,9 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/tickets/create', [AdminTicketController::class, 'create'])->name('admin.tickets.create');
         Route::get('/admin/tickets/{id}', [AdminTicketController::class, 'show'])->name('admin.tickets.show');
         Route::post('/admin/tickets/{id}/comment', [AdminTicketController::class, 'comment'])->name('admin.ticket.comment');
+        Route::post('/admin/tickets/{id}/reply/{comment_id}', [AdminTicketController::class, 'reply'])->name('admin.ticket.reply');
+        Route::put('/admin/tickets/comment/edit/{comment_id}', [AdminTicketController::class, 'updateComment'])->name('admin.ticket.edit.comment');
+        Route::delete('/admin/tickets/delete/comment/{id}', [AdminTicketController::class, 'deleteComment'])->name('admin.ticket.delete.comment');
         Route::post('/admin/tickets/create/store', [AdminTicketController::class, 'store'])->name('admin.tickets.store');
         Route::put('/admin/tickets/update-status/{ticket_id}', [AdminTicketController::class, 'status'])->name('admin.tickets.update.status');
         Route::put('/admin/tickets/update-service/{ticket_id}', [AdminTicketController::class, 'service'])->name('admin.tickets.update.service');

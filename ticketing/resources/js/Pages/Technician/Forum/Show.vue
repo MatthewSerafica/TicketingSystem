@@ -166,6 +166,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <!-- Comment Content -->
                             <div class="comment-line-connector-container">
                                 <div class="comment-line-connector"></div>
@@ -609,14 +610,14 @@
 <script setup>
 import Button from '@/Components/Button.vue';
 import Delete from "@/Components/DeleteModal.vue";
+import EmptyCard from '@/Components/EmptyState/Comments.vue';
 import EmptyProfile from '@/Components/EmptyState/Profile.vue';
 import Toast from '@/Components/Toast.vue';
 import Header from '@/Pages/Layouts/TechnicianHeader.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import Alpine from 'alpinejs';
-import { ref, watch, watchEffect } from 'vue';
-import EmptyCard from '@/Components/EmptyState/Comments.vue';
 import axios from 'axios';
+import { ref, watch, watchEffect } from 'vue';
 
 // Toast Start
 Alpine.start()
@@ -779,10 +780,10 @@ const reply = (comment) => {
     commentForm.post(route('technician.forum.reply', [props.post.id, props.post.title, selectedComment.value]), { preserveScroll: false, preserveState: false })
 }
 
-const replyMore = (comment) => {
-    selectedComment.value = comment;
-    commentForm.post(route('technician.forum.reply', [props.post.id, props.post.title, selectedComment.value]), { preserveScroll: false, preserveState: false })
-}
+    const replyMore = (comment) => {
+        selectedComment.value = comment;
+        commentForm.post(route('technician.forum.reply', [props.post.id, props.post.title, selectedComment.value]), { preserveScroll: false, preserveState: false })
+    }
 
 
 const fullscreenImage = ref(null);

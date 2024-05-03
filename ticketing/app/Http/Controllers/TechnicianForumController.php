@@ -242,7 +242,7 @@ class TechnicianForumController extends Controller
                 $originalComment->user->notify(new ReplyMade($reply, $replier->name, $post->title));
             }
 
-            return redirect()->back()->with('success', 'Commented on the post!')->with('message', 'Comment successfully posted!');
+            return redirect()->back()->with('success', 'Replied to the comment!')->with('message', 'Reply successfully posted!');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
