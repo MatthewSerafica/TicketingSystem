@@ -452,6 +452,10 @@ const createNewProblem = () => {
 
 <style scoped>
 /* Transition for the dropdown Menus 6*/
+.btn:hover {
+  scale: 0.9;
+}
+
 .dropdown-menu {
   display: none;
   opacity: 0;
