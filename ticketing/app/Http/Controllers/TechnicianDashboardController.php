@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\ServiceReport;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
@@ -118,10 +119,10 @@ class TechnicianDashboardController extends Controller
         $departments = Department::all();
         $yearly = $this->getYearlyData($user);
         $service = $this->getType($user);
-        $assigned_today = $this->getAssignedToday($user->id);
-        $resolved_today = $this->getResolvedToday($user->id);
-        $time = $this->getAverageResolutionTime($user->id);
-        $complexity = $this->getComplexityCounts($user->id);
+        $assigned_today = $this->getAssignedToday($user);
+        $resolved_today = $this->getResolvedToday($user);
+        $time = $this->getAverageResolutionTime($user);
+        $complexity = $this->getComplexityCounts($user);
         return inertia('Technician/Dashboard/Profile', [
             'users' => $user,
             'departments' => $departments,
@@ -173,7 +174,7 @@ class TechnicianDashboardController extends Controller
         $todayEnd = Carbon::today()->endOfDay();
         $ticket = Ticket::with('assigned.technician.user')
             ->whereHas('assigned.technician.user', function ($query) use ($user) {
-                $query->where('id', $user);
+                $query->where('id', $user->id);
             })
             ->whereIn('status', ['New', 'Pending', 'Ongoing'])
             ->whereBetween('created_at', [$todayStart, $todayEnd])
@@ -186,7 +187,7 @@ class TechnicianDashboardController extends Controller
         $todayEnd = Carbon::today()->endOfDay();
         $ticket = Ticket::with('assigned.technician.user')
             ->whereHas('assigned.technician.user', function ($query) use ($user) {
-                $query->where('id', $user);
+                $query->where('id', $user->id);
             })
             ->where('status', 'resolved')
             ->whereBetween('created_at', [$todayStart, $todayEnd])
@@ -198,7 +199,7 @@ class TechnicianDashboardController extends Controller
     {
         $ticketCounts = Ticket::with('assigned.technician.user')
             ->whereHas('assigned.technician.user', function ($query) use ($user) {
-                $query->where('id', $user);
+                $query->where('id', $user->id);
             })
             ->selectRaw('complexity, COUNT(*) as count')
             ->groupBy('complexity')
@@ -222,12 +223,12 @@ class TechnicianDashboardController extends Controller
 
     private function getAverageResolutionTime($user)
     {
-        $time = Ticket::with('assigned.technician.user')
-            ->whereHas('assigned.technician.user', function ($query) use ($user) {
-                $query->where('id', $user);
-            })
-            ->whereNotNull('resolved_at')
-            ->selectRaw('AVG(TIMESTAMPDIFF(SECOND, created_at, resolved_at)) AS average_resolution_time')
+        $time = ServiceReport::where('technician', 'like', '%' . $user->name . '%')
+            ->whereNotNull('date_done')
+            ->whereNotNull('time_done')
+            ->whereNotNull('date_started')
+            ->whereNotNull('time_started')
+            ->selectRaw('AVG(TIMESTAMPDIFF(SECOND, CONCAT(date_started, " ", time_started), CONCAT(date_done, " ", time_done))) AS average_resolution_time')
             ->value('average_resolution_time');
 
         $timeInHours = $time / 3600;

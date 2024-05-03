@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Office;
+use App\Models\ServiceReport;
 use App\Models\Technician;
 use App\Models\Ticket;
 use App\Models\User;
@@ -176,39 +177,39 @@ class AdminUsersController extends Controller
     }
 
     private function getComplexityCounts($user)
-{
-    $ticketCounts = Ticket::with('assigned.technician.user')
-        ->whereHas('assigned.technician.user', function ($query) use ($user) {
-            $query->where('id', $user->id);
-        })
-        ->selectRaw('complexity, COUNT(*) as count')
-        ->groupBy('complexity')
-        ->get();
-
-    $counts = [
-        'simple' => 0,
-        'complex' => 0
-    ];
-
-    foreach ($ticketCounts as $ticket) {
-        if ($ticket->complexity === 'Simple') {
-            $counts['simple'] = $ticket->count;
-        } elseif ($ticket->complexity === 'Complex') {
-            $counts['complex'] = $ticket->count;
-        }
-    }
-
-    return $counts;
-}
-
-    private function getAverageResolutionTime($user)
     {
-        $time = Ticket::with('assigned.technician.user')
+        $ticketCounts = Ticket::with('assigned.technician.user')
             ->whereHas('assigned.technician.user', function ($query) use ($user) {
                 $query->where('id', $user->id);
             })
-            ->whereNotNull('resolved_at')
-            ->selectRaw('AVG(TIMESTAMPDIFF(SECOND, created_at, resolved_at)) AS average_resolution_time')
+            ->selectRaw('complexity, COUNT(*) as count')
+            ->groupBy('complexity')
+            ->get();
+
+        $counts = [
+            'simple' => 0,
+            'complex' => 0
+        ];
+
+        foreach ($ticketCounts as $ticket) {
+            if ($ticket->complexity === 'Simple') {
+                $counts['simple'] = $ticket->count;
+            } elseif ($ticket->complexity === 'Complex') {
+                $counts['complex'] = $ticket->count;
+            }
+        }
+
+        return $counts;
+    }
+
+    private function getAverageResolutionTime($user)
+    {
+        $time = ServiceReport::where('technician', 'like', '%' . $user->name . '%')
+            ->whereNotNull('date_done')
+            ->whereNotNull('time_done')
+            ->whereNotNull('date_started')
+            ->whereNotNull('time_started')
+            ->selectRaw('AVG(TIMESTAMPDIFF(SECOND, CONCAT(date_started, " ", time_started), CONCAT(date_done, " ", time_done))) AS average_resolution_time')
             ->value('average_resolution_time');
 
         $timeInHours = $time / 3600;
@@ -217,6 +218,7 @@ class AdminUsersController extends Controller
 
         return $timeInDecimal;
     }
+
 
     private function getYearlyData($user)
     {
