@@ -63,15 +63,17 @@
                           <span class="visually-hidden">Toggle Dropdown</span>
                       </button>
                       <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                          <li v-if="problems" v-for="problem in problems" class="btn dropdown-item"
-                              @click="selectProblem(problem)" style="width: 400px;">
-                              <span class="fw-semibold">{{ problem.problem }}</span>
-                          </li>
-                          <li class="dropdown-divider"></li>
+                        
                           <li class="dropdown-item">
                               <input type="text" class="form-control" v-model="newProblem.problem" placeholder="Enter custom problem"
                                     @keyup.enter="createNewProblem">
                           </li>
+                          <li class="dropdown-divider"></li>
+                          <li v-if="problems" v-for="problem in problems" class="btn dropdown-item"
+                              @click="selectProblem(problem)" style="width: 400px;">
+                              <span class="fw-semibold">{{ problem.problem }}</span>
+                          </li>
+                          
                       </ul>
                   </div>
 
