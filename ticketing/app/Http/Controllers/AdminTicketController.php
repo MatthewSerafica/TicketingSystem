@@ -730,4 +730,18 @@ class AdminTicketController extends Controller
 
         return response()->json(['recommended' => $technicians]);
     }
+
+    public function problem(Request $request)
+    {
+        $request->validate([
+            'problem' => 'required',
+        ]);
+
+
+        $problemData = [
+            'problem' => $request->problem,
+        ];
+
+        Problem::create($problemData);
+    }
 }

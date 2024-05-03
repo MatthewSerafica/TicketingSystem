@@ -53,6 +53,7 @@ Route::middleware(['web'])->group(function () {
         Route::put('/admin/tickets/replace/technician', [AdminTicketController::class, 'replace'])->name('admin.tickets.replace.technician');
         Route::delete('/admin/tickets/remove/technician', [AdminTicketController::class, 'remove'])->name('admin.tickets.remove.technician');
         Route::get('/admin/tickets/recommended/{department}', [AdminTicketController::class, 'recommend'])->name('admin.recommended');
+        Route::post('/admin/tickets/problems/create/store', [AdminTicketController::class, 'problem'])->name('admin.ticket.problems.store');
 
         Route::get('/admin/users', [AdminUsersController::class, 'index'])->name('admin.users');
         Route::get('/admin/users/create', [AdminUsersController::class, 'create'])->name('admin.users.create');

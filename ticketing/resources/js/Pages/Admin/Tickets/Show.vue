@@ -628,7 +628,7 @@
                     </div>
                 </div>
             </div>
-            <EmptyCard v-else :title="'No Comments yet...'" class="mt-2 w-75" style="height:20rem;" />
+            <EmptyCard v-else :title="'No Comments yet...'" class="mt-2" style="height:20rem;" />
         </div>
         <Delete v-if="isShowDelete" :comment="selectedComment" :type="page.props.user.user_type" @closeDelete="closeDelete" />
     </div>

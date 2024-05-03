@@ -69,7 +69,7 @@
                           </li>
                           <li class="dropdown-divider"></li>
                           <li class="dropdown-item">
-                              <input type="text" class="form-control" v-model="form.new_problem" placeholder="Enter custom problem"
+                              <input type="text" class="form-control" v-model="newProblem.problem" placeholder="Enter custom problem"
                                     @keyup.enter="createNewProblem">
                           </li>
                       </ul>
@@ -439,11 +439,12 @@ const create = () => {
 }
 
 const newProblem = useForm({
-  new_problem: null,
+  problem: null,
 })
 
 const createNewProblem = () => {
-  newProblem.post(route('admin.problems.store'), {preserveScroll:false, preserveState:false});
+  newProblem.post(route('admin.ticket.problems.store'), {preserveScroll:false, preserveState:true});
+  form.problem = newProblem.problem;
 }
 
 
