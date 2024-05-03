@@ -93,7 +93,11 @@
             </thead>
             <tbody>
               <tr v-for="ticket in tickets.data" :key="ticket.ticket_number" class="align-middle">
-                <td class="text-center">{{ ticket.ticket_number }}</td>
+                <td class="text-center">
+                  <Link :href="route('admin.tickets.show', ticket.ticket_number)" class="text-decoration-none text-dark">
+                    <div>{{ ticket.ticket_number }}</div>
+                  </Link>
+                </td>
                 <td class="text-start" style="width: 7rem;">{{ formatDate(ticket.created_at) }}</td>
                 <td class="text-center" style="max-width: 60px;"
                   @click="showInput(ticket.rr_no, ticket.ticket_number, 'rr')">

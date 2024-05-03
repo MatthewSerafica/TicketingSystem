@@ -9,6 +9,8 @@ use App\Models\Service;
 use App\Models\Technician;
 use App\Models\Problem;
 use App\Models\Ticket;
+use App\Models\TicketComment;
+use App\Models\User;
 use App\Notifications\TicketMade;
 use App\Notifications\UpdateTechnicianReplace;
 use App\Notifications\UpdateTicketStatus;
@@ -176,6 +178,7 @@ class AdminTicketController extends Controller
         try {
             DB::beginTransaction();
             $request->validate([
+                'request_type' => 'nullable',
                 'description' => 'required',
                 'employee' => 'required',
                 'problem' => 'required',
@@ -196,6 +199,7 @@ class AdminTicketController extends Controller
 
 
             $ticket_data = [
+                'request_type' => $request->request_type,
                 'rs_no' => $request->rs_no,
                 'employee' => $request->employee,
                 'issue' => $request->problem,
@@ -234,6 +238,62 @@ class AdminTicketController extends Controller
             return redirect()->to('/admin/tickets')->with('error', 'An error occurred!')->with('message', $e->getMessage());
         }
         return redirect()->to('/admin/tickets')->with('success', 'Ticket Created')->with('message', 'All assigned technicians are notified!');
+    }
+    public function show(Request $request, $id)
+    {
+        $ticket = Ticket::where('ticket_number', $id)
+            ->with('employee.user', 'assigned.technician.user')
+            ->first();
+
+        return inertia('Admin/Tickets/Show', [
+            'ticket' => $ticket,
+        ]);
+    }
+
+    public function comment(Request $request, $id)
+    {
+        try {
+            $user_id = auth()->id();
+            $commenter = User::findOrFail($user_id);
+            $ticket = Ticket::findOrFail($id);
+
+            $request->validate([
+                'content' => 'required',
+            ]);
+
+            $comment = [
+                'ticket_number' => $id,
+                'user_id' => $user_id,
+                'content' => $request->content,
+            ];
+
+            $comment = TicketComment::create($comment);
+
+            /* $tagged = $request->tagged_user;
+
+            foreach ($tagged as $user) {
+                $tagged = TaggedUser::create([
+                    'post_id' => $post->id,
+                    'comment_id' => $comment->id,
+                    'user_id' => $user,
+                ]);
+
+                $user = User::findOrFail($user);
+                $user->notify(
+                    new UserTaggedComment($user, $comment)
+                );
+            } */
+
+            /* if ($user_id !== $post->user_id) {
+                $post->user->notify(
+                    new CommentMade($comment, $commenter->name, $post->title)
+                );
+            } */
+
+            return redirect()->back()->with('success', 'Commented on the ticket!')->with('message', 'Comment successfully posted!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     protected function sendTechnicianNotification($technician_id, $ticket)

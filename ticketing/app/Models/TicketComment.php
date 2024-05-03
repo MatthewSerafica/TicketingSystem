@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
-class Comment extends Model
+class TicketComment extends Model
 {
     use HasFactory;
 
@@ -16,21 +16,20 @@ class Comment extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function post(): BelongsTo
+    public function ticket(): BelongsTo
     {
-        return $this->belongsTo(Post::class, 'post_id', 'id');
+        return $this->belongsTo(Ticket::class, 'ticket_number', 'ticket_number');
     }
 
     public function tagged()
     {
         return $this->hasMany(TaggedUser::class, 'comment_id', 'id');
     }
-
     protected $keyType = 'string';
     public $incrementing = false;
-    protected $table = 'comments';
+    protected $table = 'ticket_comments';
     protected $fillable = [
-        'post_id',
+        'ticket_number',
         'parent_comment_id',
         'user_id',
         'content',

@@ -412,6 +412,7 @@ const toggleRSNoField = () => {
 let show = ref(true);
 
 const form = useForm({
+  request_type: null,
   rs_no: props.new_rs,
   service: null,
   problem: null,
