@@ -4,8 +4,8 @@
       <div class="modal-header">
         <h5 class="modal-title  text-center">Are you sure you want to submit this service report?</h5>
       </div>
-      <div class="modal-body d-flex gap-3 justify-content-center">
-        <div>
+      <div class="modal-body">
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
           <div class="card">
             <div class="card-body">
               <p class="card-title  text-center"><strong>Ticket Details:</strong></p>
@@ -23,12 +23,10 @@
               </div>
             </div>
           </div>
-        </div>
-        <div v-if="form">
-          <div class="card">
+        <div v-if="form" class="card">
             <div class="card-body row">
-              <div class="col-md-6">
                 <p class="modal-title text-center"><strong>Service Report Details:</strong></p>
+              <div class="col-md-6">
                 <div class="text">
                   <p class="card-text">
                     <strong>Service ID:</strong> {{ form.service_id ?? "Not available" }}
@@ -68,7 +66,8 @@
                 </div>
               </div>
             </div>
-          </div>
+          
+        </div>
         </div>
       </div>
       <div class="modal-footer justify-content-end d-flex gap-2">
@@ -145,9 +144,6 @@ const submitServiceReport = () => {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.text {
-  text-align: left;
-}
 
 .modal-content {
   background-color: #fff;
@@ -169,18 +165,19 @@ const submitServiceReport = () => {
 }
 
 .card {
-  width: 90%;
-  max-width: 100%; 
+  width: calc(50% - 10px); /* Adjusted to occupy half of the container's width with margin */
   margin-bottom: 10px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 320px) {
   .modal-content {
     padding: 50px;
   }
 
   .card {
-    width: 100%; 
+    width: 20rem;
+    text-align: start;
   }
 }
+
 </style>

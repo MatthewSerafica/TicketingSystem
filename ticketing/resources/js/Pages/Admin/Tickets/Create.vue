@@ -67,7 +67,10 @@
                           @click="selectProblem(problem)" style="width: 400px;">
                           <span class="fw-semibold">{{ problem.problem }}</span>
                         </li>
-                        <li v-else-if="!problems">No problems found...</li>
+                        <li class="dropdown-divider"></li>
+                          <li class="dropdown-item">
+                          <input type="text" class="form-control" v-model="form.otherTitle" placeholder="Enter custom title">
+                          </li>
                       </ul>
                     </div>
 
@@ -136,7 +139,10 @@
                           @click="selectService(service)" style="width: 400px;">
                           <span class="fw-semibold">{{ service.service }}</span>
                         </li>
-                        <li v-else-if="!services">No results found...</li>
+                        <li class="dropdown-divider"></li>
+                          <li class="dropdown-item">
+                          <input type="text" class="form-control" v-model="form.otherService" placeholder="Enter custom service">
+                          </li>
                       </ul>
                     </div>
                   </div>
