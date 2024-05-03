@@ -196,6 +196,13 @@ class AdminTicketController extends Controller
                 return redirect()->back()->with('error', 'Error Creating Ticket')->with('message', 'Employee has already met ticket limit!');
             } */
 
+            if (!$request->filled('problem')) {
+                $problem = Problem::create([
+                    'problem' => $request->new_problem,
+                ]);
+            } else {
+                $problem = $request->problem;
+            }
 
             $ticket_data = [
                 'request_type' => $request->request_type,

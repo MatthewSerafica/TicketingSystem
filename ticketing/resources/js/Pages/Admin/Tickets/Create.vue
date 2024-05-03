@@ -55,24 +55,26 @@
                     <label for="Title" class="fw-semibold">Title</label>
                     <div class="btn-group">
                       <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ form.problem ? form.problem : 'Select a Title...' }}
+                              data-bs-toggle="dropdown" aria-expanded="false">
+                          {{ form.problem ? form.problem : 'Select a Title...' }}
                       </button>
                       <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
-                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                        <span class="visually-hidden">Toggle Dropdown</span>
+                              data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                          <span class="visually-hidden">Toggle Dropdown</span>
                       </button>
                       <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                        <li v-if="problems" v-for="problem in problems" class="btn dropdown-item"
-                          @click="selectProblem(problem)" style="width: 400px;">
-                          <span class="fw-semibold">{{ problem.problem }}</span>
-                        </li>
-                        <li class="dropdown-divider"></li>
+                          <li v-if="problems" v-for="problem in problems" class="btn dropdown-item"
+                              @click="selectProblem(problem)" style="width: 400px;">
+                              <span class="fw-semibold">{{ problem.problem }}</span>
+                          </li>
+                          <li class="dropdown-divider"></li>
                           <li class="dropdown-item">
-                          <input type="text" class="form-control" v-model="form.otherTitle" placeholder="Enter custom title">
+                              <input type="text" class="form-control" v-model="form.new_problem" placeholder="Enter custom problem"
+                                    @keyup.enter="createNewProblem">
                           </li>
                       </ul>
-                    </div>
+                  </div>
+
 
                   </div>
 
@@ -435,6 +437,16 @@ const create = () => {
 
   form.post(route('admin.tickets.store'), { preserveScroll: false, preserveState: false });
 }
+
+const newProblem = useForm({
+  new_problem: null,
+})
+
+const createNewProblem = () => {
+  newProblem.post(route('admin.problems.store'), {preserveScroll:false, preserveState:false});
+}
+
+
 </script>
 
 <style scoped>
