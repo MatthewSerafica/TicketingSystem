@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('user')->onUpdate('cascade')->onDelete('cascade');
             $table->string('task_name');
-            $table->boolean('is_resolved')->default(0);
+            $table->timestamp('is_resolved')->nullable();
             $table->timestamps();
         });
     }
