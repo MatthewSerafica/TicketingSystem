@@ -63,15 +63,25 @@
                           <span class="visually-hidden">Toggle Dropdown</span>
                       </button>
                       <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                        
+                      <li class="dropdown-item d-flex align-items-center"> 
+                          <input type="text" class="form-control flex-grow-1" v-model="newProblem.problem" placeholder="Enter custom problem"
+                          @keyup.enter.prevent="createNewProblem">
+                          <button class="btn btn-primary ms-2" @click.prevent="createNewProblem"> 
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                          <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                          </svg>
+                          </button>
+                      </li>
+
+
+
+                          <li class="dropdown-divider"></li>
                           <li v-if="problems" v-for="problem in problems" class="btn dropdown-item"
                               @click="selectProblem(problem)" style="width: 400px;">
                               <span class="fw-semibold">{{ problem.problem }}</span>
                           </li>
-                          <li class="dropdown-divider"></li>
-                          <li class="dropdown-item">
-                              <input type="text" class="form-control" v-model="newProblem.problem" placeholder="Enter custom problem"
-                                    @keyup.enter="createNewProblem">
-                          </li>
+                          
                       </ul>
                   </div>
 
@@ -142,8 +152,14 @@
                           <span class="fw-semibold">{{ service.service }}</span>
                         </li>
                         <li class="dropdown-divider"></li>
-                          <li class="dropdown-item">
-                          <input type="text" class="form-control" v-model="form.otherService" placeholder="Enter custom service">
+                        <li class="dropdown-item d-flex align-items-center"> 
+                          <input type="text" class="form-control" v-model="newService.service" placeholder="Enter custom service"
+                          @keyup.enter="createNewService">
+                          <button class="btn btn-primary ms-2" @click.prevent="createNewService"> 
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                          <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                          </svg>
+                          </button>
                           </li>
                       </ul>
                     </div>
@@ -445,6 +461,14 @@ const newProblem = useForm({
 const createNewProblem = () => {
   newProblem.post(route('admin.ticket.problems.store'), {preserveScroll:false, preserveState:true});
   form.problem = newProblem.problem;
+}
+const newService = useForm({
+  service: null,
+})
+
+const createNewService = () => {
+  newService.post(route('admin.ticket.services.store'), {preserveScroll:false, preserveState:true});
+  form.service = newService.service;
 }
 
 

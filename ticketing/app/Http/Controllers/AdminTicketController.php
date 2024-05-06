@@ -204,6 +204,14 @@ class AdminTicketController extends Controller
                 $problem = $request->problem;
             }
 
+            if (!$request->filled('service')) {
+                $service = Service::create([
+                    'service' => $request->new_service,
+                ]);
+            } else {
+                $service = $request->service;
+            }
+
             $ticket_data = [
                 'request_type' => $request->request_type,
                 'rs_no' => $request->rs_no,
@@ -745,5 +753,19 @@ class AdminTicketController extends Controller
         ];
 
         Problem::create($problemData);
+    }
+
+    public function services(Request $request)
+    {
+        $request->validate([
+            'service' => 'required',
+        ]);
+
+
+        $serviceData = [
+            'service' => $request->service,
+        ];
+
+        Service::create($serviceData);
     }
 }
