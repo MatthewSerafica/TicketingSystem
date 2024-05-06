@@ -45,6 +45,7 @@
         </div>
       </div>
 
+      <!--Data Table-->
       <div v-if="tickets.data.length"
         class="d-flex align-items-center justify-content-between mt-2 mb-2 px-3 pagination">
         <div class="d-flex flex-grow-1 gap-2 w-100">

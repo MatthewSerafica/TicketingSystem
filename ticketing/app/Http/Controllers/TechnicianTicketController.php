@@ -143,11 +143,13 @@ class TechnicianTicketController extends Controller
 
         $problems = Problem::get();
         $filter = $request->only(['search']);
+        $services = Service::all();
         return inertia('Technician/Tickets/Create', [
             'employees' => $employees,
             'filters' => $filter,
             'new_rs' => $new,
             'problems' => $problems,
+            'services' => $services,
         ]);
     }
 

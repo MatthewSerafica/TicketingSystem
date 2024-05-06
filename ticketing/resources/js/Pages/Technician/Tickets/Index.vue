@@ -46,7 +46,7 @@
         </div>
       </div>
       <!--Data Table-->
-      <div v-if="tickets.data.length" class="d-flex justify-content-end mb-3 mt-3 pagination">
+      <div v-if="tickets.data.length" class="d-flex align-items-center justify-content-between mt-2 mb-2 px-3 pagination">
         <div class="d-flex flex-grow-1 gap-2 w-100">
           <div class="d-flex gap-2 border px-3 rounded">
             <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
@@ -55,9 +55,12 @@
             <p class="fw-bold text-secondary pt-3">SR - {{ sr ? sr.sr_no : 0 }}</p>
           </div>
         </div>
-        <Pagination :links="tickets.links" :key="'tickets'" />
-        <br>
+        <div class="d-flex flex-grow-1">
+          <Pagination :links="tickets.links" :key="'tickets'" />
+          <br>
+        </div>
       </div>
+      <!--Data Table-->
       <div v-if="tickets.data.length > 0" class="table-responsive rounded shadow pt-2 px-2 mb-5">
         <div class="">
           <table class="table table-hover custom-rounded-table ">

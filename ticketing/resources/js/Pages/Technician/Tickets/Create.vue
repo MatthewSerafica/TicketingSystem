@@ -130,6 +130,7 @@
                 <input id="deptOffice" class="form-control rounded border-secondary-subtle" type="text" placeholder=" "
                   v-model="form.department" disabled />
               </div>
+              
               <div class="flex-grow-1 w-50">
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="service" class="fw-semibold">Service</label>
@@ -143,7 +144,7 @@
                         <span class="visually-hidden">Toggle Dropdown</span>
                       </button>
                       <ul id="serviceDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                        <li v-if="services" v-for="service in services" class="btn dropdown-item"
+                        <li v-for="service in services" class="btn dropdown-item"
                           @click="selectService(service)" style="width: 400px;">
                           <span class="fw-semibold">{{ service.service }}</span>
                         </li>
@@ -161,8 +162,6 @@
                     </div>
                 </div>
               </div>
-
-
             </div>
 
             <div class="row justify-content-center">
