@@ -2,9 +2,8 @@
   <div class="position-absolute end-0 me-3" style="z-index: 100; margin-top: 5rem;">
     <Toast
       x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
-      x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
-      v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
-      @close="handleClose">
+      x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showSuccessToast"
+      :success="page.props.flash.success" :message="page.props.flash.message" @close="handleClose">
     </Toast>
 
     <Toast
@@ -13,7 +12,7 @@
       :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
     </Toast>
   </div>
-  <div class="d-flex justify-content-center align-items-center flex-column"> 
+  <div class="d-flex justify-content-center align-items-center flex-column">
     <Header class="sticky-top" style="z-index: 110;"></Header>
     <!--Toast Render-->
     <!--Main Content-->
@@ -94,8 +93,9 @@
             <tbody>
               <tr v-for="ticket in tickets.data" :key="ticket.ticket_number" class="align-middle">
                 <td class="text-center">
-                  <Link :href="route('admin.tickets.show', ticket.ticket_number)" class="text-decoration-none text-dark">
-                    <div>{{ ticket.ticket_number }}</div>
+                  <Link :href="route('admin.tickets.show', ticket.ticket_number)"
+                    class="text-decoration-none text-dark">
+                  <div>{{ ticket.ticket_number }}</div>
                   </Link>
                 </td>
                 <td class="text-start" style="width: 7rem;">{{ formatDate(ticket.created_at) }}</td>
@@ -269,7 +269,7 @@
                 </td>
                 <td class="text-start">
                   {{ isNaN(new Date(formatDate(ticket.resolved_at))) ? 'Not yet done' :
-          formatDate(ticket.resolved_at) }}
+        formatDate(ticket.resolved_at) }}
                 </td>
                 <td class="text-start text-break" style="max-width: 120px;"
                   @click="showInput(ticket.remarks, ticket.ticket_number, 'remarks')">
@@ -565,7 +565,6 @@ const updateData = async (data, id, updateField, type) => {
 
   console.log('start');
   try {
-    // Assuming useForm and form.put return promises
     const form = useForm(formData);
     await form.put(route('admin.tickets.update', { ticket_id: id, field: updateField }));
     console.log('finished updating data');
@@ -618,12 +617,10 @@ const removeTechnician = async (ticket, assignedIndex, techId) => {
 }
 
 const assignTechnician = async (ticket, assignedIndex, technician) => {
-  // Check if there are already assigned technicians
   if (ticket.assigned[assignedIndex].technician && ticket.assigned[assignedIndex].technician.length > 0) {
     const old = ticket.assigned[assignedIndex].technician[0].technician_id
     await replaceTechnician(ticket.ticket_number, technician.technician_id, old)
   } else {
-    // If there are no existing technicians, simply push the new technician
     ticket.assigned[assignedIndex].technician.splice(0, 1, technician);
     await showInput(ticket.assigned[assignedIndex].technician[0].technician_id, ticket.ticket_number, 'technician')
     await updateData(ticket.assigned[assignedIndex].technician[0].technician_id, ticket.ticket_number, 'technician', 'technician');
@@ -653,9 +650,7 @@ const fetchRecommended = async (department) => {
 // Styling and formatting
 let technicianCTAs = ref(false);
 
-// Function to toggle the visibility of CTAs for a specific row
 const toggleTechnicianCTAs = () => {
-  // Toggle the visibility of CTAs for the clicked row
   if (technicianCTAs.value) {
     technicianCTAs.value = false;
   } else {
@@ -712,6 +707,10 @@ const validateNumericInput = (inputValue, propName) => {
 
 
 <style scoped>
+.btn:hover {
+  scale: 0.9;
+}
+
 .dropdown-menu {
   display: none;
   opacity: 0;
@@ -908,7 +907,7 @@ const validateNumericInput = (inputValue, propName) => {
   .main-content {
     padding-left: 0;
     width: 100%;
-    
+
   }
 
   .custom-rounded-table {
@@ -938,26 +937,26 @@ const validateNumericInput = (inputValue, propName) => {
 
 @media (max-width: 375px) {
   .main-content {
-    padding-left: 0; 
-    width: 100%; 
+    padding-left: 0;
+    width: 100%;
   }
 
   .table-responsive {
-    width: 100%; 
-    overflow-x: auto; 
+    width: 100%;
+    overflow-x: auto;
   }
 
   .pagination {
-    width: 100%; 
+    width: 100%;
   }
 
   .btn-options {
-    width: auto; 
+    width: auto;
   }
 
   .custom-rounded-table th,
   .custom-rounded-table td {
-    font-size: 14px; 
+    font-size: 14px;
   }
 }
 
