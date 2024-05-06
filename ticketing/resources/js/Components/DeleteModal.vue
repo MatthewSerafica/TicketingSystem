@@ -32,7 +32,9 @@
           @click="closeDelete" class="btn btn-danger">Delete</Link>
         <Link v-if="comment && type === 'technician'" method="delete" type="button" as="button" :href="route('technician.forum.delete.comment', { id: comment.id })"
           @click="closeDelete" class="btn btn-danger">Delete</Link>
-        <Link v-if="comment && type === 'admin'" method="delete" type="button" as="button" :href="route('admin.ticket.delete.comment', { id: comment.id })"
+        <Link v-if="commentTicket && type === 'admin'" method="delete" type="button" as="button" :href="route('admin.ticket.delete.comment', { id: commentTicket.id })"
+          @click="closeDelete" class="btn btn-danger">Delete</Link>
+        <Link v-if="commentTicket && type === 'technician'" method="delete" type="button" as="button" :href="route('technician.ticket.delete.comment', { id: commentTicket.id })"
           @click="closeDelete" class="btn btn-danger">Delete</Link>
         <button @click="closeDelete" type="button" as="button" class="btn btn-outline-secondary ">Cancel</button>
       </div>
@@ -56,6 +58,7 @@ const props = defineProps({
   service: Object,
   post: Object,
   comment: Object,
+  commentTicket: Object,
   problem: Object,
   type: Object,
 })
