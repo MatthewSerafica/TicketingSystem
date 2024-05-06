@@ -135,14 +135,30 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 shadow rounded p-4 task">
+
+               <!-- Task List Section -->
+               <div class="col-lg-3 shadow rounded p-4 task">
                     <div>
                         <h6>Tasks</h6>
                     </div>
                     <div>
+                        <!-- Conditionally render the input form -->
+                        <form v-if="showTaskInput" @submit.prevent="addTask">
+                            <input type="text" v-model="taskForm.task_name" placeholder="Enter task" class="form-control mb-2">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </form>
 
+
+                        <!-- Button to toggle the input form -->
+                        <button type="button" class="btn btn-secondary mt-2" @click="toggleTaskInput">
+                            Add Task
+                        </button>
                     </div>
                 </div>
+
+
+
+
             </div>
 
             <div class="row mt-5 gap-4 justify-content-center text-center bg-white mb-3">
@@ -821,6 +837,23 @@ const getButtonClass = (status) => {
             return 'btn btn-secondary';
     }
 };
+
+const taskForm = useForm({
+    ticket_number : props.ticket.ticket_number,
+    user_id: page.props.user.id,
+	task_name : null,
+	is_resolved : null,
+})
+const showTaskInput = ref(false);
+const newTask = ref('');
+function toggleTaskInput() {
+    showTaskInput.value = !showTaskInput.value;
+    newTask.value = ''; // Reset input field when toggling
+}
+const addTask = () => taskForm.post(route('admin.tickets.task'), { preserveScroll: false, preserveState: false })
+
+
+
 </script>
 
 

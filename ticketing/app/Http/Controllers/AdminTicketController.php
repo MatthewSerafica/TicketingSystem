@@ -15,6 +15,7 @@ use App\Notifications\TicketMade;
 use App\Notifications\UpdateTechnicianReplace;
 use App\Notifications\UpdateTicketStatus;
 use App\Notifications\UpdateTicketTechnician;
+use App\Models\TicketTask;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -765,5 +766,32 @@ class AdminTicketController extends Controller
         ];
 
         Service::create($serviceData);
+    }
+
+    public function addTask(Request $request)
+    {
+        try {
+            $user_id = auth()->id();
+            
+            $request->validate([
+                'ticket_number' => 'required',
+                'user_id' => 'required',
+                'task_name' => 'required',
+                'is_resolved' => 'nullable',
+            ]);
+
+            $task = [
+                'ticket_number' => $request->ticket_number,
+                'task_name' => $request->task_name,
+                'user_id' => $request->user_id,
+                'is_resolved' => $request->is_resolved,
+            ];
+
+            $newTask = TicketTask::create($task);      
+
+            return redirect()->back()->with('success', 'Added Task!')->with('message', 'Task successfully Added!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }
