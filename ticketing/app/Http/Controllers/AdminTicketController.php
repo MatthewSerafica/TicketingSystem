@@ -27,6 +27,7 @@ class AdminTicketController extends Controller
     {
         $filter = $request->only(['search', 'filterTickets', 'all', 'new', 'pending', 'ongoing', 'resolved', 'from_date_filter', 'to_date_filter']);
 
+
         if (!$request->filled('from_date_filter') && !$request->filled('to_date_filter')) {
             $query = Ticket::query()
                 ->with('employee.user', 'assigned.technician.user')
@@ -283,10 +284,12 @@ class AdminTicketController extends Controller
             $reply->time_since_posted = $reply->created_at->diffForHumans();
         });
 
+        $services = Service::all();
         return inertia('Admin/Tickets/Show', [
             'ticket' => $ticket,
             'comments' => $comments,
             'replies' => $replies,
+            'services' => $services
         ]);
     }
 

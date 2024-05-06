@@ -12,6 +12,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\TicketMade;
 use App\Models\ServiceReport;
+use App\Models\TicketComment;
 use App\Notifications\UpdateTicketStatus;
 use Carbon\Carbon;
 use Exception;
@@ -142,11 +143,13 @@ class TechnicianTicketController extends Controller
 
         $problems = Problem::get();
         $filter = $request->only(['search']);
+        $services = Service::all();
         return inertia('Technician/Tickets/Create', [
             'employees' => $employees,
             'filters' => $filter,
             'new_rs' => $new,
             'problems' => $problems,
+            'services' => $services,
         ]);
     }
 
@@ -192,6 +195,22 @@ class TechnicianTicketController extends Controller
                 return redirect()->back()->with('error', 'You have already made the max number of tickets.');
             }
 
+            if (!$request->filled('problem')) {
+                $problem = Problem::create([
+                    'problem' => $request->new_problem,
+                ]);
+            } else {
+                $problem = $request->problem;
+            }
+
+            if (!$request->filled('service')) {
+                $service = Service::create([
+                    'service' => $request->new_service,
+                ]);
+            } else {
+                $service = $request->service;
+            }
+
             $ticketData = [
                 'request_type' => $request->request_type,
                 'complexity' => $request->complexity,
@@ -232,6 +251,192 @@ class TechnicianTicketController extends Controller
             return redirect()->to('/technician/tickets')->with('error', 'Invalid Ticket')->with('message', $e->getMessage());
         }
         return redirect()->to('/technician/tickets')->with('success', 'Ticket Created')->with('message', 'Admin is notified of the ticket!');
+    }
+
+    public function show(Request $request, $id)
+    {
+        $ticket = Ticket::where('ticket_number', $id)
+            ->with('employee.user', 'assigned.technician.user')
+            ->first();
+
+        $comments = TicketComment::where('ticket_number', $id)
+            ->whereNot('is_deleted', 1)
+            ->whereNull('parent_comment_id')
+            ->with('user', 'tagged.user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+
+        $comments->each(function ($comment) {
+            $comment->time_since_posted = $comment->created_at->diffForHumans();
+        });
+
+        $replies = TicketComment::where('ticket_number', $id)
+            ->whereNot('is_deleted', 1)
+            ->whereNotNull('parent_comment_id')
+            ->with('user', 'tagged.user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $replies->each(function ($reply) {
+            $reply->time_since_posted = $reply->created_at->diffForHumans();
+        });
+
+        $services = Service::all();
+        return inertia('Technician/Tickets/Show', [
+            'ticket' => $ticket,
+            'comments' => $comments,
+            'replies' => $replies,
+            'services' => $services
+        ]);
+    }
+
+    public function comment(Request $request, $id)
+    {
+        try {
+            $user_id = auth()->id();
+            $commenter = User::findOrFail($user_id);
+            $ticket = Ticket::findOrFail($id);
+
+            $request->validate([
+                'content' => 'required',
+            ]);
+
+            $comment = [
+                'ticket_number' => $id,
+                'user_id' => $user_id,
+                'content' => $request->content,
+            ];
+
+            $comment = TicketComment::create($comment);
+
+            /* $tagged = $request->tagged_user;
+
+            foreach ($tagged as $user) {
+                $tagged = TaggedUser::create([
+                    'post_id' => $post->id,
+                    'comment_id' => $comment->id,
+                    'user_id' => $user,
+                ]);
+
+                $user = User::findOrFail($user);
+                $user->notify(
+                    new UserTaggedComment($user, $comment)
+                );
+            } */
+
+            /* if ($user_id !== $post->user_id) {
+                $post->user->notify(
+                    new CommentMade($comment, $commenter->name, $post->title)
+                );
+            } */
+
+            return redirect()->back()->with('success', 'Commented on the ticket!')->with('message', 'Comment successfully posted!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function reply(Request $request, $id, $comment_id)
+    {
+        try {
+            $user_id = auth()->id();
+            $replier = User::findOrFail($user_id);
+            $ticket = Ticket::findOrFail($id);
+
+            $request->validate([
+                'parent_comment_id' => 'nullable',
+                'content' => 'required',
+            ]);
+
+            $comment = [
+                'ticket_number' => $id,
+                'parent_comment_id' => $comment_id,
+                'user_id' => $user_id,
+                'content' => $request->content,
+            ];
+
+            $reply = TicketComment::create($comment);
+
+            /* $tagged = $request->tagged_user;
+
+            foreach ($tagged as $user) {
+                $tagged = TaggedUser::create([
+                    'post_id' => $post->id,
+                    'comment_id' => $reply->id,
+                    'user_id' => $user,
+                ]);
+
+                $user = User::findOrFail($user);
+                $user->notify(
+                    new UserTaggedReply($user, $reply)
+                );
+            }
+
+            $originalComment = Comment::with('user')->find($reply->parent_comment_id);
+
+            if ($user_id !== $originalComment->user->id) {
+                $originalComment->user->notify(new ReplyMade($reply, $replier->name, $post->title));
+            } */
+
+            return redirect()->back()->with('success', 'Replied to the comment!')->with('message', 'Reply successfully posted!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function updateComment(Request $request, $id)
+    {
+        $comment = TicketComment::findOrFail($id);
+
+        $request->validate([
+            'content' => 'required',
+        ]);
+        $comment->content = $request->content;
+        $comment->save();
+
+        /* $tagged = TaggedUser::where('comment_id', $id)->get();
+
+        foreach ($tagged as $tag) {
+            $tag->delete();
+        }
+
+        $tagged = $request->tagged_user;
+
+        foreach ($tagged as $user) {
+            $tagged = TaggedUser::create([
+                'post_id' => $comment->post_id,
+                'comment_id' => $comment->id,
+                'user_id' => $user,
+            ]);
+        } */
+
+        return redirect()->back()->with('success', 'Comment successfully updated');
+    }
+
+    public function deleteComment($id)
+    {
+        $comment = TicketComment::findOrFail($id);
+        $comment->is_deleted = 1;
+        $comment->save();
+
+        $children = TicketComment::where('parent_comment_id', $id)->get();
+
+        if ($children) {
+            foreach ($children as $child) {
+                $child->is_deleted = 1;
+                $child->save();
+                $grandChildren = TicketComment::where('parent_comment_id', $child->id)->get();
+                if ($grandChildren) {
+                    foreach ($grandChildren as $grandChild) {
+                        $grandChild->is_deleted = 1;
+                        $grandChild->save();
+                    }
+                }
+            }
+        }
+
+        return redirect()->back()->with('success', 'Comment successfully deleted');
     }
 
     public function service(Request $request, $ticket_id)
@@ -331,5 +536,33 @@ class TechnicianTicketController extends Controller
         } else {
             return redirect()->back()->with('success', 'Ticket Updated!')->with('message', 'Remarks have been updated for Ticket #' . $ticket->ticket_number);
         }
+    }
+
+    public function problem(Request $request)
+    {
+        $request->validate([
+            'problem' => 'required',
+        ]);
+
+
+        $problemData = [
+            'problem' => $request->problem,
+        ];
+
+        Problem::create($problemData);
+    }
+
+    public function services(Request $request)
+    {
+        $request->validate([
+            'service' => 'required',
+        ]);
+
+
+        $serviceData = [
+            'service' => $request->service,
+        ];
+
+        Service::create($serviceData);
     }
 }

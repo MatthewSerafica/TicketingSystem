@@ -19,7 +19,7 @@
         <Header class="sticky-top" style="z-index: 110;"></Header>
 
         <div class="">
-            <Link :href="route('admin.tickets')"
+            <Link :href="route('technician.tickets')"
                 class="print-hidden btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
                 style="width: 6rem;">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
@@ -42,36 +42,21 @@
                             <div class="text-start d-flex flex-row gap-4">
                                 <div class="d-flex flex-column" style="width: 3rem;">
                                     <h7 class="text-secondary">RR No</h7>
-                                    <h5 v-if="!selectedInput || selectedInput !== 'rr'"
-                                        @click="showInput(ticket.rr_no, ticket.ticket_number, 'rr')">
+                                    <h5>
                                         {{ ticket.rr_no ? ticket.rr_no : 'N/A' }}
                                     </h5>
-                                    <input type="text" v-if="selectedInput === 'rr'" v-model="editData[ticket.rr_no]"
-                                        @blur="updateData(ticket.rr_no, ticket.ticket_number, 'rr_no', 'rr')"
-                                        @keyup.enter="updateData(ticket.rr_no, ticket.ticket_number, 'rr_no', 'rr')"
-                                        class="rounded border border-secondary-subtle text-center">
                                 </div>
                                 <div class="d-flex flex-column" style="width: 3.5rem;">
                                     <h7 class="text-secondary">MS No</h7>
-                                    <h5 v-if="!selectedInput || selectedInput !== 'ms'"
-                                        @click="showInput(ticket.rr_no, ticket.ticket_number, 'ms')">
+                                    <h5>
                                         {{ ticket.ms_no ? ticket.ms_no : 'N/A' }}
                                     </h5>
-                                    <input type="text" v-if="selectedInput === 'ms'" v-model="editData[ticket.ms_no]"
-                                        @blur="updateData(ticket.ms_no, ticket.ticket_number, 'ms_no', 'ms')"
-                                        @keyup.enter="updateData(ticket.ms_no, ticket.ticket_number, 'ms_no', 'ms')"
-                                        class="rounded border border-secondary-subtle text-center">
                                 </div>
                                 <div class="d-flex flex-column" style="width: 3.5rem;">
                                     <h7 class="text-secondary">RS No</h7>
-                                    <h5 v-if="!selectedInput || selectedInput !== 'rs'"
-                                        @click="showInput(ticket.rs_no, ticket.ticket_number, 'rs')">
+                                    <h5>
                                         {{ ticket.rs_no ? ticket.rs_no : 'N/A' }}
                                     </h5>
-                                    <input type="text" v-if="selectedInput === 'rs'" v-model="editData[ticket.rs_no]"
-                                        @blur="updateData(ticket.rs_no, ticket.ticket_number, 'rs_no', 'rs')"
-                                        @keyup.enter="updateData(ticket.rs_no, ticket.ticket_number, 'rs_no', 'rs')"
-                                        class="w-100 rounded border border-secondary-subtle text-center">
                                 </div>
                                 <div class="d-flex flex-column" style="width: 3.5rem;">
                                     <h7 class="text-secondary">SR No</h7>
@@ -210,30 +195,14 @@
                         </div>
                     </div>
                 </div>
-
-               <!-- Task List Section -->
-               <div class="col-lg-3 shadow rounded p-4 task">
+                <div class="col-lg-3 shadow rounded p-4 task">
                     <div>
                         <h6>Tasks</h6>
                     </div>
                     <div>
-                        <!-- Conditionally render the input form -->
-                        <form v-if="showTaskInput" @submit.prevent="addTask">
-                            <input type="text" v-model="taskForm.task_name" placeholder="Enter task" class="form-control mb-2">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </form>
 
-
-                        <!-- Button to toggle the input form -->
-                        <button type="button" class="btn btn-secondary mt-2" @click="toggleTaskInput">
-                            Add Task
-                        </button>
                     </div>
                 </div>
-
-
-
-
             </div>
 
             <div class="row mt-5 gap-4 justify-content-center text-center bg-white mb-3">
@@ -741,7 +710,7 @@ import Delete from "@/Components/DeleteModal.vue";
 import EmptyCard from '@/Components/EmptyState/Comments.vue';
 import EmptyProfile from '@/Components/EmptyState/Profile.vue';
 import Toast from '@/Components/Toast.vue';
-import Header from "@/Pages/Layouts/AdminHeader.vue";
+import Header from "@/Pages/Layouts/TechnicianHeader.vue";
 import { useForm, usePage } from '@inertiajs/vue3';
 import Alpine from 'alpinejs';
 import moment from "moment";
@@ -837,16 +806,16 @@ const commentForm = useForm({
     tagged_user_name: [],
 })
 
-const comment = () => commentForm.post(route('admin.ticket.comment', [props.ticket.ticket_number]), { preserveScroll: false, preserveState: false })
+const comment = () => commentForm.post(route('technician.ticket.comment', [props.ticket.ticket_number]), { preserveScroll: false, preserveState: false })
 
 const reply = (comment) => {
     selectedComment.value = comment;
-    commentForm.post(route('admin.ticket.reply', [props.ticket.ticket_number, selectedComment.value]), { preserveScroll: false, preserveState: false })
+    commentForm.post(route('technician.ticket.reply', [props.ticket.ticket_number, selectedComment.value]), { preserveScroll: false, preserveState: false })
 }
 
 const replyMore = (comment) => {
     selectedComment.value = comment;
-    commentForm.post(route('admin.ticket.reply', [props.ticket.ticket_number, selectedComment.value]), { preserveScroll: false, preserveState: false })
+    commentForm.post(route('technician.ticket.reply', [props.ticket.ticket_number, selectedComment.value]), { preserveScroll: false, preserveState: false })
 }
 
 let isShowEdit = ref(false);
@@ -881,7 +850,7 @@ const editComment = useForm({
     tagged_user_name: [],
 })
 
-const edit = (comment) => editComment.put(route('admin.ticket.edit.comment', [comment]), { preserveScroll: false, preserveState: false });
+const edit = (comment) => editComment.put(route('technician.ticket.edit.comment', [comment]), { preserveScroll: false, preserveState: false });
 
 const isShowDelete = ref(false);
 
@@ -935,7 +904,7 @@ const updateData = async (data, id, updateField, type) => {
     try {
         // Assuming useForm and form.put return promises
         const form = useForm(formData);
-        await form.put(route('admin.tickets.update', { ticket_id: id, field: updateField }));
+        await form.put(route('technician.tickets.update', { ticket_id: id, field: updateField }));
         console.log('finished updating data');
     } catch (error) {
         console.error('Error updating data:', error);
@@ -951,7 +920,7 @@ const updateComplexity = (ticket_id, complexity) => {
         complexity: complexity,
     });
 
-    form.put(route('admin.tickets.update.complexity', { ticket_id: ticket_id }));
+    form.put(route('technician.tickets.update.complexity', { ticket_id: ticket_id }));
 }
 
 const updateService = (ticket_id, service) => {
@@ -959,7 +928,7 @@ const updateService = (ticket_id, service) => {
         service: service,
     });
 
-    form.put(route('admin.tickets.update.service', { ticket_id: ticket_id }));
+    form.put(route('technician.tickets.update.service', { ticket_id: ticket_id }));
 }
 
 
@@ -991,7 +960,7 @@ const updateStatus = (ticket_id, status, old_status, srNo) => {
         old_status: old_status,
     });
 
-    form.put(route('admin.tickets.update.status', { ticket_id: ticket_id }));
+    form.put(route('technician.tickets.update.status', { ticket_id: ticket_id }));
 }
 
 const getComplexityClass = (complexity) => {
@@ -1019,23 +988,6 @@ const getButtonClass = (status) => {
             return 'btn btn-secondary';
     }
 };
-
-const taskForm = useForm({
-    ticket_number : props.ticket.ticket_number,
-    user_id: page.props.user.id,
-	task_name : null,
-	is_resolved : null,
-})
-const showTaskInput = ref(false);
-const newTask = ref('');
-function toggleTaskInput() {
-    showTaskInput.value = !showTaskInput.value;
-    newTask.value = ''; // Reset input field when toggling
-}
-const addTask = () => taskForm.post(route('admin.tickets.task'), { preserveScroll: false, preserveState: false })
-
-
-
 </script>
 
 
