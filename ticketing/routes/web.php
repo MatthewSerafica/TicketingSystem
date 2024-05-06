@@ -137,6 +137,8 @@ Route::middleware(['web'])->group(function () {
         Route::put('/technician/tickets/update-status/{ticket_id}', [TechnicianTicketController::class, 'status'])->name('technician.tickets.update.status');
         Route::put('/technician/tickets/update-service/{ticket_id}', [TechnicianTicketController::class, 'service'])->name('technician.tickets.update.service');
         Route::put('/technician/tickets/update/{field}/{ticket_id}', [TechnicianTicketController::class, 'update'])->name('technician.tickets.update');
+        Route::post('/technician/tickets/problems/create/store', [TechnicianTicketController::class, 'problem'])->name('technician.ticket.problems.store');
+        Route::post('/technician/tickets/services/create/store', [TechnicianTicketController::class, 'services'])->name('technician.ticket.services.store');
 
         Route::get('/technician/service-report', [TechnicianServiceController::class, 'index'])->name('technician.service-reports');
         Route::post('/technician/service-report/back/{service_id}', [TechnicianServiceController::class, 'back'])->name('technician.service-reports.back');

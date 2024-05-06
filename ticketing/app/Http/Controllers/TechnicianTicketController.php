@@ -192,6 +192,22 @@ class TechnicianTicketController extends Controller
                 return redirect()->back()->with('error', 'You have already made the max number of tickets.');
             }
 
+            if (!$request->filled('problem')) {
+                $problem = Problem::create([
+                    'problem' => $request->new_problem,
+                ]);
+            } else {
+                $problem = $request->problem;
+            }
+
+            if (!$request->filled('service')) {
+                $service = Service::create([
+                    'service' => $request->new_service,
+                ]);
+            } else {
+                $service = $request->service;
+            }
+
             $ticketData = [
                 'request_type' => $request->request_type,
                 'complexity' => $request->complexity,
@@ -331,5 +347,33 @@ class TechnicianTicketController extends Controller
         } else {
             return redirect()->back()->with('success', 'Ticket Updated!')->with('message', 'Remarks have been updated for Ticket #' . $ticket->ticket_number);
         }
+    }
+
+    public function problem(Request $request)
+    {
+        $request->validate([
+            'problem' => 'required',
+        ]);
+
+
+        $problemData = [
+            'problem' => $request->problem,
+        ];
+
+        Problem::create($problemData);
+    }
+
+    public function services(Request $request)
+    {
+        $request->validate([
+            'service' => 'required',
+        ]);
+
+
+        $serviceData = [
+            'service' => $request->service,
+        ];
+
+        Service::create($serviceData);
     }
 }
