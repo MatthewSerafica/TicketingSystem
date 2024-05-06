@@ -71,8 +71,8 @@
                     <span>
                       No
                     </span>
-                    <i
-                      :class="{ 'bi bi-caret-up-fill': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-caret-down-fill': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-caret-down-fill text-muted': sortColumn !== 'ticket_number' }"></i>
+                      <!-- <i
+                        :class="{ 'bi bi-caret-up-fill': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-caret-down-fill': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-caret-down-fill text-muted': sortColumn !== 'ticket_number' }"></i> -->
                   </div>
                 </th>
                 <th class="text-muted">Date</th>
@@ -374,12 +374,13 @@ let sortDirection = ref("desc");
 let timeoutId = null;
 
 const fetchData = (type, all, ne, pending, ongoing, resolved) => {
-  if (!from_date_filter.value) {
+  console.log('test', from_date_filter.value, to_date_filter.value)
+  /* if (!from_date_filter.value) {
     from_date_filter.value = new Date().toISOString().split('T')[0];
   }
   if (!to_date_filter.value) {
     to_date_filter.value = new Date().toISOString().split('T')[0];
-  }
+  } */
   router.get(
     route('admin.tickets'),
     {
@@ -490,10 +491,15 @@ const filterTickets = async (type) => {
 const handleSort = (column) => {
   if (sortColumn.value === column) {
     sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
+    from_date_filter.value = null;
+    to_date_filter.value = null;
   } else {
     sortColumn.value = column;
     sortDirection.value = "asc";
+    from_date_filter.value = null;
+    to_date_filter.value = null;
   }
+  console.log('sort', from_date_filter.value, to_date_filter.value)
   fetchData();
 };
 // Sort end
