@@ -145,7 +145,8 @@
                         </li>
                         <li class="dropdown-divider"></li>
                           <li class="dropdown-item">
-                          <input type="text" class="form-control" v-model="form.otherService" placeholder="Enter custom service">
+                          <input type="text" class="form-control" v-model="newService.service" placeholder="Enter custom service"
+                          @keyup.enter="createNewService">
                           </li>
                       </ul>
                     </div>
@@ -447,6 +448,14 @@ const newProblem = useForm({
 const createNewProblem = () => {
   newProblem.post(route('admin.ticket.problems.store'), {preserveScroll:false, preserveState:true});
   form.problem = newProblem.problem;
+}
+const newService = useForm({
+  service: null,
+})
+
+const createNewService = () => {
+  newService.post(route('admin.ticket.services.store'), {preserveScroll:false, preserveState:true});
+  form.service = newService.service;
 }
 
 
