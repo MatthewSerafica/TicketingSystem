@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AssignedTickets;
 use App\Models\Employee;
 use App\Models\HistoryNumber;
+use App\Models\Log;
 use App\Models\Service;
 use App\Models\ServiceReport;
 use App\Models\Technician;
@@ -12,6 +13,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\UpdateTicketStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminServiceReportController extends Controller
 {
@@ -115,7 +117,7 @@ class AdminServiceReportController extends Controller
 
         $employee = Employee::find($ticket->employee);
         $employee->user->notify(new UpdateTicketStatus($ticket));
-        
+
         $history = HistoryNumber::where('ticket_number', $request->ticket_number)->first();
         $history->sr_no = $request->service_id;
         $history->save();
@@ -134,6 +136,17 @@ class AdminServiceReportController extends Controller
                 }
             }
         }
+
+        $auth = Auth::user();
+        $service_data_json = json_encode($serviceData, JSON_PRETTY_PRINT);
+        $action_taken = "Created Service Report #" . $request->service_id . "\n" .
+            "Details: " . $service_data_json . "\n";
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
 
         return redirect()->to('/admin/reports/service-report')->with('success', 'Report Created');
     }
@@ -156,7 +169,8 @@ class AdminServiceReportController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $service_report = ServiceReport::where('service_id', $id)->first();
 
         $request->validate([
@@ -200,6 +214,17 @@ class AdminServiceReportController extends Controller
             'status' => 'Resolved',
             'remarks' => $request->remarks,
         ]);
+        
+        $auth = Auth::user();
+        $service_data_json = json_encode($serviceData, JSON_PRETTY_PRINT);
+        $action_taken = "Updated Service Report #" . $request->service_id . "\n" .
+            "Details: " . $service_data_json . "\n";
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
 
 
         return redirect()->to(route('admin.reports.service-reports'))->with('success', 'Service Report updated successfully!');

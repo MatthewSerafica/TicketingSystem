@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminDepartmentController extends Controller
 {
@@ -12,7 +14,7 @@ class AdminDepartmentController extends Controller
         $request->validate([
             'search' => 'nullable|string|max:255', // Example validation rule for search
         ]);
-        
+
         $departments = Department::query()
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->input('search');
@@ -50,6 +52,16 @@ class AdminDepartmentController extends Controller
 
         Department::create($departmentData);
 
+
+        $auth = Auth::user();
+        $action_taken = "Added a new department " .  $request->department;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
         return redirect()->to('/admin/department')->with('success', 'Department Created!')->with('message', $request->department . ' is added to the departments!');
     }
 
@@ -62,6 +74,15 @@ class AdminDepartmentController extends Controller
         $department = Department::findOrFail($department_id);
         $old_department = $department->department;
         $department->update(['department' => $request->department]);
+        
+        $auth = Auth::user();
+        $action_taken = "Updated a department from " . $old_department . " to " .  $request->department;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
 
         return redirect()->back()->with('success', 'Department Updated!')->with('message', $old_department . ' is updated to ' . $request->department);
     }
@@ -71,6 +92,15 @@ class AdminDepartmentController extends Controller
         $department = Department::findOrFail($id);
         $name = $department->department;
         $department->delete();
+
+        $auth = Auth::user();
+        $action_taken = "Removed " . $name . " department";
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
 
         return redirect()->back()->with('success', 'Department Deleted!')->with('message', $name . ' has been deleted from the departments');
     }

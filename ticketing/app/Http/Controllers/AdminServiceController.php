@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Log;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminServiceController extends Controller
 {
@@ -46,6 +48,15 @@ class AdminServiceController extends Controller
 
         Service::create($serviceData);
 
+        $auth = Auth::user();
+        $action_taken = "Added a new service " .  $request->service;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
         return redirect()->to('/admin/services')->with('success', 'Services Created!')->with('message', $request->service . ' is added to the Services!');
     }
 
@@ -60,6 +71,15 @@ class AdminServiceController extends Controller
         $service->service = $request->service;
         $service->save();
 
+        $auth = Auth::user();
+        $action_taken = "Updated a service from " . $old_service . " to " .  $request->service;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
         return redirect()->back()->with('success', 'Service Updated!')->with('message', $old_service . ' is updated to ' . $request->service);
     }
 
@@ -68,6 +88,15 @@ class AdminServiceController extends Controller
         $service = Service::findOrFail($id);
         $name = $service->service;
         $service->delete();
+
+        $auth = Auth::user();
+        $action_taken = "Removed " . $name . " service";
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
 
         return redirect()->back()->with('success', 'Service Deleted!')->with('message', $name . ' has been deleted from services');
     }

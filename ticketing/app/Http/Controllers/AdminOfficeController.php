@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Log;
 use App\Models\Office;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminOfficeController extends Controller
 {
@@ -46,6 +48,15 @@ class AdminOfficeController extends Controller
 
         Office::create($officeData);
 
+        $auth = Auth::user();
+        $action_taken = "Added a new office " .  $request->office;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
         return redirect()->to('/admin/office')->with('success', 'Office Created!')->with('message', $request->office . ' is added to the offices!');
     }
 
@@ -60,6 +71,15 @@ class AdminOfficeController extends Controller
         $office->office = $request->office;
         $office->save();
 
+        $auth = Auth::user();
+        $action_taken = "Updated an office from " . $old_office . " to " .  $request->office;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
         return redirect()->back()->with('success', 'Office Updated!')->with('message', $old_office . ' is updated to ' . $request->office);
     }
 
@@ -68,8 +88,16 @@ class AdminOfficeController extends Controller
         $office = Office::findOrFail($id);
         $name = $office->office;
         $office->delete();
+        
+        $auth = Auth::user();
+        $action_taken = "Removed " . $name . " office";
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
 
         return redirect()->back()->with('success', 'Office Deleted!')->with('message', $name . ' has been deleted from offices');
     }
-
 }

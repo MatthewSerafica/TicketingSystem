@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminTicketController;
 use App\Http\Controllers\AdminUsersController;
 use App\Http\Controllers\AdminDepartmentController;
 use App\Http\Controllers\AdminGenerateReportController;
+use App\Http\Controllers\AdminLogsController;
 use App\Http\Controllers\AdminOfficeController;
 use App\Http\Controllers\AdminNotificationController;
 use App\Http\Controllers\AdminServiceController;
@@ -116,6 +117,8 @@ Route::middleware(['web'])->group(function () {
         Route::post('/admin/problems/create/store', [AdminProblemController::class, 'store'])->name('admin.problems.store');
         Route::put('/admin/problems/update/{problem_id}', [AdminProblemController::class, 'update'])->name('admin.problems.update');
         Route::delete('/admin/problems/delete/{problem_id}', [AdminProblemController::class, 'destroy'])->name('admin.problems.delete');
+        
+        Route::get('/admin/logs', [AdminLogsController::class, 'index'])->name('admin.logs');
 
         Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications');
         Route::post('/admin/notifications/seen', [AdminNotificationController::class, 'update'])->name('admin.notifications.seen');

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Log;
 use App\Models\Problem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminProblemController extends Controller
 {
@@ -45,6 +47,15 @@ class AdminProblemController extends Controller
         ];
 
         Problem::create($problemData);
+        
+        $auth = Auth::user();
+        $action_taken = "Added a new problem encountered " .  $request->problem;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
 
         return redirect()->to('/admin/problems')->with('success', 'Titles Created!')->with('message', $request->problem . ' is added to the Titles!');
     }
@@ -60,6 +71,15 @@ class AdminProblemController extends Controller
         $problem->problem = $request->problem;
         $problem->save();
 
+        $auth = Auth::user();
+        $action_taken = "Updated a problem from " . $old_problem . " to " .  $request->problem;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
         return redirect()->back()->with('success', 'Titles Updated!')->with('message', $old_problem . ' is updated to ' . $request->problem);
     }
 
@@ -68,6 +88,15 @@ class AdminProblemController extends Controller
         $problem = Problem::findOrFail($id);
         $name = $problem->problem;
         $problem->delete();
+
+        $auth = Auth::user();
+        $action_taken = "Removed " . $name . " problem";
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
 
         return redirect()->back()->with('success', 'Title Deleted!')->with('message', $name . ' has been deleted from Titles');
     }

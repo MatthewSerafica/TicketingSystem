@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AssignedTickets;
 use App\Models\Employee;
 use App\Models\HistoryNumber;
+use App\Models\Log;
 use App\Models\Technician;
 use App\Models\Ticket;
 use App\Models\ServiceReport;
@@ -13,6 +14,7 @@ use App\Notifications\ResolvedTicket;
 use App\Notifications\UpdateTicketStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TechnicianServiceController extends Controller
 {
@@ -61,7 +63,7 @@ class TechnicianServiceController extends Controller
             $ticket_id = null;
             $date_done = null;
         }
-        
+
         $user_id = auth()->id();
         $technician = Technician::where('user_id', $user_id)->with('user')->first();
         $tickets = Ticket::with('employee.user', 'assigned.technician.user')
@@ -160,6 +162,17 @@ class TechnicianServiceController extends Controller
                 'remarks' => $request->remarks,
             ];
             ServiceReport::create($serviceData);
+            
+            $auth = Auth::user();
+            $service_data_json = json_encode($serviceData, JSON_PRETTY_PRINT);
+            $action_taken = "Created Service Report #" . $request->service_id . "\n" .
+                "Details: " . $service_data_json . "\n";
+            $log_data = [
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action_taken,
+            ];
+            Log::create($log_data);
         }
 
         $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
@@ -184,13 +197,15 @@ class TechnicianServiceController extends Controller
 
         $employee = Employee::find($ticket->employee);
         $employee->user->notify(new UpdateTicketStatus($ticket));
-        
+
         $admins = User::where('user_type', 'admin')->get();
         foreach ($admins as $admin) {
             $admin->notify(
                 new ResolvedTicket($ticket, $request->technician, $employee->user->name, $employee->office, $employee->department)
             );
         }
+
+
         return redirect()->to('/technician/service-report')->with('success', 'Report Created');
     }
 

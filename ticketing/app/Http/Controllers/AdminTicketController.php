@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AssignedTickets;
 use App\Models\Employee;
 use App\Models\HistoryNumber;
+use App\Models\Log;
 use App\Models\Service;
 use App\Models\Technician;
 use App\Models\Problem;
@@ -19,6 +20,7 @@ use App\Models\TicketTask;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AdminTicketController extends Controller
@@ -248,6 +250,18 @@ class AdminTicketController extends Controller
             $employee->user->notify(
                 new TicketMade($ticket, $request->technician, $employee->user->name, $employee->office, $employee->department)
             );
+
+            $auth = Auth::user();
+            $ticket_data_json = json_encode($ticket_data, JSON_PRETTY_PRINT);
+            $action_taken = "Created a new ticket #" . $ticket->ticket_number . "\n" .
+                "Details: " . $ticket_data_json . "\n";
+            $log_data = [
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action_taken,
+            ];
+            Log::create($log_data);
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -286,7 +300,7 @@ class AdminTicketController extends Controller
 
         $services = Service::all();
 
-        $tasks =TicketTask::where('ticket_number', $id)
+        $tasks = TicketTask::where('ticket_number', $id)
             ->with('user')
             ->orderBy('created_at', 'asc')
             ->get();
@@ -299,8 +313,6 @@ class AdminTicketController extends Controller
             'services' => $services,
             'tasks' => $tasks,
         ]);
-        
-
     }
 
     public function comment(Request $request, $id)
@@ -498,10 +510,19 @@ class AdminTicketController extends Controller
 
         $input = $fieldMappings[$field] ?? $field;
 
+        $auth = Auth::user();
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . $input . ' to ' . $request->$field;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
         if (!$request->$field) {
-            return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', $input . ' is now removed from Ticket #' . $ticket->ticket_number);
+            return redirect()->back()->with('success', 'Ticket Update!')->with('message', $input . ' is now removed from Ticket #' . $ticket->ticket_number);
         } else {
-            return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', $input . ' ' . $request->$field . ' is now assigned to Ticket #' . $ticket->ticket_number);
+            return redirect()->back()->with('success', 'Ticket Update!')->with('message', $input . ' ' . $request->$field . ' is now assigned to Ticket #' . $ticket->ticket_number);
         }
     }
 
@@ -543,6 +564,16 @@ class AdminTicketController extends Controller
                     new UpdateTicketTechnician($ticket, $employee->user->name, $employee->department, $employee->office,)
                 );
             }
+
+            $auth = Auth::user();
+            $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'assigned technicians';
+            $log_data = [
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action_taken,
+            ];
+            Log::create($log_data);
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -581,6 +612,15 @@ class AdminTicketController extends Controller
 
         $employee->user->notify(new UpdateTicketStatus($ticket));
         $ticket->save();
+
+        $auth = Auth::user();
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'status to ' . $request->status . ' from ' . $request->old_status;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
 
         return redirect()->back()
             ->with('success', 'Status Update!')
@@ -630,6 +670,16 @@ class AdminTicketController extends Controller
             $ticket->status = 'Pending';
         }
         $ticket->save();
+
+        $auth = Auth::user();
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'service to ' . $request->service;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
         return redirect()->back()->with('success', 'Service Update!')->with('message', $request->service . ' service is now assigned to Ticket No. ' . $ticket->ticket_number);
     }
 
@@ -643,6 +693,15 @@ class AdminTicketController extends Controller
 
         $ticket->remarks = $request->remark;
         $ticket->save();
+        
+        $auth = Auth::user();
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'remarks to ' . $request->remark;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
         return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', 'Successfuly added remarks to Ticket No. ' . $ticket->ticket_number);
     }
 
@@ -659,6 +718,17 @@ class AdminTicketController extends Controller
             $ticket->status = 'Pending';
         }
         $ticket->save();
+
+
+        $auth = Auth::user();
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'complexity to ' . $request->complexity;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
         return redirect()->back()->with('success', 'Receiving Report Update!')->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now set as ' . $request->complexity);
     }
 
@@ -715,6 +785,16 @@ class AdminTicketController extends Controller
                 new UpdateTicketTechnician($ticket, $employee->user->name, $employee->department, $employee->office,)
             );
 
+
+            $auth = Auth::user();
+            $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'assigned technicians, replaced a technician';
+            $log_data = [
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action_taken,
+            ];
+            Log::create($log_data);
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -742,6 +822,16 @@ class AdminTicketController extends Controller
                 $technician->tickets_assigned = $technician->tickets_assigned - 1;
                 $technician->save();
             }
+            
+            $auth = Auth::user();
+            $action_taken = "Removed a technician from  ticket #" .  $request->ticket_number;
+            $log_data = [
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action_taken,
+            ];
+            Log::create($log_data);
+            
             return redirect()->back()->with('success', 'Technician removed!')->with('message', 'Technician successfully removed from Ticket #' . $request->ticket_number);
         }
     }
@@ -765,6 +855,15 @@ class AdminTicketController extends Controller
         ];
 
         Problem::create($problemData);
+
+        $auth = Auth::user();
+        $action_taken = "Added a new problem " .  $request->problem;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
     }
 
     public function services(Request $request)
@@ -779,13 +878,22 @@ class AdminTicketController extends Controller
         ];
 
         Service::create($serviceData);
+
+        $auth = Auth::user();
+        $action_taken = "Added a new service " .  $request->service;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
     }
 
     public function addTask(Request $request)
     {
         try {
             $user_id = auth()->id();
-            
+
             $request->validate([
                 'ticket_number' => 'required',
                 'user_id' => 'required',
@@ -800,7 +908,7 @@ class AdminTicketController extends Controller
                 'is_resolved' => $request->is_resolved,
             ];
 
-            $newTask = TicketTask::create($task);      
+            $newTask = TicketTask::create($task);
 
             return redirect()->back()->with('success', 'Added Task!')->with('message', 'Task successfully Added!');
         } catch (Exception $e) {
@@ -814,27 +922,24 @@ class AdminTicketController extends Controller
             $request->validate([
                 'is_resolved' => 'nullable|boolean', // Update validation rule to expect boolean
             ]);
-    
+
             $task = TicketTask::where('ticket_number', $request->ticket_number)->first();
-    
+
             // Handle checkbox value conversion to timestamp or boolean
             $isResolved = $request->input('is_resolved'); // Assuming 'is_resolved' is sent from the frontend
-    
+
             if ($isResolved === true) {
                 $task->is_resolved = now()->toDateTimeString(); // Convert to timestamp if checkbox is checked
             } else {
                 $task->is_resolved = null; // Set to null if checkbox is not checked
             }
-    
+
             $task->save();
-    
+
             return redirect()->back()
                 ->with('success', 'Task Completed!');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
-    
-
-    
 }

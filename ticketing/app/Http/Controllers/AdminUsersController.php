@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Department;
 use App\Models\Employee;
+use App\Models\Log;
 use App\Models\Office;
 use App\Models\ServiceReport;
 use App\Models\Technician;
@@ -110,6 +111,16 @@ class AdminUsersController extends Controller
                     'assigned_department' => $request->assigned
                 ]);
             }
+
+            $auth = Auth::user();
+            $action_taken = "Added a new user " .  $request->name;
+            $log_data = [
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action_taken,
+            ];
+            Log::create($log_data);
+
             DB::commit();
             return redirect(route('admin.users'))->with('success', 'User created!');
         } catch (QueryException $e) {
@@ -297,6 +308,16 @@ class AdminUsersController extends Controller
         $old_name = $user->name;
         $user->name = $request->name;
         $user->save();
+
+        $auth = Auth::user();
+        $action_taken = "Updated a user's name from " . $old_name . " to " .  $request->name;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
         return redirect()->back()->with('success', 'Name Update!')->with('message', $old_name . ' is updated to ' . $request->name);
     }
 
@@ -310,6 +331,16 @@ class AdminUsersController extends Controller
         $old = $user->email;
         $user->email = $request->email;
         $user->save();
+
+        $auth = Auth::user();
+        $action_taken = "Updated a user's email from " . $old . " to " .  $request->email;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
         return redirect()->back()->with('success', 'Name Update!')->with('message', $old . ' is updated to ' . $request->email);
     }
 
@@ -324,6 +355,15 @@ class AdminUsersController extends Controller
         $user->$field = $request->$field;
         $user->save();
         $input = ucfirst($field);
+
+        $auth = Auth::user();
+        $action_taken = "Updated a user from " . $old . " to " .  $request->$field;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
 
         return redirect()->back()->with('success', $input . ' Update!')->with('message', $old . ' is updated to ' . $request->$field);
     }
@@ -340,6 +380,15 @@ class AdminUsersController extends Controller
         $employee->save();
         $input = ucfirst($field);
 
+        $auth = Auth::user();
+        $action_taken = "Updated a user from " . $old . " to " .  $request->$field;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
         return redirect()->back()->with('success', $input . ' Update!')->with('message', $old . ' is updated to ' . $request->$field);
     }
 
@@ -354,6 +403,15 @@ class AdminUsersController extends Controller
         $technician->$field = $request->$field;
         $technician->save();
         $input = ucfirst($field);
+
+        $auth = Auth::user();
+        $action_taken = "Updated a user from " . $old . " to " .  $request->$field;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
 
         return redirect()->back()->with('success', $input . ' Update!')->with('message', $old . ' is updated to ' . $request->$field);
     }
@@ -452,6 +510,15 @@ class AdminUsersController extends Controller
             }
             $this->insertChunk($employees);
             $this->insertChunkt($technicians);
+
+            $auth = Auth::user();
+            $action_taken = "Imported new users";
+            $log_data = [
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action_taken,
+            ];
+            Log::create($log_data);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

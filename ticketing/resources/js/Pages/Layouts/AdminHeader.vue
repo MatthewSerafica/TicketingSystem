@@ -50,6 +50,7 @@
                                 <li><a class="dropdown-item" href="/admin/office">Offices</a></li>
                                 <li><a class="dropdown-item" href="/admin/services">Services</a></li>
                                 <li><a class="dropdown-item" href="/admin/problems">Problem Encountered</a></li>
+                                <li><a class="dropdown-item" href="/admin/logs">Logs</a></li>
                             </ul>
                         </li>
                     </ul>

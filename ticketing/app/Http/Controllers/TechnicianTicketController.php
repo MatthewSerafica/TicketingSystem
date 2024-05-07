@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AssignedTickets;
 use App\Models\Employee;
 use App\Models\HistoryNumber;
+use App\Models\Log;
 use App\Models\Service;
 use App\Models\Problem;
 use App\Models\Technician;
@@ -17,6 +18,7 @@ use App\Notifications\UpdateTicketStatus;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TechnicianTicketController extends Controller
@@ -245,6 +247,18 @@ class TechnicianTicketController extends Controller
                     new TicketMade($ticket, $technician->user->name, $employee->user->name, $employee->office, $employee->department)
                 );
             }
+
+            $auth = Auth::user();
+            $ticket_data_json = json_encode($ticketData, JSON_PRETTY_PRINT);
+            $action_taken = "Created a new ticket #" . $ticket->ticket_number . "\n" .
+                "Details: " . $ticket_data_json . "\n";
+            $log_data = [
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action_taken,
+            ];
+            Log::create($log_data);
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -452,6 +466,16 @@ class TechnicianTicketController extends Controller
             $ticket->status = 'Pending';
         }
         $ticket->save();
+
+        $auth = Auth::user();
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'service to ' . $request->service;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
         return redirect()->back()->with('success', 'Ticket Updated!')->with('message', $request->service . ' service is now assigned to Ticket No. ' . $ticket->ticket_number);
     }
 
@@ -468,6 +492,16 @@ class TechnicianTicketController extends Controller
             $ticket->status = 'Pending';
         }
         $ticket->save();
+
+        $auth = Auth::user();
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'complexity to ' . $request->complexity;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
         return redirect()->back()->with('success', 'Ticket Updated!')->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now set as ' . $request->complexity);
     }
 
@@ -484,6 +518,15 @@ class TechnicianTicketController extends Controller
         $ticket->save();
 
         $employee->user->notify(new UpdateTicketStatus($ticket));
+
+        $auth = Auth::user();
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'status to ' . $request->status;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
 
         return redirect()->back()
             ->with('success', 'Ticket Updated!')
@@ -525,8 +568,16 @@ class TechnicianTicketController extends Controller
                 $ticket->resolved_at = now();
                 $ticket->status = 'Resolved';
             }
-
             $ticket->save();
+
+            $auth = Auth::user();
+            $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s SR No. to " . $request->$field;
+            $log_data = [
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action_taken,
+            ];
+            Log::create($log_data);
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'An error occurred!')->with('message', $e->getMessage());
         }
@@ -550,6 +601,15 @@ class TechnicianTicketController extends Controller
         ];
 
         Problem::create($problemData);
+        
+        $auth = Auth::user();
+        $action_taken = "Added a new problem " .  $request->problem;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
     }
 
     public function services(Request $request)
@@ -564,5 +624,14 @@ class TechnicianTicketController extends Controller
         ];
 
         Service::create($serviceData);
+
+        $auth = Auth::user();
+        $action_taken = "Added a new service " .  $request->service;
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
     }
 }
