@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div class="position-absolute end-0 me-3" style="z-index: 100; margin-top: 5rem;">
     <Toast
       x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
@@ -316,6 +317,7 @@
       <EmptyCard :title="'No tickets yet...'" v-else class="mt-2 w-75" style="height:20rem;">
       </EmptyCard>
     </div>
+  </div>
   </div>
 </template>
 
