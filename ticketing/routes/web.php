@@ -87,6 +87,8 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/reports/service-report/{id}/assigned-technicians', [AdminServiceReportController::class, 'assigned'])->name('admin.tickets.assigned');
 
         Route::get('/admin/reports/generate-report', [AdminGenerateReportController::class, 'index'])->name('admin.reports.generate-report');
+        Route::get('/admin/reports/collate', [AdminGenerateReportController::class, 'showCollate'])->name('admin.reports.collate');
+        Route::get('/admin/reports/collate/print', [AdminGenerateReportController::class, 'printCollate'])->name('admin.reports.collate.print');
         Route::get('/admin/reports/generate-report/show/{from}/{to}', [AdminGenerateReportController::class, 'show'])->name('admin.reports.generate-report.show');
         Route::get('/admin/reports/generate-report/{year}/{month}/print', [AdminGenerateReportController::class, 'print'])->name('admin.reports.generate-report.print');
 

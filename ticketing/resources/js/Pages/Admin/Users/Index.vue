@@ -70,7 +70,10 @@
         </div>
       </div>
       <div class="w-75 table-responsive mt-2">
-        <div v-if="users.data.length" class="d-flex justify-content-end mb-2">
+        <div v-if="users.data.length" class="d-flex justify-content-between mb-2">
+          <div>
+            <Link :href="route('admin.reports.collate')" class="btn btn-primary">All Technician Stats</Link>
+          </div>
           <Pagination :links="users.links" :filter="filter" :key="'users'" />
         </div>
         <table class="table table-hover shadow custom-rounded-table">
@@ -345,6 +348,4 @@ const formatDate = (date) => {
   font-size: 20px;
   cursor: pointer;
 }
-
-   
 </style>
