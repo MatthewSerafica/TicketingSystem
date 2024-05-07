@@ -285,12 +285,22 @@ class AdminTicketController extends Controller
         });
 
         $services = Service::all();
+
+        $tasks =TicketTask::where('ticket_number', $id)
+            ->with('user')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+
         return inertia('Admin/Tickets/Show', [
             'ticket' => $ticket,
             'comments' => $comments,
             'replies' => $replies,
-            'services' => $services
+            'services' => $services,
+            'tasks' => $tasks,
         ]);
+        
+
     }
 
     public function comment(Request $request, $id)
@@ -797,4 +807,34 @@ class AdminTicketController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+    public function updateTask(Request $request)
+    {
+        try {
+            $request->validate([
+                'is_resolved' => 'nullable|boolean', // Update validation rule to expect boolean
+            ]);
+    
+            $task = TicketTask::where('ticket_number', $request->ticket_number)->first();
+    
+            // Handle checkbox value conversion to timestamp or boolean
+            $isResolved = $request->input('is_resolved'); // Assuming 'is_resolved' is sent from the frontend
+    
+            if ($isResolved === true) {
+                $task->is_resolved = now()->toDateTimeString(); // Convert to timestamp if checkbox is checked
+            } else {
+                $task->is_resolved = null; // Set to null if checkbox is not checked
+            }
+    
+            $task->save();
+    
+            return redirect()->back()
+                ->with('success', 'Task Completed!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+    
+
+    
 }

@@ -211,25 +211,40 @@
                     </div>
                 </div>
 
-               <!-- Task List Section -->
-               <div class="col-lg-3 shadow rounded p-4 task">
-                    <div>
-                        <h6>Tasks</h6>
-                    </div>
-                    <div>
-                        <!-- Conditionally render the input form -->
-                        <form v-if="showTaskInput" @submit.prevent="addTask">
-                            <input type="text" v-model="taskForm.task_name" placeholder="Enter task" class="form-control mb-2">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </form>
-
-
-                        <!-- Button to toggle the input form -->
-                        <button type="button" class="btn btn-secondary mt-2" @click="toggleTaskInput">
-                            Add Task
-                        </button>
-                    </div>
+                
+<!-- Task List Section -->
+<div class="col-lg-3 shadow rounded p-4 task">
+    <div>
+        <h6>Tasks</h6>
+    </div>
+    <div>
+        <!-- Display tasks as Bootstrap checkboxes with formatted created_at -->
+        <div v-if="tasks.length > 0">
+            <div v-for="task in tasks" :key="task.id" class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                    <input class="form-check-input" type="checkbox" v-model="updatedTaskForm.is_resolved" :id="'taskCheckbox' + task.id" @change="updateTask">
+            <label class="form-check-label" :for="'taskCheckbox' + task.id">
+              {{ task.task_name }}
+            </label>
                 </div>
+                <!-- Secondary text for formatted created_at -->
+                <small class="text-muted tasks-date">{{ formatDateTime(task.created_at) }}</small>
+            </div>
+        </div>
+        <div v-else>
+            No tasks available.
+        </div>
+        <form v-if="showTaskInput" @submit.prevent="addTask">
+            <input type="text" v-model="taskForm.task_name" placeholder="Enter task" class="form-control mb-2">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+        <!-- Button to toggle the input form -->
+        <button type="button" class="btn btn-secondary mt-2" @click="toggleTaskInput">
+            Add Task
+        </button>
+    </div>
+</div>
+
 
 
 
@@ -773,12 +788,17 @@ const props = defineProps({
     comments: Object,
     replies: Object,
     services: Object,
+    tasks: Object,
 })
 
 const formatDate = (date) => {
     return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
 };
 
+
+const formatDateTime = (date) => {
+    return moment(date).format('MMM DD, YYYY HH:mm');
+};
 // Comment Start
 
 const commentTextarea = ref(null);
@@ -1026,8 +1046,10 @@ const taskForm = useForm({
 	task_name : null,
 	is_resolved : null,
 })
+
 const showTaskInput = ref(false);
 const newTask = ref('');
+
 function toggleTaskInput() {
     showTaskInput.value = !showTaskInput.value;
     newTask.value = ''; // Reset input field when toggling
@@ -1035,11 +1057,23 @@ function toggleTaskInput() {
 const addTask = () => taskForm.post(route('admin.tickets.task'), { preserveScroll: false, preserveState: false })
 
 
+const updatedTaskForm = useForm({
+    ticket_number : props.ticket.ticket_number,
+	is_resolved : null,
+})
+
+const updateTask = () => updatedTaskForm.put(route('admin.tickets.task.update'), { preserveScroll: false, preserveState: false })
+
 
 </script>
 
 
 <style>
+.tasks-date {
+    font-style: italic;
+}
+
+
 .btn:hover {
     scale: 0.9;
 }
