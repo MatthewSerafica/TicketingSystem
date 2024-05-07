@@ -6,14 +6,14 @@
         <br />
         <div class="container">
           <div class="title-container fw-bold mb-5 text-center">
-            <h1 class="fw-bold">Add Title</h1>
+            <h1 class="fw-bold">Add New Problem(Title)</h1>
           </div>
   
           <div class="create-title">
             <div class="d-flex flex-row gap-5 justify-content-center mb-4">
               <div class="d-flex flex-column flex-shrink-0 w-25">
-                <label for="issue" class="fw-semibold">Title</label>
-                <input id="issue" class="form-control h-100 rounded border-secondary-subtle" type="text" placeholder="Enter Title..." v-model="form.problem" required/>
+                <label for="issue" class="fw-semibold">New Problem</label>
+                <input id="issue" class="form-control h-100 rounded border-secondary-subtle" type="text" placeholder="Enter New Problem..." v-model="form.problem" required/>
               </div>
               
             </div>

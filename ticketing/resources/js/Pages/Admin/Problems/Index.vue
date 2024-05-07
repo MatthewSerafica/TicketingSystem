@@ -20,13 +20,13 @@
             <h1 class="fw-bold">View All Titles</h1>
             <p class="fs-5">Manage All Titles</p>
             <Link :href="route('admin.problems.create')">
-              <Button :name="'Add New Title'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
+              <Button :name="'Add New Problem'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
             </Link>
           </div>
           <div class="input-group mt-3">
             <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
             <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
-              placeholder="Search Titles..." aria-label="searchIcon" aria-describedby="searchIcon" />
+              placeholder="Search Problems..." aria-label="searchIcon" aria-describedby="searchIcon" />
           </div>
         </div>
   
