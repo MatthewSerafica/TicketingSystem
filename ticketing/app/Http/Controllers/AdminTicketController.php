@@ -246,7 +246,7 @@ class AdminTicketController extends Controller
 
             $employee->update(['made_ticket' => $employee->made_ticket + 1]);
             $employee->user->notify(
-                new TicketMade($ticket)
+                new TicketMade($ticket, $request->technician, $employee->user->name, $employee->office, $employee->department)
             );
             DB::commit();
         } catch (Exception $e) {

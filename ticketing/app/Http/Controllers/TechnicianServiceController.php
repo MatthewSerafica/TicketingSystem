@@ -184,10 +184,11 @@ class TechnicianServiceController extends Controller
 
         $employee = Employee::find($ticket->employee);
         $employee->user->notify(new UpdateTicketStatus($ticket));
+        
         $admins = User::where('user_type', 'admin')->get();
         foreach ($admins as $admin) {
             $admin->notify(
-                new ResolvedTicket($ticket)
+                new ResolvedTicket($ticket, $request->technician, $employee->user->name, $employee->office, $employee->department)
             );
         }
         return redirect()->to('/technician/service-report')->with('success', 'Report Created');

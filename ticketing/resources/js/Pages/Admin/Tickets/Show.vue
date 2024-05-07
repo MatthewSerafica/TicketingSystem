@@ -17,7 +17,6 @@
     </div>
     <div>
         <Header class="sticky-top" style="z-index: 110;"></Header>
-
         <div class="">
             <Link :href="route('admin.tickets')"
                 class="print-hidden btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
@@ -211,15 +210,16 @@
                     </div>
                 </div>
 
-               <!-- Task List Section -->
-               <div class="col-lg-3 shadow rounded p-4 task">
+                <!-- Task List Section -->
+                <div class="col-lg-3 shadow rounded p-4 task">
                     <div>
                         <h6>Tasks</h6>
                     </div>
                     <div>
                         <!-- Conditionally render the input form -->
                         <form v-if="showTaskInput" @submit.prevent="addTask">
-                            <input type="text" v-model="taskForm.task_name" placeholder="Enter task" class="form-control mb-2">
+                            <input type="text" v-model="taskForm.task_name" placeholder="Enter task"
+                                class="form-control mb-2">
                             <button type="submit" class="btn btn-primary">Save</button>
                         </form>
 
@@ -742,7 +742,7 @@ import EmptyCard from '@/Components/EmptyState/Comments.vue';
 import EmptyProfile from '@/Components/EmptyState/Profile.vue';
 import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
-import { useForm, usePage } from '@inertiajs/vue3';
+import { Link, useForm, usePage } from '@inertiajs/vue3';
 import Alpine from 'alpinejs';
 import moment from "moment";
 import { reactive, ref, watchEffect } from 'vue';
@@ -1021,10 +1021,10 @@ const getButtonClass = (status) => {
 };
 
 const taskForm = useForm({
-    ticket_number : props.ticket.ticket_number,
+    ticket_number: props.ticket.ticket_number,
     user_id: page.props.user.id,
-	task_name : null,
-	is_resolved : null,
+    task_name: null,
+    is_resolved: null,
 })
 const showTaskInput = ref(false);
 const newTask = ref('');

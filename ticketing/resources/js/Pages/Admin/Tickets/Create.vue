@@ -45,7 +45,8 @@
                   <div class="flex-grow-1 w-50">
                     <label for="rs_no" class="fw-semibold">Requisition Slip No.</label>
                     <input id="rs_no" class="form-control rounded border-secondary-subtle" type="text"
-                      placeholder="Enter RS No..." v-model="form.rs_no" :disabled="form.request_type !== 'Requisition Slip'"/>
+                      placeholder="Enter RS No..." v-model="form.rs_no"
+                      :disabled="form.request_type !== 'Requisition Slip'" />
                     <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
                   </div>
 
@@ -55,35 +56,33 @@
                     <label for="Title" class="fw-semibold">Title</label>
                     <div class="btn-group">
                       <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
-                              data-bs-toggle="dropdown" aria-expanded="false">
-                          {{ form.problem ? form.problem : 'Select a Title...' }}
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ form.problem ? form.problem : 'Select a Title...' }}
                       </button>
                       <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
-                              data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                          <span class="visually-hidden">Toggle Dropdown</span>
+                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                        <span class="visually-hidden">Toggle Dropdown</span>
                       </button>
                       <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                        
-                      <li class="dropdown-item d-flex align-items-center"> 
-                          <input type="text" class="form-control flex-grow-1" v-model="newProblem.problem" placeholder="Enter custom problem"
-                          @keyup.enter.prevent="createNewProblem">
-                          <button class="btn btn-primary ms-2" @click.prevent="createNewProblem"> 
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                          <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
-                          </svg>
+
+                        <li class="dropdown-item d-flex align-items-center">
+                          <input type="text" class="form-control flex-grow-1" v-model="newProblem.problem"
+                            placeholder="Enter custom problem" @keyup.enter.prevent="createNewProblem">
+                          <button class="btn btn-primary ms-2" @click.prevent="createNewProblem">
+                            <i class="bi bi-arrow-right"></i>
                           </button>
-                      </li>
+                        </li>
 
 
 
-                          <li class="dropdown-divider"></li>
-                          <li v-if="problems" v-for="problem in problems" class="btn dropdown-item"
-                              @click="selectProblem(problem)" style="width: 400px;">
-                              <span class="fw-semibold">{{ problem.problem }}</span>
-                          </li>
-                          
+                        <li class="dropdown-divider"></li>
+                        <li v-if="problems" v-for="problem in problems" class="btn dropdown-item"
+                          @click="selectProblem(problem)" style="width: 400px;">
+                          <span class="fw-semibold">{{ problem.problem }}</span>
+                        </li>
+
                       </ul>
-                  </div>
+                    </div>
 
 
                   </div>
@@ -152,15 +151,13 @@
                           <span class="fw-semibold">{{ service.service }}</span>
                         </li>
                         <li class="dropdown-divider"></li>
-                        <li class="dropdown-item d-flex align-items-center"> 
-                          <input type="text" class="form-control" v-model="newService.service" placeholder="Enter custom service"
-                          @keyup.enter="createNewService">
-                          <button class="btn btn-primary ms-2" @click.prevent="createNewService"> 
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                          <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
-                          </svg>
+                        <li class="dropdown-item d-flex align-items-center">
+                          <input type="text" class="form-control" v-model="newService.service"
+                            placeholder="Enter custom service" @keyup.enter="createNewService">
+                          <button class="btn btn-primary ms-2" @click.prevent="createNewService">
+                            <i class="bi bi-arrow-right"></i>
                           </button>
-                          </li>
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -424,7 +421,7 @@ const fetchRecommended = async (department) => {
 
 const toggleRSNoField = () => {
   if (form.request_type === 'Requisition Slip') {
-    form.rs_no = props.new_rs; 
+    form.rs_no = props.new_rs;
     document.getElementById('rs_no').disabled = false;
   } else {
     form.rs_no = null;
@@ -459,7 +456,7 @@ const newProblem = useForm({
 })
 
 const createNewProblem = () => {
-  newProblem.post(route('admin.ticket.problems.store'), {preserveScroll:false, preserveState:true});
+  newProblem.post(route('admin.ticket.problems.store'), { preserveScroll: false, preserveState: true });
   form.problem = newProblem.problem;
 }
 const newService = useForm({
@@ -467,7 +464,7 @@ const newService = useForm({
 })
 
 const createNewService = () => {
-  newService.post(route('admin.ticket.services.store'), {preserveScroll:false, preserveState:true});
+  newService.post(route('admin.ticket.services.store'), { preserveScroll: false, preserveState: true });
   form.service = newService.service;
 }
 
