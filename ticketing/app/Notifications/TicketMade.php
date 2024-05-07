@@ -16,7 +16,11 @@ class TicketMade extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        private Ticket $ticket
+        private Ticket $ticket,
+        private $technicians,
+        private $name,
+        private $office,
+        private $department,
     ) {
         //
     }
@@ -58,6 +62,10 @@ class TicketMade extends Notification
             'service' => $this->ticket->service,
             'status' => $this->ticket->status,
             'resolved_at' => $this->ticket->resolved_at,
+            'technicians' => $this->technicians,
+            'name' => $this->name,
+            'office' => $this->office,
+            'department' => $this->department,
         ];
     }
 }

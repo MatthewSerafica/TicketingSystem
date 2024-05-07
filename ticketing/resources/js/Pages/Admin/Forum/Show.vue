@@ -35,7 +35,7 @@
                                 <div class="d-flex align-items-center justify-content-center gap-2"
                                     style="margin-left: -2.5rem;">
                                     <div class="mt-3">
-                                        <a :href="route('technician.forum')"
+                                        <a :href="route('admin.forum')"
                                             class="btn btn-outline-secondary rounded-pill d-flex flex-row justify-content-center align-items-center"
                                             style="width: 2rem; height: 2rem;">
                                             <i class="bi bi-arrow-left"></i>
@@ -613,7 +613,7 @@ import Delete from "@/Components/DeleteModal.vue";
 import EmptyCard from '@/Components/EmptyState/Comments.vue';
 import EmptyProfile from '@/Components/EmptyState/Profile.vue';
 import Toast from '@/Components/Toast.vue';
-import Header from '@/Pages/Layouts/TechnicianHeader.vue';
+import Header from '@/Pages/Layouts/AdminHeader.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import Alpine from 'alpinejs';
 import axios from 'axios';
@@ -761,7 +761,7 @@ const handleContentChange = async (content) => {
         const searchTerm = content.split('@').pop().trim();
         if (searchTerm.length > 0) {
             try {
-                const response = await axios.get(`/technician/forum/post/users/${searchTerm}`);
+                const response = await axios.get(`/admin/forum/post/users/${searchTerm}`);
                 userData.value = response.data.users;
                 showAutocomplete.value = true;
             } catch (error) {
@@ -773,16 +773,16 @@ const handleContentChange = async (content) => {
     }
 };
 
-const comment = () => commentForm.post(route('technician.forum.comment', [props.post.id, props.post.title]), { preserveScroll: false, preserveState: false })
+const comment = () => commentForm.post(route('admin.forum.comment', [props.post.id, props.post.title]), { preserveScroll: false, preserveState: false })
 
 const reply = (comment) => {
     selectedComment.value = comment;
-    commentForm.post(route('technician.forum.reply', [props.post.id, props.post.title, selectedComment.value]), { preserveScroll: false, preserveState: false })
+    commentForm.post(route('admin.forum.reply', [props.post.id, props.post.title, selectedComment.value]), { preserveScroll: false, preserveState: false })
 }
 
     const replyMore = (comment) => {
         selectedComment.value = comment;
-        commentForm.post(route('technician.forum.reply', [props.post.id, props.post.title, selectedComment.value]), { preserveScroll: false, preserveState: false })
+        commentForm.post(route('admin.forum.reply', [props.post.id, props.post.title, selectedComment.value]), { preserveScroll: false, preserveState: false })
     }
 
 
@@ -886,7 +886,7 @@ const handleContentChangeEdit = async (content) => {
         const searchTerm = content.split('@').pop().trim();
         if (searchTerm.length > 0) {
             try {
-                const response = await axios.get(`/technician/forum/post/users/${searchTerm}`);
+                const response = await axios.get(`/admin/forum/post/users/${searchTerm}`);
                 userData.value = response.data.users;
                 showAutocomplete.value = true;
             } catch (error) {
@@ -898,7 +898,7 @@ const handleContentChangeEdit = async (content) => {
     }
 };
 
-const edit = (comment) => editComment.put(route('technician.forum.edit.comment', [comment]), { preserveScroll: false, preserveState: false });
+const edit = (comment) => editComment.put(route('admin.forum.edit.comment', [comment]), { preserveScroll: false, preserveState: false });
 
 
 const isShowDelete = ref(false);

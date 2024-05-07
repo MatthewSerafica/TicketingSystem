@@ -4,7 +4,6 @@
             <div class="container-fluid gap-3">
                 <div class="d-flex gap-2 col-6">
                     <Logo class="logo"></Logo>
-
                     <a class="navbar-brand text-white" href="/admin">TMDD Ticketing System</a>
                 </div>
 
@@ -36,6 +35,9 @@
                                     <a class="dropdown-item" href="/admin/reports/generate-report">Generate Reports</a>
                                 </li>
                             </ul>
+                        </li>
+                        <li class="nav-item" :class="{ 'active': activeLink === 'forum' }">
+                            <a class="nav-link text-white" href="/admin/forum" @click="setActiveLink('forum')">Forum</a>
                         </li>
                         <li class="nav-item dropdown settings" :class="{ 'active': activeLink === 'settings' }">
                             <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button"
@@ -102,29 +104,28 @@
             <div class="offcanvas-body">
                 <div class="container">
                     <div id="tab-content">
-                        <div class="card mt-3" v-for="notification in notifications.slice(0, 9)"
-                            :key="notification.notification.id">
-                            <button class="close-icon btn" @click="closeNotification(notification.notification.id)">
+                        <div class="card mt-3" v-for="notification in notifications.slice(0, 9)" :key="notification.id">
+                            <button class="close-icon btn" @click="closeNotification(notification.id)">
                                 <i class="bi bi-x-circle"></i>
                             </button>
+                            <!--Ticket-->
                             <div class="card-body d-flex flex-column gap-2"
-                                v-if="notification.notification.type === 'App\\Notifications\\ResolvedTicket'">
-
+                                v-if="notification.type === 'App\\Notifications\\ResolvedTicket'">
                                 <div class="d-flex flex-row">
                                     <div class="d-flex flex-column gap-2">
                                         <h5 class="card-title fw-bold text d-flex gap-2 align-items-center">
-                                            Ticket #{{ notification.notification.data.ticket_number }}
+                                            Ticket #{{ notification.data.ticket_number }}
                                             is now
                                             <span class="badge bg-success">
-                                                {{ notification.notification.data.status }}
+                                                {{ notification.data.status }}
                                             </span>
                                         </h5>
                                         <p class="card-subtitle">
-                                            Remarks: {{ notification.notification.data.remarks }}
+                                            Remarks: {{ notification.data.remarks }}
                                         </p>
 
                                         <p class="card-subtitle">
-                                            Service Report No.: {{ notification.notification.data.sr_no }}
+                                            Service Report No.: {{ notification.data.sr_no }}
                                         </p>
                                         <div class="card-subtitle d-flex flex-row gap-1">
                                             <span>
@@ -132,38 +133,34 @@
                                             </span>
                                             <br>
                                             <div>
-                                                <span v-for="technician in notification.technicians">
-                                                    {{ technician.user.name }} <br>
-                                                </span>
+                                                {{ notification.data.technicians }} <br>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div>
                                     <small class="card-text">
-                                        {{ notification.name }} | {{ notification.department }} -
-                                        {{ notification.office }}
+                                        {{ notification.data.name }} | {{ notification.data.department }} -
+                                        {{ notification.data.office }}
                                     </small>
                                     <br>
                                     <small class="card-text fst-italic text-muted">
-                                        {{ formatDateTime(notification.notification.created_at) }}
+                                        {{ formatDateTime(notification.created_at) }}
                                     </small>
                                 </div>
                             </div>
-
-                            <div class="card-body d-flex flex-column gap-2"
-                                v-if="notification.notification.type === 'App\\Notifications\\TicketMade'">
+                            <div class="card-body d-flex flex-column gap-2" v-if="notification.type === 'App\\Notifications\\TicketMade'">
                                 <div class="d-flex flex-row">
                                     <div class="d-flex flex-column gap-2">
                                         <h5 class="card-title fw-bold d-flex flex-row align-items-center gap-3">
-                                            Ticket No: {{ notification.notification.data.ticket_number }} <span
+                                            Ticket No: {{ notification.data.ticket_number }} <span
                                                 class="badge bg-danger">New</span>
                                         </h5>
                                         <p class="card-subtitle">
-                                            Issue: {{ notification.notification.data.description }}
+                                            Issue: {{ notification.data.description }}
                                         </p>
                                         <p class="card-subtitle">
-                                            Description: {{ notification.notification.data.description }}
+                                            Description: {{ notification.data.description }}
                                         </p>
                                         <div class="card-subtitle d-flex flex-row gap-1">
                                             <span>
@@ -171,26 +168,23 @@
                                             </span>
                                             <br>
                                             <div>
-                                                <span v-for="technician in notification.technicians">
-                                                    {{ technician.user.name }} <br>
-                                                </span>
+                                                {{ notification.data.technicians }} <br>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div>
                                     <small class="card-text">
-                                        {{ notification.name }} | {{ notification.department }} -
-                                        {{ notification.office }}
+                                        {{ notification.data.name }} | {{ notification.data.department }} -
+                                        {{ notification.data.office }}
                                     </small>
                                     <br>
                                     <small class="card-text fst-italic text-muted">
-                                        {{ formatDateTime(notification.notification.created_at) }}
+                                        {{ formatDateTime(notification.created_at) }}
                                     </small>
                                 </div>
                             </div>
-                            <div class="card-body d-flex flex-column gap-2"
-                                v-if="notification.notification.type === 'App\\Notifications\\ArchivedTickets'">
+                            <!-- <div class="card-body d-flex flex-column gap-2" v-if="notification.notification.type === 'App\\Notifications\\ArchivedTickets'">
                                 <div class="d-flex flex-row">
                                     <div class="d-flex flex-column gap-2">
                                         <h5 class="card-title fw-bold d-flex flex-row align-items-center gap-3">
@@ -199,8 +193,9 @@
                                         </h5>
                                         <div class="card-subtitle ">
                                             <p>{{ notification.notification.data.message }}</p>
-                                            <p class="fw-bold text-uppercase">{{
-                            formatMonthYear(notification.notification.data.date) }}</p>
+                                            <p class="fw-bold text-uppercase">
+                                                {{ formatMonthYear(notification.notification.data.date) }}
+                                            </p>
                                         </div>
                                         <p class="card-subtitle text-danger fw-bold">
                                             {{ notification.notification.data.message_two }}
@@ -217,6 +212,77 @@
                                         </small>
                                     </div>
                                 </div>
+                            </div> -->
+                            <!--Forum-->
+                            <div class="card-body" v-if="notification.type === 'App\\Notifications\\PostMade'">
+                                <a :href="route('admin.forum.post', [notification.data.post_id])"
+                                    class="text-decoration-none">
+                                    <p class="card-title text-dark" style="width: 90%;">
+                                        <strong>{{ notification.data.name }}</strong> posted in the
+                                        <strong>Forum</strong>
+                                    </p>
+                                    <small class="card-text fst-italic text-muted">
+                                        {{ formatDateTime(notification.created_at) }}
+                                    </small>
+                                </a>
+                            </div>
+                            <div class="card-body" v-if="notification.type === 'App\\Notifications\\UserTaggedPost'">
+                                <a :href="route('admin.forum.post', [notification.data.post_id])"
+                                    class="text-decoration-none">
+                                    <p class="card-title text-dark" style="width: 90%;">
+                                        <strong>{{ notification.data.post_user.name }}</strong> mentioned you in a post.
+                                    </p>
+                                    <small class="card-text fst-italic text-muted">
+                                        {{ formatDateTime(notification.created_at) }}
+                                    </small>
+                                </a>
+                            </div>
+                            <div class="card-body" v-if="notification.type === 'App\\Notifications\\CommentMade'">
+                                <a :href="route('admin.forum.post', [notification.data.post_id])"
+                                    class="text-decoration-none">
+                                    <p class="card-title text-dark" style="width: 90%;">
+                                        <strong>{{ notification.data.name }}</strong> commented on your post, <strong>{{
+                            notification.data.title }}</strong>, in the <strong>Forum</strong>
+                                    </p>
+                                    <small class="card-text fst-italic text-muted">
+                                        {{ formatDateTime(notification.created_at) }}
+                                    </small>
+                                </a>
+                            </div>
+                            <div class="card-body" v-if="notification.type === 'App\\Notifications\\UserTaggedComment'">
+                                <a :href="route('admin.forum.post', [notification.data.post_id])"
+                                    class="text-decoration-none">
+                                    <p class="card-title text-dark" style="width: 90%;">
+                                        <strong>{{ notification.data.comment_user.name }}</strong> mentioned you in a
+                                        comment.
+                                    </p>
+                                    <small class="card-text fst-italic text-muted">
+                                        {{ formatDateTime(notification.created_at) }}
+                                    </small>
+                                </a>
+                            </div>
+                            <div class="card-body" v-if="notification.type === 'App\\Notifications\\ReplyMade'">
+                                <Link :href="route('admin.forum.post', [notification.data.post_id])"
+                                    class="text-decoration-none">
+                                <p class="card-title w-75 text-dark">
+                                    <strong>{{ notification.data.name }}</strong> replied to your comment.
+                                </p>
+                                <small class="card-text fst-italic text-muted">
+                                    {{ formatDateTime(notification.created_at) }}
+                                </small>
+                                </Link>
+                            </div>
+                            <div class="card-body" v-if="notification.type === 'App\\Notifications\\UserTaggedReply'">
+                                <a :href="route('admin.forum.post', [notification.data.post_id])"
+                                    class="text-decoration-none">
+                                    <p class="card-title text-dark" style="width: 90%;">
+                                        <strong>{{ notification.data.comment_user.name }}</strong> mentioned you in a
+                                        reply to a comment.
+                                    </p>
+                                    <small class="card-text fst-italic text-muted">
+                                        {{ formatDateTime(notification.created_at) }}
+                                    </small>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -251,7 +317,8 @@ const determineActiveLink = () => {
         setActiveLink('reports');
     } else if (currentPath.includes('users') || currentPath.includes('department') || currentPath.includes('office') || currentPath.includes('services') || currentPath.includes('problems')) {
         setActiveLink('settings');
-
+    } else if (currentPath.includes('forum')) {
+        setActiveLink('forum');
     } else {
         setActiveLink('dashboard');
     }
@@ -307,8 +374,6 @@ const fetchNotifications = async () => {
     }
 }
 
-
-
 const closeNotification = async (notificationId) => {
     try {
         console.log('marking', notificationId)
@@ -318,7 +383,6 @@ const closeNotification = async (notificationId) => {
         console.error(err)
     }
 }
-
 
 onMounted(() => {
     determineActiveLink();

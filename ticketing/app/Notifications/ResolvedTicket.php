@@ -16,7 +16,11 @@ class ResolvedTicket extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        private Ticket $ticket
+        private Ticket $ticket,
+        private $technicians,
+        private $name,
+        private $office,
+        private $department,
     ) {
         //
     }
@@ -59,6 +63,10 @@ class ResolvedTicket extends Notification
             'status' => $this->ticket->status,
             'remarks' => $this->ticket->remarks,
             'resolved_at' => $this->ticket->resolved_at,
+            'technicians' => $this->technicians,
+            'name' => $this->name,
+            'office' => $this->office,
+            'department' => $this->department,
         ];
     }
 }

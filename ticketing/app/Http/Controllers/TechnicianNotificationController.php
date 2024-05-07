@@ -25,8 +25,6 @@ class TechnicianNotificationController extends Controller
         $notification->update(['marked_at' => 1]);
     }
 
-
-
     public function update()
     {
         $user = Auth::user();

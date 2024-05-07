@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\Auth;
 class AdminNotificationController extends Controller
 {
     public function index(Request $request)
-{
-    $user = $request->user();
-    $notifications = $user->notifications()->where('marked_at', 0)->get();
+    {
+        $user = $request->user();
+        $notifications = $user->notifications()->where('marked_at', 0)->get();
 
-    $notifications_with_user = [];
+        /* $notifications_with_user = [];
 
     foreach ($notifications as $notification) {
         $data = $notification->data;
@@ -36,23 +36,23 @@ class AdminNotificationController extends Controller
             'department' => $employee->department,
             'office' => $employee->office,
         ];
-    }
+    } */
 
-    return response()->json([
-        'notifications' => $notifications_with_user,
-    ]);
-}
-
-    public function update()
-    {
-        $user = Auth::user();
-        $user->notifications->markAsRead();
+        return response()->json([
+            'notifications' => $notifications,
+        ]);
     }
 
     public function marked($notificationId)
     {
         $user = Auth::user();
         $notification = $user->notifications()->findOrFail($notificationId);
-        $notification->update(['marked_at' => 1]); 
+        $notification->update(['marked_at' => 1]);
+    }
+    
+    public function update()
+    {
+        $user = Auth::user();
+        $user->notifications->markAsRead();
     }
 }

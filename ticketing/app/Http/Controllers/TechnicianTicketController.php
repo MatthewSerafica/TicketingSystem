@@ -188,7 +188,7 @@ class TechnicianTicketController extends Controller
                 'assignToSelf' => 'nullable',
             ]);
             $technician = Technician::where('user_id', $request->user)->firstOrFail();
-            $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
+            $employee = Employee::where('employee_id', $request->employee)->with('user')->firstOrFail();
 
             if ($employee->made_ticket >= 5 || $technician->assigned_ticket >= 5) {
                 DB::rollBack();
@@ -242,7 +242,7 @@ class TechnicianTicketController extends Controller
             $admins = User::where('user_type', 'admin')->get();
             foreach ($admins as $admin) {
                 $admin->notify(
-                    new TicketMade($ticket)
+                    new TicketMade($ticket, $technician->user->name, $employee->user->name, $employee->office, $employee->department)
                 );
             }
             DB::commit();

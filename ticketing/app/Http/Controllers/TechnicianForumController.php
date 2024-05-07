@@ -16,12 +16,14 @@ use App\Notifications\UserTaggedPost;
 use App\Notifications\UserTaggedReply;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class TechnicianForumController extends Controller
 {
     public function index(Request $request)
     {
+        $auth = Auth::user();
         $posts = Post::query()
             ->whereNot('is_deleted', 1)
             ->with(['user', 'tagged' => function ($query) {
@@ -52,16 +54,25 @@ class TechnicianForumController extends Controller
             ->get();
 
         $filters = $request->only(['search']);
-        return inertia('Technician/Forum/Index', [
-            'posts' => PostResource::collection($posts),
-            'filters' => $filters,
-            'technicians' => $technicians,
-        ]);
+        if ($auth->user_type == 'technician') {
+            return inertia('Technician/Forum/Index', [
+                'posts' => PostResource::collection($posts),
+                'filters' => $filters,
+                'technicians' => $technicians,
+            ]);
+        } else if ($auth->user_type == 'admin') {
+            return inertia('Admin/Forum/Index', [
+                'posts' => PostResource::collection($posts),
+                'filters' => $filters,
+                'technicians' => $technicians,
+            ]);
+        }
     }
 
     public function store(Request $request)
     {
-        $user_id = auth()->id();
+        $auth = Auth::user();
+        $user_id = $auth->id;
         $poster = User::findOrFail($user_id);
         $request->validate([
             'title' => 'nullable',
@@ -95,21 +106,32 @@ class TechnicianForumController extends Controller
             );
         }
 
-        $techs = User::where('user_type', 'technician')
-            ->whereNotIn('id', $tagged)
-            ->where('id', '!=', $user_id)
+        $taggedUserIds = $tagged->pluck('user_id')->toArray();
+
+        $techs = User::where(function ($query) use ($user_id, $taggedUserIds) {
+            $query->where('user_type', 'technician')
+                ->orWhere('user_type', 'admin');
+        })
+            ->whereNotIn('id', array_merge([$user_id], $taggedUserIds))
             ->get();
+
+
         foreach ($techs as $tech) {
             $tech->notify(
                 new PostMade($post, $poster->name)
             );
         }
 
-        return redirect()->to(route('technician.forum'))->with('success', 'Post created successfully.');
+        if ($auth->user_type == 'technician') {
+            return redirect()->to(route('technician.forum'))->with('success', 'Post created successfully.');
+        } else if ($auth->user_type == 'admin') {
+            return redirect()->to(route('admin.forum'))->with('success', 'Post created successfully.');
+        }
     }
 
     public function show($id)
     {
+        $auth = Auth::user();
         $post = Post::where('id', $id)
             ->with(['user', 'tagged' => function ($query) {
                 $query->whereNull('comment_id');
@@ -147,11 +169,20 @@ class TechnicianForumController extends Controller
             $reply->time_since_posted = $reply->created_at->diffForHumans();
         });
 
-        return inertia('Technician/Forum/Show', [
-            'post' => $post,
-            'comments' => $comments,
-            'replies' => $replies,
-        ]);
+
+        if ($auth->user_type == 'technician') {
+            return inertia('Technician/Forum/Show', [
+                'post' => $post,
+                'comments' => $comments,
+                'replies' => $replies,
+            ]);
+        } else if ($auth->user_type == 'admin') {
+            return inertia('Admin/Forum/Show', [
+                'post' => $post,
+                'comments' => $comments,
+                'replies' => $replies,
+            ]);
+        }
     }
 
     public function comment(Request $request, $id, $title)
@@ -313,9 +344,15 @@ class TechnicianForumController extends Controller
 
     public function getUsers($term)
     {
-        $users = User::where('user_type', 'technician')
+        $auth = Auth::user();
+        $users = User::where(function ($query) use ($term, $auth) {
+            $query->where('user_type', 'technician')
+                ->orWhere('user_type', 'admin');
+        })
+            ->whereNot('id', $auth->id)
             ->where('name', 'like', '%' . $term . '%')
             ->get();
+
         return response()->json(['users' => $users]);
     }
 }

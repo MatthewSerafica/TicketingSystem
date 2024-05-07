@@ -30,7 +30,7 @@
                         <button class="p-2 px-4 rounded-pill form-control btn btn-outline-secondary d-flex"
                             @click="showPost">What are you thinking about?</button>
                     </div>
-                    <Post v-if="isShowPost" :technicians="technicians" @closeDelete="closePost" />
+                    <Post v-if="isShowPost" :technicians="technicians" :type="page.props.user.user_type" @closeDelete="closePost" />
                 </div>
                 <div v-if="posts.data.length" class="table-responsive rounded pt-2 px-2 mb-3">
                     <div class="bg-white border-bottom pb-2 mb-2" v-for="post in posts.data" v-bind:key="post.id">
@@ -68,7 +68,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <a :href="route('technician.forum.post', [post.id])" class="text-decoration-none">
+                            <a :href="route('admin.forum.post', [post.id])" class="text-decoration-none">
                                 <div class="text-dark fw-light fst-italic" v-if="post.tagged.length">
                                     <p><small>Tagged:
                                             <span v-for="tag in post.tagged" class="me-2">
@@ -108,7 +108,7 @@
             </div>
         </div>
 
-        <Delete v-if="isShowDelete" :post="selectedPost" :type="page.props.user.user_type" @closeDelete="closeDelete" />
+        <Delete v-if="isShowDelete" :post="selectedPost" @closeDelete="closeDelete" />
     </div>
 </template>
 
@@ -119,7 +119,7 @@ import Button from '@/Components/Button.vue';
 import Delete from "@/Components/DeleteModal.vue";
 import Post from '@/Components/PostModal.vue';
 import EmptyProfile from '@/Components/EmptyState/Profile.vue';
-import Header from '@/Pages/Layouts/TechnicianHeader.vue';
+import Header from '@/Pages/Layouts/AdminHeader.vue';
 import { router, usePage } from '@inertiajs/vue3';
 import { useIntersectionObserver } from '@vueuse/core';
 import axios from 'axios';
@@ -191,7 +191,7 @@ let timeoutId = null;
 
 const fetchData = () => {
     router.get(
-        route('technician.forum'),
+        route('admin.forum'),
         {
             search: search.value,
             sort: sortColumn.value,

@@ -93,6 +93,7 @@ import { defineEmits, ref, watch } from 'vue';
 
 const props = defineProps({
     technicians: Object,
+    type: Object,
 });
 
 const page = usePage();
@@ -168,9 +169,15 @@ const handleContentChange = async (content) => {
         const searchTerm = content.split('@').pop().trim();
         if (searchTerm.length > 0) {
             try {
-                const response = await axios.get(`/technician/forum/post/users/${searchTerm}`);
-                userData.value = response.data.users;
-                showAutocomplete.value = true;
+                if (page.props.user.user_type == 'technician') {
+                    const response = await axios.get(`/technician/forum/post/users/${searchTerm}`);
+                    userData.value = response.data.users;
+                    showAutocomplete.value = true;
+                } else if (page.props.user.user_type == 'admin') {
+                    const response = await axios.get(`/admin/forum/post/users/${searchTerm}`);
+                    userData.value = response.data.users;
+                    showAutocomplete.value = true;
+                }
             } catch (error) {
                 console.error('Error fetching user suggestions:', error);
             }
@@ -213,22 +220,40 @@ const post = async () => {
     formData.append('tagged_user', JSON.stringify(taggedUserArray));
 
     try {
-        const response = await axios.post(route('technician.forum.store'), formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+        if (page.props.user.user_type == 'technician') {
+            const response = await axios.post(route('technician.forum.store'), formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
 
+            if (response.status === 200) {
+                page.props.flash.success = response.data.success;
+                page.props.flash.message = response.data.message;
+                showSuccessToast.value = true;
+            } else {
+                page.props.flash.error = true;
+                page.props.flash.error_message = response.data.message || 'Unexpected error occurred';
+                showErrorToast.value = true;
+            }
+        } else if (page.props.user.user_type == 'admin') {
+            const response = await axios.post(route('admin.forum.store'), formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
 
-        if (response.status === 200) {
-            page.props.flash.success = response.data.success;
-            page.props.flash.message = response.data.message;
-            showSuccessToast.value = true;
-        } else {
-            page.props.flash.error = true;
-            page.props.flash.error_message = response.data.message || 'Unexpected error occurred';
-            showErrorToast.value = true;
+            if (response.status === 200) {
+                page.props.flash.success = response.data.success;
+                page.props.flash.message = response.data.message;
+                showSuccessToast.value = true;
+            } else {
+                page.props.flash.error = true;
+                page.props.flash.error_message = response.data.message || 'Unexpected error occurred';
+                showErrorToast.value = true;
+            }
         }
+
 
         closeDelete();
         window.location.reload();

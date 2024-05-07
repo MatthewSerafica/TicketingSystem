@@ -222,7 +222,7 @@
         <div v-if="tasks.length > 0">
             <div v-for="task in tasks" :key="task.id" class="d-flex justify-content-between align-items-center mb-2">
                 <div>
-                    <input class="form-check-input" type="checkbox" v-model="updatedTaskForm.is_resolved" :id="'taskCheckbox' + task.id" @change="updateTask">
+                    <input class="form-check-input" type="checkbox" v-model="updatedTaskForm.is_resolved" :id="'taskCheckbox' + task.id" @change="updateTask(task.id)">
             <label class="form-check-label" :for="'taskCheckbox' + task.id">
               {{ task.task_name }}
             </label>

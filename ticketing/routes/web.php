@@ -48,7 +48,6 @@ Route::middleware(['web'])->group(function () {
         Route::post('/admin/tickets/tasks', [AdminTicketController::class, 'addTask'])->name('admin.tickets.task');
         Route::put('/admin/tickets/tasks/update', [AdminTicketController::class, 'updateTask'])->name('admin.tickets.task.update');
 
-
         Route::post('/admin/tickets/create/store', [AdminTicketController::class, 'store'])->name('admin.tickets.store');
         Route::put('/admin/tickets/update-status/{ticket_id}', [AdminTicketController::class, 'status'])->name('admin.tickets.update.status');
         Route::put('/admin/tickets/update-service/{ticket_id}', [AdminTicketController::class, 'service'])->name('admin.tickets.update.service');
@@ -59,6 +58,17 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/tickets/recommended/{department}', [AdminTicketController::class, 'recommend'])->name('admin.recommended');
         Route::post('/admin/tickets/problems/create/store', [AdminTicketController::class, 'problem'])->name('admin.ticket.problems.store');
         Route::post('/admin/tickets/services/create/store', [AdminTicketController::class, 'services'])->name('admin.ticket.services.store');
+
+
+        Route::get('/admin/forum', [TechnicianForumController::class, 'index'])->name('admin.forum');
+        Route::get('/admin/forum/post/{post_id}', [TechnicianForumController::class, 'show'])->name('admin.forum.post');
+        Route::get('/admin/forum/post/users/{term}', [TechnicianForumController::class, 'getUsers'])->name('admin.forum.post.users');
+        Route::delete('/admin/forum/delete/{post_id}', [TechnicianForumController::class, 'delete'])->name('admin.forum.delete');
+        Route::post('/admin/forum/store', [TechnicianForumController::class, 'store'])->name('admin.forum.store');
+        Route::post('/admin/forum/comment/{post_id}/{title}', [TechnicianForumController::class, 'comment'])->name('admin.forum.comment');
+        Route::put('/admin/forum/comment/{post_id}', [TechnicianForumController::class, 'update'])->name('admin.forum.edit.comment');
+        Route::delete('/admin/forum/delete/comment/{post_id}', [TechnicianForumController::class, 'deleteComment'])->name('admin.forum.delete.comment');
+        Route::post('/admin/forum/comment/{post_id}/{title}/reply/{comment_id}', [TechnicianForumController::class, 'reply'])->name('admin.forum.reply');
 
         Route::get('/admin/users', [AdminUsersController::class, 'index'])->name('admin.users');
         Route::get('/admin/users/create', [AdminUsersController::class, 'create'])->name('admin.users.create');
