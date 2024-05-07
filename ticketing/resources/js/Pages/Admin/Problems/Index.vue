@@ -26,7 +26,7 @@
           <div class="input-group mt-3">
             <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
             <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
-              placeholder="Search Titles..." aria-label="searchIcon" aria-describedby="searchIcon" />
+              placeholder="Search Problems..." aria-label="searchIcon" aria-describedby="searchIcon" />
           </div>
         </div>
   
