@@ -917,6 +917,15 @@ class AdminTicketController extends Controller
             ];
 
             $newTask = TicketTask::create($task);
+            
+            $auth = Auth::user();
+            $action_taken = "Added a new task for ticket #" . $request->ticket_number . ": " . $request->task_name;
+            $log_data = [
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action_taken,
+            ];
+            Log::create($log_data);
 
             return redirect()->back()->with('success', 'Added Task!')->with('message', 'Task Added successfully!');
         } catch (Exception $e) {
@@ -956,6 +965,15 @@ class AdminTicketController extends Controller
         try {
             $task = TicketTask::where('id', $id)->first();
             $task->delete();
+            
+            $auth = Auth::user();
+            $action_taken = "Removed a task for ticket #" . $request->ticket_number . ": " . $request->task_name;
+            $log_data = [
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action_taken,
+            ];
+            Log::create($log_data);
 
             return redirect()->back()
                 ->with('success', 'Task Deleted successfully!');
