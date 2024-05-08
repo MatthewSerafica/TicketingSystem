@@ -62,16 +62,10 @@
                       <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                         <span class="visually-hidden">Toggle Dropdown</span>
-                      </button>
+                      </button>         
                       <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-
                         <li class="dropdown-item d-flex align-items-center">
-                          <input type="text" class="form-control flex-grow-1" v-model="titleSearch" placeholder="Search Title...">
-                          <input type="text" class="form-control flex-grow-1" v-model="newProblem.problem"
-                            placeholder="Enter custom problem" @keyup.enter.prevent="createNewProblem">
-                          <button class="btn btn-primary ms-2" @click.prevent="createNewProblem">
-                            <i class="bi bi-arrow-right"></i>
-                          </button>
+                          <input type="text" class="form-control flex-grow-1" v-model="titleSearch" placeholder="Search Title...">       
                         </li>
 
 
@@ -81,6 +75,13 @@
                         <li v-else-if="filteredTitles" v-for="problem in filteredTitles" class="dropdown-item" @click="selectProblem(problem)" style="width: 550px;">
                           <span class="fw-semibold">{{ problem.problem }}</span>
                         </li>
+                        <li>
+                        <input type="text" class="form-control flex-grow-1" v-model="newProblem.problem"
+                            placeholder="Enter custom problem" @keyup.enter.prevent="createNewProblem">
+                          <button class="btn btn-primary ms-2" @click.prevent="createNewProblem">
+                            <i class="bi bi-arrow-right"></i>
+                          </button>
+                      </li>
                       </ul>
                     </div>
                   </div>
@@ -144,6 +145,11 @@
                         <span class="visually-hidden">Toggle Dropdown</span>
                       </button>
                       <ul id="serviceDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                        <input type="text" class="form-control" v-model="newService.service"
+                            placeholder="Enter custom service" @keyup.enter="createNewService">
+                          <button class="btn btn-primary ms-2" @click.prevent="createNewService">
+                            <i class="bi bi-arrow-right"></i>
+                          </button>
                         <li v-if="filteredServices.length === 0">No services found...</li>
                         <li v-else-if="filteredServices" v-for="service in filteredServices" class="dropdown-item" @click="selectService(service)" style="width: 550px;">
                             <span class="fw-semibold">{{ service.service }}</span>
@@ -151,11 +157,7 @@
                         <li class="dropdown-divider"></li>
                         <li class="dropdown-item d-flex align-items-center">
                           <input type="text" class="form-control flex-grow-1" v-model="serviceSearch" placeholder="Search Service...">
-                          <input type="text" class="form-control" v-model="newService.service"
-                            placeholder="Enter custom service" @keyup.enter="createNewService">
-                          <button class="btn btn-primary ms-2" @click.prevent="createNewService">
-                            <i class="bi bi-arrow-right"></i>
-                          </button>
+                          
                         </li>
                       </ul>
                     </div>
