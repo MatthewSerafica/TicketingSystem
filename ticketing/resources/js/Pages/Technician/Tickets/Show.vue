@@ -20,7 +20,7 @@
 
         <div class="d-flex gap-4 mt-2">
             <div class="">
-                <a :href="route('admin.tickets')"
+                <a :href="route('technician.tickets')"
                     class="print-hidden btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
                     style="width: 6rem;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
