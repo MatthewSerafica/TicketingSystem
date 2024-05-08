@@ -207,13 +207,12 @@
                     </div>
                 </div>
 
-                <!-- Task List Section -->
-                <div class="col-lg-3 shadow rounded p-4 task">
+                                <!-- Task List Section -->
+                                <div class="col-lg-3 shadow rounded p-4 task">
                     <div class="d-flex flex-row justify-content-between align-items-center">
-                        <h4>Tasks</h4>
+                        <h6>Tasks</h6>
                         <!-- Button to toggle the input form -->
-                        <button v-if="!showTaskInput" type="button" class="btn btn-secondary"
-                            @click="toggleTaskInput">
+                        <button v-if="!showTaskInput" type="button" class="btn btn-secondary" @click="toggleTaskInput">
                             Add Task
                         </button>
                     </div>
@@ -230,20 +229,51 @@
                                 </div>
                             </form>
                         </div>
-                        <!-- Display tasks as Bootstrap checkboxes with formatted created_at -->
-                        <div v-if="tasks.length > 0">
+
+                        <!-- Task Section -->
+                        <div v-if="tasks.length > 0" class="task-container p-2">
                             <div v-for="task in tasks" :key="task.id"
-                                class="d-flex justify-content-between align-items-center mb-2">
-                                <div class="d-flex flex-row gap-2 align-items-center">
-                                    <input class="form-check-input" type="checkbox" :checked="task.is_resolved"
-                                        @change="updateTask(task)">
-                                    <label class="form-check-label">
-                                        {{ task.task_name }}
-                                    </label>
+                                class="accordion d-flex justify-content-between align-items-center mb-2">
+                                <div class="accordion-item d-flex flex-column p-2" style="width: 20rem;">
+                                    <div class="d-flex flex-row justify-content-between align-items-center">
+                                        <div class="accordion-header d-flex flex-row justify-content-between">
+                                            <div class="d-flex flex-row justify-content-start gap-3 align-items-center">
+                                                <input class="form-check-input" type="checkbox" :checked="task.is_resolved" @change="resolveTask(task)">
+                                                <label v-if="selectedInput !== task.id" class="form-check-label overflow-control fw-medium"
+                                                    @dblclick="editTaskName(task)"
+                                                    :class="{ 'text-body-tertiary': task.is_resolved, 'text-decoration-line-through': task.is_resolved }">
+                                                    {{ task.task_name }}
+                                                </label>
+
+                                                <input v-if="selectedInput === task.id" v-model="editData[task.id]" @blur="updateTaskName(editData[task.id], task.id)" @keyup.enter="updateTaskName(editData[task.id], task.id)" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <button class="btn" type="button" :data-bs-toggle="'collapse'"
+                                            :data-bs-target="'#collapse' + task.id" aria-expanded="false"
+                                            :aria-controls="'collapse' + task.id">
+                                            <i class="bi bi-chevron-down"></i>
+                                        </button>
+                                    </div>
+
+                                    <div :id="'collapse' + task.id" class="accordion-collapse collapse"
+                                        aria-labelledby="headingOne">
+                                        <div class="accordion-body">
+                                            <div class="name-and-date d-flex flex-row">
+                                                <small class="text-muted tasks-date">{{ task.user.name }}</small>
+                                            </div>
+                                            <div class="name-and-date d-flex flex-row">
+                                                <small class="text-muted tasks-date">{{ formatDateTime(task.created_at) }}</small>
+                                            </div>
+                                            <div class="buttons d-flex justify-content-center mt-2 ">
+                                                <button class="btn btn-danger" @click="deleteTask(task)">
+                                                <i class="bi bi-trash"> Delete Task</i></button>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <!-- Secondary text for formatted created_at -->
-                                <small class="text-muted tasks-date">{{ formatDate(task.created_at) }}</small>
                             </div>
+                            <!-- Secondary text for formatted created_at -->
                         </div>
                         <div v-else>
                             No tasks available.
@@ -800,7 +830,9 @@ const props = defineProps({
 const formatDate = (date) => {
     return moment(date, 'YYYY-MM-DD').format('MM/DD/YY');
 };
-
+const formatDateTime = (date) => {
+    return moment(date).format('MMM DD, YYYY HH:mm  A');
+};
 // Comment Start
 
 const commentTextarea = ref(null);
@@ -1041,6 +1073,8 @@ const getButtonClass = (status) => {
             return 'btn btn-secondary';
     }
 };
+
+
 const taskForm = useForm({
     ticket_number: props.ticket.ticket_number,
     user_id: page.props.user.id,
@@ -1060,14 +1094,40 @@ const addTask = () => taskForm.post(route('technician.tickets.task'), { preserve
 console.log()
 const updatedTaskForm = useForm({
     ticket_number: props.ticket.ticket_number,
+    task_name: null,
     is_resolved: null,
 })
 
-const updateTask = (task) => {
+const updateTask = (task, id) => {
+    updatedTaskForm.task_name = task;
+    updatedTaskForm.put(route('technician.tickets.task.update', id), { preserveScroll: false, preserveState: false })
+}
+
+const resolveTask = (task) => {
     task.is_resolved = !task.is_resolved;
     updatedTaskForm.is_resolved = task.is_resolved;
-    updatedTaskForm.put(route('technician.tickets.task.update', task.id), { preserveScroll: false, preserveState: false })
+    updatedTaskForm.put(route('technician.tickets.task.resolve', task.id), { preserveScroll: false, preserveState: false })
 }
+
+const deleteTask = (task) => {
+    updatedTaskForm.id = task.id;
+    updatedTaskForm.delete(route('technician.tickets.task.delete', task.id), { preserveScroll: false, preserveState: false })
+}
+
+const editTaskName = (task) => {
+      selectedInput.value = task.id;
+      editData[task.id] = task.task_name;
+    };
+
+const updateTaskName = (task, id) => {
+    // Implement your update logic here
+    console.log('Updated task name:', task);
+    updateTask(task, id);
+    // Reset input and selected input
+    selectedInput.value = null;
+    editData[task.id] = '';
+};    
+
 </script>
 
 

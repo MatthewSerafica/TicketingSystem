@@ -276,7 +276,9 @@
                                         <div class="accordion-body">
                                             <div class="name-and-date d-flex flex-row">
                                                 <small class="text-muted tasks-date">{{ task.user.name }}</small>
-                                                <small class="text-muted tasks-date  ms-auto">{{ formatDate(task.created_at) }}</small>
+                                            </div>
+                                            <div class="name-and-date d-flex flex-row">
+                                                <small class="text-muted tasks-date">{{ formatDateTime(task.created_at) }}</small>
                                             </div>
                                             <div class="buttons d-flex justify-content-center mt-2 ">
                                                 <button class="btn btn-danger" @click="deleteTask(task)">
