@@ -468,7 +468,7 @@ class TechnicianTicketController extends Controller
         $ticket->save();
 
         $auth = Auth::user();
-        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'service to ' . $request->service;
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'service: ' . $request->service;
         $log_data = [
             'name' => $auth->name,
             'user_type' => $auth->user_type,
@@ -494,7 +494,7 @@ class TechnicianTicketController extends Controller
         $ticket->save();
 
         $auth = Auth::user();
-        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'complexity to ' . $request->complexity;
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'complexity: ' . $request->complexity;
         $log_data = [
             'name' => $auth->name,
             'user_type' => $auth->user_type,
@@ -509,18 +509,33 @@ class TechnicianTicketController extends Controller
     {
         $request->validate([
             'status' => 'required',
+            'old_status' => 'required',
         ]);
 
-        $ticket = Ticket::where('ticket_number', $ticket_id)->first();
+        $ticket = Ticket::where('ticket_number', $ticket_id)->firstOrFail();
         $employee = Employee::find($ticket->employee);
+        $assigned = AssignedTickets::where('ticket_number', $ticket->ticket_number)->get();
+
+        $technicians = collect([]);
+        foreach ($assigned as $assign) {
+            $technicians = $technicians->merge(Technician::where('technician_id', $assign->technician)->get());
+        }
 
         $ticket->status = $request->status;
+
+        if ($ticket->status == 'Resolved' && $request->old_status != 'Resolved') {
+            $this->resolveTicket($ticket, $employee, $technicians);
+        } elseif ($request->old_status == 'Resolved' && $ticket->status != 'Resolved') {
+            $this->revertResolution($ticket, $employee, $technicians);
+        } else {
+            $ticket->resolved_at = null;
+        }
         $ticket->save();
 
         $employee->user->notify(new UpdateTicketStatus($ticket));
 
         $auth = Auth::user();
-        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'status to ' . $request->status;
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'status: ' . $request->status;
         $log_data = [
             'name' => $auth->name,
             'user_type' => $auth->user_type,
@@ -532,10 +547,39 @@ class TechnicianTicketController extends Controller
             ->with('success', 'Ticket Updated!')
             ->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now ' . $request->status);
     }
+    private function resolveTicket($ticket, $employee, $technicians)
+    {
+        $ticket->resolved_at = now();
+        $employee->update(['made_ticket' => max(0, $employee->made_ticket - 1)]);
+
+        foreach ($technicians as $technician) {
+            $technician->update([
+                'tickets_resolved' => $technician->tickets_resolved + 1,
+                'tickets_assigned' => max(0, $technician->tickets_assigned - 1)
+            ]);
+        }
+    }
+
+    private function revertResolution($ticket, $employee, $technicians)
+    {
+        $ticket->resolved_at = null;
+        $employee->update(['made_ticket' => $employee->made_ticket + 1]);
+
+        $totalResolved = $technicians->sum('tickets_resolved');
+        $decrementValue = ($totalResolved > 0) ? 1 : 0;
+
+        foreach ($technicians as $technician) {
+            $technician->update([
+                'tickets_resolved' => max(0, $technician->tickets_resolved - $decrementValue),
+                'tickets_assigned' => $technician->tickets_assigned + 1,
+            ]);
+        }
+    }
 
     public function update(Request $request, $field, $id)
     {
         try {
+            DB::beginTransaction();
             $request->validate([
                 $field => 'nullable',
             ]);
@@ -546,14 +590,12 @@ class TechnicianTicketController extends Controller
 
             $ticket = Ticket::where('ticket_number', $id)->first();
 
-            // If the SR number is present in the request, update it in the tickets table
             if ($field === 'sr_no') {
                 $serviceReport = ServiceReport::where('ticket_number', $ticket->ticket_number)->first();
                 if ($serviceReport) {
                     $serviceReport->service_id = $request->$field;
                     $serviceReport->save();
                 } else {
-                    // If no service report exists, create a new one with the updated SR number
                     $serviceData = [
                         'service_id' => $request->$field,
                         'date_done' => now(),
@@ -571,13 +613,14 @@ class TechnicianTicketController extends Controller
             $ticket->save();
 
             $auth = Auth::user();
-            $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s SR No. to " . $request->$field;
+            $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s SR No.: " . $request->$field;
             $log_data = [
                 'name' => $auth->name,
                 'user_type' => $auth->user_type,
                 'actions_taken' => $action_taken,
             ];
             Log::create($log_data);
+            DB::commit();
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'An error occurred!')->with('message', $e->getMessage());
         }
@@ -601,7 +644,7 @@ class TechnicianTicketController extends Controller
         ];
 
         Problem::create($problemData);
-        
+
         $auth = Auth::user();
         $action_taken = "Added a new problem " .  $request->problem;
         $log_data = [

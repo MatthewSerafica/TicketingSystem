@@ -511,7 +511,7 @@ class AdminTicketController extends Controller
         $input = $fieldMappings[$field] ?? $field;
 
         $auth = Auth::user();
-        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . $input . ' to ' . $request->$field;
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . $input . ': ' . $request->$field;
         $log_data = [
             'name' => $auth->name,
             'user_type' => $auth->user_type,
@@ -609,12 +609,12 @@ class AdminTicketController extends Controller
         } else {
             $ticket->resolved_at = null;
         }
-
-        $employee->user->notify(new UpdateTicketStatus($ticket));
         $ticket->save();
 
+        $employee->user->notify(new UpdateTicketStatus($ticket));
+
         $auth = Auth::user();
-        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'status to ' . $request->status . ' from ' . $request->old_status;
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'status: ' . $request->old_status . ' to ' . $request->status;
         $log_data = [
             'name' => $auth->name,
             'user_type' => $auth->user_type,
@@ -672,7 +672,7 @@ class AdminTicketController extends Controller
         $ticket->save();
 
         $auth = Auth::user();
-        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'service to ' . $request->service;
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'service: ' . $request->service;
         $log_data = [
             'name' => $auth->name,
             'user_type' => $auth->user_type,
@@ -695,7 +695,7 @@ class AdminTicketController extends Controller
         $ticket->save();
         
         $auth = Auth::user();
-        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'remarks to ' . $request->remark;
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'remarks: ' . $request->remark;
         $log_data = [
             'name' => $auth->name,
             'user_type' => $auth->user_type,
@@ -721,7 +721,7 @@ class AdminTicketController extends Controller
 
 
         $auth = Auth::user();
-        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'complexity to ' . $request->complexity;
+        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'complexity: ' . $request->complexity;
         $log_data = [
             'name' => $auth->name,
             'user_type' => $auth->user_type,

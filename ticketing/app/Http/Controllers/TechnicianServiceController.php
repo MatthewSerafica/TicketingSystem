@@ -162,7 +162,7 @@ class TechnicianServiceController extends Controller
                 'remarks' => $request->remarks,
             ];
             ServiceReport::create($serviceData);
-            
+
             $auth = Auth::user();
             $service_data_json = json_encode($serviceData, JSON_PRETTY_PRINT);
             $action_taken = "Created Service Report #" . $request->service_id . "\n" .
@@ -194,6 +194,15 @@ class TechnicianServiceController extends Controller
             $technician->tickets_assigned = $technician->tickets_assigned - 1;
             $technician->save();
         }
+
+        $auth = Auth::user();
+        $action_taken = "Updated Ticket #" . $request->ticket_number . "'s status: Resolved" .
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
 
         $employee = Employee::find($ticket->employee);
         $employee->user->notify(new UpdateTicketStatus($ticket));

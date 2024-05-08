@@ -19,7 +19,7 @@
         <Header class="sticky-top" style="z-index: 110;"></Header>
 
         <div class="">
-            <Link :href="route('technician.tickets')"
+            <a :href="route('technician.tickets')"
                 class="print-hidden btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
                 style="width: 6rem;">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
@@ -28,7 +28,7 @@
                     d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
             </svg>
             <span class="">Back</span>
-            </Link>
+            </a>
         </div>
         <div class="container py-4 justify-content-center align-items-center">
             <div class="row row-cols-sm-1 gap-4 justify-content-center">
