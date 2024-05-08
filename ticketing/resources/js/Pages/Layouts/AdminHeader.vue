@@ -319,7 +319,7 @@ const determineActiveLink = () => {
         setActiveLink('tickets');
     } else if (currentPath.includes('service-report') || currentPath.includes('generate-report')) {
         setActiveLink('reports');
-    } else if (currentPath.includes('users') || currentPath.includes('department') || currentPath.includes('office') || currentPath.includes('services') || currentPath.includes('problems')) {
+    } else if (currentPath.includes('users') || currentPath.includes('department') || currentPath.includes('office') || currentPath.includes('services') || currentPath.includes('problems') || currentPath.includes('logs')){
         setActiveLink('settings');
     } else if (currentPath.includes('forum')) {
         setActiveLink('forum');
