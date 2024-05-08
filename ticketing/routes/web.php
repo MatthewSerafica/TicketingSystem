@@ -46,8 +46,11 @@ Route::middleware(['web'])->group(function () {
         Route::post('/admin/tickets/{id}/reply/{comment_id}', [AdminTicketController::class, 'reply'])->name('admin.ticket.reply');
         Route::put('/admin/tickets/comment/edit/{comment_id}', [AdminTicketController::class, 'updateComment'])->name('admin.ticket.edit.comment');
         Route::delete('/admin/tickets/delete/comment/{id}', [AdminTicketController::class, 'deleteComment'])->name('admin.ticket.delete.comment');
+
         Route::post('/admin/tickets/tasks', [AdminTicketController::class, 'addTask'])->name('admin.tickets.task');
         Route::put('/admin/tickets/tasks/update/{id}', [AdminTicketController::class, 'updateTask'])->name('admin.tickets.task.update');
+        Route::delete('/admin/tickets/tasks/delete/{id}', [AdminTicketController::class, 'deleteTask'])->name('admin.tickets.task.delete');
+
 
         Route::post('/admin/tickets/create/store', [AdminTicketController::class, 'store'])->name('admin.tickets.store');
         Route::put('/admin/tickets/update-status/{ticket_id}', [AdminTicketController::class, 'status'])->name('admin.tickets.update.status');
