@@ -59,10 +59,10 @@
                       @click="selectProblem(problem)" style="width: 550px;">
                       <span class="fw-semibold">{{ problem.problem }}</span>
                     </li>
-                    <li>
-                      <input type="text" class="form-control flex-grow-1" v-model="newProblem.problem"
-                        placeholder="Enter custom problem" @keyup.enter.prevent="createNewProblem">
-                      <button class="btn btn-primary ms-2" @click.prevent="createNewProblem">
+                    <li class="dropdown-item d-flex align-items-center">
+                      <input type="text" class="form-control flex-grow-1 me-2" v-model="newProblem.problem"
+                        placeholder="Enter new Problem" @keyup.enter.prevent="createNewProblem">
+                      <button class="btn btn-primary" @click.prevent="createNewProblem">
                         <i class="bi bi-arrow-right"></i>
                       </button>
                     </li>
@@ -153,7 +153,7 @@
                       <li class="dropdown-divider"></li>
                       <li class="dropdown-item d-flex align-items-center">
                         <input type="text" class="form-control flex-grow-1 me-2" v-model="newService.service"
-                          placeholder="Enter custom service" @keyup.enter="createNewService">
+                          placeholder="Enter new Service" @keyup.enter="createNewService">
                         <button class="btn btn-primary ms-2" @click.prevent="createNewService">
                           <i class="bi bi-arrow-right"></i>
                         </button>
