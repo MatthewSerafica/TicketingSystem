@@ -22,6 +22,10 @@
                             <a class="nav-link tickets text-light" href="/admin/tickets"
                                 @click="setActiveLink('tickets')">Tickets</a>
                         </li>
+                        <li class="nav-item" :class="{ 'active': activeLink === 'forum' }">
+                            <a class="nav-link forum text-light" href="/admin/forum" 
+                                @click="setActiveLink('forum')">Forum</a>
+                        </li>
                         <li class="nav-item dropdown reports" :class="{ 'active': activeLink === 'reports' }">
                             <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownReports"
                                 role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -36,9 +40,8 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item" :class="{ 'active': activeLink === 'forum' }">
-                            <a class="nav-link text-white" href="/admin/forum" @click="setActiveLink('forum')">Forum</a>
-                        </li>
+                        
+
                         <li class="nav-item dropdown settings" :class="{ 'active': activeLink === 'settings' }">
                             <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -417,7 +420,8 @@ onMounted(() => {
 
 .nav-link.dashboard::after,
 .nav-link.tickets::after,
-.nav-link.reports::after {
+.nav-link.reports::after,
+.nav-link.forum::after {
     content: '';
     display: block;
     width: 0;
@@ -428,7 +432,8 @@ onMounted(() => {
 
 .nav-item.active .nav-link.dashboard::after,
 .nav-item.active .nav-link.tickets::after,
-.nav-item.active .nav-link.reports::after {
+.nav-item.active .nav-link.reports::after,
+.nav-item.active .nav-link.forum::after {
     width: 100%;
 }
 
