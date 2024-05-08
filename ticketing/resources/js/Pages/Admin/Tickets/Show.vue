@@ -241,26 +241,29 @@
                                 </div>
                             </form>
                             <!-- Button to toggle the input form -->
-                            <button v-if="!showTaskInput" type="button" class="btn btn-secondary mt-2"
+                            <button v-if="!showTaskInput" type="button" class="btn btn-primary mt-2"
                                 @click="toggleTaskInput">
                                 Add Task
                             </button>
                         </div>
-                        <!-- Display tasks as Bootstrap checkboxes with formatted created_at -->
-                        <div v-if="tasks.length > 0">
-                            <div v-for="task in tasks" :key="task.id"
-                                class="d-flex justify-content-between align-items-center mb-2">
-                                <div class="d-flex flex-row gap-2 align-items-center">
+                       <!-- Display tasks as Bootstrap checkboxes -->
+                        <div class="accordion" v-if="tasks.length > 0">
+                            <div v-for="task in tasks" :key="task.id" class="accordion-item">
+                                <div class="accordion-header">
                                     <input class="form-check-input" type="checkbox" :checked="task.is_resolved"
                                         @change="updateTask(task)">
-                                    <label class="form-check-label">
+                                    <label class="form-check-label"
+                                        :class="{ 'text-muted': task.is_resolved, 'text-decoration-line-through': task.is_resolved }">
                                         {{ task.task_name }}
                                     </label>
                                 </div>
-                                <!-- Secondary text for formatted created_at -->
-                                <small class="text-muted tasks-date">{{ formatDate(task.created_at) }}</small>
+                                <div class="card-footer">
+                                    <small class="fst-italic text-muted">{{ formatDateTime(task.created_at) }}</small>
+                                </div>
                             </div>
+                            
                         </div>
+
                         <div v-else>
                             No tasks available.
                         </div>
@@ -819,7 +822,7 @@ const formatDate = (date) => {
 
 
 const formatDateTime = (date) => {
-    return moment(date).format('MMM DD, YYYY HH:mm');
+    return moment(date).format('MMM DD, YYYY HH:mm  A');
 };
 
 // Comment Start
@@ -1080,6 +1083,7 @@ const addTask = () => taskForm.post(route('admin.tickets.task'), { preserveScrol
 console.log()
 const updatedTaskForm = useForm({
     ticket_number: props.ticket.ticket_number,
+    task_name: null,
     is_resolved: null,
 })
 
@@ -1089,15 +1093,15 @@ const updateTask = (task) => {
     updatedTaskForm.put(route('admin.tickets.task.update', task.id), { preserveScroll: false, preserveState: false })
 }
 
+const deleteTask = (task) => {
+    updatedTaskForm.id = task.id;
+    updatedTaskForm.delete(route('admin.tickets.task.delete', task.id), { preserveScroll: false, preserveState: false })
+}
+
 </script>
 
 
 <style>
-.tasks-date {
-    font-style: italic;
-}
-
-
 .btn:hover {
     scale: 0.9;
 }
