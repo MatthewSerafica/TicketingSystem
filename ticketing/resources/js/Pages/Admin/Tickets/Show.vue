@@ -254,14 +254,19 @@
                                     <div class="d-flex flex-row justify-content-between align-items-center">
                                         <div class="accordion-header d-flex flex-row justify-content-between">
                                             <div class="d-flex flex-row justify-content-start gap-3 align-items-center">
-                                                <input class="form-check-input" type="checkbox" :checked="task.is_resolved" @change="resolveTask(task)">
-                                                <label v-if="selectedInput !== task.id" class="form-check-label overflow-control fw-medium"
-                                                    @dblclick="editTaskName(task)"
+                                                <input class="form-check-input" type="checkbox"
+                                                    :checked="task.is_resolved" @change="resolveTask(task)">
+                                                <label v-if="selectedInput !== task.id"
+                                                    class="form-check-label overflow-control fw-medium"
+                                                    @click="editTaskName(task)"
                                                     :class="{ 'text-body-tertiary': task.is_resolved, 'text-decoration-line-through': task.is_resolved }">
                                                     {{ task.task_name }}
                                                 </label>
 
-                                                <input v-if="selectedInput === task.id" v-model="editData[task.id]" @blur="updateTaskName(editData[task.id], task.id)" @keyup.enter="updateTaskName(editData[task.id], task.id)" class="form-control" />
+                                                <input v-if="selectedInput === task.id" v-model="editData[task.id]"
+                                                    @blur="updateTaskName(editData[task.id], task.id)"
+                                                    @keyup.enter="updateTaskName(editData[task.id], task.id)"
+                                                    class="form-control" />
                                             </div>
                                         </div>
                                         <button class="btn" type="button" :data-bs-toggle="'collapse'"
@@ -274,14 +279,16 @@
                                     <div :id="'collapse' + task.id" class="accordion-collapse collapse"
                                         aria-labelledby="headingOne">
                                         <div class="accordion-body">
-                                            <div class="name-and-date d-flex flex-row">
+                                            <div class="name-and-date d-flex flex-row align-items-center gap-4">
                                                 <small class="text-muted tasks-date">{{ task.user.name }}</small>
-                                                <small class="text-muted tasks-date  ms-auto">{{ formatDate(task.created_at) }}</small>
+                                                <small class="text-muted tasks-date  ms-auto">
+                                                    {{ formatDate(task.created_at) }}
+                                                </small>
+                                                <button class="btn btn-danger btn-sm" @click="deleteTask(task)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
                                             </div>
                                             <div class="buttons d-flex justify-content-center mt-2 ">
-                                                <button class="btn btn-danger" @click="deleteTask(task)">
-                                                <i class="bi bi-trash"> Delete Task</i></button>
-                                                
                                             </div>
                                         </div>
                                     </div>
@@ -1103,9 +1110,9 @@ const deleteTask = (task) => {
 }
 
 const editTaskName = (task) => {
-      selectedInput.value = task.id;
-      editData[task.id] = task.task_name;
-    };
+    selectedInput.value = task.id;
+    editData[task.id] = task.task_name;
+};
 
 const updateTaskName = (task, id) => {
     // Implement your update logic here
@@ -1114,7 +1121,7 @@ const updateTaskName = (task, id) => {
     // Reset input and selected input
     selectedInput.value = null;
     editData[task.id] = '';
-};    
+};
 
 
 
@@ -1231,10 +1238,12 @@ const getButtonClass = (status) => {
 }
 
 .name-and-date {
-    white-space: nowrap; /* Prevent name and date from wrapping */
+    white-space: nowrap;
+    /* Prevent name and date from wrapping */
 }
 
 .buttons {
-    flex-shrink: 0; /* Prevent buttons from shrinking */
+    flex-shrink: 0;
+    /* Prevent buttons from shrinking */
 }
 </style>
