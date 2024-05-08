@@ -49,6 +49,7 @@ Route::middleware(['web'])->group(function () {
 
         Route::post('/admin/tickets/tasks', [AdminTicketController::class, 'addTask'])->name('admin.tickets.task');
         Route::put('/admin/tickets/tasks/update/{id}', [AdminTicketController::class, 'updateTask'])->name('admin.tickets.task.update');
+        Route::put('/admin/tickets/tasks/resolve/{id}', [AdminTicketController::class, 'resolveTask'])->name('admin.tickets.task.resolve');
         Route::delete('/admin/tickets/tasks/delete/{id}', [AdminTicketController::class, 'deleteTask'])->name('admin.tickets.task.delete');
 
 

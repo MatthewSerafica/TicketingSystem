@@ -928,8 +928,25 @@ class AdminTicketController extends Controller
     {
         try {
             $request->validate([
-                'is_resolved' => 'nullable|boolean',
                 'task_name' => 'required'
+            ]);
+
+            $task = TicketTask::where('id', $id)->first();
+            $task->task_name = $request->input('task_name', $task->task_name);
+            $task->save();
+
+            return redirect()->back()
+                ->with('success', 'Task Updated successfully!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function resolveTask(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'is_resolved' => 'nullable|boolean',
             ]);
 
             $task = TicketTask::where('id', $id)->first();
@@ -942,15 +959,15 @@ class AdminTicketController extends Controller
             } else {
                 $task->is_resolved = null;
             }
-            $task->task_name = $request->input('task_name', $task->task_name);
             $task->save();
 
             return redirect()->back()
-                ->with('success', 'Task Updated successfully!');
+                ->with('success', 'Task Updated!');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
     public function deleteTask(Request $request, $id)
     {
         try {
