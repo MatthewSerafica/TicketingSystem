@@ -225,8 +225,12 @@
 
                 <!-- Task List Section -->
                 <div class="col-lg-3 shadow rounded p-4 task">
-                    <div>
+                    <div class="d-flex flex-row justify-content-between align-items-center">
                         <h6>Tasks</h6>
+                        <!-- Button to toggle the input form -->
+                        <button v-if="!showTaskInput" type="button" class="btn btn-secondary" @click="toggleTaskInput">
+                            Add Task
+                        </button>
                     </div>
                     <div class="d-flex flex-column gap-3">
                         <div>
@@ -240,30 +244,37 @@
                                     </button>
                                 </div>
                             </form>
-                            <!-- Button to toggle the input form -->
-                            <button v-if="!showTaskInput" type="button" class="btn btn-primary mt-2"
-                                @click="toggleTaskInput">
-                                Add Task
-                            </button>
                         </div>
-                       <!-- Display tasks as Bootstrap checkboxes -->
-                        <div class="accordion" v-if="tasks.length > 0">
-                            <div v-for="task in tasks" :key="task.id" class="accordion-item">
-                                <div class="accordion-header">
-                                    <input class="form-check-input" type="checkbox" :checked="task.is_resolved"
-                                        @change="updateTask(task)">
-                                    <label class="form-check-label"
-                                        :class="{ 'text-muted': task.is_resolved, 'text-decoration-line-through': task.is_resolved }">
-                                        {{ task.task_name }}
-                                    </label>
-                                </div>
-                                <div class="card-footer">
-                                    <small class="fst-italic text-muted">{{ formatDateTime(task.created_at) }}</small>
+                        <!-- Display tasks as Bootstrap checkboxes with formatted created_at -->
+                        <div v-if="tasks.length > 0">
+                            <div v-for="task in tasks" :key="task.id"
+                                class="accordion d-flex justify-content-between align-items-center mb-2">
+                                <div class="accordion-item">
+                                    <h6 class="accordion-header d-flex flex-row justify-content-start gap-3 align-items-center">
+                                        <input class="form-check-input" type="checkbox" :checked="task.is_resolved"
+                                            @change="updateTask(task)">
+                                        <label class="form-check-label">
+                                            {{ task.task_name }}
+                                        </label>
+                                    </h6>
+                                    <button class="btn" type="button" data-bs-toggle="collapse"
+                                        :data-bs-target="'#collapse' + task.id" aria-expanded="true"
+                                        :aria-controls="'collapse' + task.id">
+                                        <i class="bi bi-chevron-down"></i>
+                                    </button>
+                                    <div :id="'collapse' + task.id" class="accordion-collapse collapse show"
+                                        data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <strong>This is the first item's accordion body.</strong> It is
+                                            shown by default, until the collapse plugin adds the appropriate
+                                            classes that we use to style each element.
+                                        </div>
+                                    </div>
+                                    <small class="text-muted tasks-date">{{ formatDate(task.created_at) }}</small>
                                 </div>
                             </div>
-                            
+                            <!-- Secondary text for formatted created_at -->
                         </div>
-
                         <div v-else>
                             No tasks available.
                         </div>

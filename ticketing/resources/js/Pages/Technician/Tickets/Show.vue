@@ -20,7 +20,7 @@
 
         <div class="d-flex gap-4 mt-2">
             <div class="">
-                <a :href="route('admin.tickets')"
+                <a :href="route('technician.tickets')"
                     class="print-hidden btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
                     style="width: 6rem;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
@@ -210,7 +210,7 @@
                 <!-- Task List Section -->
                 <div class="col-lg-3 shadow rounded p-4 task">
                     <div class="d-flex flex-row justify-content-between align-items-center">
-                        <h6>Tasks</h6>
+                        <h4>Tasks</h4>
                         <!-- Button to toggle the input form -->
                         <button v-if="!showTaskInput" type="button" class="btn btn-secondary"
                             @click="toggleTaskInput">
