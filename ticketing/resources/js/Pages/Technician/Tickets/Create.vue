@@ -49,22 +49,24 @@
                     <span class="visually-hidden">Toggle Dropdown</span>
                   </button>
                   <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                        <li class="dropdown-item">
-                              <input type="text" class="form-control flex-grow-1" v-model="titleSearch" placeholder="Search Title...">
-                        </li>
-                        <li class="dropdown-divider"></li>
-                          <li v-if="filteredTitles.length === 0">No titles found...</li>
-                            <li v-else-if="filteredTitles" v-for="problem in filteredTitles" class="dropdown-item" @click="selectProblem(problem)" style="width: 550px;">
-                              <span class="fw-semibold">{{ problem.problem }}</span>
-                        </li>
-                          
-                        <li class="dropdown-item d-flex align-items-center">
-                          <input type="text" class="form-control flex-grow-1" v-model="newProblem.problem" placeholder="Enter custom problem" @keyup.enter.prevent="createNewProblem">
-                            <button class="btn btn-primary ms-2" @click.prevent="createNewProblem">
-                              <i class="bi bi-arrow-right"></i>
-                            </button>
-                        </li>
-                      </ul>
+
+                    <li class="dropdown-item d-flex align-items-center">
+                      <input type="text" class="form-control flex-grow-1" v-model="newProblem.problem"
+                        placeholder="Enter custom problem" @keyup.enter.prevent="createNewProblem">
+                      <button class="btn btn-primary ms-2" @click.prevent="createNewProblem">
+                        <i class="bi bi-arrow-right"></i>
+                      </button>
+                    </li>
+
+
+
+                    <li class="dropdown-divider"></li>
+                    <li v-if="problems" v-for="problem in problems" class="btn dropdown-item"
+                      @click="selectProblem(problem)" style="width: 400px;">
+                      <span class="fw-semibold">{{ problem.problem }}</span>
+                    </li>
+
+                  </ul>
                 </div>
               </div>
 
@@ -140,23 +142,19 @@
                       <span class="visually-hidden">Toggle Dropdown</span>
                     </button>
                     <ul id="serviceDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                        <li class="dropdown-divider"></li>
-                        <li class="dropdown-item d-flex align-items-center">
-                          <input type="text" class="form-control flex-grow-1" v-model="serviceSearch" placeholder="Search Service...">
-                          
-                        </li>
-                        <li v-if="filteredServices.length === 0">No services found...</li>
-                        <li v-else-if="filteredServices" v-for="service in filteredServices" class="dropdown-item" @click="selectService(service)" style="width: 550px;">
-                            <span class="fw-semibold">{{ service.service }}</span>
-                        </li>
-                        <li>
-                          <input type="text" class="form-control" v-model="newService.service"
-                            placeholder="Enter custom service" @keyup.enter="createNewService">
-                          <button class="btn btn-primary ms-2" @click.prevent="createNewService">
-                            <i class="bi bi-arrow-right"></i>
-                          </button>
-                        </li>
-                      </ul>
+                      <li v-for="service in services" class="btn dropdown-item" @click="selectService(service)"
+                        style="width: 400px;">
+                        <span class="fw-semibold">{{ service.service }}</span>
+                      </li>
+                      <li class="dropdown-divider"></li>
+                      <li class="dropdown-item d-flex align-items-center">
+                        <input type="text" class="form-control" v-model="newService.service"
+                          placeholder="Enter custom service" @keyup.enter="createNewService">
+                        <button class="btn btn-primary ms-2" @click.prevent="createNewService">
+                          <i class="bi bi-arrow-right"></i>
+                        </button>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -191,7 +189,7 @@
 import Button from '@/Components/Button.vue';
 import Header from "@/Pages/Layouts/TechnicianHeader.vue";
 import { Link, router, useForm, usePage } from "@inertiajs/vue3";
-import { ref, watch, computed } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   technicians: Object,
@@ -222,8 +220,6 @@ let search = ref(props.filters.search);
 let sortColumn = ref("ticket_number");
 let sortDirection = ref("asc");
 let timeoutId = null;
-let titleSearch = ref('');
-let serviceSearch = ref('');
 
 const fetchData = () => {
   router.get(
@@ -240,21 +236,6 @@ const fetchData = () => {
     )
   )
 }
-
-
-
-const filteredTitles = computed(() => {
-  return props.problems.filter(problem => {
-    return problem.problem.toLowerCase().includes(titleSearch.value.toLowerCase());
-  });
-});
-
-// Filtered service options based on search input
-const filteredServices = computed(() => {
-  return props.services.filter(service => {
-    return service.service.toLowerCase().includes(serviceSearch.value.toLowerCase());
-  });
-});
 
 const selectService = (service) => {
   form.service = service.service;

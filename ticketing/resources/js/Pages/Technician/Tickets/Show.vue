@@ -18,17 +18,28 @@
     <div>
         <Header class="sticky-top" style="z-index: 110;"></Header>
 
-        <div class="">
-            <a :href="route('technician.tickets')"
-                class="print-hidden btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
-                style="width: 6rem;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                class="bi bi-caret-left-fill print-hidden" viewBox="0 0 16 16">
-                <path
-                    d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
-            </svg>
-            <span class="">Back</span>
-            </a>
+        <div class="d-flex gap-4 mt-2">
+            <div class="">
+                <a :href="route('technician.tickets')"
+                    class="print-hidden btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
+                    style="width: 6rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                        class="bi bi-caret-left-fill print-hidden" viewBox="0 0 16 16">
+                        <path
+                            d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
+                    </svg>
+                    <span class="">Back</span>
+                </a>
+            </div>
+
+            <div class="d-flex flex-grow-1 gap-2 w-100 align-items-center">
+                <div class="d-flex gap-2 border px-3 rounded">
+                    <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
+                    <p class="fw-bold text-secondary pt-3">MS - {{ ms ? ms.ms_no : 0 }} |</p>
+                    <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }} |</p>
+                    <p class="fw-bold text-secondary pt-3">SR - {{ sr ? sr.sr_no : 0 }}</p>
+                </div>
+            </div>
         </div>
         <div class="container py-4 justify-content-center align-items-center">
             <div class="row row-cols-sm-1 gap-4 justify-content-center">
@@ -195,16 +206,53 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 shadow rounded p-4 task">
-                    <div>
-                        <h6>Tasks</h6>
-                    </div>
-                    <div>
 
+                <!-- Task List Section -->
+                <div class="col-lg-3 shadow rounded p-4 task">
+                    <div class="d-flex flex-row justify-content-between align-items-center">
+                        <h4>Tasks</h4>
+                        <!-- Button to toggle the input form -->
+                        <button v-if="!showTaskInput" type="button" class="btn btn-secondary"
+                            @click="toggleTaskInput">
+                            Add Task
+                        </button>
+                    </div>
+                    <div class="d-flex flex-column gap-3">
+                        <div>
+                            <form v-if="showTaskInput" @submit.prevent="addTask">
+                                <input type="text" v-model="taskForm.task_name" placeholder="Enter task"
+                                    class="form-control mb-2">
+                                <div class="d-flex justify-content-end align-items-center gap-2">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="button" class="btn btn-danger" @click="toggleTaskInput">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- Display tasks as Bootstrap checkboxes with formatted created_at -->
+                        <div v-if="tasks.length > 0">
+                            <div v-for="task in tasks" :key="task.id"
+                                class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="d-flex flex-row gap-2 align-items-center">
+                                    <input class="form-check-input" type="checkbox" :checked="task.is_resolved"
+                                        @change="updateTask(task)">
+                                    <label class="form-check-label">
+                                        {{ task.task_name }}
+                                    </label>
+                                </div>
+                                <!-- Secondary text for formatted created_at -->
+                                <small class="text-muted tasks-date">{{ formatDate(task.created_at) }}</small>
+                            </div>
+                        </div>
+                        <div v-else>
+                            No tasks available.
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Comment Section -->
             <div class="row mt-5 gap-4 justify-content-center text-center bg-white mb-3">
                 <div class="col-lg-8 d-flex flex-column justify-content-center align-items-center gap-2">
                     <button v-if="!isShowComment" class="p-2 px-4 rounded-pill form-control border cursor-text"
@@ -742,10 +790,15 @@ const props = defineProps({
     comments: Object,
     replies: Object,
     services: Object,
+    tasks: Object,
+    rr: Object,
+    ms: Object,
+    rs: Object,
+    sr: Object,
 })
 
 const formatDate = (date) => {
-    return moment(date, 'YYYY-MM-DD').format('MMM DD, YYYY');
+    return moment(date, 'YYYY-MM-DD').format('MM/DD/YY');
 };
 
 // Comment Start
@@ -988,6 +1041,33 @@ const getButtonClass = (status) => {
             return 'btn btn-secondary';
     }
 };
+const taskForm = useForm({
+    ticket_number: props.ticket.ticket_number,
+    user_id: page.props.user.id,
+    task_name: null,
+    is_resolved: null,
+})
+
+const showTaskInput = ref(false);
+const newTask = ref('');
+
+function toggleTaskInput() {
+    showTaskInput.value = !showTaskInput.value;
+    newTask.value = '';
+}
+const addTask = () => taskForm.post(route('technician.tickets.task'), { preserveScroll: false, preserveState: false })
+
+console.log()
+const updatedTaskForm = useForm({
+    ticket_number: props.ticket.ticket_number,
+    is_resolved: null,
+})
+
+const updateTask = (task) => {
+    task.is_resolved = !task.is_resolved;
+    updatedTaskForm.is_resolved = task.is_resolved;
+    updatedTaskForm.put(route('technician.tickets.task.update', task.id), { preserveScroll: false, preserveState: false })
+}
 </script>
 
 

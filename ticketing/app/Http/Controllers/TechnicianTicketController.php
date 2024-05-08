@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Notifications\TicketMade;
 use App\Models\ServiceReport;
 use App\Models\TicketComment;
+use App\Models\TicketTask;
 use App\Notifications\UpdateTicketStatus;
 use Carbon\Carbon;
 use Exception;
@@ -296,12 +297,26 @@ class TechnicianTicketController extends Controller
             $reply->time_since_posted = $reply->created_at->diffForHumans();
         });
 
+        $tasks = TicketTask::where('ticket_number', $id)
+            ->with('user')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
         $services = Service::all();
+        $latest_rs = HistoryNumber::select('rs_no')->whereNotNull('rs_no')->orderByDesc('rs_no')->first();
+        $latest_ms = HistoryNumber::select('ms_no')->whereNotNull('ms_no')->orderByDesc('ms_no')->first();
+        $latest_rr = HistoryNumber::select('rr_no')->whereNotNull('rr_no')->orderByDesc('rr_no')->first();
+        $latest_sr = HistoryNumber::select('sr_no')->whereNotNull('sr_no')->orderByDesc('sr_no')->first();
         return inertia('Technician/Tickets/Show', [
             'ticket' => $ticket,
             'comments' => $comments,
             'replies' => $replies,
-            'services' => $services
+            'services' => $services,
+            'tasks' => $tasks,
+            'rs' => $latest_rs,
+            'ms' => $latest_ms,
+            'rr' => $latest_rr,
+            'sr' => $latest_sr,
         ]);
     }
 
@@ -676,5 +691,57 @@ class TechnicianTicketController extends Controller
             'actions_taken' => $action_taken,
         ];
         Log::create($log_data);
+    }
+
+    public function addTask(Request $request)
+    {
+        try {
+
+            $request->validate([
+                'ticket_number' => 'required',
+                'user_id' => 'required',
+                'task_name' => 'required',
+                'is_resolved' => 'nullable',
+            ]);
+
+            $task = [
+                'ticket_number' => $request->ticket_number,
+                'task_name' => $request->task_name,
+                'user_id' => $request->user_id,
+                'is_resolved' => $request->is_resolved,
+            ];
+
+            $newTask = TicketTask::create($task);
+
+            return redirect()->back()->with('success', 'Added Task!')->with('message', 'Task successfully Added!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function updateTask(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'is_resolved' => 'nullable|boolean',
+            ]);
+
+            $task = TicketTask::where('id', $id)->first();
+
+            $isResolved = $request->input('is_resolved');
+
+            if ($isResolved === true) {
+                $task->is_resolved = now()->toDateTimeString();
+            } else {
+                $task->is_resolved = null;
+            }
+
+            $task->save();
+
+            return redirect()->back()
+                ->with('success', 'Task Completed!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }
