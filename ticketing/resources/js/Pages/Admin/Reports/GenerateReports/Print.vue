@@ -28,8 +28,8 @@
         </div>
         <div class="text-center fw-bold mb-2"> RS System (Monitoring) <br> {{ monthName(month) }} {{ year }} </div>
 
-        <div class="table-responsive px-3 rounded pt-2 px-2">
-            <table class="table table-hover custom-rounded-table border shadow-sm">
+        <div class="table-responsive px-3 rounded pt-2 px-2 ">
+            <table class="table table-hover custom-rounded-table border shadow-sm border-dark">
                 <thead>
                     <tr class="text-start text-muted">
                         <th class="text-start text-muted">No</th>
@@ -105,5 +105,10 @@ const printPage = () => {
         size: auto;
         margin: 0;
     }
+}
+
+.table-bordered td,
+.table-bordered th {
+    padding: 0.5rem; /* Adjust as needed */
 }
 </style>
