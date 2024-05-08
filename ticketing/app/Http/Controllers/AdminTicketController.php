@@ -972,12 +972,11 @@ class AdminTicketController extends Controller
 
             $isResolved = $request->input('is_resolved');
 
+            $auth = Auth::user();
+            $action_taken = "Updated a task for ticket #" . $request->ticket_number . ", resolved: " . $task->task_name;
 
             if ($isResolved === true) {
                 $task->is_resolved = now()->toDateTimeString();
-
-                $auth = Auth::user();
-                $action_taken = "Updated a task for ticket #" . $request->ticket_number . ", resolved: " . $task->task_name;
                 $log_data = [
                     'name' => $auth->name,
                     'user_type' => $auth->user_type,
@@ -987,8 +986,6 @@ class AdminTicketController extends Controller
 
             } else {
                 $task->is_resolved = null;
-                $auth = Auth::user();
-                $action_taken = "Updated a task for ticket #" . $request->ticket_number . ", unresolved: " . $task->task_name;
                 $log_data = [
                     'name' => $auth->name,
                     'user_type' => $auth->user_type,
