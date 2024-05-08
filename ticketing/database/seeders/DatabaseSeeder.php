@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Jon Doe',
                 'email' => 'jondoe@slu.edu.ph',
                 'password' => '123456',
-                'user_type' => 'admin',
+                'user_type' => 'super',
                 ],
                     
             ];

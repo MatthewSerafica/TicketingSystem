@@ -32,6 +32,9 @@ class AuthController extends Controller
         $redirectRoute = '';
 
         switch ($userType) {
+            case 'super':
+                $redirectRoute = '/admin';
+                break;
             case 'admin':
                 $redirectRoute = '/admin';
                 break;

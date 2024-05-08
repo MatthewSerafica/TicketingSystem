@@ -22,10 +22,6 @@
                             <a class="nav-link tickets text-light" href="/admin/tickets"
                                 @click="setActiveLink('tickets')">Tickets</a>
                         </li>
-                        <li class="nav-item" :class="{ 'active': activeLink === 'forum' }">
-                            <a class="nav-link forum text-light" href="/admin/forum" 
-                                @click="setActiveLink('forum')">Forum</a>
-                        </li>
                         <li class="nav-item dropdown reports" :class="{ 'active': activeLink === 'reports' }">
                             <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownReports"
                                 role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -40,8 +36,10 @@
                                 </li>
                             </ul>
                         </li>
-                        
-
+                        <li class="nav-item" :class="{ 'active': activeLink === 'forum' }">
+                            <a class="nav-link forum text-light" href="/admin/forum" 
+                                @click="setActiveLink('forum')">Forum</a>
+                        </li>
                         <li class="nav-item dropdown settings" :class="{ 'active': activeLink === 'settings' }">
                             <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,7 +50,7 @@
                                 <li><a class="dropdown-item" href="/admin/department">Departments</a></li>
                                 <li><a class="dropdown-item" href="/admin/office">Offices</a></li>
                                 <li><a class="dropdown-item" href="/admin/services">Services</a></li>
-                                <li><a class="dropdown-item" href="/admin/problems">Problem Encountered</a></li>
+                                <li><a class="dropdown-item" href="/admin/problems">Problems</a></li>
                                 <li><a class="dropdown-item" href="/admin/logs">Logs</a></li>
                             </ul>
                         </li>
@@ -71,7 +69,10 @@
                             </span>
                         </button>
                         <div class="d-flex flex-row gap-2 justify-content-center align-items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
+                            <img v-if="page.props.user.avatar !== 'http://127.0.0.1:8000/storage'"
+                                :src="page.props.user.avatar" alt="User profile picture"
+                                class="avatar rounded-circle shadow border-3">
+                            <svg v-else xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white"
                                 class="bi bi-person-circle" viewBox="0 0 16 16">
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
                                 <path fill-rule="evenodd"
@@ -84,6 +85,10 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-lg-end dropdown-menu-start mt-2">
                                     <li>
+                                        <Link :href="route('admin.profile')" v-if="page.props.user"
+                                            class="text-decoration-none dropdown-item">
+                                        Profile
+                                        </Link>
                                         <Link :href="route('admin.change', page.props.user.id)" v-if="page.props.user"
                                             class="text-decoration-none dropdown-item">Change password
                                         </Link>
@@ -396,6 +401,15 @@ onMounted(() => {
 
 
 <style scoped>
+.avatar {
+    width: 2rem;
+    /* Width of the avatar */
+    height: 2rem;
+    /* Height of the avatar */
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    cursor: pointer;
+}
 .close-icon {
     position: absolute;
     top: 10px;

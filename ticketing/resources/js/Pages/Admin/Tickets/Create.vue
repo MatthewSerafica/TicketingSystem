@@ -72,16 +72,16 @@
 
                         <li class="dropdown-divider"></li>
                         <li v-if="filteredTitles.length === 0">No titles found...</li>
-                        <li v-else-if="filteredTitles" v-for="problem in filteredTitles" class="dropdown-item" @click="selectProblem(problem)" style="width: 550px;">
+                        <li v-else-if="filteredTitles" v-for="problem in filteredTitles" class="dropdown-item" @click="selectProblem(problem)" style="width: 400px;">
                           <span class="fw-semibold">{{ problem.problem }}</span>
                         </li>
-                        <li>
-                        <input type="text" class="form-control flex-grow-1" v-model="newProblem.problem"
+                        <li class="dropdown-item d-flex align-items-center">
+                          <input type="text" class="form-control flex-grow-1 me-2" v-model="newProblem.problem"
                             placeholder="Enter custom problem" @keyup.enter.prevent="createNewProblem">
-                          <button class="btn btn-primary ms-2" @click.prevent="createNewProblem">
+                          <button class="btn btn-primary" @click.prevent="createNewProblem">
                             <i class="bi bi-arrow-right"></i>
-                          </button>
-                      </li>
+                        </button>
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -145,11 +145,13 @@
                         <span class="visually-hidden">Toggle Dropdown</span>
                       </button>
                       <ul id="serviceDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                        <input type="text" class="form-control" v-model="newService.service"
+                        <li class="dropdown-item d-flex align-items-center">
+                        <input type="text" class="form-control flex-grow-1 me-2" v-model="newService.service"
                             placeholder="Enter custom service" @keyup.enter="createNewService">
                           <button class="btn btn-primary ms-2" @click.prevent="createNewService">
                             <i class="bi bi-arrow-right"></i>
                           </button>
+                        </li>
                         <li v-if="filteredServices.length === 0">No services found...</li>
                         <li v-else-if="filteredServices" v-for="service in filteredServices" class="dropdown-item" @click="selectService(service)" style="width: 550px;">
                             <span class="fw-semibold">{{ service.service }}</span>
