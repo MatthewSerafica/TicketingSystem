@@ -918,7 +918,7 @@ class AdminTicketController extends Controller
 
             $newTask = TicketTask::create($task);
 
-            return redirect()->back()->with('success', 'Added Task!')->with('message', 'Task successfully Added!');
+            return redirect()->back()->with('success', 'Added Task!')->with('message', 'Task Added successfully!');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -929,24 +929,40 @@ class AdminTicketController extends Controller
         try {
             $request->validate([
                 'is_resolved' => 'nullable|boolean',
+                'task_name' => 'required'
             ]);
 
             $task = TicketTask::where('id', $id)->first();
 
             $isResolved = $request->input('is_resolved');
 
+
             if ($isResolved === true) {
                 $task->is_resolved = now()->toDateTimeString();
             } else {
                 $task->is_resolved = null;
             }
-
+            $task->task_name = $request->input('task_name', $task->task_name);
             $task->save();
 
             return redirect()->back()
-                ->with('success', 'Task Completed!');
+                ->with('success', 'Task Updated successfully!');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+    public function deleteTask(Request $request, $id)
+    {
+        try {
+            $task = TicketTask::where('id', $id)->first();
+            $task->delete();
+
+            return redirect()->back()
+                ->with('success', 'Task Deleted successfully!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+
 }

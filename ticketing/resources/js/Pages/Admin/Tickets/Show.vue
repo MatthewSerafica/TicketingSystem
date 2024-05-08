@@ -255,10 +255,8 @@
                                         <div class="accordion-header d-flex flex-row justify-content-between">
                                             <div class="d-flex flex-row justify-content-start gap-3 align-items-center">
                                                 <input class="form-check-input" type="checkbox"
-                                                    :id="'taskCheckbox' + task.id" :checked="task.is_resolved"
                                                     @change="updateTask(task)">
-                                                <label class="form-check-label overflow-control"
-                                                    :for="'taskCheckbox' + task.id">
+                                                <label class="form-check-label overflow-control fw-medium">
                                                     {{ task.task_name }}
                                                 </label>
                                             </div>
@@ -845,7 +843,7 @@ const formatDate = (date) => {
 
 
 const formatDateTime = (date) => {
-    return moment(date).format('MMM DD, YYYY HH:mm');
+    return moment(date).format('MMM DD, YYYY HH:mm  A');
 };
 
 // Comment Start
@@ -1068,7 +1066,6 @@ const taskForm = useForm({
     is_resolved: null,
 })
 
-// Task
 const showTaskInput = ref(false);
 const newTask = ref('');
 
@@ -1081,13 +1078,20 @@ const addTask = () => taskForm.post(route('admin.tickets.task'), { preserveScrol
 console.log()
 const updatedTaskForm = useForm({
     ticket_number: props.ticket.ticket_number,
+    task_name: null,
     is_resolved: null,
 })
 
 const updateTask = (task) => {
     task.is_resolved = !task.is_resolved;
     updatedTaskForm.is_resolved = task.is_resolved;
+    updatedTaskForm.task_name = task.task_name;
     updatedTaskForm.put(route('admin.tickets.task.update', task.id), { preserveScroll: false, preserveState: false })
+}
+
+const deleteTask = (task) => {
+    updatedTaskForm.id = task.id;
+    updatedTaskForm.delete(route('admin.tickets.task.delete', task.id), { preserveScroll: false, preserveState: false })
 }
 
 
