@@ -225,8 +225,13 @@
 
                 <!-- Task List Section -->
                 <div class="col-lg-3 shadow rounded p-4 task">
-                    <div>
+                    <div class="d-flex flex-row justify-content-between align-items-center">
                         <h6>Tasks</h6>
+                            <!-- Button to toggle the input form -->
+                            <button v-if="!showTaskInput" type="button" class="btn btn-secondary"
+                                @click="toggleTaskInput">
+                                Add Task
+                            </button>
                     </div>
                     <div class="d-flex flex-column gap-3">
                         <div>
@@ -240,11 +245,6 @@
                                     </button>
                                 </div>
                             </form>
-                            <!-- Button to toggle the input form -->
-                            <button v-if="!showTaskInput" type="button" class="btn btn-secondary mt-2"
-                                @click="toggleTaskInput">
-                                Add Task
-                            </button>
                         </div>
                         <!-- Display tasks as Bootstrap checkboxes with formatted created_at -->
                         <div v-if="tasks.length > 0">

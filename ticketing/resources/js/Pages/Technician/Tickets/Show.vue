@@ -210,7 +210,7 @@
                 <!-- Task List Section -->
                 <div class="col-lg-3 shadow rounded p-4 task">
                     <div class="d-flex flex-row justify-content-between align-items-center">
-                        <h6>Tasks</h6>
+                        <h4>Tasks</h4>
                         <!-- Button to toggle the input form -->
                         <button v-if="!showTaskInput" type="button" class="btn btn-secondary"
                             @click="toggleTaskInput">
