@@ -22,12 +22,12 @@
             <a :href="route('admin.tickets')"
                 class="print-hidden btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
                 style="width: 6rem;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                class="bi bi-caret-left-fill print-hidden" viewBox="0 0 16 16">
-                <path
-                    d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
-            </svg>
-            <span class="">Back</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                    class="bi bi-caret-left-fill print-hidden" viewBox="0 0 16 16">
+                    <path
+                        d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
+                </svg>
+                <span class="">Back</span>
             </a>
         </div>
         <div class="container py-4 justify-content-center align-items-center">
@@ -211,46 +211,44 @@
                     </div>
                 </div>
 
-                
-<!-- Task List Section -->
-<div class="col-lg-3 shadow rounded p-4 task">
-    <div>
-        <h6>Tasks</h6>
-    </div>
-    <div>
-        <!-- Display tasks as Bootstrap checkboxes with formatted created_at -->
-        <div v-if="tasks.length > 0">
-            <div v-for="task in tasks" :key="task.id" class="d-flex justify-content-between align-items-center mb-2">
-                <div>
-                    <input class="form-check-input" type="checkbox" v-model="updatedTaskForm.is_resolved" :id="'taskCheckbox' + task.id" @change="updateTask(task.id)">
-            <label class="form-check-label" :for="'taskCheckbox' + task.id">
-              {{ task.task_name }}
-            </label>
+                <!-- Task List Section -->
+                <div class="col-lg-3 shadow rounded p-4 task">
+                    <div>
+                        <h6>Tasks</h6>
+                    </div>
+                    <div>
+                        <!-- Display tasks as Bootstrap checkboxes with formatted created_at -->
+                        <div v-if="tasks.length > 0">
+                            <div v-for="task in tasks" :key="task.id"
+                                class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <input class="form-check-input" type="checkbox" :checked="task.is_resolved"
+                                        :id="'taskCheckbox' + task.id" @change="updateTask(task)">
+                                    <label class="form-check-label" :for="'taskCheckbox' + task.id">
+                                        {{ task.task_name }}
+                                    </label>
+                                </div>
+                                <!-- Secondary text for formatted created_at -->
+                                <small class="text-muted tasks-date">{{ formatDate(task.created_at) }}</small>
+                            </div>
+                        </div>
+                        <div v-else>
+                            No tasks available.
+                        </div>
+                        <form v-if="showTaskInput" @submit.prevent="addTask">
+                            <input type="text" v-model="taskForm.task_name" placeholder="Enter task"
+                                class="form-control mb-2">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </form>
+                        <!-- Button to toggle the input form -->
+                        <button type="button" class="btn btn-secondary mt-2" @click="toggleTaskInput">
+                            Add Task
+                        </button>
+                    </div>
                 </div>
-                <!-- Secondary text for formatted created_at -->
-                <small class="text-muted tasks-date">{{ formatDateTime(task.created_at) }}</small>
-            </div>
-        </div>
-        <div v-else>
-            No tasks available.
-        </div>
-        <form v-if="showTaskInput" @submit.prevent="addTask">
-            <input type="text" v-model="taskForm.task_name" placeholder="Enter task" class="form-control mb-2">
-            <button type="submit" class="btn btn-primary">Save</button>
-        </form>
-        <!-- Button to toggle the input form -->
-        <button type="button" class="btn btn-secondary mt-2" @click="toggleTaskInput">
-            Add Task
-        </button>
-    </div>
-</div>
-
-
-
-
-
             </div>
 
+            <!-- Comment Section -->
             <div class="row mt-5 gap-4 justify-content-center text-center bg-white mb-3">
                 <div class="col-lg-8 d-flex flex-column justify-content-center align-items-center gap-2">
                     <button v-if="!isShowComment" class="p-2 px-4 rounded-pill form-control border cursor-text"
@@ -799,8 +797,8 @@ const formatDate = (date) => {
 const formatDateTime = (date) => {
     return moment(date).format('MMM DD, YYYY HH:mm');
 };
-// Comment Start
 
+// Comment Start
 const commentTextarea = ref(null);
 
 const isShowComment = ref(false);
@@ -922,7 +920,6 @@ function showDelete(post) {
 // Comment End
 
 // Ticket Update Start
-
 let selectedInput = ref(null);
 let editData = reactive({});
 
@@ -1041,10 +1038,10 @@ const getButtonClass = (status) => {
 };
 
 const taskForm = useForm({
-    ticket_number : props.ticket.ticket_number,
+    ticket_number: props.ticket.ticket_number,
     user_id: page.props.user.id,
-	task_name : null,
-	is_resolved : null,
+    task_name: null,
+    is_resolved: null,
 })
 
 const showTaskInput = ref(false);
@@ -1052,18 +1049,21 @@ const newTask = ref('');
 
 function toggleTaskInput() {
     showTaskInput.value = !showTaskInput.value;
-    newTask.value = ''; // Reset input field when toggling
+    newTask.value = '';
 }
 const addTask = () => taskForm.post(route('admin.tickets.task'), { preserveScroll: false, preserveState: false })
 
-
+console.log()
 const updatedTaskForm = useForm({
-    ticket_number : props.ticket.ticket_number,
-	is_resolved : null,
+    ticket_number: props.ticket.ticket_number,
+    is_resolved: null,
 })
 
-const updateTask = () => updatedTaskForm.put(route('admin.tickets.task.update'), { preserveScroll: false, preserveState: false })
-
+const updateTask = (task) => {
+    task.is_resolved = !task.is_resolved;
+    updatedTaskForm.is_resolved = task.is_resolved;
+    updatedTaskForm.put(route('admin.tickets.task.update', task.id), { preserveScroll: false, preserveState: false })
+}
 
 </script>
 

@@ -916,22 +916,21 @@ class AdminTicketController extends Controller
         }
     }
 
-    public function updateTask(Request $request)
+    public function updateTask(Request $request, $id)
     {
         try {
             $request->validate([
-                'is_resolved' => 'nullable|boolean', // Update validation rule to expect boolean
+                'is_resolved' => 'nullable|boolean',
             ]);
 
-            $task = TicketTask::where('ticket_number', $request->ticket_number)->first();
+            $task = TicketTask::where('id', $request->id)->first();
 
-            // Handle checkbox value conversion to timestamp or boolean
-            $isResolved = $request->input('is_resolved'); // Assuming 'is_resolved' is sent from the frontend
+            $isResolved = $request->input('is_resolved');
 
             if ($isResolved === true) {
-                $task->is_resolved = now()->toDateTimeString(); // Convert to timestamp if checkbox is checked
+                $task->is_resolved = now()->toDateTimeString();
             } else {
-                $task->is_resolved = null; // Set to null if checkbox is not checked
+                $task->is_resolved = null;
             }
 
             $task->save();
