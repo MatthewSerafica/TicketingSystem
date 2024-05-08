@@ -306,12 +306,20 @@ class AdminTicketController extends Controller
             ->get();
 
 
+        $latest_rs = HistoryNumber::select('rs_no')->whereNotNull('rs_no')->orderByDesc('rs_no')->first();
+        $latest_ms = HistoryNumber::select('ms_no')->whereNotNull('ms_no')->orderByDesc('ms_no')->first();
+        $latest_rr = HistoryNumber::select('rr_no')->whereNotNull('rr_no')->orderByDesc('rr_no')->first();
+        $latest_sr = HistoryNumber::select('sr_no')->whereNotNull('sr_no')->orderByDesc('sr_no')->first();
         return inertia('Admin/Tickets/Show', [
             'ticket' => $ticket,
             'comments' => $comments,
             'replies' => $replies,
             'services' => $services,
             'tasks' => $tasks,
+            'rs' => $latest_rs,
+            'ms' => $latest_ms,
+            'rr' => $latest_rr,
+            'sr' => $latest_sr,
         ]);
     }
 
@@ -693,7 +701,7 @@ class AdminTicketController extends Controller
 
         $ticket->remarks = $request->remark;
         $ticket->save();
-        
+
         $auth = Auth::user();
         $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'remarks: ' . $request->remark;
         $log_data = [
@@ -822,7 +830,7 @@ class AdminTicketController extends Controller
                 $technician->tickets_assigned = $technician->tickets_assigned - 1;
                 $technician->save();
             }
-            
+
             $auth = Auth::user();
             $action_taken = "Removed a technician from  ticket #" .  $request->ticket_number;
             $log_data = [
@@ -831,7 +839,7 @@ class AdminTicketController extends Controller
                 'actions_taken' => $action_taken,
             ];
             Log::create($log_data);
-            
+
             return redirect()->back()->with('success', 'Technician removed!')->with('message', 'Technician successfully removed from Ticket #' . $request->ticket_number);
         }
     }
@@ -923,7 +931,7 @@ class AdminTicketController extends Controller
                 'is_resolved' => 'nullable|boolean',
             ]);
 
-            $task = TicketTask::where('id', $request->id)->first();
+            $task = TicketTask::where('id', $id)->first();
 
             $isResolved = $request->input('is_resolved');
 
