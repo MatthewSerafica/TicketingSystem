@@ -62,17 +62,16 @@
                       <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                         <span class="visually-hidden">Toggle Dropdown</span>
-                      </button>         
+                      </button>
                       <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
                         <li class="dropdown-item d-flex align-items-center">
-                          <input type="text" class="form-control flex-grow-1" v-model="titleSearch" placeholder="Search Title...">       
+                          <input type="text" class="form-control flex-grow-1" v-model="titleSearch"
+                            placeholder="Search Title...">
                         </li>
-
-
-
                         <li class="dropdown-divider"></li>
-                        <li v-if="filteredTitles.length === 0">No titles found...</li>
-                        <li v-else-if="filteredTitles" v-for="problem in filteredTitles" class="dropdown-item" @click="selectProblem(problem)" style="width: 400px;">
+                        <li v-if="filteredTitles.length === 0" class="dropdown-item">No titles found...</li>
+                        <li v-else-if="filteredTitles" v-for="problem in filteredTitles" class="dropdown-item"
+                          @click="selectProblem(problem)" style="width: 400px;">
                           <span class="fw-semibold">{{ problem.problem }}</span>
                         </li>
                         <li class="dropdown-item d-flex align-items-center">
@@ -80,7 +79,7 @@
                             placeholder="Enter custom problem" @keyup.enter.prevent="createNewProblem">
                           <button class="btn btn-primary" @click.prevent="createNewProblem">
                             <i class="bi bi-arrow-right"></i>
-                        </button>
+                          </button>
                         </li>
                       </ul>
                     </div>
@@ -97,18 +96,17 @@
                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                         <span class="visually-hidden">Toggle Dropdown</span>
                       </button>
-                      <ul id="employeeDropdown" class="dropdown-menu" :class="{ 'show': search }"
-                        style="max-height: 300px; overflow-y: auto;">
+                      <ul id="employeeDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
                         <li class="px-2">
                           <input id="employee-search" class="form-control border-secondary-subtle" type="text"
-                            placeholder="Search Employee..." v-model="search" />
+                            placeholder="Search Employee..." v-model="employeeSearch" />
                         </li>
-                        <li v-if="employees" v-for="employee in employees" class="btn dropdown-item"
+                        <li v-if="filteredEmployees.length === 0" class="dropdown-item">No results found...</li>
+                        <li v-if="filteredEmployees" v-for="employee in filteredEmployees" class="btn dropdown-item"
                           @click="selectEmployee(employee)">
                           <span class="fw-semibold">{{ employee.user.name }}</span>
                           <br> <small>{{ employee.department }}-{{ employee.office }}</small>
                         </li>
-                        <li v-else-if="!employees">No results found...</li>
                       </ul>
                     </div>
                   </div>
@@ -146,20 +144,21 @@
                       </button>
                       <ul id="serviceDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
                         <li class="dropdown-item d-flex align-items-center">
-                        <input type="text" class="form-control flex-grow-1 me-2" v-model="newService.service"
+                          <input type="text" class="form-control flex-grow-1" v-model="serviceSearch"
+                            placeholder="Search Service...">
+                        </li>
+                        <li v-if="filteredServices.length === 0" class="dropdown-item">No services found...</li>
+                        <li v-else-if="filteredServices" v-for="service in filteredServices" class="dropdown-item"
+                          @click="selectService(service)" style="width: 550px;">
+                          <span class="fw-semibold">{{ service.service }}</span>
+                        </li>
+                        <li class="dropdown-divider"></li>
+                        <li class="dropdown-item d-flex align-items-center">
+                          <input type="text" class="form-control flex-grow-1 me-2" v-model="newService.service"
                             placeholder="Enter custom service" @keyup.enter="createNewService">
                           <button class="btn btn-primary ms-2" @click.prevent="createNewService">
                             <i class="bi bi-arrow-right"></i>
                           </button>
-                        </li>
-                        <li v-if="filteredServices.length === 0">No services found...</li>
-                        <li v-else-if="filteredServices" v-for="service in filteredServices" class="dropdown-item" @click="selectService(service)" style="width: 550px;">
-                            <span class="fw-semibold">{{ service.service }}</span>
-                        </li>
-                        <li class="dropdown-divider"></li>
-                        <li class="dropdown-item d-flex align-items-center">
-                          <input type="text" class="form-control flex-grow-1" v-model="serviceSearch" placeholder="Search Service...">
-                          
                         </li>
                       </ul>
                     </div>
@@ -266,7 +265,6 @@ import Alpine from 'alpinejs';
 import axios from 'axios';
 import { ref, watch, watchEffect, computed } from "vue";
 
-
 Alpine.start()
 
 const page = usePage();
@@ -274,21 +272,6 @@ const page = usePage();
 let showSuccessToast = ref(false);
 let showErrorToast = ref(false);
 
-let titleSearch = ref('');
-let serviceSearch = ref('');
-
-const filteredTitles = computed(() => {
-  return props.problems.filter(problem => {
-    return problem.problem.toLowerCase().includes(titleSearch.value.toLowerCase());
-  });
-});
-
-// Filtered service options based on search input
-const filteredServices = computed(() => {
-  return props.services.filter(service => {
-    return service.service.toLowerCase().includes(serviceSearch.value.toLowerCase());
-  });
-});
 watchEffect(() => {
   showSuccessToast.value = !!page.props.flash.success;
   showErrorToast.value = !!page.props.flash.error;
@@ -318,6 +301,28 @@ let sortDirection = ref("asc");
 let timeoutId = null;
 let techniciansData = ref([]);
 let showLabel = ref(true);
+let employeeSearch = ref('');
+let titleSearch = ref('');
+let serviceSearch = ref('');
+
+const filteredEmployees = computed(() => {
+  return props.employees.filter(employee => {
+    return employee.user.name.toLowerCase().includes(employeeSearch.value.toLowerCase());
+  });
+});
+
+const filteredTitles = computed(() => {
+  return props.problems.filter(problem => {
+    return problem.problem.toLowerCase().includes(titleSearch.value.toLowerCase());
+  });
+});
+
+// Filtered service options based on search input
+const filteredServices = computed(() => {
+  return props.services.filter(service => {
+    return service.service.toLowerCase().includes(serviceSearch.value.toLowerCase());
+  });
+});
 
 const addDropdown = () => {
   techniciansData.value.push({

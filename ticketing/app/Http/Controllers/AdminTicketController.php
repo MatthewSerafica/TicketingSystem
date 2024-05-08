@@ -918,6 +918,15 @@ class AdminTicketController extends Controller
 
             $newTask = TicketTask::create($task);
 
+            $auth = Auth::user();
+            $action_taken = "Added a new task for ticket #" . $request->ticket_number . ": " . $request->task_name;
+            $log_data = [
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action_taken,
+            ];
+            Log::create($log_data);
+
             return redirect()->back()->with('success', 'Added Task!')->with('message', 'Task Added successfully!');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -934,6 +943,16 @@ class AdminTicketController extends Controller
             $task = TicketTask::where('id', $id)->first();
             $task->task_name = $request->input('task_name', $task->task_name);
             $task->save();
+
+
+            $auth = Auth::user();
+            $action_taken = "Updated a task for ticket #" . $request->ticket_number . " new name: " . $request->task_name;
+            $log_data = [
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action_taken,
+            ];
+            Log::create($log_data);
 
             return redirect()->back()
                 ->with('success', 'Task Updated successfully!');
@@ -956,8 +975,26 @@ class AdminTicketController extends Controller
 
             if ($isResolved === true) {
                 $task->is_resolved = now()->toDateTimeString();
+
+                $auth = Auth::user();
+                $action_taken = "Updated a task for ticket #" . $request->ticket_number . ", resolved: " . $task->task_name;
+                $log_data = [
+                    'name' => $auth->name,
+                    'user_type' => $auth->user_type,
+                    'actions_taken' => $action_taken,
+                ];
+                Log::create($log_data);
+
             } else {
                 $task->is_resolved = null;
+                $auth = Auth::user();
+                $action_taken = "Updated a task for ticket #" . $request->ticket_number . ", unresolved: " . $task->task_name;
+                $log_data = [
+                    'name' => $auth->name,
+                    'user_type' => $auth->user_type,
+                    'actions_taken' => $action_taken,
+                ];
+                Log::create($log_data);
             }
             $task->save();
 
@@ -974,12 +1011,19 @@ class AdminTicketController extends Controller
             $task = TicketTask::where('id', $id)->first();
             $task->delete();
 
+            $auth = Auth::user();
+            $action_taken = "Removed a task for ticket #" . $request->ticket_number . ": " . $task->task_name;
+            $log_data = [
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action_taken,
+            ];
+            Log::create($log_data);
+
             return redirect()->back()
                 ->with('success', 'Task Deleted successfully!');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
-
-
 }
