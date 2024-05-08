@@ -173,7 +173,7 @@ const handleContentChange = async (content) => {
                     const response = await axios.get(`/technician/forum/post/users/${searchTerm}`);
                     userData.value = response.data.users;
                     showAutocomplete.value = true;
-                } else if (page.props.user.user_type == 'admin') {
+                } else if (page.props.user.user_type == 'admin' || page.props.user.user_type == 'super') {
                     const response = await axios.get(`/admin/forum/post/users/${searchTerm}`);
                     userData.value = response.data.users;
                     showAutocomplete.value = true;
@@ -236,7 +236,7 @@ const post = async () => {
                 page.props.flash.error_message = response.data.message || 'Unexpected error occurred';
                 showErrorToast.value = true;
             }
-        } else if (page.props.user.user_type == 'admin') {
+        } else if (page.props.user.user_type == 'admin' || page.props.user.user_type == 'super') {
             const response = await axios.post(route('admin.forum.store'), formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',

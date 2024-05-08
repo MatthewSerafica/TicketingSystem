@@ -60,7 +60,7 @@ class TechnicianForumController extends Controller
                 'filters' => $filters,
                 'technicians' => $technicians,
             ]);
-        } else if ($auth->user_type == 'admin') {
+        } else if ($auth->user_type == 'admin' || $auth->user_type == 'super') {
             return inertia('Admin/Forum/Index', [
                 'posts' => PostResource::collection($posts),
                 'filters' => $filters,
@@ -106,11 +106,12 @@ class TechnicianForumController extends Controller
             );
         }
 
-        $taggedUserIds = $tagged->pluck('user_id')->toArray();
+        $taggedUserIds = json_decode($request->tagged_user, true);
 
         $techs = User::where(function ($query) use ($user_id, $taggedUserIds) {
             $query->where('user_type', 'technician')
-                ->orWhere('user_type', 'admin');
+                ->orWhere('user_type', 'admin')
+                ->orWhere('user_type', 'super');
         })
             ->whereNotIn('id', array_merge([$user_id], $taggedUserIds))
             ->get();
@@ -124,7 +125,7 @@ class TechnicianForumController extends Controller
 
         if ($auth->user_type == 'technician') {
             return redirect()->to(route('technician.forum'))->with('success', 'Post created successfully.');
-        } else if ($auth->user_type == 'admin') {
+        } else if ($auth->user_type == 'admin' || $auth->user_type == 'super') {
             return redirect()->to(route('admin.forum'))->with('success', 'Post created successfully.');
         }
     }
@@ -176,7 +177,7 @@ class TechnicianForumController extends Controller
                 'comments' => $comments,
                 'replies' => $replies,
             ]);
-        } else if ($auth->user_type == 'admin') {
+        } else if ($auth->user_type == 'admin' || $auth->user_type == 'super') {
             return inertia('Admin/Forum/Show', [
                 'post' => $post,
                 'comments' => $comments,
@@ -347,7 +348,8 @@ class TechnicianForumController extends Controller
         $auth = Auth::user();
         $users = User::where(function ($query) use ($term, $auth) {
             $query->where('user_type', 'technician')
-                ->orWhere('user_type', 'admin');
+                ->orWhere('user_type', 'admin')
+                ->orWhere('user_type', 'super');
         })
             ->whereNot('id', $auth->id)
             ->where('name', 'like', '%' . $term . '%')

@@ -113,6 +113,7 @@ class AdminServiceReportController extends Controller
             'sr_no' => $service->service_id,
             'status' => 'Resolved',
             'remarks' => $request->remarks,
+            'resolved_at' => now(),
         ]);
 
         $employee = Employee::find($ticket->employee);

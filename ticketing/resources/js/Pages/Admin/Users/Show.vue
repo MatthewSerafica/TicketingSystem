@@ -17,19 +17,19 @@
             </Toast>
         </div>
         <div class="w-25">
-            <Link :href="route('admin.users')"
+            <a :href="route('admin.users')"
                 class="btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center back-button"
                 style="width: 6rem;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                class="bi bi-caret-left-fill" viewBox="0 0 16 16">
-                <path
-                    d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
-            </svg>
-            <span>Back</span>
-            </Link>
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                    class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+                    <path
+                        d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
+                </svg>
+                <span>Back</span>
+            </a>
         </div>
         <div class="d-flex flex-column gap-4 justify-content-center align-items-center mt-3 mb-3 main-content">
-            <div v-if="users.employee" class="card shadow p-2">
+            <div v-if="users.user_type === 'employee'" class="card shadow p-2">
                 <div class="card-body d-flex flex-column gap-4">
                     <div class="card-title fw-bold fs-3">
                         User Details
@@ -113,7 +113,7 @@
                 </div>
 
             </div>
-            <div v-if="users.technician"
+            <div v-if="users.user_type === 'technician'"
                 class="d-flex gap-5 justify-content-between align-items-center detail-container">
                 <div class="card shadow p-2 user-container"
                     style="border-top: 1px; border-left: 1px; border-right: 1px; border-bottom: 1px;">
@@ -159,7 +159,26 @@
                                     <div class="card-subtitle fw-medium fs-5">
                                         User Type
                                     </div>
-                                    <p class="card-text text-capitalize">{{ users.user_type }}</p>
+                                    <div>
+                                        <button type="button" class="btn text-start text-capitalize">
+                                            {{ users.user_type ? users.user_type : 'Unassigned' }}
+                                        </button>
+                                        <button v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'" type="button" class="btn dropdown-toggle dropdown-toggle-split"
+                                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                                            <span class="visually-hidden">Toggle Dropdown</span>
+                                        </button>
+                                        <ul v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'" class="dropdown-menu">
+                                            <li class="dropdown-item disabled">Select a user type</li>
+                                            <li class="btn dropdown-item"
+                                                @click="showInput('technician'), updateData('technician', users.id, 'user_type', false, false)">
+                                                Technician
+                                            </li>
+                                            <li class="btn dropdown-item"
+                                                @click="showInput('admin'), updateData('admin', users.id, 'user_type', false, false)">
+                                                Admin
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -287,6 +306,74 @@
                     </div>
                 </div>
             </div>
+            <div v-if="users.user_type === 'admin' || users.user_type === 'super'"
+                class="d-flex gap-5 justify-content-between align-items-center detail-container">
+                <div class="card shadow p-2 user-container"
+                    style="border-top: 1px; border-left: 1px; border-right: 1px; border-bottom: 1px;">
+                    <div class="card-body d-flex flex-column gap-4 user-card-container">
+                        <div>
+                            <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
+                                <h3 class="mt-1">User Details</h3>
+                            </div>
+                            <div class="d-flex flex-row gap-5">
+                                <div>
+                                    <div class="card-subtitle fw-medium fs-5">
+                                        Name
+                                    </div>
+                                    <span v-if="!selectedInput || selectedInput !== users.name" class="card-text"
+                                        @click="showInput(users.name, users.id)">
+                                        {{ users.name }}
+                                    </span>
+                                    <input type="text" v-if="selectedInput === users.name"
+                                        v-model="editData[users.name]"
+                                        @blur="updateData(users.name, users.id, 'name', false, false)"
+                                        @keyup.enter="updateData(users.name, users.id, 'name', false, false)"
+                                        class="rounded border border-secondary-subtle text-start">
+                                </div>
+                                <div>
+                                    <div class="card-subtitle fw-medium fs-5">
+                                        Email
+                                    </div>
+                                    <span v-if="!selectedInput || selectedInput !== users.email" class="card-text"
+                                        @click="showInput(users.email, users.id)">
+                                        {{ users.email }}
+                                    </span>
+                                    <input type="text" v-if="selectedInput === users.email"
+                                        v-model="editData[users.email]"
+                                        @blur="updateData(users.email, users.id, 'email', false, false)"
+                                        @keyup.enter="updateData(users.email, users.id, 'email', false, false)"
+                                        class="rounded border border-secondary-subtle text-start">
+                                </div>
+                                <div>
+                                    <div class="card-subtitle fw-medium fs-5">
+                                        User Type
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn text-start text-capitalize">
+                                            {{ users.user_type ? users.user_type : 'Unassigned' }}
+                                        </button>
+                                        <button v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'" type="button" class="btn dropdown-toggle dropdown-toggle-split"
+                                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                                            <span class="visually-hidden">Toggle Dropdown</span>
+                                        </button>
+                                        <ul v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'" class="dropdown-menu">
+                                            <li class="dropdown-item disabled">Select a user type</li>
+                                            <li class="btn dropdown-item"
+                                                @click="showInput('technician'), updateData('technician', users.id, 'user_type', false, false)">
+                                                Technician
+                                            </li>
+                                            <li class="btn dropdown-item"
+                                                @click="showInput('admin'), updateData('admin', users.id, 'user_type', false, false)">
+                                                Admin
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="align-items-center justify-content-center gap-4 statistics">
                 <div class="card text-left border-0 shadow">
                     <h5 class="card-header text-secondary">
@@ -310,13 +397,13 @@
 </template>
 
 <script setup>
-import Header from '@/Pages/Layouts/AdminHeader.vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
-import { reactive, ref, watchEffect } from 'vue';
+import Toast from '@/Components/Toast.vue';
 import Bar from '@/Pages/Admin/Users/Charts/Bar.vue';
 import Doughnut from '@/Pages/Admin/Users/Charts/Doughnut.vue';
+import Header from '@/Pages/Layouts/AdminHeader.vue';
+import { useForm, usePage } from '@inertiajs/vue3';
 import Alpine from 'alpinejs';
-import Toast from '@/Components/Toast.vue';
+import { reactive, ref, watchEffect } from 'vue';
 
 Alpine.start()
 
@@ -375,6 +462,10 @@ const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
 </script>
 
 <style scoped>
+.btn:hover {
+    scale: 0.97;
+}
+
 .dropdown-menu {
     display: none;
     opacity: 0;
@@ -449,9 +540,9 @@ const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
 }
 
 .data-container {
-        display: flex;
-        flex-direction: column;
-    }
+    display: flex;
+    flex-direction: column;
+}
 
 @media (max-width: 1440px) {
     .statistics {
@@ -508,6 +599,7 @@ const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
     .main-content {
         margin-left: 12rem;
     }
+
     .detail-container {
         display: flex;
         flex-direction: column;
@@ -534,6 +626,7 @@ const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
         display: flex;
         flex-direction: column;
     }
+
     .data-top {
         display: flex;
         flex-direction: column;
@@ -545,6 +638,7 @@ const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
     .main-content {
         margin-left: 13rem;
     }
+
     .detail-container {
         display: flex;
         flex-direction: column;
@@ -562,10 +656,12 @@ const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
         width: 200%;
     }
 }
+
 @media (max-width: 320px) {
     .main-content {
         margin-left: 15rem;
     }
+
     .detail-container {
         display: flex;
         flex-direction: column;

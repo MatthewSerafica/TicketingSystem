@@ -11,6 +11,7 @@ use App\Http\Controllers\AdminNotificationController;
 use App\Http\Controllers\AdminServiceController;
 use App\Http\Controllers\AdminServiceReportController;
 use App\Http\Controllers\AdminProblemController;
+use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeNotificationController;
 use App\Http\Controllers\TechnicianNotificationController;
@@ -37,7 +38,7 @@ Route::middleware(['web'])->group(function () {
     Route::post('login', [AuthController::class, 'store'])->name('login.store');
     Route::delete('logout', [AuthController::class, 'destroy'])->name('logout');
 
-    Route::middleware(['auth', 'admin'])->group(function () {
+    Route::middleware(['auth', 'admin_or_super',])->group(function () {
         Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin');
         Route::get('/admin/tickets', [AdminTicketController::class, 'index'])->name('admin.tickets');
         Route::get('/admin/tickets/create', [AdminTicketController::class, 'create'])->name('admin.tickets.create');
@@ -126,6 +127,11 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications');
         Route::post('/admin/notifications/seen', [AdminNotificationController::class, 'update'])->name('admin.notifications.seen');
         Route::delete('/admin/notifications/mark/{notif_id}', [AdminNotificationController::class, 'marked'])->name('admin.notifications.marked');
+
+        Route::get('/admin/profile', [AdminProfileController::class, 'profile'])->name('admin.profile');
+        Route::post('/admin/profile/{user_id}/avatar', [AdminProfileController::class, 'avatar'])->name('admin.profile.avatar');
+        Route::put('/admin/update/{user_id}/{field}', [AdminProfileController::class, 'update'])->name('admin.update');
+        Route::put('/admin/tech/update/{user_id}/{field}', [AdminProfileController::class, 'technician'])->name('admin.tech.update');
 
         Route::get('/admin/users/change', [AdminUsersController::class, 'password'])->name('admin.change');
         Route::post('/admin/users/change-password/{user_id}', [AdminUsersController::class, 'changePassword'])->name('admin.change-password');

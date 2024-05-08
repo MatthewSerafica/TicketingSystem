@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ArchivedTicket;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,8 +27,7 @@ class AdminUsersController extends Controller
 
     public function index(Request $request)
     {
-        $query = User::query()->with('technician', 'employee')
-            ->whereNot('user_type', 'admin');
+        $query = User::query()->with('technician', 'employee');
 
         // Retrieve filter state from query parameters
         $filter = $request->only(['search', 'filterUsers', 'all', 'employee', 'technician']);
@@ -137,22 +137,28 @@ class AdminUsersController extends Controller
         $user = User::where('id', $id)->with('employee', 'technician')->firstOrFail();
         $departments = Department::all();
         $offices = Office::all();
-        $yearly = $this->getYearlyData($user);
-        $service = $this->getType($user);
-        $assigned_today = $this->getAssignedToday($user);
-        $resolved_today = $this->getResolvedToday($user);
-        $time = $this->getAverageResolutionTime($user);
-        $complexity = $this->getComplexityCounts($user);
+        if ($user->user_type == 'employee' || $user->user_type == 'technician') {
+            $yearly = $this->getYearlyData($user);
+            $service = $this->getType($user);
+            $assigned_today = $this->getAssignedToday($user);
+            $resolved_today = $this->getResolvedToday($user);
+            $time = $this->getAverageResolutionTime($user);
+            $complexity = $this->getComplexityCounts($user);
+        } else {
+
+            $yearly = $this->getAdminYearlyData();
+            $service = $this->getAdminType();
+        }
         return inertia('Admin/Users/Show', [
             'users' => $user,
             'departments' => $departments,
             'offices' => $offices,
-            'yearly' => $yearly,
-            'service' => $service,
-            'assigned_today' => $assigned_today,
-            'resolved_today' => $resolved_today,
-            'time' => $time,
-            'complexity' => $complexity,
+            'yearly' => $yearly ?? null,
+            'service' => $service ?? null,
+            'assigned_today' => $assigned_today ?? null,
+            'resolved_today' => $resolved_today ?? null,
+            'time' => $time ?? null,
+            'complexity' => $complexity ?? null,
         ]);
     }
 
@@ -293,6 +299,57 @@ class AdminUsersController extends Controller
                     ->count(); // Count tickets for each type
                 $typeCounts[$type] = $count;
             }
+        }
+
+        return $typeCounts;
+    }
+    private function getAdminYearlyData()
+    {
+        $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        $ticket_data = Ticket::whereYear('created_at', Carbon::now()->year)
+            ->get()
+            ->groupBy(function ($ticket) {
+                return Carbon::parse($ticket->created_at)->format('M');
+            })
+            ->map(function ($grouped_tickets) {
+                return $grouped_tickets->count();
+            });
+
+        $archived_ticket_data = ArchivedTicket::whereYear('created_at', Carbon::now()->year)
+            ->get()
+            ->groupBy(function ($ticket) {
+                return Carbon::parse($ticket->created_at)->format('M');
+            })
+            ->map(function ($grouped_tickets) {
+                return $grouped_tickets->count();
+            });
+
+        $yearly_data = $ticket_data->mergeRecursive($archived_ticket_data);
+
+        $ordered_data = collect([]);
+        foreach ($months as $month) {
+            $ordered_data[$month] = $yearly_data->get($month, 0);
+        }
+        return $ordered_data;
+    }
+
+    private function getAdminType()
+    {
+        $ticket_types = Ticket::distinct('service')->pluck('service');
+        $archived_ticket_types = ArchivedTicket::distinct('service')->pluck('service');
+
+        $types = $ticket_types->merge($archived_ticket_types)->unique();
+
+        $typeCounts = [];
+
+        foreach ($types as $type) {
+            $ticket_count = Ticket::where('service', $type)->count();
+            $archived_ticket_count = ArchivedTicket::where('service', $type)->count();
+
+            $total_count = $ticket_count + $archived_ticket_count;
+
+            $typeCounts[$type] = $total_count;
         }
 
         return $typeCounts;
