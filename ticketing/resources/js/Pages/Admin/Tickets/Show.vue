@@ -257,7 +257,8 @@
                                                 <input class="form-check-input" type="checkbox"
                                                     :checked="task.is_resolved" @change="resolveTask(task)">
                                                 <label v-if="selectedInput !== task.id"
-                                                    class="form-check-label overflow-control fw-medium"
+                                                    class="form-check-label overflow-control fw-medium text-truncate"  style="max-width: 10rem;"
+                                                    :title="task.task_name"
                                                     @click="editTaskName(task)"
                                                     :class="{ 'text-body-tertiary': task.is_resolved, 'text-decoration-line-through': task.is_resolved }">
                                                     {{ task.task_name }}
@@ -287,8 +288,6 @@
                                                 <button class="btn btn-danger btn-sm" @click="deleteTask(task)">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
-                                            </div>
-                                            <div class="buttons d-flex justify-content-center mt-2 ">
                                             </div>
                                         </div>
                                     </div>
