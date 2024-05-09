@@ -171,6 +171,7 @@ function closeModal() {
   resetFileInput(); 
   file.value = null; 
   isLoading.value = false;
+  removeBeforeUnloadListener();
 }
 
 function showModal() {
