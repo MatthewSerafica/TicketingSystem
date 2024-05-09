@@ -139,14 +139,13 @@ const page = usePage();
 
 let showSuccessToast = ref(false);
 let showErrorToast = ref(false);
-let isImporting = ref(false); // Flag to indicate if importing is in progress
+let isImporting = ref(false); 
 
 const handleBeforeUnload = (event) => {
   if (isImporting.value) {
-    // Show a prompt message if importing is in progress
     event.preventDefault();
-    event.returnValue = ''; // Required for some browsers
-    return ''; // This message will be shown to the user
+    event.returnValue = ''; 
+    return '';
   }
 }
 
@@ -169,6 +168,10 @@ const isShowModal = ref(false);
 
 function closeModal() {
   isShowModal.value = false;
+  resetFileInput(); 
+  file.value = null; 
+  isLoading.value = false;
+  removeBeforeUnloadListener();
 }
 
 function showModal() {
@@ -273,8 +276,20 @@ const handleFileUpload = () => {
   console.log('after upload')
 }
 
+const resetFileInput = () => {
+  file.value = null;
+}
+
+const removeBeforeUnloadListener = () => {
+  window.removeEventListener('beforeunload', handleBeforeUnload);
+}
+
 const uploadCsv = async () => {
-  isImporting.value = true; // Set importing flag to true
+  if (!file.value) {
+    return;
+  }
+
+  isImporting.value = true;
   isLoading.value = true;
   let formData = new FormData()
   formData.append('file', file.value)
@@ -294,7 +309,9 @@ const uploadCsv = async () => {
     console.error(err)
   } finally {
     isLoading.value = false;
-    isImporting.value = false; // Reset importing flag
+    isImporting.value = false; 
+    removeBeforeUnloadListener();
+    resetFileInput(); 
   }
 }
 

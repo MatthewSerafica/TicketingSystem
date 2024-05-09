@@ -151,9 +151,9 @@
                         <span class="fw-semibold">{{ service.service }}</span>
                       </li>
                       <li class="dropdown-divider"></li>
-                      <li class="dropdown-item d-flex align-items-center">
+                      <li class="dropdown-item d-flex align-items-center" >
                         <input type="text" class="form-control flex-grow-1 me-2" v-model="newService.service"
-                          placeholder="Enter new Service" @keyup.enter="createNewService">
+                          placeholder="Enter new Service" @keyup.enter="createNewService" > 
                         <button class="btn btn-primary ms-2" @click.prevent="createNewService">
                           <i class="bi bi-arrow-right"></i>
                         </button>
