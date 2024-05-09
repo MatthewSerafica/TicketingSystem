@@ -277,7 +277,7 @@
                             <button v-if="ticket.status !== 'Resolved'" type="button"
                               class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"
                               aria-expanded="false" data-bs-reference="parent"
-                              @click="fetchRecommended(ticket.employee.department)">
+                              @click="fetchRecommended(ticket.employee.department, ticket.ticket_number), fetchTechnicians(ticket.ticket_number)">
                               <span class="visually-hidden">Toggle Dropdown</span>
                             </button>
                             <div v-if="ticket.status !== 'Resolved'"
@@ -322,17 +322,19 @@
                               <!--All-->
                               <div>
                                 <h6 class="dropdown-header">All</h6>
-                                <li v-for="technician in technicians" class="btn dropdown-item"
-                                  @click="assignTechnician(ticket, index, technician)"
-                                  :class="{ 'disabled': technician.tickets_assigned >= 5 }">
-                                  <div class="d-flex justify-content-between">
-                                    <div>
-                                      <span class="fw-semibold">{{ technician.user.name }}</span>
-                                      <br> <small>{{ technician.assigned_department }}</small>
+                                <div v-for="technicians in fetchedTechs">
+                                  <li v-for="technician in technicians" class="btn dropdown-item"
+                                    @click="assignTechnician(ticket, index, technician)"
+                                    :class="{ 'disabled': technician.tickets_assigned >= 5 }">
+                                    <div class="d-flex justify-content-between">
+                                      <div>
+                                        <span class="fw-semibold">{{ technician.user.name }}</span>
+                                        <br> <small>{{ technician.assigned_department }}</small>
+                                      </div>
+                                      <span>{{ technician.tickets_assigned }}</span>
                                     </div>
-                                    <span>{{ technician.tickets_assigned }}</span>
-                                  </div>
-                                </li>
+                                  </li>
+                                </div>
                               </div>
                             </ul>
                           </div>
@@ -476,7 +478,6 @@ const handleClose = () => {
 // Define Props
 const props = defineProps({
   tickets: Object,
-  technicians: Object,
   filters: Object,
   services: Object,
   rr: Object,
@@ -769,9 +770,9 @@ const assignTechnician = async (ticket, assignedIndex, technician) => {
 
 let recommended = ref([]);
 
-const fetchRecommended = async (department) => {
+const fetchRecommended = async (department, id) => {
   try {
-    const response = await axios.get(route('admin.recommended', department))
+    const response = await axios.get(route('admin.recommended', [department, id]))
 
     if (response.status !== 200) {
       throw new Error('Failed to fetch recommended technicians');
@@ -781,6 +782,24 @@ const fetchRecommended = async (department) => {
 
   } catch (error) {
     console.error('Error fetching recommended technicians:', error);
+    return null;
+  }
+}
+
+let fetchedTechs = ref([]);
+
+const fetchTechnicians = async (id) => {
+  try {
+    const response = await axios.get(route('admin.technicians', id))
+
+    if (response.status !== 200) {
+      throw new Error('Failed to fetch technicians');
+    }
+
+    fetchedTechs.value = response.data;
+
+  } catch (error) {
+    console.error('Error fetching technicians:', error);
     return null;
   }
 }

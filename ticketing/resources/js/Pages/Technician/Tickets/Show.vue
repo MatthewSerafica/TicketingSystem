@@ -39,6 +39,19 @@
                     <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }} |</p>
                     <p class="fw-bold text-secondary pt-3">SR - {{ sr ? sr.sr_no : 0 }}</p>
                 </div>
+                <div class="d-flex gap-3 p-2 rounded border" style="overflow-x: auto; max-width: 58rem;">
+                    <div class="d-flex align-items-center flex-nowrap"
+                        v-for="(assignedTech, index) in ticket.assigned" :key="index">
+                        <div class="d-flex align-items-center gap-1" v-for="tech in assignedTech.technician">
+                            <div class="">
+                                <img v-if="tech.user.avatar !== 'http://127.0.0.1:8000/storage'" :src="tech.user.avatar"
+                                    alt="User profile picture" class="avatar rounded-circle">
+                                <EmptyProfile v-else class="avatar rounded-circle"></EmptyProfile>
+                            </div>
+                            <small>{{ tech.user.name }}</small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="container py-4 justify-content-center align-items-center">
@@ -207,8 +220,8 @@
                     </div>
                 </div>
 
-                                <!-- Task List Section -->
-                                <div class="col-lg-3 shadow rounded p-4 task">
+                <!-- Task List Section -->
+                <div class="col-lg-3 shadow rounded p-4 task">
                     <div class="d-flex flex-row justify-content-between align-items-center">
                         <h6>Tasks</h6>
                         <!-- Button to toggle the input form -->
@@ -238,17 +251,20 @@
                                     <div class="d-flex flex-row justify-content-between align-items-center">
                                         <div class="accordion-header d-flex flex-row justify-content-between">
                                             <div class="d-flex flex-row justify-content-start gap-3 align-items-center">
-                                                <input class="form-check-input" type="checkbox" :checked="task.is_resolved" @change="resolveTask(task)">
+                                                <input class="form-check-input" type="checkbox"
+                                                    :checked="task.is_resolved" @change="resolveTask(task)">
                                                 <label v-if="selectedInput !== task.id"
-                                                    class="form-check-label overflow-control fw-medium text-truncate"  style="max-width: 10rem;"
-                                                    :title="task.task_name"
-
+                                                    class="form-check-label overflow-control fw-medium text-truncate"
+                                                    style="max-width: 10rem;" :title="task.task_name"
                                                     @click="editTaskName(task)"
                                                     :class="{ 'text-body-tertiary': task.is_resolved, 'text-decoration-line-through': task.is_resolved }">
                                                     {{ task.task_name }}
                                                 </label>
 
-                                                <input v-if="selectedInput === task.id" v-model="editData[task.id]" @blur="updateTaskName(editData[task.id], task.id)" @keyup.enter="updateTaskName(editData[task.id], task.id)" class="form-control" />
+                                                <input v-if="selectedInput === task.id" v-model="editData[task.id]"
+                                                    @blur="updateTaskName(editData[task.id], task.id)"
+                                                    @keyup.enter="updateTaskName(editData[task.id], task.id)"
+                                                    class="form-control" />
                                             </div>
                                         </div>
                                         <button class="btn" type="button" :data-bs-toggle="'collapse'"
@@ -265,12 +281,12 @@
                                                 <small class="text-muted tasks-date">{{ task.user.name }}</small>
                                             </div>
                                             <div class="name-and-date d-flex flex-row">
-                                                <small class="text-muted tasks-date">{{ formatDateTime(task.created_at) }}</small>
+                                                <small class="text-muted tasks-date">{{ formatDateTime(task.created_at)
+                                                    }}</small>
                                             </div>
-                                            <div class="buttons d-flex justify-content-center mt-2 ">
+                                            <div class="buttons d-flex justify-content-end mt-2 ">
                                                 <button class="btn btn-danger" @click="deleteTask(task)">
-                                                <i class="bi bi-trash"> Delete Task</i></button>
-                                                
+                                                    <i class="bi bi-trash"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -955,7 +971,6 @@ function showDelete(post) {
         isShowDelete.value = true;
     }
 }
-
 // Comment End
 
 // Ticket Update Start
@@ -1118,9 +1133,9 @@ const deleteTask = (task) => {
 }
 
 const editTaskName = (task) => {
-      selectedInput.value = task.id;
-      editData[task.id] = task.task_name;
-    };
+    selectedInput.value = task.id;
+    editData[task.id] = task.task_name;
+};
 
 const updateTaskName = (task, id) => {
     // Implement your update logic here
@@ -1129,7 +1144,7 @@ const updateTaskName = (task, id) => {
     // Reset input and selected input
     selectedInput.value = null;
     editData[task.id] = '';
-};    
+};
 
 </script>
 

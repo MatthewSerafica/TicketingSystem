@@ -39,6 +39,19 @@
                     <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }} |</p>
                     <p class="fw-bold text-secondary pt-3">SR - {{ sr ? sr.sr_no : 0 }}</p>
                 </div>
+                <div class="d-flex gap-3 p-2 rounded border" style="overflow-x: auto; max-width: 58rem;">
+                    <div class="d-flex align-items-center flex-nowrap" v-for="(assignedTech, index) in ticket.assigned"
+                        :key="index">
+                        <div class="d-flex align-items-center gap-1" v-for="tech in assignedTech.technician">
+                            <div class="">
+                                <img v-if="tech.user.avatar !== 'http://127.0.0.1:8000/storage'" :src="tech.user.avatar"
+                                    alt="User profile picture" class="avatar rounded-circle">
+                                <EmptyProfile v-else class="avatar rounded-circle"></EmptyProfile>
+                            </div>
+                            <small class="fw-semibold">{{ tech.user.name }}</small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -257,8 +270,8 @@
                                                 <input class="form-check-input" type="checkbox"
                                                     :checked="task.is_resolved" @change="resolveTask(task)">
                                                 <label v-if="selectedInput !== task.id"
-                                                    class="form-check-label overflow-control fw-medium text-truncate"  style="max-width: 10rem;"
-                                                    :title="task.task_name"
+                                                    class="form-check-label overflow-control fw-medium text-truncate"
+                                                    style="max-width: 10rem;" :title="task.task_name"
                                                     @click="editTaskName(task)"
                                                     :class="{ 'text-body-tertiary': task.is_resolved, 'text-decoration-line-through': task.is_resolved }">
                                                     {{ task.task_name }}
@@ -280,14 +293,16 @@
                                     <div :id="'collapse' + task.id" class="accordion-collapse collapse"
                                         aria-labelledby="headingOne">
                                         <div class="accordion-body">
-                                            <div class="name-and-date d-flex flex-row align-items-center gap-4">
+                                            <div class="name-and-date d-flex flex-row">
                                                 <small class="text-muted tasks-date">{{ task.user.name }}</small>
-                                                <small class="text-muted tasks-date  ms-auto">
-                                                    {{ formatDate(task.created_at) }}
-                                                </small>
-                                                <button class="btn btn-danger btn-sm" @click="deleteTask(task)">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
+                                            </div>
+                                            <div class="name-and-date d-flex flex-row">
+                                                <small class="text-muted tasks-date">{{ formatDateTime(task.created_at)
+                                                    }}</small>
+                                            </div>
+                                            <div class="buttons d-flex justify-content-end mt-2 ">
+                                                <button class="btn btn-danger" @click="deleteTask(task)">
+                                                    <i class="bi bi-trash"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -1121,10 +1136,6 @@ const updateTaskName = (task, id) => {
     selectedInput.value = null;
     editData[task.id] = '';
 };
-
-
-
-
 
 const getComplexityClass = (complexity) => {
     switch (complexity) {

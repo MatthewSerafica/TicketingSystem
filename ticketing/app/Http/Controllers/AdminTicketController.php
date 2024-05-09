@@ -100,10 +100,6 @@ class AdminTicketController extends Controller
 
         $request->session()->put('filter', $filter);
 
-        $technicians = Technician::with('user')
-            ->where('is_working', '=', 1)
-            ->get();
-
         $services = Service::all();
         $latest_rs = HistoryNumber::select('rs_no')->whereNotNull('rs_no')->orderByDesc('rs_no')->first();
         $latest_ms = HistoryNumber::select('ms_no')->whereNotNull('ms_no')->orderByDesc('ms_no')->first();
@@ -111,7 +107,6 @@ class AdminTicketController extends Controller
         $latest_sr = HistoryNumber::select('sr_no')->whereNotNull('sr_no')->orderByDesc('sr_no')->first();
         return inertia('Admin/Tickets/Index', [
             'tickets' => $tickets,
-            'technicians' => $technicians,
             'filters' => $filter,
             'services' => $services,
             'rs' => $latest_rs,
@@ -844,11 +839,36 @@ class AdminTicketController extends Controller
         }
     }
 
-    public function recommend($department)
+    public function recommend($department, $id)
     {
-        $technicians = Technician::where('assigned_department', $department)->with('user')->get();
+        if ($id) {
+            $assignedTechnicianIds = AssignedTickets::where('ticket_number', $id)
+                ->pluck('technician');
+            $technicians = Technician::where('assigned_department', $department)
+                ->with('user')
+                ->where('is_working', '=', 1)
+                ->whereNotIn('technician_id', $assignedTechnicianIds)
+                ->get();
+        } else {
+            $technicians = Technician::where('assigned_department', $department)
+                ->with('user')
+                ->where('is_working', '=', 1)
+                ->get();
+        }
 
         return response()->json(['recommended' => $technicians]);
+    }
+    public function technicians($id)
+    {
+        $assignedTechnicianIds = AssignedTickets::where('ticket_number', $id)
+            ->pluck('technician');
+
+        $technicians = Technician::with('user')
+            ->where('is_working', '=', 1)
+            ->whereNotIn('technician_id', $assignedTechnicianIds)
+            ->get();
+
+        return response()->json(['fetchedTechs' => $technicians]);
     }
 
     public function problem(Request $request)
@@ -983,7 +1003,6 @@ class AdminTicketController extends Controller
                     'actions_taken' => $action_taken,
                 ];
                 Log::create($log_data);
-
             } else {
                 $task->is_resolved = null;
                 $log_data = [

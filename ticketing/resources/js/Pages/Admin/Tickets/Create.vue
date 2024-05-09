@@ -178,7 +178,7 @@
                             <button type="button"
                               class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
                               data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent"
-                              @click="fetchRecommended(form.department)">
+                              @click="fetchRecommended(form.department, 0)">
                               <span class="visually-hidden">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
@@ -425,9 +425,10 @@ const selectProblem = (problem) => {
 
 let recommended = ref([]);
 
-const fetchRecommended = async (department) => {
+const fetchRecommended = async (department, id) => {
+  console.log(department, id);
   try {
-    const response = await axios.get(route('admin.recommended', department))
+    const response = await axios.get(route('admin.recommended', [department, id]))
 
     if (response.status !== 200) {
       throw new Error('Failed to fetch recommended technicians');
@@ -490,8 +491,6 @@ const createNewService = () => {
   newService.post(route('admin.ticket.services.store'), { preserveScroll: false, preserveState: true });
   form.service = newService.service;
 }
-
-
 </script>
 
 <style scoped>

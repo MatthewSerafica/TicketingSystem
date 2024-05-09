@@ -102,17 +102,20 @@
             </thead>
             <tbody>
               <tr v-for="ticket in tickets.data" :key="ticket.ticket_number" class="align-middle">
+                <!-- Ticket Number -->
                 <td class="text-center" style="width: 4rem;">
                   <Link :href="route('technician.tickets.show', ticket.ticket_number)"
                     class="text-decoration-none text-dark">
                   {{ ticket.ticket_number }}
                   </Link>
                 </td>
+                <!-- Date -->
                 <td class="text-start" style="width: 7rem;">
                   <Link :href="route('technician.tickets.show', ticket.ticket_number)"
                     class="text-decoration-none text-dark">{{ formatDate(ticket.created_at) }}
                   </Link>
                 </td>
+                <!-- Client -->
                 <td class="text-start" style="width: 12rem;">
                   <Link :href="route('technician.tickets.show', ticket.ticket_number)"
                     class="text-decoration-none text-dark">
@@ -123,12 +126,14 @@
                   <small>{{ ticket.employee.department }} - {{ ticket.employee.office }}</small>
                   </Link>
                 </td>
+                <!-- RS -->
                 <td class="text-start">
                   <Link :href="route('technician.tickets.show', ticket.ticket_number)"
                     class="text-decoration-none text-dark">
                   {{ ticket.rs_no ? ticket.rs_no : "N/A" }}
                   </Link>
                 </td>
+                <!-- Description -->
                 <td class="text-start text-truncate ticket-description" style="max-width: 120px;"
                   data-hover-text="{{ ticket.description }}">
                   <Link :href="route('technician.tickets.show', ticket.ticket_number)"
@@ -354,12 +359,6 @@ let sortDirection = ref("desc");
 let timeoutId = null;
 
 const fetchData = (type, all, ne, pending, ongoing, resolved) => {
-  /*if (!from_date_filter.value) {
-    from_date_filter.value = new Date().toISOString().split('T')[0];
-  }
-  if (!to_date_filter.value) {
-    to_date_filter.value = new Date().toISOString().split('T')[0];
-  }*/
   router.get(
     route('technician.tickets'),
     {
