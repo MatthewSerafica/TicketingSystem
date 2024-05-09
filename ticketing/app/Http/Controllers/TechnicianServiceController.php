@@ -196,7 +196,7 @@ class TechnicianServiceController extends Controller
         }
 
         $auth = Auth::user();
-        $action_taken = "Updated Ticket #" . $request->ticket_number . "'s status: Resolved" .
+        $action_taken = "Updated Ticket #" . $ticket->ticket_number . "'s status: Resolved" .
         $log_data = [
             'name' => $auth->name,
             'user_type' => $auth->user_type,
