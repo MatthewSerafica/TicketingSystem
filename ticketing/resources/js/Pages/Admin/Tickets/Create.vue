@@ -70,7 +70,7 @@
                         </li>
                         <li class="dropdown-divider"></li>
                         <li v-if="filteredTitles.length === 0" class="dropdown-item">No titles found...</li>
-                        <li v-else-if="filteredTitles" v-for="problem in filteredTitles" class="dropdown-item"
+                        <li v-else-if="filteredTitles" v-for="problem in filteredTitles" class="btn dropdown-item"
                           @click="selectProblem(problem)" style="width: 400px;">
                           <span class="fw-semibold">{{ problem.problem }}</span>
                         </li>
@@ -148,7 +148,7 @@
                             placeholder="Search Service...">
                         </li>
                         <li v-if="filteredServices.length === 0" class="dropdown-item">No services found...</li>
-                        <li v-else-if="filteredServices" v-for="service in filteredServices" class="dropdown-item"
+                        <li v-else-if="filteredServices" v-for="service in filteredServices" class="btn dropdown-item"
                           @click="selectService(service)" style="width: 550px;">
                           <span class="fw-semibold">{{ service.service }}</span>
                         </li>
