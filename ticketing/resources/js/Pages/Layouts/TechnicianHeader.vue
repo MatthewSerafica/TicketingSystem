@@ -96,6 +96,8 @@
                         </button>
                         <div class="card-body d-flex flex-column gap-2"
                             v-if="notification.type === 'App\\Notifications\\UpdateTicketTechnician'">
+                            <Link class="text-decoration-none text-dark"
+                                :href="route('technician.tickets.show', notification.data.ticket_number)">
                             <div class="d-flex flex-column gap-2">
                                 <h5 class="card-title">
                                     You are assigned to <br> Ticket #{{ notification.data.ticket_number }}
@@ -115,9 +117,12 @@
                                     {{ formatDateTime(notification.created_at) }}
                                 </small>
                             </div>
+                            </Link>
                         </div>
                         <div class="card-body"
                             v-if="notification.type === 'App\\Notifications\\UpdateTechnicianReplace'">
+                            <Link class="text-decoration-none text-dark"
+                                :href="route('technician.tickets.show', notification.data.ticket_number)">
                             <h5 class="card-title">
                                 You have been replaced for <br> Ticket #{{ notification.data.ticket_number }}
                             </h5>
@@ -132,8 +137,11 @@
                                     {{ formatDateTime(notification.created_at) }}
                                 </small>
                             </div>
+                            </Link>
                         </div>
                         <div class="card-body" v-if="notification.type === 'App\\Notifications\\UpdateTicketStatus'">
+                            <Link class="text-decoration-none text-dark"
+                                :href="route('technician.tickets.show', notification.data.ticket_number)">
                             <h5 class="card-title">
                                 Ticket #{{ notification.data.ticket_number }} Status Update
                             </h5>
@@ -146,50 +154,52 @@
                             <small class="card-text fst-italic text-muted">
                                 {{ formatDateTime(notification.created_at) }}
                             </small>
+                            </Link>
                         </div>
                         <div class="card-body" v-if="notification.type === 'App\\Notifications\\PostMade'">
                             <a :href="route('technician.forum.post', [notification.data.post_id])"
                                 class="text-decoration-none">
-                            <p class="card-title text-dark" style="width: 90%;">
-                                <strong>{{ notification.data.name }}</strong> posted in the <strong>Forum</strong>
-                            </p>
-                            <small class="card-text fst-italic text-muted">
-                                {{ formatDateTime(notification.created_at) }}
-                            </small>
+                                <p class="card-title text-dark" style="width: 90%;">
+                                    <strong>{{ notification.data.name }}</strong> posted in the <strong>Forum</strong>
+                                </p>
+                                <small class="card-text fst-italic text-muted">
+                                    {{ formatDateTime(notification.created_at) }}
+                                </small>
                             </a>
                         </div>
                         <div class="card-body" v-if="notification.type === 'App\\Notifications\\UserTaggedPost'">
                             <a :href="route('technician.forum.post', [notification.data.post_id])"
                                 class="text-decoration-none">
-                            <p class="card-title text-dark" style="width: 90%;">
-                                <strong>{{ notification.data.post_user.name }}</strong> mentioned you in a post.
-                            </p>
-                            <small class="card-text fst-italic text-muted">
-                                {{ formatDateTime(notification.created_at) }}
-                            </small>
+                                <p class="card-title text-dark" style="width: 90%;">
+                                    <strong>{{ notification.data.post_user.name }}</strong> mentioned you in a post.
+                                </p>
+                                <small class="card-text fst-italic text-muted">
+                                    {{ formatDateTime(notification.created_at) }}
+                                </small>
                             </a>
                         </div>
                         <div class="card-body" v-if="notification.type === 'App\\Notifications\\CommentMade'">
                             <a :href="route('technician.forum.post', [notification.data.post_id])"
                                 class="text-decoration-none">
-                            <p class="card-title text-dark" style="width: 90%;">
-                                <strong>{{ notification.data.name }}</strong> commented on your post, <strong>{{
+                                <p class="card-title text-dark" style="width: 90%;">
+                                    <strong>{{ notification.data.name }}</strong> commented on your post, <strong>{{
                             notification.data.title }}</strong>, in the <strong>Forum</strong>
-                            </p>
-                            <small class="card-text fst-italic text-muted">
-                                {{ formatDateTime(notification.created_at) }}
-                            </small>
+                                </p>
+                                <small class="card-text fst-italic text-muted">
+                                    {{ formatDateTime(notification.created_at) }}
+                                </small>
                             </a>
                         </div>
                         <div class="card-body" v-if="notification.type === 'App\\Notifications\\UserTaggedComment'">
                             <a :href="route('technician.forum.post', [notification.data.post_id])"
                                 class="text-decoration-none">
-                            <p class="card-title text-dark" style="width: 90%;">
-                                <strong>{{ notification.data.comment_user.name }}</strong> mentioned you in a comment.
-                            </p>
-                            <small class="card-text fst-italic text-muted">
-                                {{ formatDateTime(notification.created_at) }}
-                            </small>
+                                <p class="card-title text-dark" style="width: 90%;">
+                                    <strong>{{ notification.data.comment_user.name }}</strong> mentioned you in a
+                                    comment.
+                                </p>
+                                <small class="card-text fst-italic text-muted">
+                                    {{ formatDateTime(notification.created_at) }}
+                                </small>
                             </a>
                         </div>
                         <div class="card-body" v-if="notification.type === 'App\\Notifications\\ReplyMade'">
@@ -206,12 +216,13 @@
                         <div class="card-body" v-if="notification.type === 'App\\Notifications\\UserTaggedReply'">
                             <a :href="route('technician.forum.post', [notification.data.post_id])"
                                 class="text-decoration-none">
-                            <p class="card-title text-dark" style="width: 90%;">
-                                <strong>{{ notification.data.comment_user.name }}</strong> mentioned you in a reply to a comment.
-                            </p>
-                            <small class="card-text fst-italic text-muted">
-                                {{ formatDateTime(notification.created_at) }}
-                            </small>
+                                <p class="card-title text-dark" style="width: 90%;">
+                                    <strong>{{ notification.data.comment_user.name }}</strong> mentioned you in a reply
+                                    to a comment.
+                                </p>
+                                <small class="card-text fst-italic text-muted">
+                                    {{ formatDateTime(notification.created_at) }}
+                                </small>
                             </a>
                         </div>
                     </div>

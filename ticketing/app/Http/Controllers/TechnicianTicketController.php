@@ -249,6 +249,11 @@ class TechnicianTicketController extends Controller
                 );
             }
 
+            $super = User::where('user_type', 'super')->firstOrFail();
+            $super->notify(
+                new TicketMade($ticket, $technician->user->name, $employee->user->name, $employee->office, $employee->department)
+            );
+
             $auth = Auth::user();
             $ticket_data_json = json_encode($ticketData, JSON_PRETTY_PRINT);
             $action_taken = "Created a new ticket #" . $ticket->ticket_number . "\n" .
@@ -810,7 +815,7 @@ class TechnicianTicketController extends Controller
                 'actions_taken' => $action_taken,
             ];
             Log::create($log_data);
-            
+
             return redirect()->back()
                 ->with('success', 'Task Deleted successfully!');
         } catch (Exception $e) {

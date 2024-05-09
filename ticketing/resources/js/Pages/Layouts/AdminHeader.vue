@@ -37,7 +37,7 @@
                             </ul>
                         </li>
                         <li class="nav-item" :class="{ 'active': activeLink === 'forum' }">
-                            <a class="nav-link forum text-light" href="/admin/forum" 
+                            <a class="nav-link forum text-light" href="/admin/forum"
                                 @click="setActiveLink('forum')">Forum</a>
                         </li>
                         <li class="nav-item dropdown settings" :class="{ 'active': activeLink === 'settings' }">
@@ -120,6 +120,8 @@
                             <!--Ticket-->
                             <div class="card-body d-flex flex-column gap-2"
                                 v-if="notification.type === 'App\\Notifications\\ResolvedTicket'">
+                                <Link class="text-decoration-none text-dark"
+                                    :href="route('admin.tickets.show', notification.data.ticket_number)">
                                 <div class="d-flex flex-row">
                                     <div class="d-flex flex-column gap-2">
                                         <h5 class="card-title fw-bold text d-flex gap-2 align-items-center">
@@ -157,12 +159,16 @@
                                         {{ formatDateTime(notification.created_at) }}
                                     </small>
                                 </div>
+                                </Link>
                             </div>
-                            <div class="card-body d-flex flex-column gap-2" v-if="notification.type === 'App\\Notifications\\TicketMade'">
+                            <div class="card-body d-flex flex-column gap-2"
+                                v-if="notification.type === 'App\\Notifications\\TicketMade'">
+                                <Link class="text-decoration-none text-dark"
+                                    :href="route('admin.tickets.show', notification.data.ticket_number)">
                                 <div class="d-flex flex-row">
                                     <div class="d-flex flex-column gap-2">
                                         <h5 class="card-title fw-bold d-flex flex-row align-items-center gap-3">
-                                            Ticket No: {{ notification.data.ticket_number }} <span
+                                            Ticket #{{ notification.data.ticket_number }} <span
                                                 class="badge bg-danger">New</span>
                                         </h5>
                                         <p class="card-subtitle">
@@ -192,6 +198,7 @@
                                         {{ formatDateTime(notification.created_at) }}
                                     </small>
                                 </div>
+                                </Link>
                             </div>
                             <!-- <div class="card-body d-flex flex-column gap-2" v-if="notification.notification.type === 'App\\Notifications\\ArchivedTickets'">
                                 <div class="d-flex flex-row">
@@ -324,7 +331,7 @@ const determineActiveLink = () => {
         setActiveLink('tickets');
     } else if (currentPath.includes('service-report') || currentPath.includes('generate-report')) {
         setActiveLink('reports');
-    } else if (currentPath.includes('users') || currentPath.includes('department') || currentPath.includes('office') || currentPath.includes('services') || currentPath.includes('problems') || currentPath.includes('logs')){
+    } else if (currentPath.includes('users') || currentPath.includes('department') || currentPath.includes('office') || currentPath.includes('services') || currentPath.includes('problems') || currentPath.includes('logs')) {
         setActiveLink('settings');
     } else if (currentPath.includes('forum')) {
         setActiveLink('forum');
@@ -410,6 +417,7 @@ onMounted(() => {
     transition: transform 0.5s ease;
     cursor: pointer;
 }
+
 .close-icon {
     position: absolute;
     top: 10px;

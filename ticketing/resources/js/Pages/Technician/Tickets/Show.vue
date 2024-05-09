@@ -48,7 +48,7 @@
                                     alt="User profile picture" class="avatar rounded-circle">
                                 <EmptyProfile v-else class="avatar rounded-circle"></EmptyProfile>
                             </div>
-                            <small>{{ tech.user.name }}</small>
+                            <small class="fw-semibold">{{ tech.user.name }}</small>
                         </div>
                     </div>
                 </div>

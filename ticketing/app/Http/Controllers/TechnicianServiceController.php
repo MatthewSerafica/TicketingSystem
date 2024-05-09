@@ -213,6 +213,10 @@ class TechnicianServiceController extends Controller
                 new ResolvedTicket($ticket, $request->technician, $employee->user->name, $employee->office, $employee->department)
             );
         }
+        $super = User::where('user_type', 'super')->firstOrFail();
+        $super->notify(
+            new ResolvedTicket($ticket, $request->technician, $employee->user->name, $employee->office, $employee->department)
+        );
 
 
         return redirect()->to('/technician/service-report')->with('success', 'Report Created');
