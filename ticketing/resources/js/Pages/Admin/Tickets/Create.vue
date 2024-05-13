@@ -53,11 +53,11 @@
                 </div>
                 <div class="d-flex flex-row gap-3">
                   <div class="flex-grow-1 w-50 d-flex flex-column">
-                    <label for="Title" class="fw-semibold">Title</label>
+                    <label for="Title" class="fw-semibold">Issues/Problems</label>
                     <div class="btn-group">
                       <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ form.problem ? form.problem : 'Select a Title...' }}
+                        {{ form.problem ? form.problem : 'Select an option...' }}
                       </button>
                       <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
@@ -66,7 +66,7 @@
                       <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
                         <li class="dropdown-item d-flex align-items-center">
                           <input type="text" class="form-control flex-grow-1" v-model="titleSearch"
-                            placeholder="Search Title...">
+                            placeholder="Search...">
                         </li>
                         <li class="dropdown-divider"></li>
                         <li v-if="filteredTitles.length === 0" class="dropdown-item">No titles found...</li>
@@ -76,7 +76,7 @@
                         </li>
                         <li class="dropdown-item d-flex align-items-center">
                           <input type="text" class="form-control flex-grow-1 me-2" v-model="newProblem.problem"
-                            placeholder="Enter custom problem" @keyup.enter.prevent="createNewProblem">
+                            placeholder="Enter custom problem..." @keyup.enter.prevent="createNewProblem">
                           <button class="btn btn-primary" @click.prevent="createNewProblem">
                             <i class="bi bi-arrow-right"></i>
                           </button>
@@ -245,7 +245,7 @@
             <div class="col-md-8">
               <div class="d-flex justify-content-end gap-2">
                 <Button :name="'Submit'" :color="'primary'"
-                  :disabled="!form.problem || !form.employee || !form.description || !form.service || !form.technicians.length"></Button>
+                  :disabled="!form.request_type || !form.problem || !form.employee || !form.technicians.length"></Button>
                 <Link :href="`/admin/tickets`" class="btn btn-outline-primary">Cancel</Link>
               </div>
             </div>

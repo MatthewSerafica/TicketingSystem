@@ -100,7 +100,7 @@
                   <th class="text-center text-muted">MS</th>
                   <th class="text-center text-muted">RS</th>
                   <th class="text-muted">Client</th>
-                  <th class="text-muted">Problem</th>
+                  <th class="text-muted">Issue/Problem</th>
                   <th class="text-muted text-center">Service</th>
                   <th class="text-center text-muted">Complexity</th>
                   <th class="text-muted text-center" style="cursor:pointer;" @click="toggleTechnicianCTAs">Technician

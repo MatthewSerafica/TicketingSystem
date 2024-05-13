@@ -177,42 +177,27 @@ class TechnicianTicketController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'request_type' => 'required|string',
+            'complexity' => 'required|string',
+            'description' => 'nullable|string',
+            'employee' => 'required',
+            'problem' => 'required|string',
+            'service' => 'nullable|string',
+            'user' => 'required',
+            'rs_no' => 'nullable|numeric',
+            'assignToSelf' => 'nullable',
+        ]);
+
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
-            $request->validate([
-                'request_type' => 'required',
-                'complexity' => 'required',
-                'description' => 'required',
-                'employee' => 'required',
-                'problem' => 'required',
-                'service' => 'required',
-                'user' => 'required',
-                'rs_no' => 'nullable|numeric',
-                'assignToSelf' => 'nullable',
-            ]);
             $technician = Technician::where('user_id', $request->user)->firstOrFail();
             $employee = Employee::where('employee_id', $request->employee)->with('user')->firstOrFail();
 
-            if ($employee->made_ticket >= 5 || $technician->assigned_ticket >= 5) {
+            /* if ($employee->made_ticket >= 5 || $technician->assigned_ticket >= 5) {
                 DB::rollBack();
                 return redirect()->back()->with('error', 'You have already made the max number of tickets.');
-            }
-
-            if (!$request->filled('problem')) {
-                $problem = Problem::create([
-                    'problem' => $request->new_problem,
-                ]);
-            } else {
-                $problem = $request->problem;
-            }
-
-            if (!$request->filled('service')) {
-                $service = Service::create([
-                    'service' => $request->new_service,
-                ]);
-            } else {
-                $service = $request->service;
-            }
+            } */
 
             $ticketData = [
                 'request_type' => $request->request_type,
@@ -228,20 +213,10 @@ class TechnicianTicketController extends Controller
             $ticket = Ticket::create($ticketData);
             $employee->update(['made_ticket' => $employee->made_ticket + 1]);
 
-            $history_data = [
-                'ticket_number' => $ticket->ticket_number,
-                'rs_no' => $request->rs_no,
-            ];
+            $this->handleHistoryNumberStore($ticket, $request->rs_no);
 
-            HistoryNumber::create($history_data);
+            $this->handleTechnicianStore($request->assign_to_self, $ticket, $technician);
 
-            if ($request->assign_to_self) {
-                AssignedTickets::create([
-                    'ticket_number' => $ticket->ticket_number,
-                    'technician' => $technician->technician_id,
-                ]);
-                $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
-            }
             $admins = User::where('user_type', 'admin')->get();
             foreach ($admins as $admin) {
                 $admin->notify(
@@ -254,23 +229,38 @@ class TechnicianTicketController extends Controller
                 new TicketMade($ticket, $technician->user->name, $employee->user->name, $employee->office, $employee->department)
             );
 
-            $auth = Auth::user();
             $ticket_data_json = json_encode($ticketData, JSON_PRETTY_PRINT);
             $action_taken = "Created a new ticket #" . $ticket->ticket_number . "\n" .
                 "Details: " . $ticket_data_json . "\n";
-            $log_data = [
-                'name' => $auth->name,
-                'user_type' => $auth->user_type,
-                'actions_taken' => $action_taken,
-            ];
-            Log::create($log_data);
+            $this->logAction($action_taken);
 
             DB::commit();
+            return redirect()->to('/technician/tickets')->with('success', 'Ticket Created')->with('message', 'Admin is notified of the ticket!');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->to('/technician/tickets')->with('error', 'Invalid Ticket')->with('message', $e->getMessage());
         }
-        return redirect()->to('/technician/tickets')->with('success', 'Ticket Created')->with('message', 'Admin is notified of the ticket!');
+    }
+
+    private function handleHistoryNumberStore($ticket, $rs_no)
+    {
+        $history_data = [
+            'ticket_number' => $ticket->ticket_number,
+            'rs_no' => $rs_no,
+        ];
+
+        HistoryNumber::create($history_data);
+    }
+
+    private function handleTechnicianStore($tech, $ticket, $technician)
+    {
+        if ($tech) {
+            AssignedTickets::create([
+                'ticket_number' => $ticket->ticket_number,
+                'technician' => $technician->technician_id,
+            ]);
+            $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
+        }
     }
 
     public function show(Request $request, $id)
@@ -327,15 +317,14 @@ class TechnicianTicketController extends Controller
 
     public function comment(Request $request, $id)
     {
+        $user_id = auth()->id();
+
+        $request->validate([
+            'content' => 'required',
+        ]);
+
+        DB::beginTransaction();
         try {
-            $user_id = auth()->id();
-            $commenter = User::findOrFail($user_id);
-            $ticket = Ticket::findOrFail($id);
-
-            $request->validate([
-                'content' => 'required',
-            ]);
-
             $comment = [
                 'ticket_number' => $id,
                 'user_id' => $user_id,
@@ -344,45 +333,25 @@ class TechnicianTicketController extends Controller
 
             $comment = TicketComment::create($comment);
 
-            /* $tagged = $request->tagged_user;
-
-            foreach ($tagged as $user) {
-                $tagged = TaggedUser::create([
-                    'post_id' => $post->id,
-                    'comment_id' => $comment->id,
-                    'user_id' => $user,
-                ]);
-
-                $user = User::findOrFail($user);
-                $user->notify(
-                    new UserTaggedComment($user, $comment)
-                );
-            } */
-
-            /* if ($user_id !== $post->user_id) {
-                $post->user->notify(
-                    new CommentMade($comment, $commenter->name, $post->title)
-                );
-            } */
-
+            DB::commit();
             return redirect()->back()->with('success', 'Commented on the ticket!')->with('message', 'Comment successfully posted!');
         } catch (Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
     public function reply(Request $request, $id, $comment_id)
     {
+        $user_id = auth()->id();
+
+        $request->validate([
+            'parent_comment_id' => 'nullable',
+            'content' => 'required',
+        ]);
+
+        DB::beginTransaction();
         try {
-            $user_id = auth()->id();
-            $replier = User::findOrFail($user_id);
-            $ticket = Ticket::findOrFail($id);
-
-            $request->validate([
-                'parent_comment_id' => 'nullable',
-                'content' => 'required',
-            ]);
-
             $comment = [
                 'ticket_number' => $id,
                 'parent_comment_id' => $comment_id,
@@ -392,29 +361,10 @@ class TechnicianTicketController extends Controller
 
             $reply = TicketComment::create($comment);
 
-            /* $tagged = $request->tagged_user;
-
-            foreach ($tagged as $user) {
-                $tagged = TaggedUser::create([
-                    'post_id' => $post->id,
-                    'comment_id' => $reply->id,
-                    'user_id' => $user,
-                ]);
-
-                $user = User::findOrFail($user);
-                $user->notify(
-                    new UserTaggedReply($user, $reply)
-                );
-            }
-
-            $originalComment = Comment::with('user')->find($reply->parent_comment_id);
-
-            if ($user_id !== $originalComment->user->id) {
-                $originalComment->user->notify(new ReplyMade($reply, $replier->name, $post->title));
-            } */
-
+            DB::commit();
             return redirect()->back()->with('success', 'Replied to the comment!')->with('message', 'Reply successfully posted!');
         } catch (Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -426,34 +376,41 @@ class TechnicianTicketController extends Controller
         $request->validate([
             'content' => 'required',
         ]);
-        $comment->content = $request->content;
-        $comment->save();
 
-        /* $tagged = TaggedUser::where('comment_id', $id)->get();
+        DB::beginTransaction();
+        try {
+            $comment->content = $request->content;
+            $comment->save();
 
-        foreach ($tagged as $tag) {
-            $tag->delete();
+            DB::commit();
+            return redirect()->back()->with('success', 'Comment successfully updated');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
         }
-
-        $tagged = $request->tagged_user;
-
-        foreach ($tagged as $user) {
-            $tagged = TaggedUser::create([
-                'post_id' => $comment->post_id,
-                'comment_id' => $comment->id,
-                'user_id' => $user,
-            ]);
-        } */
-
-        return redirect()->back()->with('success', 'Comment successfully updated');
     }
 
     public function deleteComment($id)
     {
         $comment = TicketComment::findOrFail($id);
-        $comment->is_deleted = 1;
-        $comment->save();
 
+        DB::beginTransaction();
+        try {
+            $comment->is_deleted = 1;
+            $comment->save();
+
+            $this->handleChildrenCommentCount($id);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Comment successfully deleted');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    private function handleChildrenCommentCount($id)
+    {
         $children = TicketComment::where('parent_comment_id', $id)->get();
 
         if ($children) {
@@ -469,8 +426,6 @@ class TechnicianTicketController extends Controller
                 }
             }
         }
-
-        return redirect()->back()->with('success', 'Comment successfully deleted');
     }
 
     public function service(Request $request, $ticket_id)
@@ -481,22 +436,23 @@ class TechnicianTicketController extends Controller
 
         $ticket = Ticket::where('ticket_number', $ticket_id)->first();
 
-        $ticket->service = $request->service;
-        if ($ticket->status == 'New') {
-            $ticket->status = 'Pending';
+        DB::beginTransaction();
+        try {
+            $ticket->service = $request->service;
+            if ($ticket->status == 'New') {
+                $ticket->status = 'Pending';
+            }
+            $ticket->save();
+
+            $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'service: ' . $request->service;
+            $this->logAction($action_taken);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Ticket Updated!')->with('message', $request->service . ' service is now assigned to Ticket No. ' . $ticket->ticket_number);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
         }
-        $ticket->save();
-
-        $auth = Auth::user();
-        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'service: ' . $request->service;
-        $log_data = [
-            'name' => $auth->name,
-            'user_type' => $auth->user_type,
-            'actions_taken' => $action_taken,
-        ];
-        Log::create($log_data);
-
-        return redirect()->back()->with('success', 'Ticket Updated!')->with('message', $request->service . ' service is now assigned to Ticket No. ' . $ticket->ticket_number);
     }
 
     public function complexity(Request $request, $ticket_id)
@@ -507,22 +463,23 @@ class TechnicianTicketController extends Controller
 
         $ticket = Ticket::where('ticket_number', $ticket_id)->first();
 
-        $ticket->complexity = $request->complexity;
-        if ($ticket->status == 'New') {
-            $ticket->status = 'Pending';
+        DB::beginTransaction();
+        try {
+            $ticket->complexity = $request->complexity;
+            if ($ticket->status == 'New') {
+                $ticket->status = 'Pending';
+            }
+            $ticket->save();
+
+            $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'complexity: ' . $request->complexity;
+            $this->logAction($action_taken);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Ticket Updated!')->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now set as ' . $request->complexity);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
         }
-        $ticket->save();
-
-        $auth = Auth::user();
-        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'complexity: ' . $request->complexity;
-        $log_data = [
-            'name' => $auth->name,
-            'user_type' => $auth->user_type,
-            'actions_taken' => $action_taken,
-        ];
-        Log::create($log_data);
-
-        return redirect()->back()->with('success', 'Ticket Updated!')->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now set as ' . $request->complexity);
     }
 
     public function status(Request $request, $ticket_id)
@@ -541,31 +498,32 @@ class TechnicianTicketController extends Controller
             $technicians = $technicians->merge(Technician::where('technician_id', $assign->technician)->get());
         }
 
-        $ticket->status = $request->status;
+        DB::beginTransaction();
+        try {
+            $ticket->status = $request->status;
 
-        if ($ticket->status == 'Resolved' && $request->old_status != 'Resolved') {
-            $this->resolveTicket($ticket, $employee, $technicians);
-        } elseif ($request->old_status == 'Resolved' && $ticket->status != 'Resolved') {
-            $this->revertResolution($ticket, $employee, $technicians);
-        } else {
-            $ticket->resolved_at = null;
+            if ($ticket->status == 'Resolved' && $request->old_status != 'Resolved') {
+                $this->resolveTicket($ticket, $employee, $technicians);
+            } elseif ($request->old_status == 'Resolved' && $ticket->status != 'Resolved') {
+                $this->revertResolution($ticket, $employee, $technicians);
+            } else {
+                $ticket->resolved_at = null;
+            }
+            $ticket->save();
+
+            $employee->user->notify(new UpdateTicketStatus($ticket));
+
+            $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'status: ' . $request->status;
+            $this->logAction($action_taken);
+
+            DB::commit();
+            return redirect()->back()
+                ->with('success', 'Ticket Updated!')
+                ->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now ' . $request->status);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
         }
-        $ticket->save();
-
-        $employee->user->notify(new UpdateTicketStatus($ticket));
-
-        $auth = Auth::user();
-        $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s " . 'status: ' . $request->status;
-        $log_data = [
-            'name' => $auth->name,
-            'user_type' => $auth->user_type,
-            'actions_taken' => $action_taken,
-        ];
-        Log::create($log_data);
-
-        return redirect()->back()
-            ->with('success', 'Ticket Updated!')
-            ->with('message', 'Ticket No. ' . $ticket->ticket_number . ' is now ' . $request->status);
     }
     private function resolveTicket($ticket, $employee, $technicians)
     {
@@ -598,17 +556,18 @@ class TechnicianTicketController extends Controller
 
     public function update(Request $request, $field, $id)
     {
+        $request->validate([
+            $field => 'nullable',
+        ]);
+
+        if (!$request->$field) {
+            return redirect()->back()->with('error', 'An empty field error occurred!')->with('message', 'Please do not leave the field empty.');
+        }
+
+        $ticket = Ticket::where('ticket_number', $id)->first();
+
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
-            $request->validate([
-                $field => 'nullable',
-            ]);
-
-            if (!$request->$field) {
-                return redirect()->back()->with('error', 'An empty field error occurred!')->with('message', 'Please do not leave the field empty.');
-            }
-
-            $ticket = Ticket::where('ticket_number', $id)->first();
 
             if ($field === 'sr_no') {
                 $serviceReport = ServiceReport::where('ticket_number', $ticket->ticket_number)->first();
@@ -623,32 +582,46 @@ class TechnicianTicketController extends Controller
                     ];
                     ServiceReport::create($serviceData);
                 }
+
+                if ($ticket->sr_no !== null) {
+                    $ticket->resolved_at = now();
+                    $ticket->status = 'Resolved';
+                }
+                $ticket->save();
+
+                $auth = Auth::user();
+                $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s SR No.: " . $request->$field;
+                $log_data = [
+                    'name' => $auth->name,
+                    'user_type' => $auth->user_type,
+                    'actions_taken' => $action_taken,
+                ];
+                Log::create($log_data);
+            } else if ($field === 'description') {
+                $ticket->$field = $request->$field;
+                $ticket->save();
+
+                $auth = Auth::user();
+                $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s Description: " . $request->$field;
+                $log_data = [
+                    'name' => $auth->name,
+                    'user_type' => $auth->user_type,
+                    'actions_taken' => $action_taken,
+                ];
+                Log::create($log_data);
             }
 
-            // Check if the SR number is present, and update resolved_at and status accordingly
-            if ($ticket->sr_no !== null) {
-                $ticket->resolved_at = now();
-                $ticket->status = 'Resolved';
-            }
-            $ticket->save();
-
-            $auth = Auth::user();
-            $action_taken = "Updated the ticket #" . $ticket->ticket_number . "'s SR No.: " . $request->$field;
-            $log_data = [
-                'name' => $auth->name,
-                'user_type' => $auth->user_type,
-                'actions_taken' => $action_taken,
-            ];
-            Log::create($log_data);
             DB::commit();
+            if ($field == 'sr_no') {
+                return redirect()->to('/technician/service-report/create');
+            } else if ($field == 'remarks') {
+                return redirect()->back()->with('success', 'Ticket Updated!')->with('message', 'Remarks have been updated for Ticket #' . $ticket->ticket_number);
+            } else if ($field == 'description') {
+                return redirect()->back()->with('success', 'Ticket Updated!')->with('message', 'Description have been updated for Ticket #' . $ticket->ticket_number);
+            }
         } catch (Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', 'An error occurred!')->with('message', $e->getMessage());
-        }
-
-        if ($field == 'sr_no') {
-            return redirect()->to('/technician/service-report/create');
-        } else {
-            return redirect()->back()->with('success', 'Ticket Updated!')->with('message', 'Remarks have been updated for Ticket #' . $ticket->ticket_number);
         }
     }
 
@@ -658,21 +631,19 @@ class TechnicianTicketController extends Controller
             'problem' => 'required',
         ]);
 
+        $problemData = $request->only('problem');
 
-        $problemData = [
-            'problem' => $request->problem,
-        ];
+        DB::beginTransaction();
+        try {
+            Problem::create($problemData);
 
-        Problem::create($problemData);
-
-        $auth = Auth::user();
-        $action_taken = "Added a new problem " .  $request->problem;
-        $log_data = [
-            'name' => $auth->name,
-            'user_type' => $auth->user_type,
-            'actions_taken' => $action_taken,
-        ];
-        Log::create($log_data);
+            $action_taken = "Added a new problem " .  $request->problem;
+            $this->logAction($action_taken);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'An error occurred!')->with('message', $e->getMessage());
+        }
     }
 
     public function services(Request $request)
@@ -682,34 +653,32 @@ class TechnicianTicketController extends Controller
         ]);
 
 
-        $serviceData = [
-            'service' => $request->service,
-        ];
+        $serviceData = $request->only('service');
 
-        Service::create($serviceData);
+        DB::beginTransaction();
+        try {
+            Service::create($serviceData);
 
-        $auth = Auth::user();
-        $action_taken = "Added a new service " .  $request->service;
-        $log_data = [
-            'name' => $auth->name,
-            'user_type' => $auth->user_type,
-            'actions_taken' => $action_taken,
-        ];
-        Log::create($log_data);
+            $action_taken = "Added a new service " .  $request->service;
+            $this->logAction($action_taken);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'An error occurred!')->with('message', $e->getMessage());
+        }
     }
 
     public function addTask(Request $request)
     {
+        $request->validate([
+            'ticket_number' => 'required',
+            'user_id' => 'required',
+            'task_name' => 'required',
+            'is_resolved' => 'nullable',
+        ]);
+
+        DB::beginTransaction();
         try {
-            $user_id = auth()->id();
-
-            $request->validate([
-                'ticket_number' => 'required',
-                'user_id' => 'required',
-                'task_name' => 'required',
-                'is_resolved' => 'nullable',
-            ]);
-
             $task = [
                 'ticket_number' => $request->ticket_number,
                 'task_name' => $request->task_name,
@@ -717,109 +686,112 @@ class TechnicianTicketController extends Controller
                 'is_resolved' => $request->is_resolved,
             ];
 
-            $newTask = TicketTask::create($task);
+            TicketTask::create($task);
 
-            $auth = Auth::user();
             $action_taken = "Added a new task for ticket #" . $request->ticket_number . ": " . $request->task_name;
-            $log_data = [
-                'name' => $auth->name,
-                'user_type' => $auth->user_type,
-                'actions_taken' => $action_taken,
-            ];
-            Log::create($log_data);
+            $this->logAction($action_taken);
 
+            DB::commit();
             return redirect()->back()->with('success', 'Added Task!')->with('message', 'Task Added successfully!');
         } catch (Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
     public function updateTask(Request $request, $id)
     {
-        try {
-            $request->validate([
-                'task_name' => 'required'
-            ]);
+        $request->validate([
+            'task_name' => 'required'
+        ]);
 
+        DB::beginTransaction();
+        try {
             $task = TicketTask::where('id', $id)->first();
             $task->task_name = $request->input('task_name', $task->task_name);
             $task->save();
 
             $auth = Auth::user();
             $action_taken = "Updated a task for ticket #" . $request->ticket_number . " new name: " . $request->task_name;
-            $log_data = [
-                'name' => $auth->name,
-                'user_type' => $auth->user_type,
-                'actions_taken' => $action_taken,
-            ];
-            Log::create($log_data);
+            $this->logAction($action_taken);
 
+            DB::commit();
             return redirect()->back()
                 ->with('success', 'Task Updated successfully!');
         } catch (Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
     public function resolveTask(Request $request, $id)
     {
+        $request->validate([
+            'is_resolved' => 'nullable|boolean',
+        ]);
+
+        $task = TicketTask::where('id', $id)->first();
+
+        DB::beginTransaction();
         try {
-            $request->validate([
-                'is_resolved' => 'nullable|boolean',
-            ]);
-
-            $task = TicketTask::where('id', $id)->first();
-
             $isResolved = $request->input('is_resolved');
 
-            $auth = Auth::user();
             $action_taken = "Updated a task for ticket #" . $request->ticket_number . ", resolved: " . $task->task_name;
 
             if ($isResolved === true) {
                 $task->is_resolved = now()->toDateTimeString();
-                $log_data = [
-                    'name' => $auth->name,
-                    'user_type' => $auth->user_type,
-                    'actions_taken' => $action_taken,
-                ];
-                Log::create($log_data);
+                $this->logAction($action_taken);
             } else {
                 $task->is_resolved = null;
-                $log_data = [
-                    'name' => $auth->name,
-                    'user_type' => $auth->user_type,
-                    'actions_taken' => $action_taken,
-                ];
-                Log::create($log_data);
+                $this->logAction($action_taken);
             }
             $task->save();
 
+            DB::commit();
             return redirect()->back()
                 ->with('success', 'Task Updated!');
         } catch (Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
     public function deleteTask(Request $request, $id)
     {
+        DB::beginTransaction();
         try {
             $task = TicketTask::where('id', $id)->first();
             $task->delete();
 
             $auth = Auth::user();
             $action_taken = "Removed a task for ticket #" . $request->ticket_number . ": " . $task->task_name;
-            $log_data = [
-                'name' => $auth->name,
-                'user_type' => $auth->user_type,
-                'actions_taken' => $action_taken,
-            ];
-            Log::create($log_data);
+            $this->logAction($action_taken);
 
+            DB::commit();
             return redirect()->back()
                 ->with('success', 'Task Deleted successfully!');
         } catch (Exception $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    private function logAction($action)
+    {
+        $auth = Auth::user();
+        if ($auth) {
+            Log::create([
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action,
+            ]);
+        } else {
+            Log::create([
+                'name' => request()->ip(),
+                'user_type' => request()->header('User-Agent'),
+                'actions_taken' => $action,
+            ]);
+            return redirect()->back()->with('error', 'Attempt to log action without authenticated user');
         }
     }
 }

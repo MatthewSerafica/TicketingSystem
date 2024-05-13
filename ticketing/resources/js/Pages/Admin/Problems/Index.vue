@@ -17,8 +17,8 @@
       <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
         <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
           <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-            <h1 class="fw-bold">View All Titles</h1>
-            <p class="fs-5">Manage All Titles</p>
+            <h1 class="fw-bold">View All Problems</h1>
+            <p class="fs-5">Manage All Problems</p>
             <Link :href="route('admin.problems.create')">
               <Button :name="'Add New Problem'" :color="'primary'" class="btn btn-tickets btn-primary py-2 px-5"></Button>
             </Link>

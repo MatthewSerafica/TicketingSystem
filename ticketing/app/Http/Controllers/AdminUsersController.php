@@ -80,7 +80,6 @@ class AdminUsersController extends Controller
 
     public function store(Request $request)
     {
-        DB::beginTransaction();
         $request->validate([
             'user_type' => 'required',
             'name' => 'required',
@@ -91,6 +90,7 @@ class AdminUsersController extends Controller
             'assigned' => 'nullable',
         ]);
 
+        DB::beginTransaction();
         try {
             $user = User::create([
                 'name' => $request->name,

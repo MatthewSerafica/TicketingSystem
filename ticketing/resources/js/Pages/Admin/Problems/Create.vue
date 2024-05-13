@@ -6,7 +6,7 @@
         <br />
         <div class="container">
           <div class="title-container fw-bold mb-5 text-center">
-            <h1 class="fw-bold">Add New Problem(Title)</h1>
+            <h1 class="fw-bold">Add New Problem</h1>
           </div>
   
           <div class="create-title">
@@ -41,10 +41,6 @@
   import Header from "@/Pages/Layouts/AdminHeader.vue";
   import { Link, useForm } from "@inertiajs/vue3";
   import Button from '@/Components/Button.vue';
-  
-  const props = defineProps({
-    problem: Object,
-  })
   
   const form = useForm({
     problem: null,
