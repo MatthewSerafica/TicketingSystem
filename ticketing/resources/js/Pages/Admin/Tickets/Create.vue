@@ -30,7 +30,7 @@
                 <div class="d-flex flex-row gap-3 mb-2">
                   <div class="flex-grow-1 w-50">
                     <div class="flex-grow-1 w-80 d-flex flex-column">
-                      <label for="request_type" class="fw-semibold">Request Type</label>
+                      <label for="request_type" class="fw-semibold"><span class="text-danger">*</span>Request Type</label>
                       <select id="request_type" class="h-100 rounded border-secondary-subtle form-select"
                         placeholder="Select Request Type..." v-model="form.request_type" @change="toggleRSNoField">
                         <option disabled>Select Type</option>
@@ -53,7 +53,7 @@
                 </div>
                 <div class="d-flex flex-row gap-3">
                   <div class="flex-grow-1 w-50 d-flex flex-column">
-                    <label for="Title" class="fw-semibold">Issues/Problems</label>
+                    <label for="Title" class="fw-semibold"><span class="text-danger">*</span>Issues/Problems</label>
                     <div class="btn-group">
                       <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -86,7 +86,7 @@
                   </div>
 
                   <div class="flex-grow-1 w-50 d-flex flex-column">
-                    <label for="employee" class="fw-semibold">Employee</label>
+                    <label for="employee" class="fw-semibold"><span class="text-danger">*</span>Employee</label>
                     <div class="btn-group">
                       <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -112,7 +112,7 @@
                   </div>
 
                   <div class="flex-grow-1 w-50 d-flex flex-column">
-                    <label for="deptOffice" class="fw-semibold">Department & Office</label>
+                    <label for="deptOffice" class="fw-semibold"><span class="text-danger">*</span>Department & Office</label>
                     <input id="deptOffice" class="form-control rounded border-secondary-subtle" type="text"
                       placeholder=" " v-model="form.department_office" disabled />
                   </div>
@@ -164,7 +164,7 @@
                     </div>
                   </div>
                   <div class="w-50 d-flex flex-column justify-content-start align-items-start">
-                    <label for="" class="fw-semibold">Technicians</label>
+                    <label for="" class="fw-semibold"><span class="text-danger">*</span>Technicians</label>
                     <div class="d-flex flex-column justify-content-center align-items-center gap-2 w-100">
                       <div v-for="(dropdown, index) in techniciansData" :key="index">
                         <div class="flex-grow-1 w-100 d-flex flex-row gap-2">

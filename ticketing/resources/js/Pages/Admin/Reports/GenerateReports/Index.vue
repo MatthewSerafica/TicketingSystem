@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div>
         <Header></Header>
         <!--Toast Render-->
         <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
@@ -18,21 +18,20 @@
             </Toast>
         </div>
         <!--Main Content-->
-        <div class="d-flex justify-content-center flex-column align-content-center align-items-center main-content">
+        <div class="container-fluid main-content d-flex flex-column align-items-center">
             <!--CTAs and Search-->
-            <div class="text-center justify-content-center align-items-center d-flex mt-3 flex-column gap-3">
+            <div class="text-center justify-content-center align-items-center d-flex mt-3 flex-column gap-3 w-100">
                 <div class="d-flex flex-column justify-content-center align-items-center gap-2">
                     <h1 class="fw-bold">Generate Reports</h1>
                 </div>
 
-                <div class="d-flex gap-2 rounded w-50">
+                <div class="d-flex gap-2 rounded w-50 w-md-25">
                     <VueDatePicker v-model="date" range multi-calendars :max-date="new Date()" teleport-center
-                        placeholder="Select Date" class="border rounded border-1" />
+                        placeholder="Select Date" class="border rounded border-1 w-100" />
                 </div>
 
-                <div v-if="monthsAndYears.length > 0" class="table-responsive rounded shadow pt-2 px-2"
-                    style="width: 50rem;">
-                    <div class="">
+                <div v-if="monthsAndYears.length > 0" class="table-responsive rounded shadow pt-2 px-2 w-100 w-lg-75" style="max-width: 50rem;">
+                    <div>
                         <table class="table table-hover custom-rounded-table">
                             <thead>
                                 <tr class="text-start">
@@ -52,12 +51,12 @@
                                         </div>
                                     </td>
                                     <td class="text-center">
-                                        <div class="d-flex gap-2 justify-content-center align-items-center">
+                                        <div class="d-flex gap-2 justify-content-center align-items-center flex-wrap">
                                             <Button :name="'Download'" :color="'primary'"
                                                 @click="download(monthYear.month, monthYear.year)"></Button>
                                             <Link class="btn btn-outline-primary"
                                                 :href="route('admin.reports.generate-report.print', { year: monthYear.year, month: monthYear.month })">
-                                            Print
+                                                Print
                                             </Link>
                                         </div>
                                     </td>
@@ -66,7 +65,7 @@
                         </table>
                     </div>
                 </div>
-                <EmptyCard :title="'No reports yet...'" v-else class="mt-2" style="height:20rem;">
+                <EmptyCard :title="'No reports yet...'" v-else class="mt-2 w-100" style="height:20rem;">
                 </EmptyCard>
             </div>
         </div>
@@ -81,7 +80,6 @@ import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link, router } from "@inertiajs/vue3";
 import moment from "moment";
 import { ref, watch } from 'vue';
-
 
 const props = defineProps({
     monthsAndYears: Object,
@@ -108,7 +106,6 @@ function download(month, year) {
     link.click();
 }
 
-
 function convertToCSV(data) {
     const headerMap = {
         ticket_number: 'Ticket No.',
@@ -128,7 +125,6 @@ function convertToCSV(data) {
     const headers = Object.keys(headerMap);
     const rows = data.map(ticket => headers.map(header => {
         if (header === 'employee') {
-            // Retrieve employee.user.name if it exists
             const employeeName = ticket.employee?.user?.name || '';
             return employeeName;
         } else if (header === 'department') {
@@ -152,28 +148,27 @@ function convertToCSV(data) {
     return csvRows.join('\n');
 }
 
-let from_date_filter = ref(null)
-let to_date_filter = ref(null)
+let from_date_filter = ref(null);
+let to_date_filter = ref(null);
 let timeoutId = null;
 
 function fetchData() {
     const url = route('admin.reports.generate-report.show', {
         from: from_date_filter,
         to: to_date_filter,
-    })
+    });
 
     router.visit(url);
-
 }
 
 const debouncedFetchData = () => {
     if (timeoutId) {
-        clearTimeout(timeoutId)
+        clearTimeout(timeoutId);
     }
     timeoutId = setTimeout(() => {
-        fetchData()
-    }, 500)
-}
+        fetchData();
+    }, 500);
+};
 
 const date = ref();
 
@@ -186,11 +181,8 @@ watch(date, (newDate) => {
         to_date_filter = null;
     }
     if (!newDate) {
-        return
+        return;
     }
     debouncedFetchData();
 });
-
-
-
 </script>
