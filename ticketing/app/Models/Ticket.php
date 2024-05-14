@@ -13,7 +13,7 @@ class Ticket extends Model
 
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(Employee::class, 'employee', 'employee_id');
+        return $this->belongsTo(Employee::class, 'employee_id', 'employee_id');
     }
 
     public function assigned()
@@ -26,8 +26,13 @@ class Ticket extends Model
         return $this->hasOne(HistoryNumber::class, 'ticket_number', 'ticket_number');
     }
 
+    public function serviceReport()
+    {
+        return $this->hasOne(ServiceReport::class, 'ticket_number', 'ticket_number');
+    }
+
     protected $fillable = [
-        'employee',
+        'employee_id',
         'request_type',
         'rr_no',
         'ms_no',

@@ -203,7 +203,7 @@ class TechnicianTicketController extends Controller
                 'request_type' => $request->request_type,
                 'complexity' => $request->complexity,
                 'rs_no' => $request->rs_no,
-                'employee' => $request->employee,
+                'employee_id' => $request->employee,
                 'issue' => $request->problem,
                 'description' => $request->description,
                 'service' => $request->service,
@@ -490,7 +490,7 @@ class TechnicianTicketController extends Controller
         ]);
 
         $ticket = Ticket::where('ticket_number', $ticket_id)->firstOrFail();
-        $employee = Employee::find($ticket->employee);
+        $employee = Employee::find($ticket->employee_id);
         $assigned = AssignedTickets::where('ticket_number', $ticket->ticket_number)->get();
 
         $technicians = collect([]);

@@ -145,7 +145,6 @@ class AdminUsersController extends Controller
             $time = $this->getAverageResolutionTime($user);
             $complexity = $this->getComplexityCounts($user);
         } else {
-
             $yearly = $this->getAdminYearlyData();
             $service = $this->getAdminType();
         }
@@ -242,7 +241,7 @@ class AdminUsersController extends Controller
         $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         if ($user->user_type == 'employee') {
             $yearly_data = Ticket::whereYear('created_at', Carbon::now()->year)
-                ->where('employee', $user->employee->employee_id)
+                ->where('employee_id', $user->employee->employee_id)
                 ->get()
                 ->groupBy(function ($ticket) {
                     return Carbon::parse($ticket->created_at)->format('M');
@@ -274,11 +273,11 @@ class AdminUsersController extends Controller
     private function getType($user)
     {
         if ($user->user_type == 'employee') {
-            $types = Ticket::distinct('service')->where('employee', $user->employee->employee_id)->pluck('service');
+            $types = Ticket::distinct('service')->where('employee_id', $user->employee->employee_id)->pluck('service');
             $typeCounts = [];
 
             foreach ($types as $type) {
-                $count = Ticket::where('service', $type)->where('employee', $user->employee->employee_id)->count(); // Count tickets for each type
+                $count = Ticket::where('service', $type)->where('employee_id', $user->employee->employee_id)->count(); // Count tickets for each type
                 $typeCounts[$type] = $count;
             }
         } else if ($user->user_type == 'technician') {

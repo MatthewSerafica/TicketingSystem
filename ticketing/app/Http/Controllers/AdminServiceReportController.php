@@ -116,7 +116,7 @@ class AdminServiceReportController extends Controller
             'resolved_at' => now(),
         ]);
 
-        $employee = Employee::find($ticket->employee);
+        $employee = Employee::find($ticket->employee_id);
         $employee->user->notify(new UpdateTicketStatus($ticket));
 
         $history = HistoryNumber::where('ticket_number', $request->ticket_number)->first();

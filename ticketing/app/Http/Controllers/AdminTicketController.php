@@ -195,7 +195,7 @@ class AdminTicketController extends Controller
             $ticket_data = [
                 'request_type' => $request->request_type,
                 'rs_no' => $request->rs_no,
-                'employee' => $request->employee,
+                'employee_id' => $request->employee,
                 'issue' => $request->problem,
                 'description' => $request->description,
                 'service' => $request->service,
@@ -419,7 +419,7 @@ class AdminTicketController extends Controller
         $technician = Technician::where('technician_id', $technician_id)->firstOrFail();
         $technician->update(['tickets_assigned' => $technician->tickets_assigned + 1]);
 
-        $employee = Employee::findOrFail($ticket->employee);
+        $employee = Employee::findOrFail($ticket->employee_id);
         $technician->user->notify(
             new UpdateTicketTechnician($ticket, $employee->user->name, $employee->department, $employee->office)
         );
@@ -514,7 +514,7 @@ class AdminTicketController extends Controller
             AssignedTickets::create($assign);
 
 
-            $employee = Employee::findOrFail($ticket->employee);
+            $employee = Employee::findOrFail($ticket->employee_id);
 
             if ($technician) {
                 $technician->user->notify(
@@ -544,7 +544,7 @@ class AdminTicketController extends Controller
 
         try {
             $ticket = Ticket::where('ticket_number', $ticket_id)->firstOrFail();
-            $employee = Employee::find($ticket->employee);
+            $employee = Employee::find($ticket->employee_id);
             $assigned = AssignedTickets::where('ticket_number', $ticket->ticket_number)->get();
 
             $technicians = collect([]);
@@ -732,7 +732,7 @@ class AdminTicketController extends Controller
             ]);
 
 
-            $employee = Employee::findOrFail($ticket->employee);
+            $employee = Employee::findOrFail($ticket->employee_id);
             $old->user->notify(
                 new UpdateTechnicianReplace($ticket, $employee->user->name, $employee->department, $employee->office,)
             );

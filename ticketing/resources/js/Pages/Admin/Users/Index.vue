@@ -71,8 +71,10 @@
       </div>
       <div class="w-75 table-responsive mt-2">
         <div v-if="users.data.length" class="d-flex justify-content-between mb-2">
-          <div>
-            <Link :href="route('admin.reports.collate')" class="btn btn-primary">All Technician Stats</Link>
+          <div class="d-flex gap-2 align-items-center justify-content-center">
+            <Link :href="route('admin.reports.collate')" class="btn btn-outline-primary">All Technician Stats</Link>
+            <Link :href="route('admin.reports.client-collate')" class="btn btn-outline-success">All Client Stats</Link>
+            <Link :href="route('admin.reports.department-collate')" class="btn btn-outline-secondary">Department Stats</Link>
           </div>
           <Pagination :links="users.links" :filter="filter" :key="'users'" />
         </div>

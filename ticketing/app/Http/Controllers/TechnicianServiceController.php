@@ -204,7 +204,7 @@ class TechnicianServiceController extends Controller
         ];
         Log::create($log_data);
 
-        $employee = Employee::find($ticket->employee);
+        $employee = Employee::find($ticket->employee_id);
         $employee->user->notify(new UpdateTicketStatus($ticket));
 
         $admins = User::where('user_type', 'admin')->get();
