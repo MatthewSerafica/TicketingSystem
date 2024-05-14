@@ -18,7 +18,7 @@ class ObserverUsersController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::query()->with('technician', 'employee');
+        $query = User::query()->with('technician', 'employee')->whereNot('user_type', 'observer');
 
         // Retrieve filter state from query parameters
         $filter = $request->only(['search', 'filterUsers', 'all', 'employee', 'technician']);
