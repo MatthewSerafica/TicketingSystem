@@ -53,55 +53,83 @@
                     <span>SR-A-{{ props.service_report.service_id }}</span>
                 </p>
 
-              <div class="bordered-section">
-                <div class="content-group">
-                  <span class="content-group-text bordered-column"><Strong>Date Started:</Strong><br>{{ moment(props.service_report.date_started).format("MMM DD, YYYY") }}</span>
-                  <span class="content-group-text bordered-column"><Strong>Time Started:</Strong><br>{{ moment(props.service_report.time_started, "HH:mm:ss").format("hh:mm A") }}</span>
-                  <span class="content-group-text bordered-column"><Strong>Ticket Number:</Strong><br>{{ props.service_report.ticket_number }}</span>
+                <div class="bordered-section">
+                  <div class="content-group">
+                    <span class="content-group-text bordered-column">
+                      <strong>Date Started:</strong><br>{{ moment(props.service_report.date_started).format("MMM DD, YYYY") }}
+                    </span>
+                    <span class="content-group-text bordered-column">
+                      <strong>Time Started:</strong><br>{{ moment(props.service_report.time_started, "HH:mm:ss").format("hh:mm A") }}
+                    </span>
+                    <span class="content-group-text bordered-column">
+                      <strong>Ticket Number:</strong><br>{{ props.service_report.ticket_number }}
+                    </span>
+                  </div>
+                  <div class="content-group">
+                    <span class="content-group-text bordered-column">
+                      <strong>Name of Technician:</strong><br>{{ props.service_report.technician }}
+                    </span>
+                  </div>
+                  <div class="content-group">
+                    <span class="content-group-text bordered-column">
+                      <strong>Requesting Office:</strong><br>{{ props.service_report.requesting_office }}
+                    </span>
+                  </div>
+                  <div class="content-group">
+                    <span class="content-group-text bordered-column">
+                      <strong>Equipment, Property Tag/Serial No.:</strong><br>{{ props.service_report.equipment_no }}
+                    </span>
+                  </div>
+                  <div class="content-group">
+                    <span class="content-group-text bordered-column">
+                      <strong>Problem Encountered:</strong><br>{{ props.service_report.issue }}
+                    </span>
+                  </div>
+                  <div class="content-group">
+                    <span class="content-group-text bordered-column">
+                      <strong>Action Taken:</strong><br>{{ props.service_report.action }}
+                    </span>
+                  </div>
+                  <div class="content-group">
+                    <span class="content-group-text bordered-column">
+                      <strong>Recommendation:</strong><br>{{ props.service_report.recommendation }}
+                    </span>
+                  </div>
                 </div>
-                <div class="content-group">
-                  <span class="content-group-text bordered-column" colspan="2"><Strong>Name of Technician:</Strong>{{ props.service_report.technician }}</span>
-                </div>
-                <div class="content-group">
-                  <span class="content-group-text bordered-column" colspan="2"><Strong>Requesting Office:</Strong><br>{{ props.service_report.requesting_office }}</span>
-                </div>
-                <div class="content-group">
-                  <span class="content-group-text bordered-column" colspan="2"><Strong>Equipment, Property Tag/Serial No.:</Strong> {{ props.service_report.equipment_no }}</span>
-                </div>
-                <div class="content-group">
-                  <span class="content-group-text bordered-column" colspan="2"><Strong>Problem Encountered:</Strong><br>{{ props.service_report.issue}}</span>
-                </div>
-                <div class="content-group">
-                  <span class="content-group-text bordered-column" colspan="2"><Strong>Action Taken:</Strong><br>{{ props.service_report.action }}</span>
-                </div>
-                <div class="content-group">
-                  <span class="content-group-text bordered-column" colspan="2"><Strong>Recommendation:</Strong><br>{{ props.service_report.recommendation }}</span>
-                </div>
-              </div>
+
   
               <h3 class="section-title">Client Verification of Service Rendered</h3>
               <div class="bordered-section">
-                
                 <div class="content-group">
-                  <span class="content-group-text"><Strong>Status of equipment after service:</Strong> </span>
+                  <span class="content-group-text">
+                    <strong>Status of equipment after service:</strong><br>{{ props.service_report.status_after_service }}
+                  </span>
                 </div>
                 <div class="content-group">
-                  <span class="content-group-text"><Strong>Name and Signature of Client:</Strong> </span>
+                  <span class="content-group-text">
+                    <strong>Name and Signature of Client:</strong><br>{{ props.service_report.client_name_signature }}
+                  </span>
                 </div>
               </div>
+
               
               <h3 class="section-title">Technician Activity Report</h3>
               <div class="bordered-section">
-                
-                <div class="content-group">
-                  <span class="content-group-text"><Strong>Date Done:</Strong> {{ moment(props.service_report.date_done).format("MMM DD, YYYY") }}</span>
-                </div>
-                <div class="content-group">
-                  <span class="content-group-text"><Strong>Time Done:</Strong> {{ moment(props.service_report.time_done, "HH:mm:ss").format("hh:mm A") }}</span>
-                </div>
-                <div class="content-group">
-                  <span class="content-group-text"><Strong>Technician's Signature:</Strong> </span>
-                </div>
+              <div class="content-group">
+                <span class="content-group-text">
+                  <strong>Date Done:</strong><br>{{ moment(props.service_report.date_done).format("MMM DD, YYYY") }}
+                </span>
+              </div>
+              <div class="content-group">
+                <span class="content-group-text">
+                  <strong>Time Done:</strong><br>{{ moment(props.service_report.time_done, "HH:mm:ss").format("hh:mm A") }}
+                </span>
+              </div>
+              <div class="content-group">
+                <span class="content-group-text">
+                  <strong>Technician's Signature:</strong><br>{{ props.service_report.technician_signature }}
+                </span>
+              </div>
               </div>
             </div>
           </div>
@@ -222,6 +250,7 @@
     .content-group-text {
       flex: 2;
       text-align: left;
+      display: inline;
     }
   
     .bordered-column {
