@@ -27,12 +27,12 @@ class Ticket extends Model
     }
 
     protected $fillable = [
-        'employee', 
+        'employee',
         'request_type',
-        'rr_no', 
-        'ms_no', 
-        'rs_no', 
-        'sr_no', 
+        'rr_no',
+        'ms_no',
+        'rs_no',
+        'sr_no',
         'issue',
         'complexity',
         'description',
@@ -41,6 +41,6 @@ class Ticket extends Model
         'remarks',
         'resolved_at'
     ];
-    
+
     protected $primaryKey = 'ticket_number';
 }

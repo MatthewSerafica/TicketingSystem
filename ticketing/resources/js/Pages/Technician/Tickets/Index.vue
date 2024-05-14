@@ -90,7 +90,7 @@
                 <th class="text-muted">Date</th>
                 <th class="text-muted">Client</th>
                 <th class="text-muted">RS No</th>
-                <th class="text-muted">Request</th>
+                <th class="text-muted">Issue/Problem</th>
                 <th class="text-muted text-center">Service</th>
                 <th class="text-center text-muted">Complexity</th>
                 <th class="text-muted center">Technician</th>

@@ -38,11 +38,11 @@
               </div>
 
               <div class="flex-grow-1 w-50 d-flex flex-column">
-                <label for="Title" class="fw-semibold">Title</label>
+                <label for="Title" class="fw-semibold">Issue/Problem</label>
                 <div class="btn-group">
                   <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
                     data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ form.problem ? form.problem : 'Select a Title...' }}
+                    {{ form.problem ? form.problem : 'Select an option...' }}
                   </button>
                   <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
                     data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
@@ -51,7 +51,7 @@
                   <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
                     <li class="dropdown-item d-flex align-items-center">
                       <input type="text" class="form-control flex-grow-1" v-model="titleSearch"
-                        placeholder="Search Title...">
+                        placeholder="Search...">
                     </li>
                     <li class="dropdown-divider"></li>
                     <li v-if="filteredTitles.length === 0" class="dropdown-item">No titles found...</li>
@@ -90,7 +90,7 @@
                 <div class="d-flex flex-column flex-shrink-0">
                   <label for="description" class="fw-semibold">Description</label>
                   <textarea id="description" class="form-control border-secondary-subtle"
-                    placeholder="Enter Ticket Description..." v-model="form.description" rows="5" required></textarea>
+                    placeholder="Enter Ticket Description..." v-model="form.description" rows="5"></textarea>
                 </div>
               </div>
             </div>
@@ -178,7 +178,7 @@
             <div class="d-flex-row justify-content-end mb-4 w-50">
               <div class="d-flex justify-content-end gap-2">
                 <Button :name="'Submit'" :color="'primary'" class="submit-btn"
-                  :disabled="!form.problem || !form.employee || !form.description || !form.service || !form.complexity || !form.request_type"></Button>
+                  :disabled="!form.request_type || !form.problem || !form.employee || !form.complexity || !form.request_type"></Button>
                 <Link :href="`/technician/tickets`" class="btn btn-outline-secondary">Cancel</Link>
               </div>
             </div>

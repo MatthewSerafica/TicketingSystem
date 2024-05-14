@@ -2,102 +2,122 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ProblemCreated;
+use App\Http\Requests\ProblemRequest;
 use App\Models\Log;
 use App\Models\Problem;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class AdminProblemController extends Controller
 {
     public function index(Request $request)
     {
-        $problems = Problem::query()
-            ->when($request->filled('search'), function ($query) use ($request) {
-                $search = $request->input('search');
-                $query->where('id', 'like', '%' . $search . '%')
-                    ->orWhere('problem', 'like', '%' . $search . '%');
-            })
-            ->orderByDesc('id')
-            ->paginate(10);
-        $filters = $request->only(['search']);
-        return inertia('Admin/Problems/Index', [
-            'problems' => $problems,
-            'filters' => $filters,
-        ]);
+        try {
+            $request->validate([
+                'search' => 'nullable|string|max:255',
+            ]);
+
+            $problems = Problem::query()
+                ->when($request->filled('search'), function ($query) use ($request) {
+                    $search = $request->input('search');
+                    $query->where('id', 'like', '%' . $search . '%')
+                        ->orWhere('problem', 'like', '%' . $search . '%');
+                })
+                ->orderByDesc('id')
+                ->paginate(10);
+            $filters = $request->only(['search']);
+
+            return inertia('Admin/Problems/Index', [
+                'problems' => $problems,
+                'filters' => $filters,
+            ]);
+        } catch (ValidationException $e) {
+            return inertia('Admin/Problems/Index', [
+                'error' => $e->validator->errors()->all(),
+            ]);
+        }
     }
 
     public function create()
     {
-        $problems = Problem::get();
-        return inertia('Admin/Problems/Create', [
-            'problems' => $problems,
-        ]);
+        return inertia('Admin/Problems/Create');
     }
 
-    public function store(Request $request)
+    public function store(ProblemRequest $request)
     {
+        $problemData = $request->only('problem');
 
-        $request->validate([
-            'problem' => 'required',
-        ]);
+        DB::beginTransaction();
+        try {
+            $problem = Problem::create($problemData);
+            event(new ProblemCreated($problem));
+            $this->logAction($problem->problem, "Added a new problem");
 
-
-        $problemData = [
-            'problem' => $request->problem,
-        ];
-
-        Problem::create($problemData);
-        
-        $auth = Auth::user();
-        $action_taken = "Added a new problem encountered " .  $request->problem;
-        $log_data = [
-            'name' => $auth->name,
-            'user_type' => $auth->user_type,
-            'actions_taken' => $action_taken,
-        ];
-        Log::create($log_data);
-
-        return redirect()->to('/admin/problems')->with('success', 'Titles Created!')->with('message', $request->problem . ' is added to the Titles!');
+            DB::commit();
+            return redirect()->to('/admin/problems')->with('success', 'Titles Created!')->with('message', $request->problem . ' is added to the Titles!');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to create problem!')->with('message', $e->getMessage());
+        }
     }
 
-    public function update(Request $request, $problem_id)
+    public function update(ProblemRequest $request, $problem_id)
     {
-        $request->validate([
-            'problem' => 'required',
-        ]);
-
         $problem = Problem::findOrFail($problem_id);
         $old_problem = $problem->problem;
-        $problem->problem = $request->problem;
-        $problem->save();
 
-        $auth = Auth::user();
-        $action_taken = "Updated a problem from " . $old_problem . " to " .  $request->problem;
-        $log_data = [
-            'name' => $auth->name,
-            'user_type' => $auth->user_type,
-            'actions_taken' => $action_taken,
-        ];
-        Log::create($log_data);
+        DB::beginTransaction();
+        try {
+            $problem->problem = $request->problem;
+            $problem->save();
+            $message = "Updated " . $old_problem . " problem to " . $request->problem;
+            $this->logAction($problem->problem, $message);
 
-        return redirect()->back()->with('success', 'Titles Updated!')->with('message', $old_problem . ' is updated to ' . $request->problem);
+            return redirect()->back()->with('success', 'Titles Updated!')->with('message', $message);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to update problem!')->with('message', $e->getMessage());
+        }
     }
 
     public function destroy($id)
     {
-        $problem = Problem::findOrFail($id);
-        $name = $problem->problem;
-        $problem->delete();
+        DB::beginTransaction();
+        try {
+            $problem = Problem::findOrFail($id);
+            $name = $problem->problem;
+            $problem->delete();
 
+
+            $message = "Deleted " . $name . " problem";
+            $this->logAction($problem->problem, $message);
+
+            return redirect()->back()->with('success', 'Problem Deleted!')->with('message', $message);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to update problem!')->with('message', $e->getMessage());
+        }
+    }
+    private function logAction($problem, $action)
+    {
         $auth = Auth::user();
-        $action_taken = "Removed " . $name . " problem";
-        $log_data = [
-            'name' => $auth->name,
-            'user_type' => $auth->user_type,
-            'actions_taken' => $action_taken,
-        ];
-        Log::create($log_data);
-
-        return redirect()->back()->with('success', 'Title Deleted!')->with('message', $name . ' has been deleted from Titles');
+        if ($auth) {
+            Log::create([
+                'name' => $auth->name,
+                'user_type' => $auth->user_type,
+                'actions_taken' => $action . ': ' . $problem,
+            ]);
+        } else {
+            Log::create([
+                'name' => request()->ip(),
+                'user_type' => request()->header('User-Agent'),
+                'actions_taken' => $action . ': ' . $problem,
+            ]);
+            return redirect()->back()->with('error', 'Attempt to log action without authenticated user');
+        }
     }
 }

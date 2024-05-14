@@ -79,8 +79,6 @@ import Alpine from 'alpinejs';
 import moment from "moment";
 import { reactive, ref, watch, watchEffect, defineProps } from 'vue';
 
-
-
 Alpine.start()
 
 const page = usePage();

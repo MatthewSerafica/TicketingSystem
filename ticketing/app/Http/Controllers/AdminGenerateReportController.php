@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CollateResource;
-use App\Models\ArchivedTicket;
 use App\Models\ServiceReport;
 use App\Models\Ticket;
 use App\Models\User;
@@ -32,8 +31,6 @@ class AdminGenerateReportController extends Controller
         ]);
     }
 
-
-
     public function show($from, $to)
     {
         $tickets = Ticket::select('*')
@@ -53,17 +50,14 @@ class AdminGenerateReportController extends Controller
     {
         $users = User::where('user_type', 'technician')->with(['technician'])->get();
 
-        // Creating an array to hold the CollateResource collection
         $collateResources = [];
 
         foreach ($users as $user) {
-            // Dynamically set the custom attributes for each user
             $user->average_resolution_time = $this->getAverageResolutionTime($user);
             $user->complexity_counts = $this->getComplexityCounts($user);
             $user->resolved_today = $this->getResolvedToday($user);
             $user->assigned_today = $this->getAssignedToday($user);
 
-            // Create a new CollateResource for each user and add it to the collection
             $collateResources[] = new CollateResource($user);
         }
         return inertia('Admin/Reports/GenerateReports/ShowCollate', [
@@ -149,74 +143,6 @@ class AdminGenerateReportController extends Controller
         $timeInDecimal = round($timeInHours, 2);
 
         return $timeInDecimal;
-    }
-
-
-    private function getYearlyData($user)
-    {
-        $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        if ($user->user_type == 'employee') {
-            $yearly_data = Ticket::whereYear('created_at', Carbon::now()->year)
-                ->where('employee', $user->employee->employee_id)
-                ->get()
-                ->groupBy(function ($ticket) {
-                    return Carbon::parse($ticket->created_at)->format('M');
-                })
-                ->map(function ($grouped_tickets) {
-                    return $grouped_tickets->count();
-                });
-        } else if ($user->user_type == 'technician') {
-            $yearly_data = Ticket::whereYear('created_at', Carbon::now()->year)
-                ->with('assigned.technician.user')
-                ->whereHas('assigned.technician.user', function ($query) use ($user) {
-                    $query->where('id', $user->id);
-                })
-                ->get()
-                ->groupBy(function ($ticket) {
-                    return Carbon::parse($ticket->created_at)->format('M');
-                })
-                ->map(function ($grouped_tickets) {
-                    return $grouped_tickets->count();
-                });
-        }
-        $ordered_data = collect([]);
-        foreach ($months as $month) {
-            $ordered_data[$month] = $yearly_data->get($month, 0);
-        }
-        return $ordered_data;
-    }
-
-    private function getType($user)
-    {
-        if ($user->user_type == 'employee') {
-            $types = Ticket::distinct('service')->where('employee', $user->employee->employee_id)->pluck('service');
-            $typeCounts = [];
-
-            foreach ($types as $type) {
-                $count = Ticket::where('service', $type)->where('employee', $user->employee->employee_id)->count(); // Count tickets for each type
-                $typeCounts[$type] = $count;
-            }
-        } else if ($user->user_type == 'technician') {
-            $types = Ticket::distinct('service')
-                ->with('assigned.technician.user')
-                ->whereHas('assigned.technician.user', function ($query) use ($user) {
-                    $query->where('id', $user->id);
-                })
-                ->pluck('service');
-            $typeCounts = [];
-
-            foreach ($types as $type) {
-                $count = Ticket::where('service', $type)
-                    ->with('assigned.technician.user')
-                    ->whereHas('assigned.technician.user', function ($query) use ($user) {
-                        $query->where('id', $user->id);
-                    })
-                    ->count(); // Count tickets for each type
-                $typeCounts[$type] = $count;
-            }
-        }
-
-        return $typeCounts;
     }
     public function print($year, $month)
     {

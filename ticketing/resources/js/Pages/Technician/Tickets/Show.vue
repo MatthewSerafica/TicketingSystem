@@ -180,9 +180,23 @@
                         </div>
                     </div>
                     <div class="d-flex flex-row justify-content-between gap-5 px-3">
-                        <div class="w-75">
+                        <div class="d-flex flex-column w-75">
                             <h7 class="text-secondary">Description</h7>
-                            <h5>{{ ticket.description }}</h5>
+                            <div v-if="ticket.status !== 'Resolved'">
+                                <h5 v-if="!selectedInput || selectedInput !== 'description'"
+                                    @click="showInput(ticket.description, ticket.ticket_number, 'description')">
+                                    {{ ticket.description ?? 'N/A' }}
+                                </h5>
+                            </div>
+                            <div v-else>    
+                                <h5>
+                                    {{ ticket.description ?? 'N/A' }}
+                                </h5>
+                            </div>
+                            <textarea v-if="selectedInput === 'description'" v-model="editData[ticket.description]"
+                                @blur="updateData(ticket.description, ticket.ticket_number, 'description', 'description')"
+                                @keyup.enter="updateData(ticket.description, ticket.ticket_number, 'description', 'description')"
+                                class="rounded border border-secondary-subtle text-center"></textarea>
                         </div>
                         <div class="w-25">
                             <h7 class="text-secondary ">Status</h7>
@@ -982,9 +996,8 @@ const showInput = (data, id, type, status) => {
     if (status != 'Resolved') {
         console.log(data);
         selectedInput.value = type;
-        selectedRow.value = id;
         editData[data] = data ? data : '';
-        console.log(selectedInput.value, editData[data], selectedRow.value);
+        console.log(selectedInput.value, editData[data]);
     }
 }
 
@@ -1036,7 +1049,7 @@ const updateService = (ticket_id, service) => {
 
 
 const validateNumericInput = (inputValue, propName) => {
-    if (propName === 'remarks') {
+    if (propName === 'remarks' || propName === 'description') {
         return true;
     }
     const isValid = inputValue === '' || /^\d+$/.test(inputValue);

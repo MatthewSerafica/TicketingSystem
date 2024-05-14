@@ -40,6 +40,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(TaggedUser::class, 'user_id');
     }
+    public function isAdmin(): bool
+    {
+        return $this->user_type === 'admin' || $this->user_type === 'super';
+    }
+
 
     /**
      * The attributes that are mass assignable.
