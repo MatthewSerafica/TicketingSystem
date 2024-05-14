@@ -25,7 +25,7 @@
                     <h1 class="fw-bold">Generate Reports</h1>
                 </div>
 
-                <div class="d-flex gap-2 rounded w-50 w-md-25">
+                <div class="d-flex gap-2 rounded w-40 w-md-25">
                     <VueDatePicker v-model="date" range multi-calendars :max-date="new Date()" teleport-center
                         placeholder="Select Date" class="border rounded border-1 w-100" />
                 </div>
