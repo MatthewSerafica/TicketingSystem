@@ -44,6 +44,9 @@ class AuthController extends Controller
             case 'technician':
                 $redirectRoute = '/technician';
                 break;
+            case 'observer':
+                $redirectRoute = '/observer';
+                break;
         }
 
         return redirect()->intended($redirectRoute);
