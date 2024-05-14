@@ -27,6 +27,7 @@ class Kernel extends HttpKernel
         'admin_or_super' => \App\Http\Middleware\AdminMiddleware::class,
         'employee' => \App\Http\Middleware\EmployeeMiddleware::class,
         'technician' => \App\Http\Middleware\TechnicianMiddleware::class,
+        'observer' => \App\Http\Middleware\ObserverMiddleware::class,
     ];
 
     /**

@@ -20,6 +20,11 @@ use App\Http\Controllers\TechnicianDashboardController;
 use App\Http\Controllers\TechnicianForumController;
 use App\Http\Controllers\TechnicianServiceController;
 use App\Http\Controllers\TechnicianTicketController;
+use App\Http\Controllers\ObserverController;
+use App\Http\Controllers\ObserverGenerateController;
+use App\Http\Controllers\ObserverServiceController;
+use App\Http\Controllers\ObserverTicketController;
+use App\Http\Controllers\ObserverUsersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -207,4 +212,26 @@ Route::middleware(['web'])->group(function () {
         Route::post('/technician/notifications/seen', [TechnicianNotificationController::class, 'update'])->name('technician.notifications.seen');
         Route::delete('/technician/notifications/mark/{notif_id}', [TechnicianNotificationController::class, 'marked'])->name('technician.notifications.marked');
     });
+
+    Route::middleware(['auth', 'observer'])->group(function () {
+        Route::get('/observer', [ObserverController::class, 'index'])->name('observer');
+        Route::get('/observer/profile', [ObserverController::class, 'profile'])->name('observer.profile');
+        Route::get('/observer/profile/change', [ObserverController::class, 'password'])->name('observer.change');
+
+        Route::get('/observer/tickets', [ObserverTicketController::class, 'index'])->name('observer.tickets');
+        Route::get('/observer/tickets/{id}', [ObserverTicketController::class, 'show'])->name('observer.tickets.show');
+        Route::get('/observer/reports/service-report', [ObserverServiceController::class, 'index'])->name('observer.reports.service-reports');
+        Route::get('/observer/reports/service-report/{id}', [ObserverServiceController::class, 'show'])->name('observer.reports.service-report.show');
+    
+        Route::get('/observer/reports/generate-report', [ObserverGenerateController::class, 'index'])->name('observer.reports.generate-report');
+        Route::get('/observer/reports/collate', [ObserverGenerateController::class, 'showCollate'])->name('observer.reports.collate');
+        Route::get('/observer/reports/collate/print', [ObserverGenerateController::class, 'printCollate'])->name('observer.reports.collate.print');
+        Route::get('/observer/reports/generate-report/show/{from}/{to}', [ObserverGenerateController::class, 'show'])->name('observer.reports.generate-report.show');
+        Route::get('/observer/reports/generate-report/{year}/{month}/print', [ObserverGenerateController::class, 'print'])->name('observer.reports.generate-report.print');
+    
+        Route::get('/observer/users', [ObserverUsersController::class, 'index'])->name('observer.users');
+        Route::get('/observer/users/create', [ObserverUsersController::class, 'create'])->name('observer.users.create');
+        Route::get('/observer/users/show/{user_id}', [ObserverUsersController::class, 'show'])->name('observer.users.show');
+    });
+
 });
