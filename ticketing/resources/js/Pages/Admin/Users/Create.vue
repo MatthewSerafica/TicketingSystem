@@ -33,7 +33,7 @@
                             <option disabled>Select User Type</option>
                             <option value="employee">Employee</option>
                             <option value="technician">Technician</option>
-                            <option value="Observer">Observer</option>
+                            <option value="observer">Observer</option>
                         </select>
                     </div>
 

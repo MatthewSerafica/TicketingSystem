@@ -37,7 +37,7 @@
       </div>
       <div class="w-75 table-responsive mt-2">
         <div v-if="users.data.length" class="d-flex justify-content-between mb-2">
-          <div>
+          <div class="d-flex  align-items-center gap-2">
             <Link :href="route('observer.reports.collate')" class="btn btn-primary">All Technician Stats</Link>
             <Link :href="route('observer.reports.client-collate')" class="btn btn-outline-success">All Client Stats</Link>
             <Link :href="route('observer.reports.department-collate')" class="btn btn-outline-secondary">Department Stats</Link>
