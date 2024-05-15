@@ -299,14 +299,13 @@ const handleFileChange = async (event) => {
 
 .modal-content {
     background-color: #fff;
-    padding-top: 15px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom: 20px;
+    padding: 15px;
     border-radius: 8px;
     text-align: center;
-    width: 40%;
+    width: 90%; /* Adjust for larger screens */
+    max-width: 500px; /* Adjust for smaller screens */
     max-height: 70%;
+    overflow-y: auto;
 }
 
 .close {
@@ -318,7 +317,7 @@ const handleFileChange = async (event) => {
 }
 
 .upload:hover {
-    background-color: #F2F1F1;
+    background-color: #f2f1f1;
 }
 
 .image {
@@ -326,9 +325,14 @@ const handleFileChange = async (event) => {
     cursor: pointer;
 }
 
-
 .image:hover {
     opacity: 0.95;
     border-color: blue;
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+    }
 }
 </style>

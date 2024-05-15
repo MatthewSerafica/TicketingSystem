@@ -1,87 +1,89 @@
 <template>
   <div>
     <Header></Header>
-    <div class="mt-2 pt-5">
+    <div class="mt-3">
       <form @submit.prevent="create">
         <br />
         <div class="container">
-          <div class="title-container fw-bold mb-5 text-center">
+          <div class="title-container fw-bold mb-3 text-center">
             <h1 class="fw-bold">Create Tickets</h1>
           </div>
 
-          <div class="create-ticket d-flex flex-column justify-content-center align-items-center">
-            <div class="d-flex flex-row gap-3 w-50 justify-content-center mb-4">
+          <div class="create-ticket">
+            <div class="row justify-content-center mb-4">
+              <div class="">
+                <div class="d-flex flex-row gap-3 w-50 justify-content-center mb-4">
+                  <div class=" flex-shrink-1 w-25">
+                    <div class="flex-grow-1 w-80 d-flex flex-column">
+                      <label for="request_type" class="fw-semibold">Request Type</label>
+                      <select id="request_type" class="h-100 rounded border-secondary-subtle form-select"
+                        placeholder="Select Request Type..." v-model="form.request_type" @change="toggleRSNoField">
+                        <option disabled>Select Type</option>
+                        <option value="Requisition Slip">RS</option>
+                        <option value="Phone Call">Phone Call</option>
+                        <option value="Text">Text</option>
+                        <option value="Verbal">Verbal</option>
+                      </select>
+                    </div>
+                  </div>
 
-              <div class=" flex-shrink-1 w-25">
-                <div class="flex-grow-1 w-80 d-flex flex-column">
-                  <label for="request_type" class="fw-semibold">Request Type</label>
-                  <select id="request_type" class="h-100 rounded border-secondary-subtle form-select"
-                    placeholder="Select Request Type..." v-model="form.request_type" @change="toggleRSNoField">
-                    <option disabled>Select Type</option>
-                    <option value="Requisition Slip">RS</option>
-                    <option value="Phone Call">Phone Call</option>
-                    <option value="Text">Text</option>
-                    <option value="Verbal">Verbal</option>
-                  </select>
-                </div>
-              </div>
+                  <div class=" flex-shrink-1 w-25">
+                    <div class="d-flex flex-column flex-shrink-0">
+                      <label for="rs_no" class="fw-semibold">RS No.</label>
+                      <input id="rs_no" class="form-control h-100 rounded border-secondary-subtle" type="text"
+                        placeholder="Enter RS No..." v-model="form.rs_no"
+                        :disabled="form.request_type !== 'Requisition Slip'" />
 
-              <div class=" flex-shrink-1 w-25">
-                <div class="d-flex flex-column flex-shrink-0">
-                  <label for="rs_no" class="fw-semibold">RS No.</label>
-                  <input id="rs_no" class="form-control h-100 rounded border-secondary-subtle" type="text"
-                    placeholder="Enter RS No..." v-model="form.rs_no"
-                    :disabled="form.request_type !== 'Requisition Slip'" />
+                      <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
+                    </div>
+                  </div>
 
-                  <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
-                </div>
-              </div>
-
-              <div class="flex-grow-1 w-50 d-flex flex-column">
-                <label for="Title" class="fw-semibold">Issue/Problem</label>
-                <div class="btn-group">
-                  <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ form.problem ? form.problem : 'Select an option...' }}
-                  </button>
-                  <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
-                    data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                    <span class="visually-hidden">Toggle Dropdown</span>
-                  </button>
-                  <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                    <li class="dropdown-item d-flex align-items-center">
-                      <input type="text" class="form-control flex-grow-1" v-model="titleSearch"
-                        placeholder="Search...">
-                    </li>
-                    <li class="dropdown-divider"></li>
-                    <li v-if="filteredTitles.length === 0" class="dropdown-item">No titles found...</li>
-                    <li v-else-if="filteredTitles" v-for="problem in filteredTitles" class="btn dropdown-item"
-                      @click="selectProblem(problem)" style="width: 550px;">
-                      <span class="fw-semibold">{{ problem.problem }}</span>
-                    </li>
-                    <li class="dropdown-item d-flex align-items-center">
-                      <input type="text" class="form-control flex-grow-1 me-2" v-model="newProblem.problem"
-                        placeholder="Enter new Problem" @keyup.enter.prevent="createNewProblem">
-                      <button class="btn btn-primary" @click.prevent="createNewProblem">
-                        <i class="bi bi-arrow-right"></i>
+                  <div class="flex-grow-1 w-50 d-flex flex-column">
+                    <label for="Title" class="fw-semibold">Issue/Problem</label>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ form.problem ? form.problem : 'Select an option...' }}
                       </button>
-                    </li>
-                  </ul>
+                      <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                      </button>
+                      <ul id="titleDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                        <li class="dropdown-item d-flex align-items-center">
+                          <input type="text" class="form-control flex-grow-1" v-model="titleSearch"
+                            placeholder="Search...">
+                        </li>
+                        <li class="dropdown-divider"></li>
+                        <li v-if="filteredTitles.length === 0" class="dropdown-item">No titles found...</li>
+                        <li v-else-if="filteredTitles" v-for="problem in filteredTitles" class="btn dropdown-item"
+                          @click="selectProblem(problem)" style="width: 550px;">
+                          <span class="fw-semibold">{{ problem.problem }}</span>
+                        </li>
+                        <li class="dropdown-item d-flex align-items-center">
+                          <input type="text" class="form-control flex-grow-1 me-2" v-model="newProblem.problem"
+                            placeholder="Enter new Problem" @keyup.enter.prevent="createNewProblem">
+                          <button class="btn btn-primary" @click.prevent="createNewProblem">
+                            <i class="bi bi-arrow-right"></i>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="flex-grow-1 w-30">
+                    <div class="d-flex flex-column flex-shrink-0">
+                      <label for="complexity" class="fw-semibold">Complexity</label>
+                      <select id="complexity" class="rounded border-secondary-subtle form-select"
+                        placeholder="Select Complexity..." v-model="form.complexity">
+                        <option disabled>Select Complexity</option>
+                        <option value="Simple">Simple</option>
+                        <option value="Complex">Complex</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              <div class="flex-grow-1 w-30">
-                <div class="d-flex flex-column flex-shrink-0">
-                  <label for="complexity" class="fw-semibold">Complexity</label>
-                  <select id="complexity" class="rounded border-secondary-subtle form-select"
-                    placeholder="Select Complexity..." v-model="form.complexity">
-                    <option disabled>Select Complexity</option>
-                    <option value="Simple">Simple</option>
-                    <option value="Complex">Complex</option>
-                  </select>
-                </div>
-              </div>
-
             </div>
 
 

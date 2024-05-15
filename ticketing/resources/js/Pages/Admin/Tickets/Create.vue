@@ -1,21 +1,6 @@
 <template>
   <div>
     <Header></Header>
-    <!--Toast Render-->
-    <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
-      <Toast
-        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
-        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
-        v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
-        @close="handleClose">
-      </Toast>
-
-      <Toast
-        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
-        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown" v-if="showErrorToast"
-        :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
-      </Toast>
-    </div>
     <div class="mt-3">
       <form @submit.prevent="create">
         <br />
@@ -27,7 +12,7 @@
           <div class="create-ticket">
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
-                <div class="d-flex flex-row gap-3 mb-2">
+                <div class="d-flex flex-column flex-md-row gap-3 mb-2">
                   <div class="flex-grow-1 w-50">
                     <div class="flex-grow-1 w-80 d-flex flex-column">
                       <label for="request_type" class="fw-semibold"><span class="text-danger">*</span>Request Type</label>
@@ -49,9 +34,9 @@
                       :disabled="form.request_type !== 'Requisition Slip'" />
                     <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
                   </div>
-
                 </div>
-                <div class="d-flex flex-row gap-3">
+                
+                <div class="d-flex flex-column flex-md-row gap-3">
                   <div class="flex-grow-1 w-50 d-flex flex-column">
                     <label for="Title" class="fw-semibold"><span class="text-danger">*</span>Issues/Problems</label>
                     <div class="btn-group">
@@ -130,7 +115,7 @@
 
             <div class="row justify-content-center mb-4">
               <div class="col-md-8">
-                <div class="d-flex flex-row gap-3">
+                <div class="d-flex flex-column flex-md-row gap-3">
                   <div class="flex-grow-1 w-50 d-flex flex-column">
                     <label for="service" class="fw-semibold">Service</label>
                     <div class="btn-group">
@@ -163,9 +148,9 @@
                       </ul>
                     </div>
                   </div>
-                  <div class="w-50 d-flex flex-column justify-content-start align-items-start">
+                  <div class="d-flex w-50 flex-column justify-content-start align-items-start">
                     <label for="" class="fw-semibold"><span class="text-danger">*</span>Technicians</label>
-                    <div class="d-flex flex-column justify-content-center align-items-center gap-2 w-100">
+                    <div class="d-flex flex-column justify-content-start align-items-start gap-2 w-100">
                       <div v-for="(dropdown, index) in techniciansData" :key="index">
                         <div class="flex-grow-1 w-100 d-flex flex-row gap-2">
                           <div class="btn-group">
@@ -499,6 +484,9 @@ const createNewService = () => {
 }
 
 .dropdown-menu {
+  max-width: 100%; 
+  overflow-wrap: break-word; 
+  white-space: normal;
   display: none;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -520,6 +508,7 @@ const createNewService = () => {
 
 .dropdown-item {
   animation: fadeIn 0.5s ease forwards;
+  white-space: normal;
 }
 
 @keyframes fadeIn {
@@ -549,47 +538,20 @@ const createNewService = () => {
   width: 5.1rem;
 }
 
-@media (max-width: 1024px) {
-  .technicians {
-    width: 21rem;
+@media (max-width: 767px) {
+
+  .dropdown-menu {
+    max-width: 90vw; 
   }
 
-  .droppy {
-    width: 4.1rem;
+  .d-flex.flex-column.flex-md-row {
+    flex-direction: column !important;
   }
-}
-
-@media (max-width: 768px) {
-  .technicians {
-    width: 16rem;
+  .d-flex.flex-column.flex-md-row .flex-grow-1 {
+    width: 100% !important;
   }
-
-  .droppy {
-    width: 3.4rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .technicians {
-    width: 16rem;
-  }
-
-  .droppy {
-    width: 3.4rem;
-  }
-}
-
-@media (max-width: 426px) {
-  .technicians {
-    width: 10rem;
-  }
-
-  .technician {
-    width: 8rem;
-  }
-
-  .droppy {
-    height: 3.85rem;
+  .d-flex.flex-column.flex-md-row .btn-group {
+    width: 100% !important;
   }
 }
 </style>

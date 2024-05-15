@@ -1,5 +1,5 @@
 <template>
-
+<div>
     <div class="position-absolute end-0 me-3" style="z-index: 100; margin-top: 5rem;">
         <Toast
             x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
@@ -15,7 +15,7 @@
             @close="handleClose">
         </Toast>
     </div>
-    <div>
+    
         <Header class="sticky-top" style="z-index: 110;"></Header>
 
         <div class="d-flex gap-4 mt-2">

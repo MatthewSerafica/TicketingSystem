@@ -1,22 +1,7 @@
 <template>
     <div>
         <Header></Header>
-        <!--Toast Render-->
-        <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
-            <Toast
-                x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
-                x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
-                v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
-                @close="handleClose">
-            </Toast>
-
-            <Toast
-                x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
-                x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
-                v-if="showErrorToast" :error="page.props.flash.error" :error_message="page.props.flash.error_message"
-                @close="handleClose">
-            </Toast>
-        </div>
+        
         <!--Main Content-->
         <div class="container-fluid main-content d-flex flex-column align-items-center">
             <!--CTAs and Search-->
@@ -186,3 +171,7 @@ watch(date, (newDate) => {
     debouncedFetchData();
 });
 </script>
+
+<style scoped>
+
+</style>

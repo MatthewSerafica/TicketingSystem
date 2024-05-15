@@ -479,13 +479,13 @@ onMounted(() => {
 
 @media (max-width: 425px) {
     .header {
-        width: 145%;
+        width: 100%;
     }
 }
 
 @media (max-width: 375px) {
     .header {
-        width: 157%;
+        width: 100%;
     }
 
     .logo {
@@ -495,7 +495,7 @@ onMounted(() => {
 
 @media (max-width: 325px) {
     .header {
-        width: 175%;
+        width: 100%;
     }
 }
 </style>
