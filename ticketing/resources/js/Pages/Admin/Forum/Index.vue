@@ -108,7 +108,7 @@
             </div>
         </div>
 
-        <Delete v-if="isShowDelete" :post="selectedPost" @closeDelete="closeDelete" />
+        <Delete v-if="isShowDelete" :post="selectedPost" :type="page.props.user.user_type" @closeDelete="closeDelete" />
     </div>
 </template>
 
