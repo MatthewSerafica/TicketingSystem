@@ -39,6 +39,8 @@
         <div v-if="users.data.length" class="d-flex justify-content-between mb-2">
           <div>
             <Link :href="route('observer.reports.collate')" class="btn btn-primary">All Technician Stats</Link>
+            <Link :href="route('observer.reports.client-collate')" class="btn btn-outline-success">All Client Stats</Link>
+            <Link :href="route('observer.reports.department-collate')" class="btn btn-outline-secondary">Department Stats</Link>
           </div>
           <Pagination :links="users.links" :filter="filter" :key="'users'" />
         </div>

@@ -225,6 +225,8 @@ Route::middleware(['web'])->group(function () {
     
         Route::get('/observer/reports/generate-report', [ObserverGenerateController::class, 'index'])->name('observer.reports.generate-report');
         Route::get('/observer/reports/collate', [ObserverGenerateController::class, 'showCollate'])->name('observer.reports.collate');
+        Route::get('/observer/reports/client-collate', [ObserverGenerateController::class, 'clientCollate'])->name('observer.reports.client-collate');
+        Route::get('/observer/reports/department-collate', [ObserverGenerateController::class, 'departmentCollate'])->name('observer.reports.department-collate');
         Route::get('/observer/reports/collate/print', [ObserverGenerateController::class, 'printCollate'])->name('observer.reports.collate.print');
         Route::get('/observer/reports/generate-report/show/{from}/{to}', [ObserverGenerateController::class, 'show'])->name('observer.reports.generate-report.show');
         Route::get('/observer/reports/generate-report/{year}/{month}/print', [ObserverGenerateController::class, 'print'])->name('observer.reports.generate-report.print');
