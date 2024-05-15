@@ -6,10 +6,7 @@
                 <div class="cta">
                     <h2 class="fw-semibold">Recent Tickets</h2>
                     <div class="d-flex gap-2">
-                        <Link class="text-decoration-none" :href="route('admin.tickets.create')">
-                        <Button :name="'Create'" :color="'primary'" class="btn-width shadow"></Button>
-                        </Link>
-                        <Link class="text-decoration-none" :href="route('admin.tickets')">
+                        <Link class="text-decoration-none" :href="route('observer.tickets')">
                         <Button :name="'View All'" :color="'outline-primary'" class="btn-width shadow"></Button>
                         </Link>
                     </div>
@@ -18,7 +15,7 @@
                     <div v-if="tickets && tickets.length > 0"
                         class="d-flex flex-column gap-4 justify-content-center align-items-center">
                         <div class="" v-for="ticket in tickets" :key="ticket.ticket_number">
-                            <Link class="text-decoration-none" :href="route('admin.tickets.show', ticket.ticket_number)">
+                            <Link class="text-decoration-none" :href="route('observer.tickets.show', ticket.ticket_number)">
                             <Card class="text-truncate hover" :no="ticket.ticket_number" :issue="ticket.issue"
                                 :employee="ticket.employee.user.name" :department="ticket.employee.department"
                                 :date="formatDate(ticket.created_at)" :status="ticket.status"

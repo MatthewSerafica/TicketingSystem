@@ -98,7 +98,7 @@ class ObserverController extends Controller
         $user = User::where('id', $auth->id)->firstOrFail();
         $yearly = $this->getYearlyData();
         $service = $this->getType();
-        return inertia('Admin/Profile/Index', [
+        return inertia('Observer/Profile/Index', [
             'users' => $user,
             'service' => $service,
             'yearly' => $yearly,

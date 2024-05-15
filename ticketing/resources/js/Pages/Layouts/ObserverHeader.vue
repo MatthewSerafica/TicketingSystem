@@ -36,15 +36,9 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown settings" :class="{ 'active': activeLink === 'settings' }">
-                            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                Settings
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="/observer/users">Users</a></li>
-                                <li><a class="dropdown-item" href="/observer/services">Services</a></li>
-                            </ul>
+                        <li class="nav-item" :class="{ 'active': activeLink === 'users' }">
+                            <a class="nav-link dashboard text-white" aria-current="page" href="/observer/users"
+                                @click="setActiveLink('users')">Users</a>
                         </li>
                     </ul>
 
@@ -111,10 +105,8 @@ const determineActiveLink = () => {
     } else if (currentPath.includes('service-report') || currentPath.includes('generate-report')) {
         setActiveLink('reports');
     } else if (currentPath.includes('users') || currentPath.includes('department') || currentPath.includes('office') || currentPath.includes('services') || currentPath.includes('problems') || currentPath.includes('logs')) {
-        setActiveLink('settings');
-    } else if (currentPath.includes('forum')) {
-        setActiveLink('forum');
-    } else {
+        setActiveLink('users');
+    }  else {
         setActiveLink('dashboard');
     }
 }
