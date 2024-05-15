@@ -1,22 +1,22 @@
 <template>
     <div>
-     <Header class="sticky-top" style="z-index: 110;"></Header>
-    <div class="position-absolute end-0 me-3" style="z-index: 100; margin-top: 5rem;">
-        <Toast
-            x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
-            x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
-            v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
-            @close="handleClose">
-        </Toast>
+        <Header class="sticky-top" style="z-index: 110;"></Header>
+        <div class="position-absolute end-0 me-3" style="z-index: 100; margin-top: 5rem;">
+            <Toast
+                x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+                x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
+                v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
+                @close="handleClose">
+            </Toast>
 
-        <Toast
-            x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
-            x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
-            v-if="showErrorToast" :error="page.props.flash.error" :error_message="page.props.flash.error_message"
-            @close="handleClose">
-        </Toast>
-    </div>
-        <div class="d-flex gap-4 mt-2">
+            <Toast
+                x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+                x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
+                v-if="showErrorToast" :error="page.props.flash.error" :error_message="page.props.flash.error_message"
+                @close="handleClose">
+            </Toast>
+        </div>
+        <div class="flex-container gap-4 mt-2">
             <div class="">
                 <a :href="route('admin.tickets')"
                     class="print-hidden btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
@@ -30,8 +30,8 @@
                 </a>
             </div>
 
-            <div class="d-flex flex-grow-1 gap-2 w-100 align-items-center">
-                <div class="d-flex gap-2 border px-3 rounded">
+            <div class="flex-container flex-grow-1 gap-3 w-100">
+                <div class="d-flex justify-content-center gap-2 border px-3 rounded">
                     <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
                     <p class="fw-bold text-secondary pt-3">MS - {{ ms ? ms.ms_no : 0 }} |</p>
                     <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }} |</p>
@@ -59,7 +59,7 @@
         <div class="container py-4 justify-content-center align-items-center">
             <div class="row row-cols-sm-1 gap-4 justify-content-center">
                 <div class="col-lg-8 d-flex flex-column justify-content-around gap-4 shadow rounded py-4 px-4 ticket">
-                    <div class="d-flex flex-row justify-content-between gap-5 px-3">
+                    <div class="d-flex flex-row flex-wrap justify-content-between gap-5 px-3">
                         <div>
                             <h7 class="text-secondary">Ticket Number</h7>
                             <h5>#{{ ticket.ticket_number }}</h5>
@@ -117,7 +117,7 @@
                             <h5>{{ formatDate(ticket.created_at) }}</h5>
                         </div>
                     </div>
-                    <div class="d-flex flex-row justify-content-between gap-5 px-3">
+                    <div class="d-flex flex-row flex-wrap justify-content-between gap-5 px-3">
                         <div>
                             <h7 class="text-secondary">Complexity</h7>
                             <div v-if="ticket.status !== 'Resolved'" class="">
@@ -154,7 +154,7 @@
                             <h5>{{ ticket.employee.department }} - {{ ticket.employee.office }}</h5>
                         </div>
                     </div>
-                    <div class="d-flex flex-row justify-content-between gap-5 px-3">
+                    <div class="d-flex flex-row flex-wrap justify-content-between gap-5 px-3">
                         <div>
                             <h7 class="text-secondary">Issue</h7>
                             <h5>{{ ticket.issue }}</h5>
@@ -196,7 +196,7 @@
                                 class="rounded border border-secondary-subtle text-center"></textarea>
                         </div>
                     </div>
-                    <div class="d-flex flex-row justify-content-between gap-5 px-3">
+                    <div class="d-flex flex-row flex-wrap justify-content-between gap-5 px-3">
                         <div class="d-flex flex-column w-75">
                             <h7 class="text-secondary">Description</h7>
                             <div v-if="ticket.status !== 'Resolved'">
@@ -205,7 +205,7 @@
                                     {{ ticket.description ?? 'N/A' }}
                                 </h5>
                             </div>
-                            <div v-else>    
+                            <div v-else>
                                 <h5>
                                     {{ ticket.description ?? 'N/A' }}
                                 </h5>
@@ -245,7 +245,7 @@
                             <h7 class="text-secondary ">Resolved</h7>
                             <h5>
                                 {{ isNaN(new Date(formatDate(ticket.resolved_at))) ? 'Not yet done' :
-                formatDate(ticket.resolved_at) }}
+                    formatDate(ticket.resolved_at) }}
                             </h5>
                         </div>
                     </div>
@@ -262,17 +262,20 @@
                     <div class="d-flex flex-column gap-3">
                         <div>
                             <form v-if="showTaskInput" @submit.prevent="addTask">
-                                <input type="text" v-model="taskForm.task_name" placeholder="Enter task" class="form-control mb-2">
+                                <input type="text" v-model="taskForm.task_name" placeholder="Enter task"
+                                    class="form-control mb-2">
                                 <div class="d-flex justify-content-end align-items-center gap-2">
                                     <button type="submit" class="btn btn-primary">Save</button>
-                                    <button type="button" class="btn btn-danger" @click="toggleTaskInput">Cancel</button>
+                                    <button type="button" class="btn btn-danger"
+                                        @click="toggleTaskInput">Cancel</button>
                                 </div>
                             </form>
                         </div>
 
                         <!-- Task Section -->
                         <div v-if="tasks.length > 0" class="task-container p-2">
-                            <div v-for="task in tasks" :key="task.id" class="accordion d-flex justify-content-between align-items-center mb-2">
+                            <div v-for="task in tasks" :key="task.id"
+                                class="accordion d-flex justify-content-between align-items-center mb-2">
                                 <div class="accordion-item d-flex flex-column p-2" style="width: 20rem;">
                                     <div class="d-flex flex-row justify-content-between align-items-center">
                                         <div class="accordion-header d-flex flex-row justify-content-between">
@@ -328,14 +331,16 @@
             <!-- Comment Section -->
             <div class="row mt-5 gap-4 justify-content-center text-center bg-white mb-3">
                 <div class="col-lg-8 d-flex flex-column justify-content-center align-items-center gap-2">
-                    <button v-if="!isShowComment" class="p-2 px-4 rounded-pill form-control border cursor-text" @click="showComment">Add a comment</button>
+                    <button v-if="!isShowComment" class="p-2 px-4 rounded-pill form-control border cursor-text"
+                        @click="showComment">Add a comment</button>
                     <div v-if="isShowComment" class="d-flex flex-column gap-2 w-100">
                         <form @submit.prevent="comment">
                             <textarea class="p-2 px-4 rounded-4 form-control mb-2" v-model="commentForm.content"
                                 @input="handleContentChange(commentForm.content)"></textarea>
                             <div class="position-relative">
                                 <div class="d-flex gap-2">
-                                    <div class="d-flex gap-1 align-items-center" v-for="(mention, index) in commentForm.tagged_user_name">
+                                    <div class="d-flex gap-1 align-items-center"
+                                        v-for="(mention, index) in commentForm.tagged_user_name">
                                         <span style="font-size: 11px;">{{ mention }}</span>
                                         <button type="button" class="btn btn-sm rounded-circle"
                                             @click="removeMention(index)"
@@ -365,7 +370,8 @@
 
             <div v-if="comments.length" class="row justify-content-center">
                 <div class="d-flex flex-column justify-content-center align-items-center">
-                    <div class="pb-2 d-flex flex-column justify-content-center w-50 commentt" v-for="comment in comments" v-bind:key="comment.id">
+                    <div class="pb-2 d-flex flex-column justify-content-center w-50 commentt"
+                        v-for="comment in comments" v-bind:key="comment.id">
                         <div class="post rounded px-2">
                             <div class="d-flex align-items-center gap-2">
                                 <div class="d-flex align-items-center justify-content-center gap-2">
@@ -406,7 +412,8 @@
                                 </div>
 
                                 <!-- Content -->
-                                <p v-if="!isShowEdit || selectedComment.id !== comment.id" class="text-secondary-emphasis">
+                                <p v-if="!isShowEdit || selectedComment.id !== comment.id"
+                                    class="text-secondary-emphasis">
                                     {{ comment.content }}
                                 </p>
 
@@ -446,7 +453,8 @@
                                 </div>
 
                                 <!-- CTA -->
-                                <div class="d-flex justify-content-start align-items-center text-dark" style="margin-left: -2rem;">
+                                <div class="d-flex justify-content-start align-items-center text-dark"
+                                    style="margin-left: -2rem;">
                                     <button @click="toggleRepliesVisibility(comment.id)" class="btn">
                                         <i
                                             :class="repliesVisibility[comment.id] ? 'bi bi-dash-circle' : 'bi bi-plus-circle'">
@@ -457,18 +465,22 @@
                                         <i class="bi bi-chat-left-dots"></i>
                                         <span style="font-size: 12px;" class="fw-semibold">Reply</span>
                                     </div>
-                                    <div v-if="page.props.user.id === comment.user.id" class="mt-1 ellipsis rounded-circle dropdown">
-                                        <button data-bs-toggle="dropdown" aria-expanded="false" class="btn rounded-circle">
+                                    <div v-if="page.props.user.id === comment.user.id"
+                                        class="mt-1 ellipsis rounded-circle dropdown">
+                                        <button data-bs-toggle="dropdown" aria-expanded="false"
+                                            class="btn rounded-circle">
                                             <i class="bi bi-three-dots-vertical text-dark"></i>
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li>
-                                                <div class="dropdown-item" style="cursor: pointer;" @click="showEdit(comment)">
+                                                <div class="dropdown-item" style="cursor: pointer;"
+                                                    @click="showEdit(comment)">
                                                     Edit
                                                 </div>
                                             </li>
                                             <li>
-                                                <div class="dropdown-item" style="cursor: pointer;" @click="showDelete(comment)">
+                                                <div class="dropdown-item" style="cursor: pointer;"
+                                                    @click="showDelete(comment)">
                                                     Delete
                                                 </div>
                                             </li>
@@ -477,7 +489,8 @@
                                 </div>
 
                                 <!-- Reply Form -->
-                                <div v-if="isShowReply && selectedComment && selectedComment === comment.id" class="d-flex flex-column gap-2 border rounded-4 p-2">
+                                <div v-if="isShowReply && selectedComment && selectedComment === comment.id"
+                                    class="d-flex flex-column gap-2 border rounded-4 p-2">
                                     <form @submit.prevent="reply(comment.id)">
                                         <textarea ref="commentTextarea"
                                             class="p-2 px-4 rounded-4 form-control border-0 mb-2"
@@ -636,7 +649,8 @@
                                             </div>
 
                                             <!-- More Reply Form -->
-                                            <div v-if="isShowReply && selectedComment && selectedComment === reply.id" class="d-flex flex-column gap-2 border rounded-4 p-2">
+                                            <div v-if="isShowReply && selectedComment && selectedComment === reply.id"
+                                                class="d-flex flex-column gap-2 border rounded-4 p-2">
                                                 <form @submit.prevent="replyMore(reply.id)">
                                                     <textarea class="p-2 px-4 rounded-4 form-control border-0"
                                                         v-model="commentForm.content"
@@ -663,8 +677,11 @@
                                                         </ul>
                                                     </div>
                                                     <div class="d-flex justify-content-end py-1 px-3 gap-2">
-                                                        <Button :name="'Cancel'" :color="'secondary'" @click="closeReply" class="rounded-pill" style="font-size: 12px;"></Button>
-                                                        <button type="submit" class="rounded-pill btn btn-primary" style="font-size: 12px;">Comment</button>
+                                                        <Button :name="'Cancel'" :color="'secondary'"
+                                                            @click="closeReply" class="rounded-pill"
+                                                            style="font-size: 12px;"></Button>
+                                                        <button type="submit" class="rounded-pill btn btn-primary"
+                                                            style="font-size: 12px;">Comment</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -675,7 +692,8 @@
                                             <div v-for="more in replies" v-bind:key="more.id" class="mx-5">
                                                 <div v-if="more.parent_comment_id === reply.id" class="post rounded">
                                                     <div class="d-flex align-items-center gap-2">
-                                                        <div class="d-flex align-items-center justify-content-center gap-2">
+                                                        <div
+                                                            class="d-flex align-items-center justify-content-center gap-2">
                                                             <div class="mt-1 d-flex align-items-center gap-2">
                                                                 <div class="">
                                                                     <img v-if="more.user.avatar !== 'http://127.0.0.1:8000/storage'"
@@ -702,16 +720,20 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div v-if="page.props.user.id === more.user.id" class="ellipsis rounded-circle dropdown">
-                                                                <button data-bs-toggle="dropdown" aria-expanded="false" class="btn rounded-circle">
+                                                            <div v-if="page.props.user.id === more.user.id"
+                                                                class="ellipsis rounded-circle dropdown">
+                                                                <button data-bs-toggle="dropdown" aria-expanded="false"
+                                                                    class="btn rounded-circle">
                                                                     <i class="bi bi-three-dots-vertical text-dark"></i>
                                                                 </button>
                                                                 <ul class="dropdown-menu">
                                                                     <li>
-                                                                        <div class="dropdown-item" @click="showEdit(more)">Edit</div>
+                                                                        <div class="dropdown-item"
+                                                                            @click="showEdit(more)">Edit</div>
                                                                     </li>
                                                                     <li>
-                                                                        <div class="dropdown-item" @click="showDelete(more)">Delete</div>
+                                                                        <div class="dropdown-item"
+                                                                            @click="showDelete(more)">Delete</div>
                                                                     </li>
                                                                 </ul>
                                                             </div>
@@ -720,7 +742,8 @@
 
                                                     <!-- Content -->
                                                     <div class="">
-                                                        <div class="text-dark fw-light fst-italic" v-if="more.tagged.length">
+                                                        <div class="text-dark fw-light fst-italic"
+                                                            v-if="more.tagged.length">
                                                             <p><small>Tagged:
                                                                     <span v-for="tag in more.tagged" class="">
                                                                         {{ tag.user.name }} /
@@ -730,7 +753,8 @@
                                                         </div>
 
                                                         <!-- Content -->
-                                                        <p v-if="!isShowEdit || selectedComment.id !== more.id" class="text-secondary-emphasis"> {{ more.content }} </p>
+                                                        <p v-if="!isShowEdit || selectedComment.id !== more.id"
+                                                            class="text-secondary-emphasis"> {{ more.content }} </p>
 
                                                         <!-- Edit Form -->
                                                         <div v-if="isShowEdit && selectedComment.id === more.id"
@@ -741,11 +765,15 @@
                                                                     @input="handleContentChangeEdit(editComment.content)"></textarea>
                                                                 <div class="position-relative">
                                                                     <div class="d-flex gap-2">
-                                                                        <div class="d-flex gap-1 align-items-center" v-for="(mention, index) in editComment.tagged_user_name">
+                                                                        <div class="d-flex gap-1 align-items-center"
+                                                                            v-for="(mention, index) in editComment.tagged_user_name">
                                                                             <span style="font-size: 11px;">
                                                                                 {{ mention }}
                                                                             </span>
-                                                                            <button type="button" class="btn btn-sm rounded-circle" @click="removeMentionEdit(index)" style="--bs-btn-padding-y: .07rem; --bs-btn-padding-x: .20rem; --bs-btn-font-size: .75rem;">
+                                                                            <button type="button"
+                                                                                class="btn btn-sm rounded-circle"
+                                                                                @click="removeMentionEdit(index)"
+                                                                                style="--bs-btn-padding-y: .07rem; --bs-btn-padding-x: .20rem; --bs-btn-font-size: .75rem;">
                                                                                 <i class="bi bi-x"></i>
                                                                             </button>
                                                                         </div>
@@ -753,14 +781,20 @@
                                                                     <ul v-if="showAutocomplete"
                                                                         class="autocomplete-dropdown bg-white border-secondary border p-2 rounded shadow  w-50 position-absolute"
                                                                         style="top: -0.5rem;z-index: 100; list-style-type: none; cursor: pointer;">
-                                                                        <li class="text-decoration-none" v-for="user in userData" :key="user.id" @click="selectUserEdit(user)">
+                                                                        <li class="text-decoration-none"
+                                                                            v-for="user in userData" :key="user.id"
+                                                                            @click="selectUserEdit(user)">
                                                                             {{ user.name }}
                                                                         </li>
                                                                     </ul>
                                                                 </div>
                                                                 <div class="d-flex justify-content-end py-1 px-3 gap-2">
-                                                                    <Button :name="'Cancel'" :color="'secondary'" @click="closeEdit" class="rounded-pill" style="font-size: 12px;"></Button>
-                                                                    <button type="submit" class="rounded-pill btn btn-primary" style="font-size: 12px;">Submit</button>
+                                                                    <Button :name="'Cancel'" :color="'secondary'"
+                                                                        @click="closeEdit" class="rounded-pill"
+                                                                        style="font-size: 12px;"></Button>
+                                                                    <button type="submit"
+                                                                        class="rounded-pill btn btn-primary"
+                                                                        style="font-size: 12px;">Submit</button>
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -1129,7 +1163,7 @@ const getButtonClass = (status) => {
 </script>
 
 
-<style>
+<style scoped>
 .task-container {
     max-height: 250px;
     overflow-y: auto;
@@ -1212,11 +1246,66 @@ const getButtonClass = (status) => {
 
 .name-and-date {
     white-space: nowrap;
-    /* Prevent name and date from wrapping */
 }
 
 .buttons {
     flex-shrink: 0;
-    /* Prevent buttons from shrinking */
+}
+
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+@media (max-width: 1030px) {
+    .flex-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .ticket {
+        width: 67%;
+    }
+
+    .task {
+        width: 30%;
+    }
+}
+
+@media (max-width: 770px) {
+    .flex-container {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        width: 100%;
+        padding-left: 2rem;
+    }
+
+    .ticket {
+        width: 90%;
+    }
+
+    .task {
+        width: 40%;
+    }
+}
+
+@media (max-width: 430px) {
+    .flex-container {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .ticket {
+        width: 90%;
+    }
+
+    .task {
+        width: 90%;
+    }
 }
 </style>

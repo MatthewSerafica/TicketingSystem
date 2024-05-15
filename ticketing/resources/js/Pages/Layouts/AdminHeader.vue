@@ -471,19 +471,24 @@ onMounted(() => {
     display: none !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1030px) {
+    .header {
+        width: 100%;
+    }
+}
+@media (max-width: 770px) {
     .header {
         width: 100%;
     }
 }
 
-@media (max-width: 425px) {
+@media (max-width: 430px) {
     .header {
         width: 100%;
     }
 }
 
-@media (max-width: 375px) {
+@media (max-width: 380px) {
     .header {
         width: 100%;
     }
@@ -493,7 +498,7 @@ onMounted(() => {
     }
 }
 
-@media (max-width: 325px) {
+@media (max-width: 330px) {
     .header {
         width: 100%;
     }
