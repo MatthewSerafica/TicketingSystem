@@ -30,13 +30,13 @@
           @click="closeDelete" class="btn btn-danger">Delete</Link>
         <Link v-if="post && type === 'technician'" method="delete" type="button" as="button" :href="route('technician.forum.delete', { id: post.id })"
           @click="closeDelete" class="btn btn-danger">Delete</Link>
-        <Link v-if="post && type === 'admin'" method="delete" type="button" as="button" :href="route('admin.forum.delete', { id: post.id })"
+        <Link v-if="post && (type === 'admin' || type === 'super')" method="delete" type="button" as="button" :href="route('admin.forum.delete', { id: post.id })"
           @click="closeDelete" class="btn btn-danger">Delete</Link>
         <Link v-if="comment && type === 'technician'" method="delete" type="button" as="button" :href="route('technician.forum.delete.comment', { id: comment.id })"
           @click="closeDelete" class="btn btn-danger">Delete</Link>
-        <Link v-if="comment && type === 'admin'" method="delete" type="button" as="button" :href="route('admin.forum.delete.comment', { id: comment.id })"
+        <Link v-if="comment && (type === 'admin' || type === 'super')" method="delete" type="button" as="button" :href="route('admin.forum.delete.comment', { id: comment.id })"
           @click="closeDelete" class="btn btn-danger">Delete</Link>
-        <Link v-if="commentTicket && type === 'admin'" method="delete" type="button" as="button" :href="route('admin.ticket.delete.comment', { id: commentTicket.id })"
+        <Link v-if="commentTicket && (type === 'admin' || type === 'super')" method="delete" type="button" as="button" :href="route('admin.ticket.delete.comment', { id: commentTicket.id })"
           @click="closeDelete" class="btn btn-danger">Delete</Link>
         <Link v-if="commentTicket && type === 'technician'" method="delete" type="button" as="button" :href="route('technician.ticket.delete.comment', { id: commentTicket.id })"
           @click="closeDelete" class="btn btn-danger">Delete</Link>

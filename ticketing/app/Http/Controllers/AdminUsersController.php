@@ -29,7 +29,6 @@ class AdminUsersController extends Controller
     {
         $query = User::query()->with('technician', 'employee');
 
-        // Retrieve filter state from query parameters
         $filter = $request->only(['search', 'filterUsers', 'all', 'employee', 'technician']);
 
         if ($request->filled('search')) {
@@ -46,7 +45,6 @@ class AdminUsersController extends Controller
         }
 
         if ($request->filled('filterUsers')) {
-            // Apply user type filter
             $userFilter = $request->input('filterUsers');
             if ($userFilter === 'employee' || $userFilter === 'technician') {
                 $query->where('user_type', $userFilter);
@@ -57,15 +55,13 @@ class AdminUsersController extends Controller
 
         $users->appends($filter);
 
-        // Save the filter in the session to maintain state across page requests
         $request->session()->put('filter', $filter);
 
         return inertia('Admin/Users/Index', [
             'users' => $users,
-            'filter' => $filter, // Pass the filter state to the view
+            'filter' => $filter,
         ]);
     }
-
 
 
     public function create()
