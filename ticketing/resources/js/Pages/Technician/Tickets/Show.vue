@@ -18,7 +18,7 @@
     
         <Header class="sticky-top" style="z-index: 110;"></Header>
 
-        <div class="d-flex gap-4 mt-2">
+        <div class="flex-container gap-4 mt-2">
             <div class="">
                 <a :href="route('technician.tickets')"
                     class="print-hidden btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center"
@@ -32,7 +32,7 @@
                 </a>
             </div>
 
-            <div class="d-flex flex-grow-1 gap-2 w-100 align-items-center">
+            <div class="flex-container flex-grow-1 gap-2 w-100 ">
                 <div class="d-flex gap-2 border px-3 rounded">
                     <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
                     <p class="fw-bold text-secondary pt-3">MS - {{ ms ? ms.ms_no : 0 }} |</p>
@@ -57,7 +57,7 @@
         <div class="container py-4 justify-content-center align-items-center">
             <div class="row row-cols-sm-1 gap-4 justify-content-center">
                 <div class="col-lg-8 d-flex flex-column justify-content-around gap-4 shadow rounded py-4 px-4 ticket">
-                    <div class="d-flex flex-row justify-content-between gap-5 px-3">
+                    <div class="d-flex flex-row flex-wrap justify-content-between gap-5 px-3">
                         <div>
                             <h7 class="text-secondary">Ticket Number</h7>
                             <h5>#{{ ticket.ticket_number }}</h5>
@@ -100,7 +100,7 @@
                             <h5>{{ formatDate(ticket.created_at) }}</h5>
                         </div>
                     </div>
-                    <div class="d-flex flex-row justify-content-between gap-5 px-3">
+                    <div class="d-flex flex-row flex-wrap justify-content-between gap-5 px-3">
                         <div>
                             <h7 class="text-secondary">Complexity</h7>
                             <div v-if="ticket.status !== 'Resolved'" class="">
@@ -137,7 +137,7 @@
                             <h5>{{ ticket.employee.department }} - {{ ticket.employee.office }}</h5>
                         </div>
                     </div>
-                    <div class="d-flex flex-row justify-content-between gap-5 px-3">
+                    <div class="d-flex flex-row flex-wrap justify-content-between gap-5 px-3">
                         <div>
                             <h7 class="text-secondary">Issue</h7>
                             <h5>{{ ticket.issue }}</h5>
@@ -179,7 +179,7 @@
                                 class="rounded border border-secondary-subtle text-center"></textarea>
                         </div>
                     </div>
-                    <div class="d-flex flex-row justify-content-between gap-5 px-3">
+                    <div class="d-flex flex-row flex-wrap justify-content-between gap-5 px-3">
                         <div class="d-flex flex-column w-75">
                             <h7 class="text-secondary">Description</h7>
                             <div v-if="ticket.status !== 'Resolved'">
@@ -1230,5 +1230,62 @@ const updateTaskName = (task, id) => {
 .modal-content img {
     max-width: 100%;
     max-height: 100%;
+}
+
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+@media (max-width: 1030px) {
+    .flex-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .ticket {
+        width: 67%;
+    }
+
+    .task {
+        width: 30%;
+    }
+}
+
+@media (max-width: 770px) {
+    .flex-container {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        width: 100%;
+        padding-left: 2rem;
+    }
+
+    .ticket {
+        width: 90%;
+    }
+
+    .task {
+        width: 40%;
+    }
+}
+
+@media (max-width: 430px) {
+    .flex-container {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .ticket {
+        width: 90%;
+    }
+
+    .task {
+        width: 90%;
+    }
 }
 </style>

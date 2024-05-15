@@ -2,7 +2,7 @@
     <div>
         <nav class="navbar navbar-expand-lg shadow-sm header-color">
             <div class="container-fluid gap-3">
-                <div class="d-flex gap-2 col-6">
+                <div class="d-flex gap-2 col-sm-4 col-md-5 col-6">
                     <Logo class="logo"></Logo>
                     <a class="navbar-brand text-white" href="/technician">TMDD Ticketing System</a>
                 </div>
@@ -11,7 +11,7 @@
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse gap-5" id="navbarNav">
+                <div class="collapse navbar-collapse gap-3" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item" :class="{ 'active': activeLink === 'dashboard' }">
                             <a class="nav-link text-white" aria-current="page" href="/technician"
@@ -31,7 +31,7 @@
                         </li>
                     </ul>
 
-                    <div class="d-flex gap-2 align-items-center">
+                    <div class="d-flex align-items-center">
                         <button class="btn p-2" type="button" data-bs-toggle="offcanvas"
                             data-bs-target="#notificationBar" aria-controls="notificationBar"
                             @click="fetchNotifications">
@@ -375,4 +375,5 @@ const handleBadge = (status) => {
     transition: transform 0.5s ease;
     cursor: pointer;
 }
+
 </style>

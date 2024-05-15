@@ -2,7 +2,7 @@
     <div class="header">
         <nav class="navbar navbar-expand-lg shadow-sm header-color">
             <div class="container-fluid gap-3">
-                <div class="d-flex gap-2 col-6">
+                <div class="d-flex gap-2 col-sm-4 col-md-5 col-6">
                     <Logo class="logo"></Logo>
                     <a class="navbar-brand text-white" href="/admin">TMDD Ticketing System</a>
                 </div>
