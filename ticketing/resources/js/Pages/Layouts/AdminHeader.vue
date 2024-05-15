@@ -394,7 +394,7 @@ const closeNotification = async (notificationId) => {
     try {
         console.log('marking', notificationId)
         await axios.delete(route('admin.notifications.marked', notificationId))
-        notifications.value = notifications.value.filter(notification => notification.notification.id !== notificationId);
+        notifications.value = notifications.value.filter(notification => notification.id !== notificationId);
     } catch (err) {
         console.error(err)
     }
