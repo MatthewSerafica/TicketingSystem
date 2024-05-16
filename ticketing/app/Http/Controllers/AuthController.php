@@ -15,10 +15,7 @@ class AuthController extends Controller
     
     public function store(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string'
-        ]);
+        $credentials = $this->validateLogin($request);
 
         if (!Auth::attempt($credentials, true)) {
             throw ValidationException::withMessages([
@@ -28,7 +25,8 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        $userType = auth()->user()->user_type;
+        return $this->authenticated($request, auth()->user()->user_type);
+        /* $userType = auth()->user()->user_type;
         $redirectRoute = '';
 
         switch ($userType) {
@@ -47,7 +45,32 @@ class AuthController extends Controller
             case 'observer':
                 $redirectRoute = '/observer';
                 break;
+            case 'default':
+                $redirectRoute = '';
+                break;
         }
+
+        return redirect()->intended($redirectRoute); */
+    }
+
+    protected function validateLogin(Request $request)
+    {
+        return $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+    }
+
+    protected function authenticated(Request $request, $user_type)
+    {
+        $redirectRoute = match ($user_type) {
+            'admin' => route('admin'),
+            'super' => route('admin'),
+            'employee' => route('employee'),
+            'technician' => route('technician'),
+            'observer' => route('observer'),
+            default => route('login'),
+        };
 
         return redirect()->intended($redirectRoute);
     }
