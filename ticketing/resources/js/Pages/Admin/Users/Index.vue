@@ -20,7 +20,8 @@
         <div class="d-flex flex-column justify-content-center align-items-center gap-1">
           <h1 class="fw-bold">View All Users</h1>
           <p class="fs-5">Manage All Users</p>
-          <div class="d-flex flex-row gap-2 justify-content-center align-items-center w-100">
+
+          <div class="d-flex flex-column flex-md-row gap-2 justify-content-center align-items-center w-100">
             <Link :href="route('admin.users.create')"
               class="btn btn-tickets btn-primary w-50 d-flex justify-content-center align-items-center shadow">
             Create User
@@ -54,31 +55,41 @@
               </div>
             </div>
           </div>
-          <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
+
+          <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2 flex-wrap">
             <Button :name="'All'" :color="'secondary'" class="btn-options shadow" @click="filterUsers('all')"></Button>
             <Button :name="'Employees'" :color="'secondary'" class="btn-options shadow"
               @click="filterUsers('employee')"></Button>
             <Button :name="'Technicians'" :color="'secondary'" class="btn-options shadow"
               @click="filterUsers('technician')"></Button>
           </div>
+
           <!-- Add buttons for filtering if needed -->
-          <div class="input-group mt-3 shadow rounded">
-            <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
-              placeholder="Search Users..." aria-label="searchIcon" aria-describedby="searchIcon" />
+          <div class="d-flex justify-content-center align-items-center mt-3 mb-2">
+            <div class="input-group d-flex justify-content-center">
+              <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
+              <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
+                placeholder="Search Users..." aria-label="searchIcon" aria-describedby="searchIcon" />
+            </div>
           </div>
+
         </div>
       </div>
-      <div class="w-75 table-responsive mt-2">
-        <div v-if="users.data.length" class="d-flex justify-content-between mb-2">
+      <div class="w-75 mt-2">
+        <div v-if="users.data.length" class="d-flex flex-column flex-md-row justify-content-between mb-2">
           <div class="d-flex gap-2 align-items-center justify-content-center">
             <Link :href="route('admin.reports.collate')" class="btn btn-outline-primary">All Technician Stats</Link>
             <Link :href="route('admin.reports.client-collate')" class="btn btn-outline-success">All Client Stats</Link>
             <Link :href="route('admin.reports.department-collate')" class="btn btn-outline-secondary">Department Stats</Link>
           </div>
-          <Pagination :links="users.links" :filter="filter" :key="'users'" />
+          <!-- Pagination -->
+          <div class="d-flex flex-column justify-content-end align-items-center mt-3 mt-md-0 ">
+            <Pagination :links="users.links" :filter="filter" :key="'users'" />
+          </div>
         </div>
-        <table class="table table-hover shadow custom-rounded-table">
+
+        <div class="table-responsive rounded shadow  pt-2 px-2 mb-3 overflow-auto">
+        <table class="table table-hover custom-rounded-table ">
           <thead v-if="!isLoading">
             <tr class="text-start">
               <th class="text-center text-muted">ID</th>
@@ -119,6 +130,7 @@
             </tr>
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   </div>

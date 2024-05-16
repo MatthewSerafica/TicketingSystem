@@ -19,7 +19,7 @@
 
     <div class="container">
       <!--Main Content-->
-      <div class="main-content">
+      <div class="main-content d-flex flex-column gap-2 justify-content-center">
         <!--CTAs and Search-->
         <div class="text-center mt-3">
           <div class="d-flex flex-column justify-content-center align-items-center gap-2">
@@ -52,14 +52,14 @@
 
         <!--Data Table-->
         <div v-if="tickets.data.length"
-          class="d-flex align-items-center justify-content-between mt-2 mb-2 px-3 pagination">
+          class="d-flex flex-column flex-md-row align-items-md-center align-items-start gap-2 justify-content-between mt-2 mb-2 px-3 pagination">
           <div class="d-flex flex-column flex-md-row gap-2">
-            <div class="d-flex flex-grow-1 gap-2 w-100 align-items-center">
+            <div class="d-flex flex-grow-1 gap-2 align-items-center">
               <div class="d-flex gap-2 border px-3 rounded custom-rounded-table">
-                <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
-                <p class="fw-bold text-secondary pt-3">MS - {{ ms ? ms.ms_no : 0 }} |</p>
-                <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }} |</p>
-                <p class="fw-bold text-secondary pt-3">SR - {{ sr ? sr.sr_no : 0 }}</p>
+                <h6 class="fw-bold text-secondary pt-3">RS-{{ rs ? rs.rs_no : 0 }}</h6>
+                <h6 class="fw-bold text-secondary pt-3">MS-{{ ms ? ms.ms_no : 0 }}</h6>
+                <h6 class="fw-bold text-secondary pt-3">RR-{{ rr ? rr.rr_no : 0 }}</h6>
+                <h6 class="fw-bold text-secondary pt-3">SR-{{ sr ? sr.sr_no : 0 }}</h6>
               </div>
             </div>  
 
@@ -84,7 +84,7 @@
             </div>
           </div>
           
-          <div class="d-flex flex-grow-1 justify-content-end">
+          <div class="d-flex flex-grow-1 justify-content-md-end justify-content-start">
             <Pagination :links="tickets.links" :key="'tickets'" />
             <br>
           </div>
