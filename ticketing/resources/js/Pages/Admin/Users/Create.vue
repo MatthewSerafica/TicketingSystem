@@ -1,31 +1,31 @@
 <template>
     <div>
         <Header></Header>
-        <!--Toast Render-->
-        <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
-            <Toast
-                x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
-                x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
-                v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
-                @close="handleClose">
-            </Toast>
+            <div class="mt-2">
+                <!--Toast Render-->
+                <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
+                    <Toast
+                        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+                        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
+                        v-if="showSuccessToast" :success="page.props.flash.success" :message="page.props.flash.message"
+                        @close="handleClose">
+                    </Toast>
 
-            <Toast
-                x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
-                x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
-                v-if="showErrorToast" :error="page.props.flash.error" :error_message="page.props.flash.error_message"
-                @close="handleClose">
-            </Toast>
-        </div>
-        <div class="mt-2">
-            <form @submit.prevent="create">
-                <br />
-                <div class="d-flex flex-column justify-content-center align-items-center gap-4">
-                    <div class="title-container fw-bold text-center">
-                        <h1 class="fw-bold">Create Users</h1>
-                    </div>
+                    <Toast
+                        x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
+                        x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
+                        v-if="showErrorToast" :error="page.props.flash.error" :error_message="page.props.flash.error_message"
+                        @close="handleClose">
+                    </Toast>
+                </div>
+        <form @submit.prevent="create">
+            <br />
+            <div class="container">
+                <div class="title-container fw-bold text-center">
+                    <h1 class="fw-bold">Create Users</h1>
+                </div>
 
-
+                
                     <div class="d-flex flex-column">
                         <label for="user_type" class="fw-semibold">User Type</label>
                         <select id="user_type" class="form-select h-100 rounded border-secondary-subtle"
@@ -123,6 +123,7 @@
                         </div>
                     </div>
                 </div>
+            
 
                 <div class="container mt-3">
                     <div class="row justify-content-center">

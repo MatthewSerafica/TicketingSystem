@@ -11,11 +11,11 @@
 
           <div class="create-ticket">
             <div class="row justify-content-center mb-4">
-              <div class="">
-                <div class="d-flex flex-row gap-3 w-50 justify-content-center mb-4">
-                  <div class=" flex-shrink-1 w-25">
+              <div class="col-md-8">
+                <div class="d-flex flex-column  flex-md-row gap-3 mb-2">
+                  <div class="flex-grow-1 w-50">
                     <div class="flex-grow-1 w-80 d-flex flex-column">
-                      <label for="request_type" class="fw-semibold">Request Type</label>
+                      <label for="request_type" class="fw-semibold"><span class="text-danger">*</span>Request Type</label>
                       <select id="request_type" class="h-100 rounded border-secondary-subtle form-select"
                         placeholder="Select Request Type..." v-model="form.request_type" @change="toggleRSNoField">
                         <option disabled>Select Type</option>
@@ -27,19 +27,18 @@
                     </div>
                   </div>
 
-                  <div class=" flex-shrink-1 w-25">
-                    <div class="d-flex flex-column flex-shrink-0">
-                      <label for="rs_no" class="fw-semibold">RS No.</label>
-                      <input id="rs_no" class="form-control h-100 rounded border-secondary-subtle" type="text"
-                        placeholder="Enter RS No..." v-model="form.rs_no"
-                        :disabled="form.request_type !== 'Requisition Slip'" />
-
-                      <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
-                    </div>
+                  <div class="flex-grow-1 w-50">
+                    <label for="rs_no" class="fw-semibold">Requisition Slip No.</label>
+                    <input id="rs_no" class="form-control rounded border-secondary-subtle" type="text"
+                      placeholder="Enter RS No..." v-model="form.rs_no"
+                      :disabled="form.request_type !== 'Requisition Slip'" />
+                    <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
                   </div>
+                </div>
 
+                <div class="d-flex flex-column flex-md-row gap-3">
                   <div class="flex-grow-1 w-50 d-flex flex-column">
-                    <label for="Title" class="fw-semibold">Issue/Problem</label>
+                    <label for="Title" class="fw-semibold"><span class="text-danger">*</span>Issue/Problem</label>
                     <div class="btn-group">
                       <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -70,121 +69,119 @@
                       </ul>
                     </div>
                   </div>
-
-                  <div class="flex-grow-1 w-30">
-                    <div class="d-flex flex-column flex-shrink-0">
-                      <label for="complexity" class="fw-semibold">Complexity</label>
+                  <div class="flex-grow-1 w-50 d-flex flex-column">
+                    <label for="complexity" class="fw-semibold"><span class="text-danger">*</span>Complexity</label>
                       <select id="complexity" class="rounded border-secondary-subtle form-select"
                         placeholder="Select Complexity..." v-model="form.complexity">
                         <option disabled>Select Complexity</option>
                         <option value="Simple">Simple</option>
                         <option value="Complex">Complex</option>
                       </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row justify-content-center mb-4">
+              <div class="col-md-8">
+                  <label for="description" class="fw-semibold">Description</label>
+                  <textarea id="description" class="form-control border-secondary-subtle"
+                    placeholder="Enter Ticket Description..." v-model="form.description" rows="5"></textarea>
+              </div>
+            </div>
+
+            <!-- employee -->
+            <div class="row justify-content-center mb-4">
+              <div class="col-md-8">
+                <div class="d-flex flex-column flex-md-row gap-3">
+                  <div class="flex-grow-1 w-50 d-flex flex-column">
+                    <label for="employee" class="fw-semibold"><span class="text-danger">*</span>Employee</label>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ selectedEmployee ? selectedEmployee : 'Select a client...' }}
+                      </button>
+                      <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                      </button>
+                      <ul id="employeeDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                        <li class="px-2">
+                          <input id="employee-search" class="form-control border-secondary-subtle" type="text"
+                            placeholder="Search Employee..." v-model="employeeSearch" />
+                        </li>
+                        <li v-if="filteredEmployees.length === 0" class="dropdown-item">No results found...</li>
+                        <li v-if="filteredEmployees" v-for="employee in filteredEmployees" class="btn dropdown-item"
+                          @click="selectEmployee(employee)">
+                          <span class="fw-semibold">{{ employee.user.name }}</span>
+                          <br> <small>{{ employee.department }}-{{ employee.office }}</small>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="flex-grow-1 w-50 d-flex flex-column">
+                    <label for="deptOffice" class="fw-semibold"><span class="text-danger">*</span>Department & Office</label>
+                    <input id="deptOffice" class="form-control rounded border-secondary-subtle" type="text" placeholder=" "
+                      v-model="form.department" disabled />
+                  </div>
+
+                  <div class="flex-grow-1 w-50 d-flex flex-column">
+                    <label for="service" class="fw-semibold">Service</label>
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
+                          data-bs-toggle="dropdown" aria-expanded="false">
+                          {{ form.service ? form.service : 'Select a service...' }}
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                          data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                          <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <ul id="serviceDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                          <li class="dropdown-item d-flex align-items-center">
+                            <input type="text" class="form-control flex-grow-1" v-model="serviceSearch"
+                              placeholder="Search Service...">
+                          </li>
+                          <li v-if="filteredServices.length === 0" class="dropdown-item">No services found...</li>
+                          <li v-else-if="filteredServices" v-for="service in filteredServices" class="btn dropdown-item"
+                            @click="selectService(service)" style="width: 550px;">
+                            <span class="fw-semibold">{{ service.service }}</span>
+                          </li>
+                          <li class="dropdown-divider"></li>
+                          <li class="dropdown-item d-flex align-items-center" >
+                            <input type="text" class="form-control flex-grow-1 me-2" v-model="newService.service"
+                              placeholder="Enter new Service" @keyup.enter="createNewService" > 
+                            <button class="btn btn-primary ms-2" @click.prevent="createNewService">
+                              <i class="bi bi-arrow-right"></i>
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
-
-            <div class="d-flex flex-row justify-content-center mb-4 w-75">
-              <div class="col-md-8">
-                <div class="d-flex flex-column flex-shrink-0">
-                  <label for="description" class="fw-semibold">Description</label>
-                  <textarea id="description" class="form-control border-secondary-subtle"
-                    placeholder="Enter Ticket Description..." v-model="form.description" rows="5"></textarea>
-                </div>
+            
+            <div class="d-flex justify-content-center align-items-center mb-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="assignToSelf" v-model="form.assign_to_self">
+                <label class="form-check-label" for="assignToSelf">
+                  Assign to Self
+                </label>
               </div>
             </div>
-            <!-- employee -->
-            <div class="d-flex flex-row mb-4 gap-4 w-50 align-items-center justify-content-center">
-              <div class="flex-grow-1 w-50 d-flex flex-column">
-                <label for="employee" class="fw-semibold">Employee</label>
-                <div class="btn-group">
-                  <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ selectedEmployee ? selectedEmployee : 'Select a client...' }}
-                  </button>
-                  <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
-                    data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                    <span class="visually-hidden">Toggle Dropdown</span>
-                  </button>
-                  <ul id="employeeDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                    <li class="px-2">
-                      <input id="employee-search" class="form-control border-secondary-subtle" type="text"
-                        placeholder="Search Employee..." v-model="employeeSearch" />
-                    </li>
-                    <li v-if="filteredEmployees.length === 0" class="dropdown-item">No results found...</li>
-                    <li v-if="filteredEmployees" v-for="employee in filteredEmployees" class="btn dropdown-item"
-                      @click="selectEmployee(employee)">
-                      <span class="fw-semibold">{{ employee.user.name }}</span>
-                      <br> <small>{{ employee.department }}-{{ employee.office }}</small>
-                    </li>
-                  </ul>
+          
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="d-flex justify-content-end gap-2">
+                  <Button :name="'Submit'" :color="'primary'" class="submit-btn"
+                    :disabled="!form.request_type || !form.problem || !form.employee || !form.complexity || !form.request_type"></Button>
+                  <Link :href="`/technician/tickets`" class="btn btn-outline-secondary">Cancel</Link>
                 </div>
-
-              </div>
-              <div class="flex-grow-1 w-50 d-flex flex-column">
-                <label for="deptOffice" class="fw-semibold">Department & Office</label>
-                <input id="deptOffice" class="form-control rounded border-secondary-subtle" type="text" placeholder=" "
-                  v-model="form.department" disabled />
-              </div>
-
-              <div class="flex-grow-1 w-50">
-                <div class="d-flex flex-column flex-shrink-0">
-                  <label for="service" class="fw-semibold">Service</label>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-outline-secondary text-start text-secondary-emphasis w-75"
-                      data-bs-toggle="dropdown" aria-expanded="false">
-                      {{ form.service ? form.service : 'Select a service...' }}
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
-                      data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                      <span class="visually-hidden">Toggle Dropdown</span>
-                    </button>
-                    <ul id="serviceDropdown" class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
-                      <li class="dropdown-item d-flex align-items-center">
-                        <input type="text" class="form-control flex-grow-1" v-model="serviceSearch"
-                          placeholder="Search Service...">
-                      </li>
-                      <li v-if="filteredServices.length === 0" class="dropdown-item">No services found...</li>
-                      <li v-else-if="filteredServices" v-for="service in filteredServices" class="btn dropdown-item"
-                        @click="selectService(service)" style="width: 550px;">
-                        <span class="fw-semibold">{{ service.service }}</span>
-                      </li>
-                      <li class="dropdown-divider"></li>
-                      <li class="dropdown-item d-flex align-items-center" >
-                        <input type="text" class="form-control flex-grow-1 me-2" v-model="newService.service"
-                          placeholder="Enter new Service" @keyup.enter="createNewService" > 
-                        <button class="btn btn-primary ms-2" @click.prevent="createNewService">
-                          <i class="bi bi-arrow-right"></i>
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
             </div>
+          </div>  
 
-            <div class="row justify-content-center">
-              <div class="col gap-1">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="assignToSelf" v-model="form.assign_to_self">
-                  <label class="form-check-label" for="assignToSelf">
-                    Assign to Self
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex-row justify-content-end mb-4 w-50">
-              <div class="d-flex justify-content-end gap-2">
-                <Button :name="'Submit'" :color="'primary'" class="submit-btn"
-                  :disabled="!form.request_type || !form.problem || !form.employee || !form.complexity || !form.request_type"></Button>
-                <Link :href="`/technician/tickets`" class="btn btn-outline-secondary">Cancel</Link>
-              </div>
-            </div>
-          </div>
         </div>
       </form>
     </div>
@@ -393,5 +390,21 @@ const createNewService = () => {
 
 .error-message {
   color: red;
+}
+
+@media (max-width: 767px) {
+.dropdown-menu {
+  max-width: 90vw; 
+}
+
+.d-flex.flex-column.flex-md-row {
+  flex-direction: column !important;
+}
+.d-flex.flex-column.flex-md-row .flex-grow-1 {
+  width: 100% !important;
+}
+.d-flex.flex-column.flex-md-row .btn-group {
+  width: 100% !important;
+}
 }
 </style>

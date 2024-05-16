@@ -302,8 +302,8 @@ const handleFileChange = async (event) => {
     padding: 15px;
     border-radius: 8px;
     text-align: center;
-    width: 90%; /* Adjust for larger screens */
-    max-width: 500px; /* Adjust for smaller screens */
+    width: 90%; 
+    max-width: 500px; 
     max-height: 70%;
     overflow-y: auto;
 }

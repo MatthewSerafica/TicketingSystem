@@ -80,15 +80,19 @@ const props = defineProps({
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
 }
 
 .modal-content {
   background-color: #fff;
-  padding: 30px;
+  padding: 15px;
   border-radius: 8px;
   text-align: center;
-  width: 25%;
-}
+  width: 80%;
+  max-width: 400px; 
+  max-height: 70%;
+  overflow-y: auto;
+} 
 
 .close {
   position: absolute;
