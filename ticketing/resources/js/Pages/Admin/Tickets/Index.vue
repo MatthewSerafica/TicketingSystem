@@ -267,7 +267,7 @@
                       </div>
                     </div>
                   </td>
-                  <td class="text-center">
+                  <td class="text-center" style="width: 8rem;">
                     <div class="d-flex flex-column justify-content-center align-items-center">
                       <div v-for="(assignedTech, index) in ticket.assigned" :key="index">
                         <div>
@@ -374,7 +374,7 @@
                         class="w-100 rounded border border-secondary-subtle text-center">
                     </div>
                   </td>
-                  <td class="text-start">
+                  <td class="text-start" style="width: 7rem;">
                     <Link :href="route('admin.tickets.show', ticket.ticket_number)"
                       class="text-decoration-none text-dark">
                     {{ isNaN(new Date(formatDate(ticket.resolved_at))) ? 'Not yet done' :
