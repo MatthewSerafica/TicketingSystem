@@ -43,7 +43,7 @@
             </div>
           </div>
           <div class="d-flex justify-content-center align-items-center mt-3 mb-2">
-            <div class="input-group d-flex justify-content-center w-50">
+            <div class="input-group d-flex justify-content-center w-50 ">
               <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
               <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
               placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
@@ -54,37 +54,40 @@
         <!--Data Table-->
         <div v-if="tickets.data.length"
           class="d-flex align-items-center justify-content-between mt-2 mb-2 px-3 pagination">
-          <div class="d-flex flex-grow-1 gap-2 w-100 align-items-center">
-            <div class="d-flex gap-2 border px-3 rounded">
-              <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
-              <p class="fw-bold text-secondary pt-3">MS - {{ ms ? ms.ms_no : 0 }} |</p>
-              <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }} |</p>
-              <p class="fw-bold text-secondary pt-3">SR - {{ sr ? sr.sr_no : 0 }}</p>
+          <div class="d-flex flex-column flex-md-row gap-2">
+          <!-- RR, RS, MS, SR box -->
+            <div class="d-flex flex-grow-1 gap-2 w-100 align-items-center">
+              <div class="d-flex gap-2 border px-3 rounded custom-rounded-table">
+                <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
+                <p class="fw-bold text-secondary pt-3">MS - {{ ms ? ms.ms_no : 0 }} |</p>
+                <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }} |</p>
+                <p class="fw-bold text-secondary pt-3">SR - {{ sr ? sr.sr_no : 0 }}</p>
+              </div>
             </div>
-            <div>
-              <button class="btn btn-primary" @click="handleSort('ticket_number')">
-                <i
-                  :class="{ 'bi bi-sort-up': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-sort-down': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-sort-down text-muted': sortColumn !== 'ticket_number' }">
-                </i>
-              </button>
+    
+            <!-- Sort and Quick Edit buttons -->
+            <div class="d-flex flex-column flex-md-row gap-2">
+              <div class="d-flex flex-grow-1 gap-2 w-100 align-items-center">
+                <button class="btn btn-primary" @click="handleSort('ticket_number')">
+                  <i :class="{ 'bi bi-sort-up': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-sort-down': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-sort-down text-muted': sortColumn !== 'ticket_number' }"></i>
+                </button>
+                <button v-if="!isEditable" class="btn btn-outline-primary" @click="handleEdit">
+                  <i class="bi bi-pencil-square"></i> Quick Edit
+                </button>
+                <button v-if="isEditable" class="btn btn-outline-primary" @click="handleEdit">
+                  <i class="bi bi-x-lg"></i> Close Edit
+                </button>
+              </div>
             </div>
-            <div>
-              <button v-if="!isEditable" class="btn btn-outline-primary" @click="handleEdit">
-                <i class="bi bi-pencil-square"></i>
-                <span class="d-none d-md-inline">Quick Edit</span>
-              </button>
-              <button v-if="isEditable" class="btn btn-outline-primary" @click="handleEdit">
-                <i class="bi bi-x-lg"></i>
-                Close Edit
-              </button>
+          </div>
 
+
+            <div class="d-flex flex-grow-1 justify-content-end">
+              <Pagination :links="tickets.links" :key="'tickets'" />
+              <br>
             </div>
-          </div>
-          <div class="d-flex flex-grow-1 justify-content-end">
-            <Pagination :links="tickets.links" :key="'tickets'" />
-            <br>
-          </div>
         </div>
+
         <!--Data Table-->
         <div v-if="tickets.data.length" class="table-responsive rounded shadow pt-2 px-2 mb-3 overflow-auto">
           <div>
@@ -914,13 +917,10 @@ const validateNumericInput = (inputValue, propName) => {
   color: #000;
 }
 
-
 .pagination {
   width: 95%;
 
 }
-
-
 
 .btn-tickets {
   transition: all 0.2s;
@@ -938,17 +938,9 @@ const validateNumericInput = (inputValue, propName) => {
   border-radius: 10px;
 }
 
-
 .ticket-description {
   position: relative;
   cursor: default;
 }
-
-@media (max-width: 768px) {
-  .btn .d-md-inline {
-    display: none !important;
-  }
-}
-
 
 </style>

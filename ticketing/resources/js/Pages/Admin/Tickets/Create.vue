@@ -35,7 +35,7 @@
                     <span v-if="form.errors.rs_no" class="error-message">{{ form.errors.rs_no }}</span>
                   </div>
                 </div>
-                
+
                 <div class="d-flex flex-column flex-md-row gap-3">
                   <div class="flex-grow-1 w-50 d-flex flex-column">
                     <label for="Title" class="fw-semibold"><span class="text-danger">*</span>Issues/Problems</label>
@@ -235,6 +235,7 @@
               </div>
             </div>
           </div>
+          
         </div>
       </form>
     </div>

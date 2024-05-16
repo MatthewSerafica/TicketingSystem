@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header class="sticky-top" style="z-index: 110; width: 100%;"></Header>
+    <Header class="sticky-top" ></Header>
     <!--Toast Render-->
     <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
       <Toast
@@ -16,291 +16,303 @@
         :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
       </Toast>
     </div>
-    <!--Main Content-->
-    <div class="d-flex justify-content-center flex-column align-content-center align-items-center main-content mb-3">
-      <!--CTAs and Search-->
-      <div class="text-center justify-content-center align-items-center d-flex mt-5 flex-column">
-        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-          <h1 class="fw-bold">View All Tickets</h1>
-          <p class="fs-5"> Manage and Track all TMDD Tickets</p>
-          <Link :href="route('technician.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New
-          Ticket
-          </Link>
-          <div class="d-flex gap-2 rounded">
-            <VueDatePicker v-model="date" range multi-calendars :max-date="new Date()" teleport-center
-              placeholder="Select date..." :enable-time-picker="false" class="border rounded border-1" />
-          </div>
-          <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
-            <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
-            <Button :name="'New'" :color="'danger'" class="btn-options" @click="filterTickets('new')"></Button>
-            <Button :name="'Pending'" :color="'warning'" class="btn-options" @click="filterTickets('pending')"></Button>
-            <Button :name="'Ongoing'" :color="'info'" class="btn-options" @click="filterTickets('ongoing')"></Button>
-            <Button :name="'Resolved'" :color="'success'" class="btn-options"
-              @click="filterTickets('resolved')"></Button>
-          </div>
-        </div>
-        <div class="input-group mt-3">
-          <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
-          <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
-            placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
-        </div>
-      </div>
-      <!--Data Table-->
-      <div v-if="tickets.data.length"
-        class="d-flex align-items-center justify-content-between mt-2 mb-2 px-3 pagination">
-        <div class="d-flex flex-grow-1 gap-2 w-100 align-items-center">
-          <div class="d-flex gap-2 border px-3 rounded">
-            <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
-            <p class="fw-bold text-secondary pt-3">MS - {{ ms ? ms.ms_no : 0 }} |</p>
-            <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }} |</p>
-            <p class="fw-bold text-secondary pt-3">SR - {{ sr ? sr.sr_no : 0 }}</p>
-          </div>
-          <div>
-            <button class="btn btn-primary" @click="handleSort('ticket_number')">
-              <i
-                :class="{ 'bi bi-sort-up': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-sort-down': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-sort-down text-muted': sortColumn !== 'ticket_number' }">
-              </i>
-            </button>
-          </div>
-          <div>
-            <button v-if="!isEditable" class="btn btn-outline-primary" @click="handleEdit">
-              <i class="bi bi-pencil-square"></i>
-              Quick Edit
-            </button>
-            <button v-if="isEditable" class="btn btn-outline-primary" @click="handleEdit">
-              <i class="bi bi-x-lg"></i>
-              Close Edit
-            </button>
-          </div>
-        </div>
-        <div class="d-flex flex-grow-1">
-          <Pagination :links="tickets.links" :key="'tickets'" />
-          <br>
-        </div>
-      </div>
-      <!--Data Table-->
-      <div v-if="tickets.data.length > 0" class="table-responsive rounded shadow pt-2 px-2 mb-5">
-        <div class="">
-          <table class="table table-hover custom-rounded-table ">
-            <thead>
-              <tr class="text-start">
-                <th class="text-start text-muted">
-                  No
-                </th>
-                <th class="text-muted">Date</th>
-                <th class="text-muted">Client</th>
-                <th class="text-muted">RS No</th>
-                <th class="text-muted">Issue/Problem</th>
-                <th class="text-muted text-center">Service</th>
-                <th class="text-center text-muted">Complexity</th>
-                <th class="text-muted center">Technician</th>
-                <th class="text-muted">SR</th>
-                <th class="text-muted">Date Resolved</th>
-                <th class="text-muted">Remarks</th>
-                <th class="text-center text-muted">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="ticket in tickets.data" :key="ticket.ticket_number" class="align-middle">
-                <!-- Ticket Number -->
-                <td class="text-center" style="width: 4rem;">
-                  <Link :href="route('technician.tickets.show', ticket.ticket_number)"
-                    class="text-decoration-none text-dark">
-                  {{ ticket.ticket_number }}
-                  </Link>
-                </td>
-                <!-- Date -->
-                <td class="text-start" style="width: 7rem;">
-                  <Link :href="route('technician.tickets.show', ticket.ticket_number)"
-                    class="text-decoration-none text-dark">{{ formatDate(ticket.created_at) }}
-                  </Link>
-                </td>
-                <!-- Client -->
-                <td class="text-start" style="width: 12rem;">
-                  <Link :href="route('technician.tickets.show', ticket.ticket_number)"
-                    class="text-decoration-none text-dark">
-                  <span class="fw-medium">
-                    {{ ticket.employee.user.name }}
-                  </span>
-                  <br>
-                  <small>{{ ticket.employee.department }} - {{ ticket.employee.office }}</small>
-                  </Link>
-                </td>
-                <!-- RS -->
-                <td class="text-start">
-                  <Link :href="route('technician.tickets.show', ticket.ticket_number)"
-                    class="text-decoration-none text-dark">
-                  {{ ticket.rs_no ? ticket.rs_no : "N/A" }}
-                  </Link>
-                </td>
-                <!-- Description -->
-                <td class="text-start text-truncate ticket-description" style="max-width: 120px;"
-                  data-hover-text="{{ ticket.description }}">
-                  <Link :href="route('technician.tickets.show', ticket.ticket_number)"
-                    class="text-decoration-none text-dark">
-                  <span class="d-inline-block" tabindex="0" :title="ticket.description">
-                    {{ ticket.issue }}
-                  </span>
-                  </Link>
-                </td>
-                <td class="text-center">
-                  <div v-if="!isEditable">
-                    <Link :href="route('technician.tickets.show', ticket.ticket_number)"
-                      class="text-decoration-none text-dark">
-                    {{ ticket.service ? ticket.service : 'N/A' }}
-                    </Link>
-                  </div>
-                  <div v-if="isEditable">
-                    <div v-if="ticket.status !== 'Resolved'" class="">
-                      <button type="button" class="btn text-center" data-bs-toggle="dropdown" aria-expanded="false"
-                        data-bs-reference="parent">
-                        {{ ticket.service ? ticket.service : 'Unassigned' }}
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-end">
-                        <li class="dropdown-item disabled">Select a service</li>
-                        <li v-for="service in services" class="btn dropdown-item"
-                          @click="updateService(ticket.ticket_number, service.service)">{{ service.service }}</li>
-                      </ul>
-                    </div>
-                    <div v-else-if="ticket.status == 'Resolved'">
-                      <span class="text-center">
-                        {{ ticket.service ? ticket.service : 'N/A' }}
-                      </span>
-                    </div>
-                  </div>
-                </td>
 
-                <td class="text-center">
-                  <div v-if="!isEditable">
+    <div class="container">
+      <!--Main Content-->
+      <div class="main-content">
+        <!--CTAs and Search-->
+        <div class="text-center mt-3">
+          <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+            <h1 class="fw-bold">View All Tickets</h1>
+            <p class="fs-5"> Manage and Track all TMDD Tickets</p>
+            <Link :href="route('technician.tickets.create')" class="btn btn-tickets btn-primary py-2 px-5">Create New
+            Ticket
+            </Link>
+            <div class="d-flex gap-2 rounded">
+              <VueDatePicker v-model="date" range multi-calendars :max-date="new Date()" teleport-center
+                placeholder="Select date..." :enable-time-picker="false" class="border rounded border-1" />
+            </div>
+            <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2 flex-wrap">
+              <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
+              <Button :name="'New'" :color="'danger'" class="btn-options" @click="filterTickets('new')"></Button>
+              <Button :name="'Pending'" :color="'warning'" class="btn-options" @click="filterTickets('pending')"></Button>
+              <Button :name="'Ongoing'" :color="'info'" class="btn-options" @click="filterTickets('ongoing')"></Button>
+              <Button :name="'Resolved'" :color="'success'" class="btn-options"
+                @click="filterTickets('resolved')"></Button>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center align-items-center mt-3 mb-2">
+            <div class="d-flex justify-content-center w-50">
+              <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
+              <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
+                placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
+            </div>
+          </div>  
+        </div>
+
+        <!--Data Table-->
+        <div v-if="tickets.data.length"
+          class="d-flex align-items-center justify-content-between mt-2 mb-2 px-3 pagination">
+          <div class="d-flex flex-column flex-md-row gap-2">
+            <div class="d-flex flex-grow-1 gap-2 w-100 align-items-center">
+              <div class="d-flex gap-2 border px-3 rounded custom-rounded-table">
+                <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
+                <p class="fw-bold text-secondary pt-3">MS - {{ ms ? ms.ms_no : 0 }} |</p>
+                <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }} |</p>
+                <p class="fw-bold text-secondary pt-3">SR - {{ sr ? sr.sr_no : 0 }}</p>
+              </div>
+            </div>  
+
+            <div class="d-flex flex-column flex-md-row gap-2">
+              <div class="d-flex flex-grow-1 gap-2 w-100 align-items-center">
+                <button class="btn btn-primary" @click="handleSort('ticket_number')">
+                  <i
+                    :class="{ 'bi bi-sort-up': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-sort-down': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-sort-down text-muted': sortColumn !== 'ticket_number' }">
+                  </i>
+                </button>
+                <div>
+                  <button v-if="!isEditable" class="btn btn-outline-primary" @click="handleEdit">
+                    <i class="bi bi-pencil-square"></i>
+                    Quick Edit
+                  </button>
+                  <button v-if="isEditable" class="btn btn-outline-primary" @click="handleEdit">
+                    <i class="bi bi-x-lg"></i>
+                    Close Edit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="d-flex flex-grow-1 justify-content-end">
+            <Pagination :links="tickets.links" :key="'tickets'" />
+            <br>
+          </div>
+        </div>
+        <!--Data Table-->
+        <div v-if="tickets.data.length > 0" class="table-responsive rounded shadow pt-2 px-2 mb-5 overflow-auto">
+          <div class="">
+            <table class="table table-hover custom-rounded-table ">
+              <thead>
+                <tr class="text-start">
+                  <th class="text-start text-muted">
+                    No
+                  </th>
+                  <th class="text-muted">Date</th>
+                  <th class="text-muted">Client</th>
+                  <th class="text-muted">RS No</th>
+                  <th class="text-muted">Issue/Problem</th>
+                  <th class="text-muted text-center">Service</th>
+                  <th class="text-center text-muted">Complexity</th>
+                  <th class="text-muted center">Technician</th>
+                  <th class="text-muted">SR</th>
+                  <th class="text-muted">Date Resolved</th>
+                  <th class="text-muted">Remarks</th>
+                  <th class="text-center text-muted">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="ticket in tickets.data" :key="ticket.ticket_number" class="align-middle">
+                  <!-- Ticket Number -->
+                  <td class="text-center" style="width: 4rem;">
                     <Link :href="route('technician.tickets.show', ticket.ticket_number)"
                       class="text-decoration-none text-dark">
-                    <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center px-3">
-                      {{ ticket.complexity ? ticket.complexity : 'N/A' }}
-                    </button>
+                    {{ ticket.ticket_number }}
                     </Link>
-                  </div>
-                  <div v-if="isEditable">
-                    <div v-if="ticket.status !== 'Resolved'" class="">
-                      <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center px-3"
-                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                        {{ ticket.complexity ? ticket.complexity : 'N/A' }}
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li @click="updateComplexity(ticket.ticket_number, 'Simple')" class="btn dropdown-item">Simple
-                        </li>
-                        <li @click="updateComplexity(ticket.ticket_number, 'Complex')" class="btn dropdown-item">Complex
-                        </li>
-                      </ul>
+                  </td>
+                  <!-- Date -->
+                  <td class="text-start" style="width: 7rem;">
+                    <Link :href="route('technician.tickets.show', ticket.ticket_number)"
+                      class="text-decoration-none text-dark">{{ formatDate(ticket.created_at) }}
+                    </Link>
+                  </td>
+                  <!-- Client -->
+                  <td class="text-start" style="width: 12rem;">
+                    <Link :href="route('technician.tickets.show', ticket.ticket_number)"
+                      class="text-decoration-none text-dark">
+                    <span class="fw-medium">
+                      {{ ticket.employee.user.name }}
+                    </span>
+                    <br>
+                    <small>{{ ticket.employee.department }} - {{ ticket.employee.office }}</small>
+                    </Link>
+                  </td>
+                  <!-- RS -->
+                  <td class="text-start">
+                    <Link :href="route('technician.tickets.show', ticket.ticket_number)"
+                      class="text-decoration-none text-dark">
+                    {{ ticket.rs_no ? ticket.rs_no : "N/A" }}
+                    </Link>
+                  </td>
+                  <!-- Description -->
+                  <td class="text-start text-truncate ticket-description" style="max-width: 120px;"
+                    data-hover-text="{{ ticket.description }}">
+                    <Link :href="route('technician.tickets.show', ticket.ticket_number)"
+                      class="text-decoration-none text-dark">
+                    <span class="d-inline-block" tabindex="0" :title="ticket.description">
+                      {{ ticket.issue }}
+                    </span>
+                    </Link>
+                  </td>
+                  <td class="text-center">
+                    <div v-if="!isEditable">
+                      <Link :href="route('technician.tickets.show', ticket.ticket_number)"
+                        class="text-decoration-none text-dark">
+                      {{ ticket.service ? ticket.service : 'N/A' }}
+                      </Link>
                     </div>
-                    <div v-else-if="ticket.status == 'Resolved'">
+                    <div v-if="isEditable">
+                      <div v-if="ticket.status !== 'Resolved'" class="">
+                        <button type="button" class="btn text-center" data-bs-toggle="dropdown" aria-expanded="false"
+                          data-bs-reference="parent">
+                          {{ ticket.service ? ticket.service : 'Unassigned' }}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                          <li class="dropdown-item disabled">Select a service</li>
+                          <li v-for="service in services" class="btn dropdown-item"
+                            @click="updateService(ticket.ticket_number, service.service)">{{ service.service }}</li>
+                        </ul>
+                      </div>
+                      <div v-else-if="ticket.status == 'Resolved'">
+                        <span class="text-center">
+                          {{ ticket.service ? ticket.service : 'N/A' }}
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td class="text-center">
+                    <div v-if="!isEditable">
+                      <Link :href="route('technician.tickets.show', ticket.ticket_number)"
+                        class="text-decoration-none text-dark">
                       <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center px-3">
                         {{ ticket.complexity ? ticket.complexity : 'N/A' }}
                       </button>
+                      </Link>
                     </div>
-                  </div>
-                </td>
-
-                <td class="text-start">
-                  <Link :href="route('technician.tickets.show', ticket.ticket_number)"
-                    class="text-decoration-none text-dark">
-                  <div v-for="(assignedTech, index) in ticket.assigned" :key="index">
-                    <div v-for="(tech, techIndex) in assignedTech.technician" :key="techIndex">
-                      <span>{{ tech.user.name }}</span>
+                    <div v-if="isEditable">
+                      <div v-if="ticket.status !== 'Resolved'" class="">
+                        <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center px-3"
+                          data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                          {{ ticket.complexity ? ticket.complexity : 'N/A' }}
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li @click="updateComplexity(ticket.ticket_number, 'Simple')" class="btn dropdown-item">Simple
+                          </li>
+                          <li @click="updateComplexity(ticket.ticket_number, 'Complex')" class="btn dropdown-item">Complex
+                          </li>
+                        </ul>
+                      </div>
+                      <div v-else-if="ticket.status == 'Resolved'">
+                        <button type="button" :class="getComplexityClass(ticket.complexity)" class="text-center px-3">
+                          {{ ticket.complexity ? ticket.complexity : 'N/A' }}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  </Link>
-                </td>
+                  </td>
 
-                <td class="text-center" style="max-width: 60px;">
-                  <div v-if="!isEditable">
+                  <td class="text-start">
                     <Link :href="route('technician.tickets.show', ticket.ticket_number)"
                       class="text-decoration-none text-dark">
-                    <span v-if="!selectedInput || selectedInput !== 'sr' || selectedRow !== ticket.ticket_number">
-                      {{ ticket.sr_no ? ticket.sr_no : 'N/A' }}
-                    </span>
+                    <div v-for="(assignedTech, index) in ticket.assigned" :key="index">
+                      <div v-for="(tech, techIndex) in assignedTech.technician" :key="techIndex">
+                        <span>{{ tech.user.name }}</span>
+                      </div>
+                    </div>
                     </Link>
-                  </div>
-                  <div v-if="isEditable" @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
-                    <span v-if="!selectedInput || selectedInput !== 'sr' || selectedRow !== ticket.ticket_number">
-                      {{ ticket.sr_no ? ticket.sr_no : 'N/A' }}
-                    </span>
-                    <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'sr'"
-                      v-model="editData[ticket.sr_no]"
-                      @blur="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no', 'sr')"
-                      @keyup.enter="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no')"
-                      class="w-100 rounded border border-secondary-subtle text-center">
-                  </div>
-                </td>
+                  </td>
 
-                <td class="text-start">
-                  <Link :href="route('technician.tickets.show', ticket.ticket_number)"
-                    class="text-decoration-none text-dark">
-                  {{ isNaN(new Date(formatDate(ticket.resolved_at))) ? 'Not yet resolved' :
-          formatDate(ticket.resolved_at) }}
-                  </Link>
-                </td>
-                <td class="text-start text-break" style="max-width: 120px;">
-                  <div v-if="!isEditable">
+                  <td class="text-center" style="max-width: 60px;">
+                    <div v-if="!isEditable">
+                      <Link :href="route('technician.tickets.show', ticket.ticket_number)"
+                        class="text-decoration-none text-dark">
+                      <span v-if="!selectedInput || selectedInput !== 'sr' || selectedRow !== ticket.ticket_number">
+                        {{ ticket.sr_no ? ticket.sr_no : 'N/A' }}
+                      </span>
+                      </Link>
+                    </div>
+                    <div v-if="isEditable" @click="showInput(ticket.sr_no, ticket.ticket_number, 'sr')">
+                      <span v-if="!selectedInput || selectedInput !== 'sr' || selectedRow !== ticket.ticket_number">
+                        {{ ticket.sr_no ? ticket.sr_no : 'N/A' }}
+                      </span>
+                      <input type="text" v-if="selectedRow === ticket.ticket_number && selectedInput === 'sr'"
+                        v-model="editData[ticket.sr_no]"
+                        @blur="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no', 'sr')"
+                        @keyup.enter="updateData(ticket.sr_no, ticket.ticket_number, 'sr_no')"
+                        class="w-100 rounded border border-secondary-subtle text-center">
+                    </div>
+                  </td>
+
+                  <td class="text-start">
                     <Link :href="route('technician.tickets.show', ticket.ticket_number)"
                       class="text-decoration-none text-dark">
-                    <span v-if="!selectedInput || selectedInput !== 'remarks' || selectedRow !== ticket.ticket_number">
-                      {{ ticket.remarks ? ticket.remarks : 'N/A' }}
-                    </span>
+                    {{ isNaN(new Date(formatDate(ticket.resolved_at))) ? 'Not yet resolved' :
+            formatDate(ticket.resolved_at) }}
                     </Link>
-                  </div>
-                  <div v-if="isEditable" @click="showInput(ticket.remarks, ticket.ticket_number, 'remarks')">
-                    <span v-if="!selectedInput || selectedInput !== 'remarks' || selectedRow !== ticket.ticket_number">
-                      {{ ticket.remarks ? ticket.remarks : 'N/A' }}
-                    </span>
-                    <textarea v-if="selectedRow === ticket.ticket_number && selectedInput === 'remarks'"
-                      v-model="editData[ticket.remarks]"
-                      @blur="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
-                      @keyup.enter="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
-                      class="w-100 rounded border border-secondary-subtle text-center"></textarea>
-                  </div>
-                </td>
-                <td class="text-start">
-                  <div v-if="!isEditable">
-                    <Link :href="route('technician.tickets.show', ticket.ticket_number)"
-                      class="text-decoration-none text-dark">
-                    <button type="button" :class="getButtonClass(ticket.status)" class="text-center px-3">
-                      {{ ticket.status }}
-                    </button>
-                    </Link>
-                  </div>
-                  <div v-if="isEditable">
-                    <div class="btn-group position-static">
-                      <button type="button" :class="getButtonClass(ticket.status)" class="text-center rounded-end"
-                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                  </td>
+                  <td class="text-start text-break" style="max-width: 120px;">
+                    <div v-if="!isEditable">
+                      <Link :href="route('technician.tickets.show', ticket.ticket_number)"
+                        class="text-decoration-none text-dark">
+                      <span v-if="!selectedInput || selectedInput !== 'remarks' || selectedRow !== ticket.ticket_number">
+                        {{ ticket.remarks ? ticket.remarks : 'N/A' }}
+                      </span>
+                      </Link>
+                    </div>
+                    <div v-if="isEditable" @click="showInput(ticket.remarks, ticket.ticket_number, 'remarks')">
+                      <span v-if="!selectedInput || selectedInput !== 'remarks' || selectedRow !== ticket.ticket_number">
+                        {{ ticket.remarks ? ticket.remarks : 'N/A' }}
+                      </span>
+                      <textarea v-if="selectedRow === ticket.ticket_number && selectedInput === 'remarks'"
+                        v-model="editData[ticket.remarks]"
+                        @blur="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
+                        @keyup.enter="updateData(ticket.remarks, ticket.ticket_number, 'remarks', 'remarks')"
+                        class="w-100 rounded border border-secondary-subtle text-center"></textarea>
+                    </div>
+                  </td>
+                  <td class="text-start">
+                    <div v-if="!isEditable">
+                      <Link :href="route('technician.tickets.show', ticket.ticket_number)"
+                        class="text-decoration-none text-dark">
+                      <button type="button" :class="getButtonClass(ticket.status)" class="text-center px-3">
                         {{ ticket.status }}
                       </button>
-                      <ul class="dropdown-menu">
-                        <li @click="updateStatus(ticket.ticket_number, 'New', ticket.status, ticket.sr_no)"
-                          class="btn dropdown-item">New
-                        </li>
-                        <li @click="updateStatus(ticket.ticket_number, 'Pending', ticket.status, ticket.sr_no)"
-                          class="btn dropdown-item">
-                          Pending
-                        </li>
-                        <li @click="updateStatus(ticket.ticket_number, 'Ongoing', ticket.status, ticket.sr_no)"
-                          class="btn dropdown-item">
-                          Ongoing
-                        </li>
-                        <li @click="updateStatus(ticket.ticket_number, 'Resolved', ticket.status, ticket.sr_no)"
-                          class="btn dropdown-item">
-                          Resolved
-                        </li>
-                      </ul>
+                      </Link>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                    <div v-if="isEditable">
+                      <div class="btn-group position-static">
+                        <button type="button" :class="getButtonClass(ticket.status)" class="text-center rounded-end"
+                          data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                          {{ ticket.status }}
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li @click="updateStatus(ticket.ticket_number, 'New', ticket.status, ticket.sr_no)"
+                            class="btn dropdown-item">New
+                          </li>
+                          <li @click="updateStatus(ticket.ticket_number, 'Pending', ticket.status, ticket.sr_no)"
+                            class="btn dropdown-item">
+                            Pending
+                          </li>
+                          <li @click="updateStatus(ticket.ticket_number, 'Ongoing', ticket.status, ticket.sr_no)"
+                            class="btn dropdown-item">
+                            Ongoing
+                          </li>
+                          <li @click="updateStatus(ticket.ticket_number, 'Resolved', ticket.status, ticket.sr_no)"
+                            class="btn dropdown-item">
+                            Resolved
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+        <EmptyCard :title="'No tickets yet...'" v-else class="mt-2 w-75" style="height:20rem;">
+        </EmptyCard>
       </div>
-      <EmptyCard :title="'No tickets yet...'" v-else class="mt-2 w-75" style="height:20rem;">
-      </EmptyCard>
     </div>
   </div>
 </template>
@@ -639,17 +651,6 @@ const validateNumericInput = (inputValue, propName) => {
   }
 }
 
-
-.table-responsive {
-  width: 90%;
-  overflow-x: auto;
-
-}
-
-.pagination {
-  width: 90%;
-}
-
 .btn-tickets {
   transition: all 0.2s;
 }
@@ -672,150 +673,5 @@ const validateNumericInput = (inputValue, propName) => {
   cursor: default;
 }
 
-@media (max-width: 1440px) {
-  .custom-rounded-table {
-    font-size: 12px;
-  }
 
-
-  .table-responsive {
-    width: 85rem;
-    overflow-x: auto;
-  }
-
-  .pagination {
-    width: 85rem;
-  }
-
-  .btn-options {
-    padding: 6px 0;
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 1024px) {
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-
-  .table-responsive {
-    width: 55rem;
-    overflow-x: auto;
-  }
-
-  .pagination {
-    width: 55rem;
-  }
-
-  .btn-options {
-    padding: 6px 0;
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 768px) {
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-
-  .pagination {
-    width: 40rem;
-  }
-
-  .table-responsive {
-    width: 40rem;
-    overflow-x: auto;
-  }
-
-  .btn-options {
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 425px) {
-
-  .main-content {
-    margin-left: 12rem;
-  }
-
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-
-  .pagination {
-    width: 35rem;
-  }
-
-  .table-responsive {
-    width: 35rem;
-    overflow-x: auto;
-  }
-
-  .btn-options {
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 375px) {
-
-  .main-content {
-    margin-left: 13rem;
-  }
-}
-
-@media (max-width: 325px) {
-  .main-content {
-    margin-left: 0;
-  }
-
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-
-  .pagination {
-    width: 100%;
-    overflow-x: auto;
-  }
-
-  .table-responsive {
-    width: 100%;
-    overflow-x: auto;
-  }
-
-  .btn-options {
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-  }
-
-  /* Adjust header styles */
-  .sticky-top {
-    width: 100%;
-    left: 0;
-    right: 0;
-  }
-}
 </style>
