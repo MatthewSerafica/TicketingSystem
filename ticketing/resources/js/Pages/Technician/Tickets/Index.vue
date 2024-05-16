@@ -310,8 +310,10 @@
             </table>
           </div>
         </div>
-        <EmptyCard :title="'No tickets yet...'" v-else class="mt-2 w-75" style="height:20rem;">
+        <div v-else class="mt-2 d-flex align-items-center justify-content-center">
+        <EmptyCard :title="'No tickets yet...'" style="height:20rem;">
         </EmptyCard>
+        </div>
       </div>
     </div>
   </div>

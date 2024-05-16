@@ -26,15 +26,14 @@
           </Link>
         </div>
 
-        <div class="input-group mt-3">
+        <div class="input-group mt-3 mb-2">
           <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
           <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
             placeholder="Search Report..." aria-label="searchIcon" aria-describedby="searchIcon" />
         </div>
       </div>
 
-
-      <div v-if="service_report.data.length" class="d-flex justify-content-end mb-3 pagination">
+      <div v-if="service_report.data.length" class="d-flex justify-content-start justify-content-md-end mb-2 pagination">
         <Pagination :links="service_reports.links" :key="'service_report'" />
         <br>
       </div>
@@ -207,8 +206,19 @@ const formatDate = (date) => {
   overflow-x: auto;
 }
 
-
 .pagination {
   width: 88%;
+}
+
+.input-group {
+  width: 100%;
+  max-width: 400px; /* Adjust as needed */
+  margin: 0 auto; /* Center the search bar */
+}
+
+@media (max-width: 576px) {
+  .input-group {
+    max-width: 90%;
+  }
 }
 </style>

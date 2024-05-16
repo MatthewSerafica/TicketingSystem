@@ -31,37 +31,41 @@
         </div>
       </div>
 
-      <div class="w-75 table-responsive">
-        <div v-if="departments.data.length" class="d-flex justify-content-end mb-2">
-          <Pagination :links="departments.links" :key="'departments'" />
-          <br>
+      <div class="w-75 mt-2">
+        <div v-if="departments.data.length" class="d-flex justify-content-start justify-content-md-end  mb-2">
+          <div class="d-flex flex-column mt-3 mt-md-0"> 
+            <Pagination :links="departments.links" :key="'departments'" />
+          </div>
+
         </div>
-        <table class="table table-hover shadow custom-rounded-table">
-          <thead>
-            <tr class="text-start">
-              <th class="text-center text-muted"> Department ID</th>
-              <th class="text-center text-muted">Department</th>
-              <th class="text-center text-muted">Date Created</th>
-              <th class="text-center text-muted">Date Updated</th>
-              <th class="text-muted">Delete Option</th>
-            </tr>
-          </thead>
-          <tbody class="">
-            <tr v-for="department in departments.data" :key="department.id">
-              <td class="text-center py-4">{{ department.id }}</td>
-              <td class="text-center" style="max-width: 60px;"
-                @click="startEditing(department.id, department.department)">
-                <span v-if="selectedDepartmentId !== department.id">{{ department.department }}</span>
-                <input v-model="editedDepartment[department.id]" v-if="selectedDepartmentId === department.id"
-                  @keyup.enter="saveDepartment(department.id)" @blur="saveDepartment(department.id)"
-                  class="w-50 rounded border border-secondary-subtle text-center">
-              </td>
-              <td class="text-center">{{ formatDate(department.created_at) }}</td>
-              <td class="text-center">{{ formatDate(department.updated_at) }}</td>
-              <td><button type="button" as="button" class="btn btn-danger" @click="showDelete(department)">Delete</button></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive rounded shadow  pt-2 px-2 mb-3 overflow-auto">
+          <table class="table table-hover custom-rounded-table">
+            <thead>
+              <tr class="text-start">
+                <th class="text-center text-muted"> Department ID</th>
+                <th class="text-center text-muted">Department</th>
+                <th class="text-center text-muted">Date Created</th>
+                <th class="text-center text-muted">Date Updated</th>
+                <th class="text-muted">Delete Option</th>
+              </tr>
+            </thead>
+            <tbody class="">
+              <tr v-for="department in departments.data" :key="department.id">
+                <td class="text-center py-4">{{ department.id }}</td>
+                <td class="text-center" style="max-width: 60px;"
+                  @click="startEditing(department.id, department.department)">
+                  <span v-if="selectedDepartmentId !== department.id">{{ department.department }}</span>
+                  <input v-model="editedDepartment[department.id]" v-if="selectedDepartmentId === department.id"
+                    @keyup.enter="saveDepartment(department.id)" @blur="saveDepartment(department.id)"
+                    class="w-50 rounded border border-secondary-subtle text-center">
+                </td>
+                <td class="text-center">{{ formatDate(department.created_at) }}</td>
+                <td class="text-center">{{ formatDate(department.updated_at) }}</td>
+                <td><button type="button" as="button" class="btn btn-danger" @click="showDelete(department)">Delete</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <Delete v-if="isShowDelete" :department="selectedDepartmentId" @closeDelete="closeDelete"/>
@@ -193,7 +197,7 @@ const formatDate = (date) => {
 .table-responsive {
   overflow-x: auto; 
 }
-
+s
 .btn-tickets {
   transition: all 0.2s;
 }
@@ -228,39 +232,5 @@ const formatDate = (date) => {
   z-index: 9999;
 }
 
-@media (max-width: 768px) {
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-  .table-responsive {
-    overflow-x: auto; 
-  }
-  
-  .btn-options {
-    width: 80px; 
-  }
 
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap; 
-  }
-}
-
-@media (max-width: 576px) {
-  
-  .custom-rounded-table {
-    font-size: 10px; 
-  }
-  
-  .btn-options {
-    width: 60px; 
-}
-
-custom-rounded-table th,
-  .custom-rounded-table td {
-    display: block; 
-    width: 100%; 
-    text-align: left; 
-  }
-}
 </style>

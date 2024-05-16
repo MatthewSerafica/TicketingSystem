@@ -30,35 +30,38 @@
         </div>
       </div>
 
-      <div class="w-75">
-        <div v-if="offices.data.length" class="d-flex justify-content-end mb-2">
+      <div class="w-75 mt-2">
+        <div v-if="offices.data.length" class="d-flex justify-content-start justify-content-md-end mb-2">
+          <div class="d-flex flex-column mt-3 mt-md-0">
           <pagination :links="offices.links" :key="'offices'" />
-          <br>
+          </div>
         </div>
-        <table class="table table-hover shadow custom-rounded-table">
-          <thead>
-            <tr class="text-start">
-              <th class="text-center text-muted">Office ID</th>
-              <th class="text-muted" style="width: 40%;">Offices</th>
-              <th class="text-center text-muted">Date Created</th>
-              <th class="text-center text-muted">Date Updated</th>
-              <th class="text-muted">Delete Option</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="office in offices.data" class="align-middle">
-              <td class="text-center">{{ office.id }}</td>
-              <td style="max-width: 60px;" @dblclick="startEditing(office.id, office.office)">
-                <span v-if="selectedOfficeId !== office.id">{{ office.office }}</span>
-                <input v-model="editedOffice[office.id]" v-if="selectedOfficeId === office.id"
-                  @keyup.enter="saveOffice(office.id)" @blur="saveOffice(office.id)">
-              </td>
-              <td class="text-center">{{ formatDate(office.created_at) }}</td>
-              <td class="text-center">{{ formatDate(office.updated_at) }}</td>
-              <td><button type="button" as="button" class="btn btn-danger" @click="showDelete(office)">Delete</button></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive rounded shadow pt-2 px-2 mb-3 overflow-auto">
+          <table class="table table-hover custom-rounded-table">
+            <thead>
+              <tr class="text-start">
+                <th class="text-center text-muted">Office ID</th>
+                <th class="text-muted" style="width: 40%;">Offices</th>
+                <th class="text-center text-muted">Date Created</th>
+                <th class="text-center text-muted">Date Updated</th>
+                <th class="text-muted">Delete Option</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="office in offices.data" class="align-middle">
+                <td class="text-center">{{ office.id }}</td>
+                <td style="max-width: 60px;" @dblclick="startEditing(office.id, office.office)">
+                  <span v-if="selectedOfficeId !== office.id">{{ office.office }}</span>
+                  <input v-model="editedOffice[office.id]" v-if="selectedOfficeId === office.id"
+                    @keyup.enter="saveOffice(office.id)" @blur="saveOffice(office.id)">
+                </td>
+                <td class="text-center">{{ formatDate(office.created_at) }}</td>
+                <td class="text-center">{{ formatDate(office.updated_at) }}</td>
+                <td><button type="button" as="button" class="btn btn-danger" @click="showDelete(office)">Delete</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <Delete v-if="isShowDelete" :office="selectedOfficeId" @closeDelete="closeDelete"/>
     </div>
@@ -183,8 +186,6 @@ function showDelete(office) {
   }
 }
 
-
-
 </script>
 
 <style scoped>
@@ -227,39 +228,4 @@ function showDelete(office) {
   z-index: 9999;
 }
 
-@media (max-width: 768px) {
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-  .table-responsive {
-    overflow-x: auto; 
-  }
-  
-  .btn-options {
-    width: 80px; 
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap; 
-  }
-}
-
-@media (max-width: 576px) {
-  
-  .custom-rounded-table {
-    font-size: 10px; 
-  }
-  
-  .btn-options {
-    width: 60px; 
-}
-
-custom-rounded-table th,
-  .custom-rounded-table td {
-    display: block; 
-    width: 100%; 
-    text-align: left; 
-  }
-}
 </style>

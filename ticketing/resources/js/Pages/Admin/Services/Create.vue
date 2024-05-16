@@ -1,39 +1,23 @@
 <template>
     <div>
     <Header></Header>
-    <div class="mt-5 pt-5">
-      <form @submit.prevent="create">
-        <br />
-        <div class="container">
-          <div class="title-container fw-bold mb-5 text-center">
-            <h1 class="fw-bold">Add Service</h1>
-          </div>
-  
-          <div class="create-service">
-            <div class="d-flex flex-row gap-5 justify-content-center mb-4">
-              <div class="d-flex flex-column flex-shrink-0 w-25">
-                <label for="issue" class="fw-semibold">Service</label>
-                <input id="issue" class="form-control h-100 rounded border-secondary-subtle" type="text" placeholder="Enter Service..." v-model="form.service" required/>
-              </div>
-              
+      <div class="d-flex flex-column justify-content-center align-items-center">
+        <div class="mt-5 pt-5">
+          <form @submit.prevent="create" class="form-container">
+            <div class="title-container fw-bold mb-5 text-center">
+              <h1 class="fw-bold">Add Service</h1>
             </div>
-  
-          </div>
-  
-          <div class="container">
-            <div class="row justify-content-end">
-              <div class="col-md-6">
-                <div class="d-flex gap-2">
-                  <Button :name="'Add'" :color="'primary'" class="submit-btn"></button>
-                  <Link :href="`/admin/services`" class=" btn btn-outline-secondary">Cancel</Link>
-                </div>
-              </div>
+            <div class="mb-3">
+              <label for="issue" class="fw-semibold">Service</label>
+              <input id="issue" class="form-control h-100 rounded border-secondary-subtle" type="text" placeholder="Enter Service..." v-model="form.service" required/>
             </div>
-          </div>
-  
+            <div class="d-flex justify-content-end gap-2">
+              <Button :name="'Add'" :color="'primary'" class="submit-btn"></button>
+              <Link :href="`/admin/services`" class=" btn btn-outline-secondary">Cancel</Link>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
+      </div>  
     </div>
   </template>
     

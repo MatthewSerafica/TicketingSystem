@@ -5,7 +5,7 @@
             <div class="gap-5 justify-content-center align-items-center recent">
                 <div class="cta">
                     <h2 class="fw-semibold">Recent Tickets</h2>
-                    <div class="d-flex gap-2">
+                    <div class="d-flex flex-column flex-md-row gap-2">
                         <Link class="text-decoration-none" :href="route('admin.tickets.create')">
                         <Button :name="'Create'" :color="'primary'" class="btn-width shadow"></Button>
                         </Link>

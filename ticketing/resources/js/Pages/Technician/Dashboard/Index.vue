@@ -5,7 +5,7 @@
             <div class="gap-5 justify-content-center align-items-center recent flex-wrap">
                 <div class="cta">
                     <h2 class="fw-semibold">Recent Tickets</h2>
-                    <div class="d-flex gap-2 flex-wrap">
+                    <div class="d-flex flex-column flex-md-row gap-2">
                         <Link class="text-decoration-none" :href="route('technician.tickets.create')">
                             <Button :name="'Create'" :color="'primary'" class="btn-width"></Button>
                         </Link>

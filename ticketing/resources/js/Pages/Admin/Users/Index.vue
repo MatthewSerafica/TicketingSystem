@@ -28,8 +28,8 @@
             </Link>
             <Button :name="'Import'" :color="'outline-primary'" :width="'50'" @click="showModal"
               class="shadow"></Button>
-            <div v-if="isShowModal" class="custom-modal">
-              <div class="modal-content d-flex flex-column">
+            <div v-if="isShowModal" class="custom-modal d-flex justify-content-center">
+              <div class="modal-content">
                 <div class="d-flex flex-row justify-content-end">
                   <button type="button" class="btn-close" @click="closeModal"></button>
                 </div>
@@ -39,18 +39,20 @@
                   </div>
                   <div class="text-primary ms-2">Importing...</div>
                 </div>
-                <div v-else>
-                  <form @submit.prevent="uploadCsv" enctype="multipart/form-data">
-                    <div class="d-flex flex-column justify-content-center align-items-start">
-                      <label for="file" class="form-label fw-semibold">Upload File</label>
-                      <input type="file" id="file" @change="handleFileUpload" class="form-control" accept=".csv">
-                    </div>
-                    <div class="d-flex flex-row gap-2 justify-content-end mt-3">
-                      <button type="submit" class="btn btn-primary">
-                        Submit</button>
-                      <button @click="closeModal" type="button" class="btn btn-secondary">Cancel</button>
-                    </div>
-                  </form>
+                <div v-else> 
+                 
+                    <form @submit.prevent="uploadCsv" enctype="multipart/form-data">
+                      <div class="d-flex flex-column justify-content-center align-items-start">
+                        <label for="file" class="form-label fw-semibold">Upload File</label>
+                        <input type="file" id="file" @change="handleFileUpload" class="form-control" accept=".csv">
+                      </div>
+                      <div class="d-flex flex-row gap-2 justify-content-end mt-3">
+                        <button type="submit" class="btn btn-primary">
+                          Submit</button>
+                        <button @click="closeModal" type="button" class="btn btn-secondary">Cancel</button>
+                      </div>
+                    </form>
+                    
                 </div>
               </div>
             </div>
@@ -378,5 +380,11 @@ const formatDate = (date) => {
   right: 10px;
   font-size: 20px;
   cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .modal-content {
+    width: 80%; 
+  }
 }
 </style>

@@ -15,7 +15,7 @@
         :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
       </Toast>
     </div>
-    <div class="d-flex justify-content-center flex-column align-content-center align-items-center  main-content">
+    <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-3 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Service Reports</h1>
@@ -32,7 +32,7 @@
         </div>
       </div>
 
-      <div v-if="service_reports.data.length" class="d-flex justify-content-end mb-2 pagination">
+      <div v-if="service_reports.data.length" class="d-flex justify-content-start justify-content-md-end mb-2 pagination">
         <Pagination :links="service_reports.links" :key="'service_reports'" />
         <br>
       </div>
@@ -279,8 +279,6 @@ function showPrint(service_report) {
 .pagination {
   width: 88%;
 }
-
-
 
 .input-group {
   width: 100%;

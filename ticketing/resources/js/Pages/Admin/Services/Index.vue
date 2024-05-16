@@ -31,12 +31,15 @@
         </div>
       </div>
 
-      <div class="w-75 table-responsive">
-        <div v-if="services.data.length" class="d-flex justify-content-end mb-2">
+      <div class="w-75 mt-2">
+        <div v-if="services.data.length" class="d-flex justify-content-start justify-content-md-end mb-2">
+          <div class="d-flex flex-column mt-3 mt-md-0">
           <pagination :links="services.links" :key="'services'" />
+          </div>
           <br>
         </div>
-        <table class="table table-hover shadow custom-rounded-table">
+        <div class="table-responsive rounded shadow pt-2 px-2 mb-3 overflow-auto">
+        <table class="table table-hover custom-rounded-table">
           <thead>
             <tr class="text-start">
               <th class="text-center text-muted">Service ID</th>
@@ -61,6 +64,7 @@
             </tr>
           </tbody>
         </table>
+        </div>
       </div>
       <Delete v-if="isShowDelete" :service="selectedServiceId" @closeDelete="closeDelete" />
     </div>
@@ -230,40 +234,4 @@ function showDelete(service) {
   z-index: 9999;
 }
 
-@media (max-width: 768px) {
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-
-  .table-responsive {
-    overflow-x: auto;
-  }
-
-  .btn-options {
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 576px) {
-
-  .custom-rounded-table {
-    font-size: 10px;
-  }
-
-  .btn-options {
-    width: 60px;
-  }
-
-  custom-rounded-table th,
-  .custom-rounded-table td {
-    display: block;
-    width: 100%;
-    text-align: left;
-  }
-}
 </style>
