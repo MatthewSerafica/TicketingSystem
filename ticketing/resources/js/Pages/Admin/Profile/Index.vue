@@ -17,7 +17,7 @@
             </Toast>
         </div>
         <div class="w-25">
-            <Link :href="route('technician')"
+            <Link :href="route('admin')"
                 class="btn btn-secondary m-2 d-flex flex-row justify-content-start align-items-center back-button"
                 style="width: 6rem;">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
