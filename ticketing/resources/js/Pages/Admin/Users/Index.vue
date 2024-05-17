@@ -91,7 +91,7 @@
         </div>
 
         <div class="table-responsive rounded shadow  pt-2 px-2 mb-3 overflow-auto">
-        <table class="table table-hover custom-rounded-table ">
+        <table class="table table-hover custom-rounded-table">
           <thead v-if="!isLoading">
             <tr class="text-start">
               <th class="text-center text-muted">ID</th>

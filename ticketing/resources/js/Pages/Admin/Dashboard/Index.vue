@@ -111,6 +111,7 @@ watch(myData, (newValue, oldValue) => {
     width: 50rem;
     padding: 1rem;
 }
+
 @media (max-width: 1024px) {
     .main-content {
         padding: 2rem;

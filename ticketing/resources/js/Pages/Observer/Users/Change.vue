@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import Header from "@/Pages/Layouts/AdminHeader.vue";
+import Header from "@/Pages/Layouts/ObserverHeader.vue";
 import { Link, usePage, useForm } from "@inertiajs/vue3";
 import Button from '@/Components/Button.vue';
 import { computed, ref } from 'vue';
@@ -81,7 +81,7 @@ const isFormValid = computed(() => {
 
 const changePassword = async () => {
   try {
-    await form.post(route('admin.change-password', { user_id: page.props.user.id }));
+    await form.post(route('observer.change-password', { user_id: page.props.user.id }));
     if (page.props.flash.success) {
       console.log(page.props.flash.success);
     }

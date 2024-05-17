@@ -1,6 +1,6 @@
 <template>
-  <div class="content">
-    <Header></Header>
+  <div>
+    <Header class="sticky-top"></Header>
     <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
       <Toast
         x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
@@ -15,7 +15,7 @@
         :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
       </Toast>
     </div>
-    <div class="d-flex justify-content-center flex-column align-content-center align-items-center  main-content">
+    <div class="d-flex justify-content-center flex-column align-content-center align-items-center">
       <div class="text-center justify-content-center align-items-center d-flex mt-3 flex-column">
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
           <h1 class="fw-bold">View All Service Reports</h1>
@@ -28,7 +28,7 @@
         </div>
       </div>
 
-      <div v-if="service_reports.data.length" class="d-flex justify-content-end mb-2 pagination">
+      <div v-if="service_reports.data.length" class="d-flex justify-content-start justify-content-md-end mb-2 pagination">
         <Pagination :links="service_reports.links" :key="'service_reports'" />
         <br>
       </div>
@@ -247,10 +247,6 @@ function showPrint(service_report) {
 </script>
 
 <style scoped>
-.content {
-  width: 100%;
-}
-
 .custom-rounded-table {
   border-radius: 10px;
 }
@@ -276,152 +272,16 @@ function showPrint(service_report) {
   width: 88%;
 }
 
+.input-group {
+  width: 100%;
+  max-width: 400px; /* Adjust as needed */
+  margin: 0 auto; /* Center the search bar */
+}
 
-@media (max-width: 1440px) {
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-
-  .content {
-    width: 100%;
-  }
-
-  .table-responsive {
-    max-width: 100%;
-    overflow-x: auto;
-  }
-
-  .pagination {
-    width: 70rem;
-  }
-
-  .btn-options {
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
+@media (max-width: 576px) {
+  .input-group {
+    max-width: 90%;
   }
 }
 
-@media (max-width: 1024px) {
-
-  .table-responsive {
-    max-width: 100%;
-    overflow-x: auto;
-  }
-
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-
-  .pagination {
-    width: 55rem;
-  }
-
-  .table-responsive {
-    width: 55rem;
-    overflow-x: auto;
-  }
-
-  .btn-options {
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 768px) {
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-
-  .table-responsive {
-    max-width: 100%;
-    overflow-x: auto;
-  }
-
-  .pagination {
-    width: 40rem;
-  }
-
-  .btn-options {
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 425px) {
-  .custom-rounded-table {
-    font-size: 10px;
-  }
-
-  .content {
-    width: 90%;
-  }
-
-  .main-content {
-    width: 100%;
-    margin-left: 6rem;
-  }
-
-  .btn-options {
-    width: 60px;
-  }
-
-  .table-responsive {
-    width: 30rem;
-    overflow-x: auto;
-  }
-
-  .pagination {
-    width: 30rem;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 320px) {
-  .custom-rounded-table {
-    font-size: 10px;
-  }
-
-  .content {
-    width: 85%;
-  }
-
-  .main-content {
-    width: 100%;
-    margin-left: 6rem;
-  }
-
-  .btn-options {
-    width: 60px;
-  }
-
-  .table-responsive {
-    max-width: 100%;
-    overflow-x: auto;
-  }
-
-  .pagination {
-    width: 25rem;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-  }
-}
 </style>

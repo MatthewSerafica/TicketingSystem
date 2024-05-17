@@ -129,7 +129,7 @@ class ObserverController extends Controller
     public function password()
     {
         $user = Auth::user();
-        return inertia('Admin/Users/Change', [
+        return inertia('Observer/Users/Change', [
             'user' => $user,
         ]);
     }
@@ -155,7 +155,7 @@ class ObserverController extends Controller
             return redirect()->back()->with('success', 'Password changed successfully');
 
             if (session('error') === null) {
-                return redirect()->route('admin')->with('success', 'Password changed successfully');
+                return redirect()->route('observer')->with('success', 'Password changed successfully');
             }
         } catch (ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();

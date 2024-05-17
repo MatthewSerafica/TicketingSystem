@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Header class="sticky-top"></Header>
     <div class="position-absolute end-0 me-3" style="z-index: 100; margin-top: 5rem;">
       <Toast
         x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
@@ -14,13 +15,12 @@
         :error="page.props.flash.error" :error_message="page.props.flash.error_message" @close="handleClose">
       </Toast>
     </div>
-    <div class="d-flex justify-content-center align-items-center flex-column">
-      <Header class="sticky-top" style="z-index: 110;"></Header>
+    <div class="container">
       <!--Toast Render-->
       <!--Main Content-->
-      <div class="d-flex justify-content-center flex-column align-content-center align-items-center main-content">
+      <div class="main-content d-flex flex-column gap-2 justify-content-center">
         <!--CTAs and Search-->
-        <div class="text-center justify-content-center align-items-center d-flex mt-3 flex-column">
+        <div class="text-center mt-3">
           <div class="d-flex flex-column justify-content-center align-items-center gap-2">
             <h1 class="fw-bold">View All Tickets</h1>
             <p class="fs-5"> Manage and Track all TMDD Tickets</p>
@@ -28,7 +28,7 @@
               <VueDatePicker v-model="date" range multi-calendars :max-date="new Date()" teleport-center
                 placeholder="Select date..." :enable-time-picker="false" class="border rounded border-1" />
             </div>
-            <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
+            <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2 flex-wrap">
               <Button :name="'All'" :color="'secondary'" class="btn-options" @click="filterTickets('all')"></Button>
               <Button :name="'New'" :color="'danger'" class="btn-options" @click="filterTickets('new')"></Button>
               <Button :name="'Pending'" :color="'warning'" class="btn-options"
@@ -38,22 +38,26 @@
                 @click="filterTickets('resolved')"></Button>
             </div>
           </div>
-          <div class="input-group mt-3 mb-2">
+          <div class="d-flex justify-content-center align-items-center mt-3 mb-2">
+          <div class="input-group d-flex justify-content-center w-50 ">
             <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
             <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
               placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
+          </div>
           </div>
         </div>
 
         <!--Data Table-->
         <div v-if="tickets.data.length"
-          class="d-flex align-items-center justify-content-between mt-2 mb-2 px-3 pagination">
-          <div class="d-flex flex-grow-1 gap-2 w-100 align-items-center">
-            <div class="d-flex gap-2 border px-3 rounded">
-              <p class="fw-bold text-secondary pt-3">RS - {{ rs ? rs.rs_no : 0 }} |</p>
-              <p class="fw-bold text-secondary pt-3">MS - {{ ms ? ms.ms_no : 0 }} |</p>
-              <p class="fw-bold text-secondary pt-3">RR - {{ rr ? rr.rr_no : 0 }} |</p>
-              <p class="fw-bold text-secondary pt-3">SR - {{ sr ? sr.sr_no : 0 }}</p>
+          class="d-flex flex-column flex-md-row align-items-md-center align-items-start gap-2 justify-content-between mt-2 mb-2 px-3 pagination">
+          <div class="d-flex flex-column flex-md-row gap-2">
+            <div class="d-flex flex-grow-1 gap-2 align-items-center">
+              <div class="d-flex gap-2 border px-3 rounded custom-rounded-table">
+                <h6 class="fw-bold text-secondary pt-3">RS-{{ rs ? rs.rs_no : 0 }}</h6>
+                <h6 class="fw-bold text-secondary pt-3">MS-{{ ms ? ms.ms_no : 0 }}</h6>
+                <h6 class="fw-bold text-secondary pt-3">RR-{{ rr ? rr.rr_no : 0 }}</h6>
+                <h6 class="fw-bold text-secondary pt-3">SR-{{ sr ? sr.sr_no : 0 }}</h6>
+              </div>
             </div>
             <div>
               <button class="btn btn-primary" @click="handleSort('ticket_number')">
@@ -63,14 +67,14 @@
               </button>
             </div>
           </div>
-          <div class="d-flex flex-grow-1">
+          <div class="d-flex flex-grow-1 justify-content-md-end justify-content-start">
             <Pagination :links="tickets.links" :key="'tickets'" />
             <br>
           </div>
         </div>
         <!--Data Table-->
-        <div v-if="tickets.data.length" class="table-responsive rounded shadow pt-2 px-2 mb-3">
-          <div class="d-flex justify-content-center align-items-center pb-2">
+        <div v-if="tickets.data.length" class="table-responsive rounded shadow pt-2 px-2 mb-3 overflow-auto">
+          <div>
             <table class="table table-hover custom-rounded-table">
               <thead>
                 <tr class="text-start">
@@ -360,8 +364,10 @@
             </table>
           </div>
         </div>
-        <EmptyCard :title="'No tickets yet...'" v-else class="mt-2 w-75" style="height:20rem;">
-        </EmptyCard>
+        <div v-else  class="mt-2 d-flex align-items-center justify-content-center">
+          <EmptyCard :title="'No tickets yet...'"  style="height:20rem;">
+          </EmptyCard>
+        </div>
       </div>
     </div>
   </div>
@@ -671,12 +677,6 @@ const validateNumericInput = (inputValue, propName) => {
   color: #000;
 }
 
-.table-responsive {
-  width: 95%;
-  overflow-x: auto;
-
-}
-
 .pagination {
   width: 95%;
 
@@ -704,186 +704,5 @@ const validateNumericInput = (inputValue, propName) => {
   cursor: default;
 }
 
-@media (max-width: 1440px) {
-  .custom-rounded-table {
-    font-size: 12px;
-  }
 
-
-  .table-responsive {
-    width: 85rem;
-    overflow-x: auto;
-  }
-
-  .table {
-    margin-left: 7rem;
-  }
-
-  .pagination {
-    width: 85rem;
-  }
-
-  .btn-options {
-    padding: 6px 0;
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 1024px) {
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-
-  .table-responsive {
-    width: 55rem;
-    overflow-x: auto;
-  }
-
-  .table {
-    margin-left: 37rem;
-  }
-
-  .pagination {
-    width: 55rem;
-  }
-
-  .btn-options {
-    padding: 6px 0;
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 768px) {
-
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-
-  .pagination {
-    width: 40rem;
-  }
-
-  .table-responsive {
-    width: 40rem;
-    overflow-x: auto;
-  }
-
-  .table {
-    margin-left: 58.5rem;
-  }
-
-  .btn-options {
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-    font-size: 16px;
-  }
-}
-
-
-@media (max-width: 768px) {
-
-  .custom-rounded-table {
-    font-size: 10px;
-  }
-
-  .pagination {
-    width: 30rem;
-  }
-
-  .table-responsive {
-    width: 30rem;
-    overflow-x: auto;
-  }
-
-  .btn-options {
-    width: 70px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 425px) {
-
-  .main-content {
-    padding-left: 0;
-    width: 100%;
-
-  }
-
-  .custom-rounded-table {
-    font-size: 12px;
-  }
-
-  .pagination {
-    width: 35rem;
-  }
-
-  .table-responsive {
-    width: 35rem;
-    overflow-x: auto;
-  }
-
-  .btn-options {
-    width: 80px;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    white-space: nowrap;
-    font-size: 16px;
-
-  }
-}
-
-@media (max-width: 375px) {
-  .main-content {
-    padding-left: 0;
-    width: 100%;
-  }
-
-  .table-responsive {
-    width: 100%;
-    overflow-x: auto;
-  }
-
-  .pagination {
-    width: 100%;
-  }
-
-  .btn-options {
-    width: auto;
-  }
-
-  .custom-rounded-table th,
-  .custom-rounded-table td {
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 320px) {
-
-  .main-content {
-    margin-left: 15rem;
-  }
-}
 </style>

@@ -186,11 +186,6 @@ Route::middleware(['web'])->group(function () {
         Route::put('/technician/tickets/tasks/resolve/{id}', [TechnicianTicketController::class, 'resolveTask'])->name('technician.tickets.task.resolve');
         Route::delete('/technician/tickets/tasks/delete/{id}', [TechnicianTicketController::class, 'deleteTask'])->name('technician.tickets.task.delete');
 
-
-
-
-
-
         Route::get('/technician/service-report', [TechnicianServiceController::class, 'index'])->name('technician.service-reports');
         Route::post('/technician/service-report/back/{service_id}', [TechnicianServiceController::class, 'back'])->name('technician.service-reports.back');
         Route::get('/technician/service-report/create', [TechnicianServiceController::class, 'create'])->name('technician.service-report.create');

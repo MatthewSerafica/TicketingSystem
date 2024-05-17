@@ -1,11 +1,11 @@
 <template>
     <div class="justify-content-center">
-        <Header></Header>
+        <Header class="sticky-top"></Header>
         <div class="justify-content-center align-items-center d-flex flex-column mt-5 pt-5 gap-5 main-content">
             <div class="gap-5 justify-content-center align-items-center recent">
                 <div class="cta">
                     <h2 class="fw-semibold">Recent Tickets</h2>
-                    <div class="d-flex gap-2">
+                    <div class="d-flex flex-column flex-md-row gap-2">
                         <Link class="text-decoration-none" :href="route('observer.tickets')">
                         <Button :name="'View All'" :color="'outline-primary'" class="btn-width shadow"></Button>
                         </Link>
@@ -108,6 +108,7 @@ watch(myData, (newValue, oldValue) => {
     width: 50rem;
     padding: 1rem;
 }
+
 @media (max-width: 1024px) {
     .main-content {
         padding: 2rem;
