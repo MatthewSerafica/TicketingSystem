@@ -20,71 +20,78 @@
         <div class="d-flex flex-column justify-content-center align-items-center gap-1">
           <h1 class="fw-bold">View All Users</h1>
           <p class="fs-5">Manage All Users</p>
-          <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2">
+          <div class="d-flex flex-row justify-content-center align-items-center gap-3 mt-2 flex-wrap">
             <Button :name="'All'" :color="'secondary'" class="btn-options shadow" @click="filterUsers('all')"></Button>
             <Button :name="'Employees'" :color="'secondary'" class="btn-options shadow"
               @click="filterUsers('employee')"></Button>
             <Button :name="'Technicians'" :color="'secondary'" class="btn-options shadow"
               @click="filterUsers('technician')"></Button>
           </div>
+
           <!-- Add buttons for filtering if needed -->
-          <div class="input-group mt-3 shadow rounded">
-            <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
-              placeholder="Search Users..." aria-label="searchIcon" aria-describedby="searchIcon" />
+          <div class="d-flex justify-content-center align-items-center mt-3 mb-2">
+            <div class="input-group d-flex justify-content-center">
+              <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
+              <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
+                placeholder="Search Users..." aria-label="searchIcon" aria-describedby="searchIcon" />
+            </div>
           </div>
         </div>
       </div>
-      <div class="w-75 table-responsive mt-2">
-        <div v-if="users.data.length" class="d-flex justify-content-between mb-2">
-          <div class="d-flex  align-items-center gap-2">
+      <div class="w-75 mt-2">
+        <div v-if="users.data.length" class="d-flex flex-column flex-md-row justify-content-between mb-2">
+          <div class="d-flex gap-2 align-items-center justify-content-center">
             <Link :href="route('observer.reports.collate')" class="btn btn-primary">All Technician Stats</Link>
             <Link :href="route('observer.reports.client-collate')" class="btn btn-outline-success">All Client Stats</Link>
             <Link :href="route('observer.reports.department-collate')" class="btn btn-outline-secondary">Department Stats</Link>
           </div>
-          <Pagination :links="users.links" :filter="filter" :key="'users'" />
+          <div class="d-flex flex-column justify-content-end align-items-center mt-3 mt-md-0 ">
+            <Pagination :links="users.links" :filter="filter" :key="'users'" />
+          </div>
         </div>
-        <table class="table table-hover shadow custom-rounded-table">
-          <thead v-if="!isLoading">
-            <tr class="text-start">
-              <th class="text-center text-muted">ID</th>
-              <th class="text-muted">Name</th>
-              <th class="text-muted">Email</th>
-              <th class="text-muted">User Type</th>
-              <th class="text-muted">Created At</th>
-              <th v-if="filter.filterUsers === 'technician'" class="text-muted">Status</th>
-            </tr>
-          </thead>
-          <tbody v-if="!isLoading">
-            <tr v-for="user in users.data" :key="user.id" class="align-middle">
-              <td class="text-center py-3">
-                <Link :href="route('observer.users.show', user.id)" class="btn">
-                {{ user.id }}
-                </Link>
-              </td>
-              <td class="text-start py-3">
-                <Link :href="route('observer.users.show', user.id)" class="btn">{{ user.name }}</Link>
-              </td>
-              <td class="text-start py-3">
-                <Link :href="route('observer.users.show', user.id)" class="btn">{{ user.email }}</Link>
-              </td>
-              <td class="text-start py-3">
-                <Link :href="route('observer.users.show', user.id)" class="btn">{{ user.user_type }}</Link>
-              </td>
-              <td class="text-start py-3">
-                <Link :href="route('observer.users.show', user.id)" class="btn">{{ formatDate(user.created_at) }}</Link>
-              </td>
-              <td v-if="filter.filterUsers === 'technician'" class="text-start py-3">
-                <Link v-if="user.technician" :href="route('observer.users.show', user.id)" class="btn">
-                <span v-if="user.technician.is_working == 1" class="badge bg-success rounded-circle"
-                  style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
-                <span v-if="user.technician.is_working == 0" class="badge bg-danger rounded-circle"
-                  style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
-                </Link>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive rounded shadow  pt-2 px-2 mb-3 overflow-auto">
+          <table class="table table-hover custom-rounded-table">
+            <thead v-if="!isLoading">
+              <tr class="text-start">
+                <th class="text-center text-muted">ID</th>
+                <th class="text-muted">Name</th>
+                <th class="text-muted">Email</th>
+                <th class="text-muted">User Type</th>
+                <th class="text-muted">Created At</th>
+                <th v-if="filter.filterUsers === 'technician'" class="text-muted">Status</th>
+              </tr>
+            </thead>
+            <tbody v-if="!isLoading">
+              <tr v-for="user in users.data" :key="user.id" class="align-middle">
+                <td class="text-center py-3">
+                  <Link :href="route('observer.users.show', user.id)" class="btn">
+                  {{ user.id }}
+                  </Link>
+                </td>
+                <td class="text-start py-3">
+                  <Link :href="route('observer.users.show', user.id)" class="btn">{{ user.name }}</Link>
+                </td>
+                <td class="text-start py-3">
+                  <Link :href="route('observer.users.show', user.id)" class="btn">{{ user.email }}</Link>
+                </td>
+                <td class="text-start py-3">
+                  <Link :href="route('observer.users.show', user.id)" class="btn">{{ user.user_type }}</Link>
+                </td>
+                <td class="text-start py-3">
+                  <Link :href="route('observer.users.show', user.id)" class="btn">{{ formatDate(user.created_at) }}</Link>
+                </td>
+                <td v-if="filter.filterUsers === 'technician'" class="text-start py-3">
+                  <Link v-if="user.technician" :href="route('observer.users.show', user.id)" class="btn">
+                  <span v-if="user.technician.is_working == 1" class="badge bg-success rounded-circle"
+                    style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
+                  <span v-if="user.technician.is_working == 0" class="badge bg-danger rounded-circle"
+                    style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
+                  </Link>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -332,5 +339,11 @@ const formatDate = (date) => {
   right: 10px;
   font-size: 20px;
   cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .modal-content {
+    width: 80%; 
+  }
 }
 </style>

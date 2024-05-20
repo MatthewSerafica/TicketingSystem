@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header></Header>
+    <Header class="sticky-top"></Header>
     <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
       <Toast
         x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"

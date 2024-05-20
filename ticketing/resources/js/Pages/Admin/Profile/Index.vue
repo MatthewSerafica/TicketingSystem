@@ -28,12 +28,12 @@
             <span>Back</span>
             </Link>
         </div>
-        <div class="d-flex flex-column gap-4 justify-content-center align-items-center mt-3 mb-3 main-content">
-            <div class="d-flex gap-5 justify-content-between align-items-center detail-container">
+        <div class="main-content">
+            <div class="detail-container">
                 <div class="card shadow p-2 user-container">
-                    <div class="card-body d-flex flex-row gap-5 align-items-center">
-                        <div class="d-flex flex-column justify-content-center align-items-center mb-3">
-                            <div class="mb-2 text-center">
+                    <div class="card-body d-flex flex-row gap-5 align-items-center flex-wrap">
+                        <div class="d-flex flex-column justify-content-center align-items-center mb-3 text-center">
+                            <div class="mb-2">
                                 <!-- AVATAR -->
                                 <input @change="handleFileChange" ref="fileInput" type="file" hidden>
                                 <img v-if="profilePictureUrl || users.avatar !== 'http://127.0.0.1:8000/storage'"
@@ -57,7 +57,7 @@
                             </div>
                         </div>
 
-                        <div class="d-flex flex-column justify-content-center gap-2" style="flex: 1;">
+                        <div class="d-flex flex-column justify-content-center gap-2 flex-grow-1">
                             <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
                                 <h3 class="mt-1">User Details</h3>
                             </div>
@@ -78,10 +78,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="users.technician" class="d-flex flex-column justify-content-center gap-2"
-                            style="flex: 1;">
+                        <div v-if="users.technician" class="d-flex flex-column justify-content-center gap-2 flex-grow-1">
                             <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
-                                <h3 class="mt-1">User Details</h3>
+                                <h3 class="mt-1">Technician Details</h3>
                                 <span v-if="users.technician.is_working == 1" class="badge bg-success rounded-circle"
                                     style="width: 2em; height: 2em;"><span
                                         class="visually-hidden">Available</span></span>
@@ -96,7 +95,7 @@
                                     </div>
                                     <div class="btn-group">
                                         <button type="button" class="btn text-start"
-                                            :class="users.technician.is_working ? 'N/A' : 'N/A'">
+                                            :class="users.technician.is_working ? 'btn-success' : 'btn-danger'">
                                             {{ users.technician.is_working ? 'Available' : 'Unavailable' }}
                                         </button>
                                         <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
@@ -155,16 +154,16 @@
                     </div>
                 </div>
             </div>
-            <div class="align-items-center justify-content-center gap-4 statistics">
-                <div class="card text-left border-0 shadow">
+            <div class="statistics">
+                <div class="card text-left border-0 shadow statistics-card">
                     <h5 class="card-header text-secondary">
                         Tickets by Services
                     </h5>
-                    <div class="card-body">
+                    <div class="card-body d-flex justify-content-center align-items-center">
                         <Doughnut :service="service" class="doughnut"></Doughnut>
                     </div>
                 </div>
-                <div class="card text-left border-0 shadow">
+                <div class="card text-left border-0 shadow statistics-card">
                     <h5 class="card-header text-secondary">
                         Tickets for this Year
                     </h5>
@@ -297,37 +296,38 @@ const handleFileChange = async (event) => {
 </script>
 
 <style scoped>
-.dropdown-menu {
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    padding: 1rem;
 }
 
-.dropdown-menu.show {
-    display: block;
-    opacity: 1;
+.detail-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 1000px;
 }
 
-.dropdown-item {
-    opacity: 0;
-    transition: opacity 0.5s ease;
+.statistics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
 }
 
-.dropdown-menu.show .dropdown-item {
-    opacity: 1;
+.statistics-card {
+    flex: 1;
+    min-width: 400px;
+    max-width: 1000px;
 }
 
-.dropdown-item {
-    animation: fadeIn 0.5s ease forwards;
-}
-
-.back-button {
-    width: 6rem;
-    transition: transform 0.3s ease;
-}
-
-.back-button:hover {
-    transform: scale(1.1);
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .avatar {
@@ -343,247 +343,38 @@ const handleFileChange = async (event) => {
     border-color: blue;
 }
 
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
+.back-button {
+    width: 6rem;
+    transition: transform 0.3s ease;
 }
 
-.statistics {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.doughnut {
-    width: 25rem;
-}
-
-.bar {
-    width: 50rem;
-}
-
-
-.assigned-total {
-    width: 13rem;
-}
-
-.resolved-total {
-    width: 13rem;
-}
-
-.assigned-today {
-    width: 13rem;
-}
-
-.resolved-today {
-    width: 13rem;
-}
-
-.data-container {
-    display: flex;
-    flex-direction: column;
-}
-
-@media (max-width: 1440px) {
-    .statistics {
-        width: 90%;
-    }
-
-    .doughnut {
-        width: 65rem;
-    }
-
-    .bar {
-        width: 70rem;
-    }
-}
-
-@media (max-width: 1440px) {
-    .statistics {
-        width: 90%;
-    }
-
-    .doughnut {
-        width: 65rem;
-    }
-
-    .bar {
-        width: 70rem;
-    }
-}
-
-@media (max-width: 1024px) {
-    .detail-container {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .statistics {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .doughnut {
-        width: 150%;
-    }
-
-    .bar {
-        width: 250%;
-    }
-
+.back-button:hover {
+    transform: scale(1.1);
 }
 
 @media (max-width: 768px) {
     .detail-container {
-        display: flex;
         flex-direction: column;
-    }
-
-    .data-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        /* Center items horizontally */
         align-items: center;
-        /* Center items vertically */
-        margin-top: 3rem;
-        /* Adjust margin top as needed */
     }
 
-
-    .doughnut {
-        width: 100%;
+    .statistics-card {
+        flex: 1;
+        min-width: 200px;
+        max-width: 300px;
     }
-
-    .bar {
-        width: 200%;
-    }
-
 }
 
-@media (max-width: 425px) {
-    .main-content {
-        margin-left: 12rem;
-    }
-
-    .data-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        /* Center items horizontally */
-        align-items: center;
-        /* Center items vertically */
-        margin-top: 3rem;
-        /* Adjust margin top as needed */
-    }
-
+@media (min-width: 769px) {
     .detail-container {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .statistics {
-        width: 250%;
-    }
-
-    .doughnut {
-        width: 100%;
-    }
-
-    .bar {
-        width: 200%;
-    }
-
-    .data-container {
-        display: flex;
         flex-direction: row;
     }
-
-    .data-bottom {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .data-top {
-        display: flex;
-        flex-direction: column;
-    }
-
 }
 
-@media (max-width: 375px) {
-    .main-content {
-        margin-left: 13rem;
-    }
-
-    .data-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        /* Center items horizontally */
-        align-items: center;
-        /* Center items vertically */
-        margin-top: 3rem;
-        /* Adjust margin top as needed */
-    }
-
-    .detail-container {
-        display: flex;
-        flex-direction: column;
-    }
-
+@media (min-width: 1024px) {
     .statistics {
-        width: 280%;
-    }
-
-    .doughnut {
-        width: 100%;
-    }
-
-    .bar {
-        width: 200%;
-    }
-}
-
-@media (max-width: 320px) {
-    .main-content {
-        margin-left: 15rem;
-    }
-
-    .data-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        /* Center items horizontally */
-        align-items: center;
-        /* Center items vertically */
-        margin-top: 3rem;
-        /* Adjust margin top as needed */
-    }
-
-
-    .detail-container {
-        display: flex;
-        flex-direction: column;
-        width: 50%;
-    }
-
-
-    .statistics {
-        width: 300%;
-    }
-
-    .doughnut {
-        width: 100%;
-    }
-
-    .bar {
-        width: 100%;
+        flex-direction: row;
+        gap: 2rem;
     }
 }
 </style>

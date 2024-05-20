@@ -34,7 +34,7 @@
                     <div class="card-title fw-bold fs-3">
                         User Details
                     </div>
-                    <div class="d-flex flex-row gap-3">
+                    <div class="d-flex flex-column flex-md-row gap-3">
                         <div>
                             <div class="card-subtitle fw-medium fs-5">
                                 Name
@@ -66,7 +66,7 @@
                             <p class="card-text text-capitalize">{{ users.user_type }}</p>
                         </div>
                     </div>
-                    <div class="d-flex flex-row gap-3">
+                    <div class="d-flex flex-column flex-md-row gap-3">
                         <div>
                             <div class="card-subtitle fw-medium fs-5">
                                 Department
@@ -114,7 +114,7 @@
 
             </div>
             <div v-if="users.user_type === 'technician'"
-                class="d-flex gap-5 justify-content-between align-items-center detail-container">
+                class="d-flex flex-column flex-md-row gap-5 justify-content-between align-items-center">
                 <div class="card shadow p-2 user-container"
                     style="border-top: 1px; border-left: 1px; border-right: 1px; border-bottom: 1px;">
                     <div class="card-body d-flex flex-column gap-4 user-card-container">
@@ -126,7 +126,7 @@
                                 <span v-if="users.technician.is_working == 0" class="badge bg-danger rounded-circle"
                                     style="width: 2em; height: 2em;"><span class="visually-hidden">s</span></span>
                             </div>
-                            <div class="d-flex flex-row gap-5">
+                            <div class="d-flex flex-column flex-md-row gap-3 gap-md-5">
                                 <div>
                                     <div class="card-subtitle fw-medium fs-5">
                                         Name
@@ -183,7 +183,7 @@
                             </div>
                         </div>
                         <div class="d-flex flex-column gap-3">
-                            <div>
+                            <div class="">
                                 <div class="card-subtitle fw-medium fs-5">
                                     Assigned Department
                                 </div>
@@ -210,7 +210,7 @@
                     </div>
                 </div>
                 <div class="gap-3 data-container">
-                    <div class="d-flex gap-3 data-top">
+                    <div class="d-flex flex-column flex-md-row gap-3 data-top mb-3">
                         <div class="assigned-total card border-3 border-primary p-2 shadow"
                             style="border-top: 1px; border-left: 1px; border-right: 1px;">
                             <div class="card-body d-flex flex-column gap-4">
@@ -260,7 +260,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex gap-3 data-bottom">
+                    <div class="d-flex gap-3 flex-column flex-md-row">
                         <div class="assigned-today card border-3 border-danger p-2 shadow"
                             style="border-top: 1px; border-left: 1px; border-right: 1px;">
                             <div class="card-body d-flex flex-column gap-4">
@@ -315,7 +315,7 @@
                             <div class="card-title fw-bold d-flex flex-row align-items-center gap-3">
                                 <h3 class="mt-1">User Details</h3>
                             </div>
-                            <div class="d-flex flex-row gap-5">
+                            <div class="d-flex flex-column flex-md-row gap-5">
                                 <div>
                                     <div class="card-subtitle fw-medium fs-5">
                                         Name
@@ -374,7 +374,7 @@
                     </div>
                 </div>
             </div>
-            <div class="align-items-center justify-content-center gap-4 statistics">
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-4 statistics">
                 <div class="card text-left border-0 shadow">
                     <h5 class="card-header text-secondary">
                         Tickets by Services
@@ -517,21 +517,13 @@ const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
     width: 50rem;
 }
 
-.assigned-total {
-    width: 13rem;
-}
-
-.resolved-total {
-    width: 13rem;
-}
-
-.assigned-today {
-    width: 13rem;
-}
-
+.assigned-total,
+.resolved-total,
+.assigned-today,
 .resolved-today {
     width: 13rem;
 }
+
 
 .statistics {
     display: flex;
@@ -539,144 +531,14 @@ const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
     width: 70%;
 }
 
-.data-container {
-    display: flex;
-    flex-direction: column;
-}
 
-@media (max-width: 1440px) {
-    .statistics {
-        width: 90%;
-    }
-
-    .doughnut {
-        width: 65rem;
-    }
-
+@media (max-width: 768px){
+    
+    .doughnut,
     .bar {
-        width: 70rem;
-    }
-}
-
-@media (max-width: 1024px) {
-    .detail-container {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .statistics {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .doughnut {
-        width: 150%;
-    }
-
-    .bar {
-        width: 250%;
+        width: 100%; 
     }
 
 }
 
-@media (max-width: 768px) {
-    .detail-container {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .doughnut {
-        width: 100%;
-    }
-
-    .bar {
-        width: 200%;
-    }
-
-}
-
-@media (max-width: 425px) {
-    .main-content {
-        margin-left: 12rem;
-    }
-
-    .detail-container {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .statistics {
-        width: 250%;
-    }
-
-    .doughnut {
-        width: 100%;
-    }
-
-    .bar {
-        width: 200%;
-    }
-
-    .data-container {
-        display: flex;
-        flex-direction: row;
-    }
-
-    .data-bottom {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .data-top {
-        display: flex;
-        flex-direction: column;
-    }
-
-}
-
-@media (max-width: 375px) {
-    .main-content {
-        margin-left: 13rem;
-    }
-
-    .detail-container {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .statistics {
-        width: 280%;
-    }
-
-    .doughnut {
-        width: 100%;
-    }
-
-    .bar {
-        width: 200%;
-    }
-}
-
-@media (max-width: 320px) {
-    .main-content {
-        margin-left: 15rem;
-    }
-
-    .detail-container {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .statistics {
-        width: 300%;
-    }
-
-    .doughnut {
-        width: 100%;
-    }
-
-    .bar {
-        width: 200%;
-    }
-}
 </style>
