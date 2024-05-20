@@ -49,7 +49,7 @@
               <th class="text-muted">Date Done</th>
               <th class="text-muted">Time Done</th>
               <th class="text-muted">Remarks</th>
-              <th class="text-muted">Print</th>
+            <!--   <th class="text-muted">Show</th> -->
             </tr>
           </thead>
           <tbody>
@@ -133,8 +133,8 @@
                 {{ service_report.remarks }}
                 </Link>
               </td>
-              <td><button type="button" as="button" class="btn btn-secondary"
-                  @click="showPrint(service_report)">Print</button></td>
+              <!-- <td><button type="button" as="button" class="btn btn-secondary"
+                  @click="showPrint(service_report)">Show</button></td> -->
             </tr>
           </tbody>
         </table>
@@ -143,7 +143,7 @@
       <EmptyCard :title="'No service reports yet...'" v-else class="mt-2 w-75" style="height:20rem;">
       </EmptyCard>
     </div>
-    <Print v-if="isShowPrint" :service_report="selectedServiceReport" @closePrint="closePrint" />
+    <!-- <Print v-if="isShowPrint" :service_report="selectedServiceReport" @closePrint="closePrint" /> -->
   </div>
 
 </template>

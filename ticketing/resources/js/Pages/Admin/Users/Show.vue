@@ -524,21 +524,16 @@ const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
     width: 13rem;
 }
 
-
 .statistics {
     display: flex;
     flex-direction: row;
     width: 70%;
 }
 
-
 @media (max-width: 768px){
-    
     .doughnut,
     .bar {
         width: 100%; 
     }
-
 }
-
 </style>
