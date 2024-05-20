@@ -15,9 +15,9 @@
                         placeholder="Select Date" class="border rounded border-1 w-100" />
                 </div>
 
-                <div v-if="monthsAndYears.length > 0" class="table-responsive rounded shadow pt-2 px-2">
+                <div v-if="monthsAndYears.length > 0" class="table-responsive rounded shadow pt-2 px-2 custom-table-container">
                     <div>
-                        <table class="table table-hover custom-rounded-table">
+                        <table class="table table-hover custom-rounded-table w-100">
                             <thead>
                                 <tr class="text-start">
                                     <th class="text-start text-muted" @click="handleSort('ticket_number')">
@@ -56,6 +56,7 @@
         </div>
     </div>
 </template>
+
 
 <script setup>
 import Button from '@/Components/Button.vue';
@@ -173,5 +174,25 @@ watch(date, (newDate) => {
 </script>
 
 <style scoped>
+.custom-table-container {
+    width: 80%; 
+}
 
+@media (max-width: 1200px) {
+    .custom-table-container {
+        width: 80%;
+    }
+}
+
+@media (max-width: 992px) {
+    .custom-table-container {
+        width: 95%; 
+    }
+}
+
+@media (max-width: 768px) {
+    .custom-table-container {
+        width: 100%;
+    }
+}
 </style>
