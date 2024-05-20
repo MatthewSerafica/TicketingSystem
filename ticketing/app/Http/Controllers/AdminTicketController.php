@@ -22,6 +22,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class AdminTicketController extends Controller
 {
@@ -29,31 +30,17 @@ class AdminTicketController extends Controller
     {
         $filter = $request->only(['search', 'filterTickets', 'all', 'new', 'pending', 'ongoing', 'resolved', 'from_date_filter', 'to_date_filter']);
 
+        $query = Ticket::query()->with('employee.user', 'assigned.technician.user');
 
-        if (!$request->filled('from_date_filter') && !$request->filled('to_date_filter')) {
-            $query = Ticket::query()
-                ->with('employee.user', 'assigned.technician.user')
-                ->whereYear('created_at', Carbon::now()->year)
-                ->whereMonth('created_at', Carbon::now()->month)
-                ->orderBy(
-                    $request->input('sort', 'ticket_number'),
-                    $request->input('direction', 'desc')
-                );
-        } else {
-            $query = Ticket::query()
-                ->with('employee.user', 'assigned.technician.user')
-                ->orderBy(
-                    $request->input('sort', 'ticket_number'),
-                    $request->input('direction', 'desc')
-                );
-        }
-
-
-        if ($request->filled('from_date_filter') && $request->filled('to_date_filter')) {
+        if ($request->filled(['from_date_filter', 'to_date_filter'])) {
             $fromDate = $request->input('from_date_filter');
             $toDate = $request->input('to_date_filter');
-            $query->whereBetween('created_at', [$fromDate . ' 00:00:00', $toDate . ' 23:59:59']);
+            $query->whereBetween('created_at', ["$fromDate 00:00:00", "$toDate 23:59:59"]);
+        } else {
+            $query->whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month);
         }
+
+        $query->orderBy($request->input('sort', 'ticket_number'), $request->input('direction', 'desc'));
 
 
         if ($request->filled('search')) {
@@ -100,22 +87,25 @@ class AdminTicketController extends Controller
 
         $request->session()->put('filter', $filter);
 
+        $additionalData = $this->getAdditionalData();
+
+        return inertia('Admin/Tickets/Index', array_merge(['tickets' => $tickets, 'filters' => $filter], $additionalData));
+    }
+    protected function getAdditionalData()
+    {
         $services = Service::all();
         $latest_rs = HistoryNumber::select('rs_no')->whereNotNull('rs_no')->orderByDesc('rs_no')->first();
         $latest_ms = HistoryNumber::select('ms_no')->whereNotNull('ms_no')->orderByDesc('ms_no')->first();
         $latest_rr = HistoryNumber::select('rr_no')->whereNotNull('rr_no')->orderByDesc('rr_no')->first();
         $latest_sr = HistoryNumber::select('sr_no')->whereNotNull('sr_no')->orderByDesc('sr_no')->first();
-        return inertia('Admin/Tickets/Index', [
-            'tickets' => $tickets,
-            'filters' => $filter,
+        return [
             'services' => $services,
             'rs' => $latest_rs,
             'ms' => $latest_ms,
             'rr' => $latest_rr,
             'sr' => $latest_sr,
-        ]);
+        ];
     }
-
 
     public function create(Request $request)
     {
@@ -173,16 +163,16 @@ class AdminTicketController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'request_type' => 'required|string',
+            'description' => 'nullable|string',
+            'employee' => 'required',
+            'problem' => 'required|string',
+            'service' => 'nullable|string',
+            'rs_no' => 'nullable|numeric',
+        ]);
+
         try {
-            DB::beginTransaction();
-            $request->validate([
-                'request_type' => 'required|string',
-                'description' => 'nullable|string',
-                'employee' => 'required',
-                'problem' => 'required|string',
-                'service' => 'nullable|string',
-                'rs_no' => 'nullable|numeric',
-            ]);
 
             if ($request->filled('rs_no')) {
                 if (!is_numeric($request->rs_no)) {
@@ -190,37 +180,35 @@ class AdminTicketController extends Controller
                 }
             }
 
-            $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
+            DB::transaction(function () use ($request) {
+                $employee = Employee::where('employee_id', $request->employee)->firstOrFail();
+                $ticket_data = [
+                    'request_type' => $request->request_type,
+                    'rs_no' => $request->rs_no,
+                    'employee_id' => $request->employee,
+                    'issue' => $request->problem,
+                    'description' => $request->description,
+                    'service' => $request->service,
+                    'status' => 'Pending',
+                ];
 
-            $ticket_data = [
-                'request_type' => $request->request_type,
-                'rs_no' => $request->rs_no,
-                'employee_id' => $request->employee,
-                'issue' => $request->problem,
-                'description' => $request->description,
-                'service' => $request->service,
-                'status' => 'Pending',
-            ];
+                $ticket = Ticket::create($ticket_data);
+                $this->handleHistoryNumberStore($ticket, $request->rs_no);
+                $this->handleTechnicianStore($ticket, $request->technicians);
 
-            $ticket = Ticket::create($ticket_data);
+                $employee->update(['made_ticket' => $employee->made_ticket + 1]);
+                $employee->user->notify(
+                    new TicketMade($ticket, $request->technician, $employee->user->name, $employee->office, $employee->department)
+                );
 
-            $this->handleHistoryNumberStore($ticket, $request->rs_no);
+                $ticket_data_json = json_encode($ticket_data, JSON_PRETTY_PRINT);
+                $action_taken = "Created a new ticket #" . $ticket->ticket_number . "\n" .
+                    "Details: " . $ticket_data_json . "\n";
+                $this->logAction($action_taken);
+            });
 
-            $this->handleTechnicianStore($ticket, $request->technicians);
-
-            $employee->update(['made_ticket' => $employee->made_ticket + 1]);
-            $employee->user->notify(
-                new TicketMade($ticket, $request->technician, $employee->user->name, $employee->office, $employee->department)
-            );
-
-            $ticket_data_json = json_encode($ticket_data, JSON_PRETTY_PRINT);
-            $action_taken = "Created a new ticket #" . $ticket->ticket_number . "\n" .
-                "Details: " . $ticket_data_json . "\n";
-            $this->logAction($action_taken);
-
-            DB::commit();
             return redirect()->to('/admin/tickets')->with('success', 'Ticket Created')->with('message', 'All assigned technicians are notified!');
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             DB::rollBack();
             return redirect()->to('/admin/tickets')->with('error', 'An error occurred!')->with('message', $e->getMessage());
         }
@@ -253,8 +241,8 @@ class AdminTicketController extends Controller
     public function show(Request $request, $id)
     {
         $ticket = Ticket::where('ticket_number', $id)
-            ->with('employee.user', 'assigned.technician.user')
-            ->first();
+            ->with(['employee.user', 'assigned.technician.user'])
+            ->firstOrFail();
 
         $comments = TicketComment::where('ticket_number', $id)
             ->whereNot('is_deleted', 1)
@@ -306,67 +294,65 @@ class AdminTicketController extends Controller
 
     public function comment(Request $request, $id)
     {
-        DB::beginTransaction();
+        $request->validate([
+            'content' => 'required',
+        ]);
+
         try {
-            $user_id = auth()->id();
+            DB::transaction(function () use ($request, $id) {
+                $user_id = auth()->id();
 
-            $request->validate([
-                'content' => 'required',
-            ]);
+                TicketComment::create([
+                    'ticket_number' => $id,
+                    'user_id' => $user_id,
+                    'content' => $request->content,
+                ]);
+            });
 
-            $comment = [
-                'ticket_number' => $id,
-                'user_id' => $user_id,
-                'content' => $request->content,
-            ];
-
-            $comment = TicketComment::create($comment);
-
-            DB::commit();
             return redirect()->back()->with('success', 'Commented on the ticket!')->with('message', 'Comment successfully posted!');
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', $e->getMessage());
+            Log::error($e->getMessage());
+            return redirect()->back()->with('error', 'Unable to post comment at this time. Please try again later.');
         }
     }
 
     public function reply(Request $request, $id, $comment_id)
     {
+        $request->validate([
+            'parent_comment_id' => 'nullable',
+            'content' => 'required',
+        ]);
+
         DB::beginTransaction();
         try {
             $user_id = auth()->id();
 
-            $request->validate([
-                'parent_comment_id' => 'nullable',
-                'content' => 'required',
-            ]);
-
-            $comment = [
+            $reply = TicketComment::create([
                 'ticket_number' => $id,
                 'parent_comment_id' => $comment_id,
                 'user_id' => $user_id,
                 'content' => $request->content,
-            ];
-
-            $reply = TicketComment::create($comment);
+            ]);
 
             DB::commit();
             return redirect()->back()->with('success', 'Replied to the comment!')->with('message', 'Reply successfully posted!');
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', $e->getMessage());
+            Log::error($e);
+            return redirect()->back()->with('error', 'Failed to post reply. Please try again.');
         }
     }
 
     public function updateComment(Request $request, $id)
     {
+        $request->validate([
+            'content' => 'required',
+        ]);
         DB::beginTransaction();
         try {
             $comment = TicketComment::findOrFail($id);
 
-            $request->validate([
-                'content' => 'required',
-            ]);
             $comment->content = $request->content;
             $comment->save();
 
@@ -430,7 +416,7 @@ class AdminTicketController extends Controller
         $request->validate([
             $field => 'nullable',
         ]);
-        
+
         if (!$request->$field) {
             return redirect()->back()->with('error', 'An empty field error occurred!')->with('message', 'Please do not leave the field empty.');
         }
@@ -983,7 +969,6 @@ class AdminTicketController extends Controller
                 'user_type' => request()->header('User-Agent'),
                 'actions_taken' => $action,
             ]);
-            return redirect()->back()->with('error', 'Attempt to log action without authenticated user');
         }
     }
 }

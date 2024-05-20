@@ -1,7 +1,7 @@
 <template>
     <div>
         <Header class="sticky-top" style="z-index: 110;"></Header>
-        <div class="position-absolute end-0 me-3" style="z-index: 100; margin-top: 5rem;">
+        <div class="position-absolute end-0 me-3 top-0" style="z-index: 100; margin-top: 5rem;">
             <Toast
                 x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
                 x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"

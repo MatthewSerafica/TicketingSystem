@@ -59,7 +59,7 @@ class AdminDepartmentController extends Controller
             $this->logAction($department->department, "Added a new department");
 
             DB::commit();
-            return redirect()->to('/admin/department')->with('success', 'Department Created!')->with('message', $request->department . ' is added to the departments!');
+            return redirect()->to('/admin/department')->with('success', 'Department Created!')->with('message', $department->department . ' is added to the departments!');
         } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Failed to create department!')->with('message', $e->getMessage());
@@ -90,10 +90,9 @@ class AdminDepartmentController extends Controller
 
         try {
             $department = Department::findOrFail($id);
-            $name = $department->department;
             $department->delete();
             
-            $message = "Deleted " . $name . " department";
+            $message = "Deleted " . $department->department . " department";
             $this->logAction($department->department, $message);
 
             DB::commit();
@@ -119,7 +118,6 @@ class AdminDepartmentController extends Controller
                 'user_type' => request()->header('User-Agent'),
                 'actions_taken' => $action . ': ' . $departmentName,
             ]);
-            return redirect()->back()->with('error', 'Attempt to log action without authenticated user');
         }
     }
 }

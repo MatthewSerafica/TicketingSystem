@@ -13,7 +13,7 @@ class AdminDashboardController extends Controller
     {
         $tickets = Ticket::with('employee.user', 'assigned.technician.user')
             ->whereDate('created_at', today())
-            ->orderByDesc('created_at')
+            ->latest()
             ->take(3)
             ->get();
 
@@ -40,17 +40,17 @@ class AdminDashboardController extends Controller
                 return $grouped_tickets->count();
             });
 
-        $archived_ticket_data = ArchivedTicket::whereYear('created_at', Carbon::now()->year)
+        /* $archived_ticket_data = ArchivedTicket::whereYear('created_at', Carbon::now()->year)
             ->get()
             ->groupBy(function ($ticket) {
                 return Carbon::parse($ticket->created_at)->format('M');
             })
             ->map(function ($grouped_tickets) {
                 return $grouped_tickets->count();
-            });
+            }); */
 
         // Merge the data from both models
-        $yearly_data = $ticket_data->mergeRecursive($archived_ticket_data);
+        $yearly_data = $ticket_data;
 
         $ordered_data = collect([]);
         foreach ($months as $month) {
@@ -62,9 +62,9 @@ class AdminDashboardController extends Controller
     private function getType()
     {
         $ticket_types = Ticket::distinct('service')->pluck('service');
-        $archived_ticket_types = ArchivedTicket::distinct('service')->pluck('service');
+        /* $archived_ticket_types = ArchivedTicket::distinct('service')->pluck('service'); */
 
-        $types = $ticket_types->merge($archived_ticket_types)->unique();
+        $types = $ticket_types->unique();
 
         $typeCounts = [];
 

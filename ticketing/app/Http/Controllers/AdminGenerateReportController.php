@@ -10,6 +10,7 @@ use App\Models\ServiceReport;
 use App\Models\Ticket;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class AdminGenerateReportController extends Controller
 {
@@ -21,9 +22,9 @@ class AdminGenerateReportController extends Controller
             ->orderByDesc('month')
             ->get();
 
-        $tickets = Ticket::select('*')
-            ->selectRaw('MONTH(created_at) as month, YEAR(created_at) as year')
+        $tickets = Ticket::selectRaw('MONTH(created_at) as month, YEAR(created_at) as year')
             ->with('employee.user')
+            ->distinct()
             ->orderByDesc('year')
             ->orderByDesc('month')
             ->get();
@@ -38,8 +39,8 @@ class AdminGenerateReportController extends Controller
     {
         $tickets = Ticket::select('*')
             ->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
-            ->orderByDesc('created_at')
             ->with('employee.user', 'assigned.technician.user')
+            ->orderByDesc('created_at')
             ->get();
 
         return inertia('Admin/Reports/GenerateReports/Show', [
@@ -51,7 +52,7 @@ class AdminGenerateReportController extends Controller
 
     public function showCollate()
     {
-        $users = User::where('user_type', 'technician')->with(['technician'])->get();
+        $users = User::where('user_type', 'technician')->with('technician')->get();
 
         $collateResources = [];
 
@@ -69,7 +70,7 @@ class AdminGenerateReportController extends Controller
     }
     public function clientCollate()
     {
-        $users = User::where('user_type', 'employee')->with(['employee'])->get();
+        $users = User::where('user_type', 'employee')->with('employee')->get();
 
         $collateResources = [];
 
@@ -116,22 +117,21 @@ class AdminGenerateReportController extends Controller
             $today = now()->startOfDay();
 
             $tickets = Department::where('departments.department', $department->department)
-                ->selectRaw('COUNT(tickets.ticket_number) as tickets_made_today')
                 ->join('employees', 'departments.department', '=', 'employees.department')
                 ->join('tickets', 'employees.employee_id', '=', 'tickets.employee_id')
                 ->where('tickets.status', '<>', 'Resolved')
                 ->whereDate('tickets.created_at', $today)
                 ->groupBy('departments.id')
                 ->count();
+
             return $tickets;
         } else if ($when === 'total') {
             $tickets = Department::where('departments.department', $department->department)
-                ->selectRaw('COUNT(tickets.ticket_number) as tickets_made_today')
                 ->join('employees', 'departments.department', '=', 'employees.department')
                 ->join('tickets', 'employees.employee_id', '=', 'tickets.employee_id')
-                ->where('tickets.status', '=', 'Resolved')
                 ->groupBy('departments.id')
                 ->count();
+
             return $tickets;
         }
     }
@@ -141,22 +141,22 @@ class AdminGenerateReportController extends Controller
             $today = now()->startOfDay();
 
             $tickets = Department::where('departments.department', $department->department)
-                ->selectRaw('COUNT(tickets.ticket_number) as tickets_made_today')
                 ->join('employees', 'departments.department', '=', 'employees.department')
                 ->join('tickets', 'employees.employee_id', '=', 'tickets.employee_id')
                 ->where('tickets.status', '=', 'Resolved')
                 ->whereDate('tickets.created_at', $today)
                 ->groupBy('departments.id')
                 ->count();
+
             return $tickets;
         } else if ($when === 'total') {
             $tickets = Department::where('departments.department', $department->department)
-                ->selectRaw('COUNT(tickets.ticket_number) as tickets_made_today')
                 ->join('employees', 'departments.department', '=', 'employees.department')
                 ->join('tickets', 'employees.employee_id', '=', 'tickets.employee_id')
                 ->where('tickets.status', '=', 'Resolved')
                 ->groupBy('departments.id')
                 ->count();
+
             return $tickets;
         }
     }
@@ -164,9 +164,9 @@ class AdminGenerateReportController extends Controller
     private function getDepartmentComplexity($department)
     {
         $tickets = Department::where('departments.department', $department->department)
-            ->selectRaw('tickets.complexity, COUNT(tickets.complexity) as count')
             ->join('employees', 'departments.department', '=', 'employees.department')
             ->join('tickets', 'employees.employee_id', '=', 'tickets.employee_id')
+            ->selectRaw('tickets.complexity, COUNT(tickets.complexity) as count')
             ->groupBy('tickets.complexity')
             ->get();
 
@@ -177,9 +177,9 @@ class AdminGenerateReportController extends Controller
 
         foreach ($tickets as $ticket) {
             if ($ticket->complexity === 'Simple') {
-                $counts['simple'] = $ticket->count;
+                $counts['simple'] += $ticket->count;
             } elseif ($ticket->complexity === 'Complex') {
-                $counts['complex'] = $ticket->count;
+                $counts['complex'] += $ticket->count;
             }
         }
 
@@ -190,7 +190,7 @@ class AdminGenerateReportController extends Controller
     {
         $time = ServiceReport::with('ticket.employee')
             ->whereHas('ticket.employee', function ($query) use ($department) {
-                $query->where('department', 'like', '%' . $department->department . '%');
+                $query->where('department', $department->department);
             })
             ->whereNotNull('date_done')
             ->whereNotNull('time_done')
@@ -199,125 +199,100 @@ class AdminGenerateReportController extends Controller
             ->selectRaw('AVG(TIMESTAMPDIFF(SECOND, CONCAT(date_started, " ", time_started), CONCAT(date_done, " ", time_done))) AS average_resolution_time')
             ->value('average_resolution_time');
 
-        $timeInHours = $time / 3600;
-        $timeInDecimal = round($timeInHours, 2);
-
-        return $timeInDecimal;
+        if ($time) {
+            $timeInHours = $time / 3600;
+            $timeInDecimal = round($timeInHours, 2);
+            return $timeInDecimal;
+        } else {
+            return 0;
+        }
     }
 
     private function getAssignedToday($user)
     {
-        if ($user->user_type == 'technician') {
-            $todayStart = Carbon::today();
-            $todayEnd = Carbon::today()->endOfDay();
-            $ticket = Ticket::with('assigned.technician.user')
-                ->whereHas('assigned.technician.user', function ($query) use ($user) {
-                    $query->where('id', $user->id);
-                })
-                ->whereIn('status', ['New', 'Pending', 'Ongoing'])
-                ->whereBetween('created_at', [$todayStart, $todayEnd])
-                ->count();
-            return $ticket;
-        } else {
-            $todayStart = Carbon::today();
-            $todayEnd = Carbon::today()->endOfDay();
-            $ticket = Ticket::with('employee.user')
-                ->whereHas('employee.user', function ($query) use ($user) {
-                    $query->where('id', $user->id);
-                })
-                ->whereIn('status', ['New', 'Pending', 'Ongoing'])
-                ->whereBetween('created_at', [$todayStart, $todayEnd])
-                ->count();
-            return $ticket;
-        }
+        $todayStart = Carbon::today();
+        $todayEnd = $todayStart->copy()->endOfDay();
+
+        $statusFilter = ['New', 'Pending', 'Ongoing'];
+        $relationPath = $user->user_type == 'technician' ? 'assigned.technician.user' : 'employee.user';
+
+        $ticketCount = Ticket::with($relationPath)
+            ->whereHas($relationPath, function ($query) use ($user) {
+                $query->where('id', $user->id);
+            })
+            ->whereIn('status', $statusFilter)
+            ->whereBetween('created_at', [$todayStart, $todayEnd])
+            ->count();
+
+        return $ticketCount;
     }
+
     private function getResolvedToday($user)
     {
+        $todayStart = Carbon::today();
+        $todayEnd = Carbon::today()->endOfDay();
+
+        $relation = $user->user_type == 'technician' ? 'assigned.technician.user' : 'employee.user';
+
+        $ticketCount = Ticket::with($relation)
+            ->whereHas($relation, function ($query) use ($user) {
+                $query->where('id', $user->id);
+            })
+            ->where('status', 'resolved');
+
         if ($user->user_type == 'technician') {
-            $todayStart = Carbon::today();
-            $todayEnd = Carbon::today()->endOfDay();
-            $ticket = Ticket::with('assigned.technician.user')
-                ->whereHas('assigned.technician.user', function ($query) use ($user) {
-                    $query->where('id', $user->id);
-                })
-                ->where('status', 'resolved')
-                ->whereBetween('created_at', [$todayStart, $todayEnd])
-                ->count();
-            return $ticket;
-        } else {
-            $ticket = Ticket::with('employee.user')
-                ->whereHas('employee.user', function ($query) use ($user) {
-                    $query->where('id', $user->id);
-                })
-                ->where('status', 'resolved')
-                ->count();
-            return $ticket;
+            $ticketCount = $ticketCount->whereBetween('created_at', [$todayStart, $todayEnd]);
         }
+
+        return $ticketCount->count();
     }
 
     private function getClientTicketResolved($user)
     {
-        $todayStart = Carbon::today();
-        $todayEnd = Carbon::today()->endOfDay();
-        $ticket = Ticket::with('employee.user')
-            ->whereHas('employee.user', function ($query) use ($user) {
-                $query->where('id', $user->id);
-            })
-            ->where('status', 'resolved')
-            ->whereBetween('created_at', [$todayStart, $todayEnd])
-            ->count();
-        return $ticket;
+        $cacheKey = 'resolved_tickets_count_' . $user->id . '_' . Carbon::today()->toDateString();
+
+        $ticketCount = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($user) {
+            $todayStart = Carbon::today();
+            $todayEnd = Carbon::today()->endOfDay();
+
+            return Ticket::with('employee.user')
+                ->whereHas('employee.user', function ($query) use ($user) {
+                    $query->where('id', $user->id);
+                })
+                ->where('status', 'resolved')
+                ->whereBetween('created_at', [$todayStart, $todayEnd])
+                ->count();
+        });
+
+        return $ticketCount;
     }
 
     private function getComplexityCounts($user)
     {
-        if ($user->user_type === 'technician') {
-            $ticketCounts = Ticket::with('assigned.technician.user')
-                ->whereHas('assigned.technician.user', function ($query) use ($user) {
-                    $query->where('id', $user->id);
-                })
-                ->selectRaw('complexity, COUNT(*) as count')
-                ->groupBy('complexity')
-                ->get();
+        $relationship = $user->user_type === 'technician' ? 'assigned.technician' : 'employee';
 
-            $counts = [
-                'simple' => 0,
-                'complex' => 0
-            ];
+        $ticketCountsQuery = Ticket::query()
+            ->whereHas($relationship . '.user', function ($query) use ($user) {
+                $query->where('id', $user->id);
+            })
+            ->selectRaw('lower(complexity) as complexity, COUNT(*) as count')
+            ->groupBy('complexity')
+            ->get();
 
-            foreach ($ticketCounts as $ticket) {
-                if ($ticket->complexity === 'Simple') {
-                    $counts['simple'] = $ticket->count;
-                } elseif ($ticket->complexity === 'Complex') {
-                    $counts['complex'] = $ticket->count;
-                }
+        $counts = [
+            'simple' => 0,
+            'complex' => 0,
+        ];
+
+        foreach ($ticketCountsQuery as $ticketCount) {
+            if ($ticketCount->complexity === 'simple') {
+                $counts['simple'] = $ticketCount->count;
+            } elseif ($ticketCount->complexity === 'complex') {
+                $counts['complex'] = $ticketCount->count;
             }
-
-            return $counts;
-        } else {
-            $ticketCounts = Ticket::with('employee.user')
-                ->whereHas('employee.user', function ($query) use ($user) {
-                    $query->where('id', $user->id);
-                })
-                ->selectRaw('complexity, COUNT(*) as count')
-                ->groupBy('complexity')
-                ->get();
-
-            $counts = [
-                'simple' => 0,
-                'complex' => 0
-            ];
-
-            foreach ($ticketCounts as $ticket) {
-                if ($ticket->complexity === 'Simple') {
-                    $counts['simple'] = $ticket->count;
-                } elseif ($ticket->complexity === 'Complex') {
-                    $counts['complex'] = $ticket->count;
-                }
-            }
-
-            return $counts;
         }
+
+        return $counts;
     }
 
     private function getAverageResolutionTime($user)
