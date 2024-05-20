@@ -15,14 +15,15 @@
                     </div>
                 </div>
                 <div class="d-flex flex-column gap-4 justify-content-center align-items-center ms-5">
-                    <div v-if="tickets && tickets.length > 0"
-                        class="d-flex flex-column gap-4 justify-content-center align-items-center">
-                        <div class="" v-for="ticket in tickets" :key="ticket.ticket_number">
+                    <div v-if="tickets && tickets.length > 0" class="d-flex flex-column gap-4 justify-content-center align-items-center">
+                        <div class="d-flex flex-column" v-for="ticket in tickets" :key="ticket.ticket_number">
                             <Link class="text-decoration-none" :href="route('admin.tickets.show', ticket.ticket_number)">
-                            <Card class="text-truncate hover" :no="ticket.ticket_number" :issue="ticket.issue"
-                                :employee="ticket.employee.user.name" :department="ticket.employee.department"
-                                :date="formatDate(ticket.created_at)" :status="ticket.status"
-                                :technicians="ticket.assigned ? ticket.assigned : 'Unassigned'">
+                            <Card class="d-flex flex-column text-truncate hover" 
+                            :no="ticket.ticket_number" 
+                            :issue="ticket.issue"
+                            :employee="ticket.employee.user.name" :department="ticket.employee.department"
+                            :date="formatDate(ticket.created_at)" :status="ticket.status"
+                            :technicians="ticket.assigned ? ticket.assigned : 'Unassigned'">
                             </Card>
                             </Link>
                         </div>
@@ -114,29 +115,29 @@ watch(myData, (newValue, oldValue) => {
 
 @media (max-width: 1024px) {
     .main-content {
-        padding: 2rem;
+        padding: 1rem;
     }
 
     .statistics,
     .recent {
         display: flex;
         flex-direction: column;
-        align-items: center; /* Center items horizontally */
-        text-align: center; /* Center text */
+        align-items: center; 
+        text-align: center; 
     }
 
     .doughnut {
-        width: 100%; /* Adjust width to fit container */
+        width: 100%; 
     }
 
     .bar {
-        width: 100%; /* Adjust width to fit container */
+        width: 100%; 
     }
 }
 
 @media (max-width: 768px) {
     .main-content {
-        margin-left: 2rem;
+        margin-left: 1rem;
         width: 80%;
     }
 
@@ -148,24 +149,24 @@ watch(myData, (newValue, oldValue) => {
 
 
     .recent {
-        padding-left: 0; /* Remove padding */
+        padding-left: 0;
     }
 
     .cta {
-        padding-left: 0; /* Remove padding */
+        padding-left: 0; 
     }
 
     .statistics {
-        padding-left: 0; /* Remove padding */
+        padding-left: 0; 
     }
 
     .stat-label {
-        padding-left: 0; /* Remove padding */
+        padding-left: 0; 
     }
 
     .doughnut,
     .bar {
-        width: 100%; /* Adjust width to fit container */
+        width: 100%; 
     }
 }
 </style>
