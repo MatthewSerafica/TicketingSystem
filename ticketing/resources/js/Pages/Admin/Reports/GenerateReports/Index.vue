@@ -15,7 +15,7 @@
                         placeholder="Select Date" class="border rounded border-1 w-100" />
                 </div>
 
-                <div v-if="monthsAndYears.length > 0" class="table-responsive rounded shadow pt-2 px-2 w-100 w-lg-75">
+                <div v-if="monthsAndYears.length > 0" class="table-responsive rounded shadow pt-2 px-2">
                     <div>
                         <table class="table table-hover custom-rounded-table">
                             <thead>
