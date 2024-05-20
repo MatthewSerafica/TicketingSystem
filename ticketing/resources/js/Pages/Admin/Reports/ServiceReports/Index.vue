@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header class="sticky-top"></Header>
+    <Header class="sticky-top no-print"></Header>
     <div class="position-absolute end-0 mt-3 me-3" style="z-index: 100;">
       <Toast
         x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
@@ -291,5 +291,97 @@ function showPrint(service_report) {
     max-width: 90%;
   }
 }
+
+@media print {
+  @page {
+    size: A6;
+    margin: 5mm; /* Adjust the margin as needed */
+  }
+
+  /* Hide elements not needed for print */
+  .no-print,
+  .sticky-top,
+  .position-absolute {
+    display: none !important;
+  }
+
+  /* Adjust the main container for print */
+  .d-flex, .flex-column, .align-content-center, .align-items-center, .text-center, .justify-content-center {
+    width: 100%;
+    display: block;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Adjust table layout for printing */
+  .table-responsive {
+    width: 100%;
+    overflow: visible;
+  }
+
+  .table {
+    width: 100%;
+    font-size: 8px; /* Smaller font for better fit */
+  }
+
+  .table th,
+  .table td {
+    padding: 4px; /* Reduce padding for better fit */
+  }
+
+  /* Ensure links and buttons are styled appropriately for print */
+  a {
+    color: black;
+    text-decoration: none;
+  }
+
+  .btn {
+    display: none;
+  }
+
+  /* Adjust specific column widths to fit content */
+  .table th:nth-child(1),
+  .table td:nth-child(1) { width: 5%; text-align: center; }
+  .table th:nth-child(2),
+  .table td:nth-child(2) { width: 10%; }
+  .table th:nth-child(3),
+  .table td:nth-child(3) { width: 10%; }
+  .table th:nth-child(4),
+  .table td:nth-child(4) { width: 10%; text-align: center; }
+  .table th:nth-child(5),
+  .table td:nth-child(5) { width: 12%; }
+  .table th:nth-child(6),
+  .table td:nth-child(6) { width: 10%; }
+  .table th:nth-child(7),
+  .table td:nth-child(7) { width: 10%; text-align: center; }
+  .table th:nth-child(8),
+  .table td:nth-child(8) { width: 10%; }
+  .table th:nth-child(9),
+  .table td:nth-child(9) { width: 10%; }
+  .table th:nth-child(10),
+  .table td:nth-child(10) { width: 12%; }
+  .table th:nth-child(11),
+  .table td:nth-child(11) { width: 10%; }
+  .table th:nth-child(12),
+  .table td:nth-child(12) { width: 10%; }
+  .table th:nth-child(13),
+  .table td:nth-child(13) { width: 12%; }
+  .table th:nth-child(14),
+  .table td:nth-child(14) { width: 5%; text-align: center; }
+
+  /* Adjust general styles for print */
+  body {
+    margin: 0;
+    padding: 0;
+    font-size: 10px; /* Adjust font size for better fit */
+  }
+
+  .input-group,
+  .pagination,
+  .EmptyCard {
+    display: none !important;
+  }
+}
+
 
 </style>
