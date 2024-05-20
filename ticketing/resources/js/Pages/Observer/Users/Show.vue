@@ -39,8 +39,7 @@
                             <div class="card-subtitle fw-medium fs-5">
                                 Name
                             </div>
-                            <span v-if="!selectedInput || selectedInput !== users.name" class="card-text"
-                               >
+                            <span v-if="!selectedInput || selectedInput !== users.name" class="card-text">
                                 {{ users.name }}
                             </span>
                         </div>
@@ -137,11 +136,14 @@
                                         <button type="button" class="btn text-start text-capitalize">
                                             {{ users.user_type ? users.user_type : 'Unassigned' }}
                                         </button>
-                                        <button v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'" type="button" class="btn dropdown-toggle dropdown-toggle-split"
+                                        <button
+                                            v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'"
+                                            type="button" class="btn dropdown-toggle dropdown-toggle-split"
                                             data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                                             <span class="visually-hidden">Toggle Dropdown</span>
                                         </button>
-                                        <ul v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'" class="dropdown-menu">
+                                        <ul v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'"
+                                            class="dropdown-menu">
                                             <li class="dropdown-item disabled">Select a user type</li>
                                             <li class="btn dropdown-item"
                                                 @click="showInput('technician'), updateData('technician', users.id, 'user_type', false, false)">
@@ -315,7 +317,9 @@
                                         <button type="button" class="btn text-start text-capitalize">
                                             {{ users.user_type ? users.user_type : 'Unassigned' }}
                                         </button>
-                                        <button v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'" type="button" class="btn dropdown-toggle dropdown-toggle-split"
+                                        <button
+                                            v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'"
+                                            type="button" class="btn dropdown-toggle dropdown-toggle-split"
                                             data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                                             <span class="visually-hidden">Toggle Dropdown</span>
                                         </button>
