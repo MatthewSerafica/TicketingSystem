@@ -102,11 +102,11 @@
           </div>
 
           <ConfirmModal v-if="showConfirmationModal" :form="selectedServiceReport" :id="form.technicianId"
-            :ticket="selectedTicket" @confirm="create" @closeSubmitService="closeSubmitService" />
+            :ticket="selectedTicket" @confirm="create" @closeSubmitService="closeSubmitService" style="z-index: 100;" />
           <div class="row justify-content-end">
             <div class="col-md-4">
               <div class="d-flex justify-content-end gap-2">
-                <Button :name="'Submit'" :color="'primary'" @click="submitServiceReport(form, selectedTicket)"
+                <Button class="z-0" :name="'Submit'" :color="'primary'" @click="submitServiceReport(form, selectedTicket)" style="z-index: 0;"
                   :disabled="!form.service_id || !form.date_started || !form.time_started || !form.ticket_number || !form.requesting_office || !form.equipment_no || !form.problem || !form.action || !form.recommendation || !form.date_done || !form.time_done"></Button>
                 <Button :name="'Cancel'" :color="'light'" @click="back(props.new_service_id)"
                   class="btn btn-outline-secondary"></Button>

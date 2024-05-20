@@ -270,7 +270,7 @@ const props = defineProps({
   border-radius: 8px;
   text-align: center;
   max-width: 80%;
-  max-height: 100%;
+  max-height: 80%;
   overflow: auto;
 }
 
