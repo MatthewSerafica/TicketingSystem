@@ -134,7 +134,7 @@
                 </Link>
               </td>
               <!-- <td><button type="button" as="button" class="btn btn-secondary"
-                  @click="showPrint(service_report)">Show</button></td> -->
+                  @click="showPrint(service_report)">Print</button></td> -->
             </tr>
           </tbody>
         </table>
