@@ -54,7 +54,6 @@
               <th class="text-muted">Date Done</th>
               <th class="text-muted">Time Done</th>
               <th class="text-muted">Remarks</th>
-              <th class="text-muted">Print</th>
             </tr>
           </thead>
           <tbody>
@@ -78,8 +77,6 @@
                 {{ moment(service_report.time_done, "HH:mm:ss").format("hh:mm A") }}
               </td>
               <td class="text-start">{{ service_report.remarks }} </td>
-              <td><button type="button" as="button" class="btn btn-secondary"
-                  @click="showPrint(service_report)">Print</button></td>
             </tr>
           </tbody>
         </table>
