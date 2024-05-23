@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ArchivedTicket;
+use App\Models\AssignedDepartment;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-
-
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Log;
@@ -21,6 +20,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class AdminUsersController extends Controller
 {
@@ -130,7 +130,7 @@ class AdminUsersController extends Controller
 
     public function show($id)
     {
-        $user = User::where('id', $id)->with('employee', 'technician')->firstOrFail();
+        $user = User::where('id', $id)->with('employee', 'technician.departments.departments')->firstOrFail();
         $departments = Department::all();
         $offices = Office::all();
         if ($user->user_type == 'employee' || $user->user_type == 'technician') {
@@ -450,14 +450,24 @@ class AdminUsersController extends Controller
             $field => 'required',
         ]);
 
-        $technician = Technician::where('technician_id', $id)->first();
-        $old = $technician->$field;
-        $technician->$field = $request->$field;
-        $technician->save();
-        $input = ucfirst($field);
+        if ($field !== 'department_id') {
+            $technician = Technician::where('technician_id', $id)->first();
+            $old = $technician->$field;
+            $technician->$field = $request->$field;
+            $technician->save();
+            $input = ucfirst($field);
+            $action_taken = "Updated a user from " . $old . " to " .  $request->$field;
+        } else {
+            $assign = [
+                'department_id' => $request->$field,
+                'technician' => $id,
+            ];
+            $action_taken = "Updated department assignment";
+            AssignedDepartment::create($assign);
+            $input = ucfirst($field);
+        }
 
         $auth = Auth::user();
-        $action_taken = "Updated a user from " . $old . " to " .  $request->$field;
         $log_data = [
             'name' => $auth->name,
             'user_type' => $auth->user_type,
@@ -465,12 +475,74 @@ class AdminUsersController extends Controller
         ];
         Log::create($log_data);
 
-        return redirect()->back()->with('success', $input . ' Update!')->with('message', $old . ' is updated to ' . $request->$field);
+        return redirect()->back()->with('success', $input . ' Update!')->with('message', $action_taken);
     }
 
-    public function destroy($id)
+    public function remove(Request $request)
     {
-        // Add logic here to delete user
+        $request->validate([
+            'department_id' => 'required',
+            'technician' => 'required',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $assigned = AssignedDepartment::where(['department_id' => $request->department_id, 'technician' => $request->technician])->first();
+
+            if ($assigned) {
+                $assigned->delete();
+
+                $auth = Auth::user();
+                $action_taken = "Removed a department from  technician";
+                $log_data = [
+                    'name' => $auth->name,
+                    'user_type' => $auth->user_type,
+                    'actions_taken' => $action_taken,
+                ];
+                Log::create($log_data);
+
+                DB::commit();
+                return redirect()->back()->with('success', 'Department removed!')->with('message', 'Department successfully removed from technician');
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'An error occurred!')->with('message', $e->getMessage());
+        }
+    }
+    
+    public function replaceDepartment(Request $request)
+    {
+        $request->validate([
+            'department_id' => 'required',
+            'technician' => 'required',
+            'old' => 'required',
+            'assignId' => 'required',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $assigned = AssignedDepartment::where(['department_id' => $request->old, 'technician' => $request->technician])->firstOrFail();
+
+            if ($assigned) {
+                $assigned->department_id = $request->department_id;
+                $assigned->save();
+    
+                $auth = Auth::user();
+                $action_taken = "Replaced a department for technician";
+                $log_data = [
+                    'name' => $auth->name,
+                    'user_type' => $auth->user_type,
+                    'actions_taken' => $action_taken,
+                ];
+                Log::create($log_data);
+    
+                DB::commit();
+                return redirect()->back()->with('success', 'Department Updated!')->with('message', 'Department has been replaced!');
+            }
+        } catch (Throwable $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'An error occurred!')->with('message', $e->getMessage());
+        }
     }
 
     public function password()
@@ -553,7 +625,7 @@ class AdminUsersController extends Controller
                 } else if ($line[2] == 'technician') {
                     $technicians[] = [
                         'user_id' => $user->id,
-                        'assigned_department' => $line[5],
+                        'assigned_department' => null,
                     ];
                     if (count($technicians) >= $chunkSize) {
                         $this->insertChunkt($technicians);

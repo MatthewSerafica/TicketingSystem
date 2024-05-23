@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Department extends Model
 {
     use HasFactory;
+    public function assigned()
+    {
+        return $this->hasMany(AssignedDepartment::class, 'department_id', 'id');
+    }
 
     protected $fillable = [
         'department',

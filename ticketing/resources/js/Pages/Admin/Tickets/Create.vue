@@ -15,7 +15,8 @@
                 <div class="d-flex flex-column flex-md-row gap-3 mb-2">
                   <div class="flex-grow-1 w-50">
                     <div class="flex-grow-1 w-80 d-flex flex-column">
-                      <label for="request_type" class="fw-semibold"><span class="text-danger">*</span>Request Type</label>
+                      <label for="request_type" class="fw-semibold"><span class="text-danger">*</span>Request
+                        Type</label>
                       <select id="request_type" class="h-100 rounded border-secondary-subtle form-select"
                         placeholder="Select Request Type..." v-model="form.request_type" @change="toggleRSNoField">
                         <option disabled>Select Type</option>
@@ -97,7 +98,8 @@
                   </div>
 
                   <div class="flex-grow-1 w-50 d-flex flex-column">
-                    <label for="deptOffice" class="fw-semibold"><span class="text-danger">*</span>Department & Office</label>
+                    <label for="deptOffice" class="fw-semibold"><span class="text-danger">*</span>Department &
+                      Office</label>
                     <input id="deptOffice" class="form-control rounded border-secondary-subtle" type="text"
                       placeholder=" " v-model="form.department_office" disabled />
                   </div>
@@ -176,7 +178,10 @@
                                     <div class="d-flex justify-content-between">
                                       <div>
                                         <span class="fw-semibold">{{ technician.user.name }}</span>
-                                        <br> <small>{{ technician.assigned_department }}</small>
+                                        <br>
+                                        <small v-for="department in technician.departments">
+                                          <span v-for="dep in department.departments">{{ dep.department }} | </span>
+                                        </small>
                                       </div>
                                       <span>{{ technician.tickets_assigned }}</span>
                                     </div>
@@ -194,7 +199,10 @@
                                   <div class="d-flex justify-content-between">
                                     <div>
                                       <span class="fw-semibold">{{ technician.user.name }}</span>
-                                      <br> <small>{{ technician.assigned_department }}</small>
+                                      <br>
+                                      <small v-for="department in technician.departments">
+                                        <span v-for="dep in department.departments">{{ dep.department }} | </span>
+                                      </small>
                                     </div>
                                     <span>{{ technician.tickets_assigned }}</span>
                                   </div>
@@ -235,7 +243,7 @@
               </div>
             </div>
           </div>
-          
+
         </div>
       </form>
     </div>
@@ -244,31 +252,10 @@
 
 <script setup>
 import Button from '@/Components/Button.vue';
-import Toast from '@/Components/Toast.vue';
 import Header from "@/Pages/Layouts/AdminHeader.vue";
 import { Link, router, useForm, usePage } from "@inertiajs/vue3";
-import Alpine from 'alpinejs';
 import axios from 'axios';
-import { ref, watch, watchEffect, computed } from "vue";
-
-Alpine.start()
-
-const page = usePage();
-
-let showSuccessToast = ref(false);
-let showErrorToast = ref(false);
-
-watchEffect(() => {
-  showSuccessToast.value = !!page.props.flash.success;
-  showErrorToast.value = !!page.props.flash.error;
-})
-
-const handleClose = () => {
-  page.props.flash.success = null;
-  page.props.flash.error = null;
-  showSuccessToast.value = false;
-  showErrorToast.value = false;
-}
+import { computed, ref, watch, watchEffect } from "vue";
 
 const props = defineProps({
   technicians: Object,
@@ -485,8 +472,8 @@ const createNewService = () => {
 }
 
 .dropdown-menu {
-  max-width: 100%; 
-  overflow-wrap: break-word; 
+  max-width: 100%;
+  overflow-wrap: break-word;
   white-space: normal;
   display: none;
   opacity: 0;
@@ -542,15 +529,17 @@ const createNewService = () => {
 @media (max-width: 767px) {
 
   .dropdown-menu {
-    max-width: 90vw; 
+    max-width: 90vw;
   }
 
   .d-flex.flex-column.flex-md-row {
     flex-direction: column !important;
   }
+
   .d-flex.flex-column.flex-md-row .flex-grow-1 {
     width: 100% !important;
   }
+
   .d-flex.flex-column.flex-md-row .btn-group {
     width: 100% !important;
   }

@@ -19,6 +19,10 @@ class Technician extends Model
     {
         return $this->belongsTo(AssignedTickets::class, 'technician');
     }
+    public function departments()
+    {
+        return $this->hasMany(AssignedDepartment::class, 'technician', 'technician_id');
+    }
 
     public function tickets() {
         return $this->hasMany(Ticket::class, 'technician_id', 'technician');

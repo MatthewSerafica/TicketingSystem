@@ -42,7 +42,6 @@ class AdminTicketController extends Controller
 
         $query->orderBy($request->input('sort', 'ticket_number'), $request->input('direction', 'desc'));
 
-
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where('ticket_number', 'like', '%' . $search . '%')
@@ -111,7 +110,7 @@ class AdminTicketController extends Controller
     {
         $latest = HistoryNumber::whereNotNull('rs_no')->orderByDesc('rs_no')->first();
         $new = $latest ? $this->increment($latest->ticket_number, $latest->rs_no) : '0001';
-        $technicians = Technician::with('user')
+        $technicians = Technician::with('user', 'departments.departments')
             ->where('is_working', '=', 1)
             ->where('tickets_assigned', '!=', 5)
             ->get();
@@ -777,16 +776,20 @@ class AdminTicketController extends Controller
         if ($id) {
             $assignedTechnicianIds = AssignedTickets::where('ticket_number', $id)
                 ->pluck('technician');
-            $technicians = Technician::where('assigned_department', $department)
-                ->with('user')
+                $technicians = Technician::with(['user', 'departments.departments'])
+                ->whereHas('departments.departments', function($query) use ($department) {
+                    $query->where('department', $department);
+                })
                 ->where('is_working', '=', 1)
                 ->whereNotIn('technician_id', $assignedTechnicianIds)
                 ->get();
         } else {
-            $technicians = Technician::where('assigned_department', $department)
-                ->with('user')
-                ->where('is_working', '=', 1)
-                ->get();
+            $technicians = Technician::with(['user', 'departments.departments'])
+            ->whereHas('departments.departments', function($query) use ($department) {
+                $query->where('department', $department);
+            })
+            ->where('is_working', '=', 1)
+            ->get();
         }
 
         return response()->json(['recommended' => $technicians]);
@@ -796,7 +799,7 @@ class AdminTicketController extends Controller
         $assignedTechnicianIds = AssignedTickets::where('ticket_number', $id)
             ->pluck('technician');
 
-        $technicians = Technician::with('user')
+        $technicians = Technician::with('user', 'departments.departments')
             ->where('is_working', '=', 1)
             ->whereNotIn('technician_id', $assignedTechnicianIds)
             ->get();

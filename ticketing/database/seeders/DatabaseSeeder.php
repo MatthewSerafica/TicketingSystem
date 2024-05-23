@@ -78,34 +78,40 @@ class DatabaseSeeder extends Seeder
 
         $departments =[
             [
-                'department' => 'LES'
-            ],
-            [
-                'department' => 'JHS'
-            ],
-            [
-                'department' => 'SHS'
-            ],
-            [
-                'department' => 'SAMCIS'
-            ],
-            [
-                'department' => 'SAS'
+                'department' => 'BEDS'
             ],
             [
                 'department' => 'SEA'
             ],
             [
+                'department' => 'NATSCI'
+            ],
+            [
+                'department' => 'Finance'
+            ],
+            [
+                'department' => 'Admin'
+            ],
+            [
                 'department' => 'SOL'
             ],
             [
-                'department' => 'SOM'
+                'department' => 'Junior High'
             ],
             [
-                'department' => 'SONAHBS'
+                'department' => 'OSA'
             ],
             [
                 'department' => 'STELA'
+            ],
+            [
+                'department' => 'SAMCIS'
+            ],
+            [
+                'department' => 'Senior High'
+            ],
+            [
+                'department' => 'SAS'
             ],
         ];
         foreach ($departments as $departments) {

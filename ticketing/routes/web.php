@@ -89,7 +89,9 @@ Route::middleware(['web'])->group(function () {
         Route::get('/admin/users/show/{user_id}', [AdminUsersController::class, 'show'])->name('admin.users.show');
         Route::put('/admin/users/{user_id}/{field}', [AdminUsersController::class, 'update'])->name('admin.users.update');
         Route::put('/admin/users/employee/{user_id}/{field}', [AdminUsersController::class, 'employee'])->name('admin.users.update.employee');
+        Route::put('/admin/users/technician/replace/department', [AdminUsersController::class, 'replaceDepartment'])->name('admin.users.replace.department');
         Route::put('/admin/users/technician/{user_id}/{field}', [AdminUsersController::class, 'technician'])->name('admin.users.update.technician');
+        Route::delete('/admin/users/technician/remove/department', [AdminUsersController::class, 'remove'])->name('admin.users.remove.department');
 
         Route::get('/admin/reports/service-report', [AdminServiceReportController::class, 'index'])->name('admin.reports.service-reports');
         Route::get('/admin/reports/service-report/create', [AdminServiceReportController::class, 'create'])->name('admin.reports.service-report.create');
@@ -129,7 +131,7 @@ Route::middleware(['web'])->group(function () {
         Route::post('/admin/problems/create/store', [AdminProblemController::class, 'store'])->name('admin.problems.store');
         Route::put('/admin/problems/update/{problem_id}', [AdminProblemController::class, 'update'])->name('admin.problems.update');
         Route::delete('/admin/problems/delete/{problem_id}', [AdminProblemController::class, 'destroy'])->name('admin.problems.delete');
-        
+
         Route::get('/admin/logs', [AdminLogsController::class, 'index'])->name('admin.logs');
 
         Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications');
@@ -217,7 +219,7 @@ Route::middleware(['web'])->group(function () {
         Route::get('/observer/tickets/{id}', [ObserverTicketController::class, 'show'])->name('observer.tickets.show');
         Route::get('/observer/reports/service-report', [ObserverServiceController::class, 'index'])->name('observer.reports.service-reports');
         Route::get('/observer/reports/service-report/{id}', [ObserverServiceController::class, 'show'])->name('observer.reports.service-report.show');
-    
+
         Route::get('/observer/reports/generate-report', [ObserverGenerateController::class, 'index'])->name('observer.reports.generate-report');
         Route::get('/observer/reports/collate', [ObserverGenerateController::class, 'showCollate'])->name('observer.reports.collate');
         Route::get('/observer/reports/client-collate', [ObserverGenerateController::class, 'clientCollate'])->name('observer.reports.client-collate');
@@ -225,10 +227,9 @@ Route::middleware(['web'])->group(function () {
         Route::get('/observer/reports/collate/print', [ObserverGenerateController::class, 'printCollate'])->name('observer.reports.collate.print');
         Route::get('/observer/reports/generate-report/show/{from}/{to}', [ObserverGenerateController::class, 'show'])->name('observer.reports.generate-report.show');
         Route::get('/observer/reports/generate-report/{year}/{month}/print', [ObserverGenerateController::class, 'print'])->name('observer.reports.generate-report.print');
-    
+
         Route::get('/observer/users', [ObserverUsersController::class, 'index'])->name('observer.users');
         Route::get('/observer/users/create', [ObserverUsersController::class, 'create'])->name('observer.users.create');
         Route::get('/observer/users/show/{user_id}', [ObserverUsersController::class, 'show'])->name('observer.users.show');
     });
-
 });

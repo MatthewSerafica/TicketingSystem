@@ -163,11 +163,14 @@
                                         <button type="button" class="btn text-start text-capitalize">
                                             {{ users.user_type ? users.user_type : 'Unassigned' }}
                                         </button>
-                                        <button v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'" type="button" class="btn dropdown-toggle dropdown-toggle-split"
+                                        <button
+                                            v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'"
+                                            type="button" class="btn dropdown-toggle dropdown-toggle-split"
                                             data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                                             <span class="visually-hidden">Toggle Dropdown</span>
                                         </button>
-                                        <ul v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'" class="dropdown-menu">
+                                        <ul v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'"
+                                            class="dropdown-menu">
                                             <li class="dropdown-item disabled">Select a user type</li>
                                             <li class="btn dropdown-item"
                                                 @click="showInput('technician'), updateData('technician', users.id, 'user_type', false, false)">
@@ -184,26 +187,62 @@
                         </div>
                         <div class="d-flex flex-column gap-3">
                             <div class="">
-                                <div class="card-subtitle fw-medium fs-5">
-                                    Assigned Department
+                                <div class="card-subtitle fw-medium fs-5 d-flex flex-row gap-2">
+                                    <span>Assigned Department</span>
+                                    <div class="d-flex flex-grow-1 gap-2 w-100 align-items-center">
+                                        <button v-if="!isEditable" class="btn btn-outline-primary" @click="handleEdit">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <button v-if="isEditable" class="btn btn-outline-primary" @click="handleEdit">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="btn-group">
-                                    <button type="button" class="btn text-start">
-                                        {{ users.technician.assigned_department ?
-                    users.technician.assigned_department :
-                    'Unassigned' }}
+                                <div class="d-flex flex-column justify-content-center align-items-start">
+                                    <div v-for="(assignedDep, index) in users.technician.departments" :key="index">
+                                        <div>
+                                            <div v-if="!isEditable">
+                                                <div v-for="dep in assignedDep.departments"
+                                                    class="d-flex flex-row justify-content-center align-items-center">
+                                                    {{ dep.department }}
+                                                </div>
+                                            </div>
+                                            <div class="btn-group position-static" v-if="isEditable">
+                                                <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
+                                                    data-bs-toggle="dropdown" aria-expanded="false"
+                                                    data-bs-reference="parent">
+                                                    <span class="visually-hidden">Toggle Dropdown</span>
+                                                </button>
+                                                <div v-for="dep in assignedDep.departments"
+                                                    class="d-flex flex-row justify-content-center align-items-center">
+                                                    <button type="button" class="btn text-start tech-btn"
+                                                        @click="toggleTechnicianCTAs">
+                                                        {{ dep ? dep.department : 'N/A' }}
+                                                    </button>
+                                                    <button v-if="technicianCTAs"
+                                                        class="btn align-items-center justify-content-center d-flex text-danger fs-5"
+                                                        style="height:1.5em;"
+                                                        @click="removeDropdown(users.technician.departments, index, users.technician.technician_id, dep.id)"><i
+                                                            class="bi bi-dash-circle-fill"></i>
+                                                    </button>
+                                                </div>
+                                                <ul class="dropdown-menu"
+                                                    style="max-height: 300px; overflow-y: auto; width: 14rem;">
+                                                    <!--All-->
+                                                    <li class="dropdown-item disabled">Select a department</li>
+                                                    <li v-for="department in departments" class="btn dropdown-item"
+                                                        @click="assignDepartment(users, index, department.id, users.technician.technician_id)">
+                                                        {{ department.department }}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button v-if="technicianCTAs && isEditable"
+                                        class="btn align-items-center justify-content-center d-flex text-primary fs-5"
+                                        style="height:1.5em;" @click="addDropdown(users.technician.departments)">
+                                        <i class="bi bi-plus-circle-fill"></i>
                                     </button>
-                                    <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
-                                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                                        <span class="visually-hidden">Toggle Dropdown</span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li class="dropdown-item disabled">Select a department</li>
-                                        <li v-for="department in departments" class="btn dropdown-item"
-                                            @click="showInput(department.department), updateData(department.department, users.technician.technician_id, 'assigned_department', false, true), console.log('Dropdown item clicked:', department.department)">
-                                            {{ department.department }}
-                                        </li>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -352,11 +391,14 @@
                                         <button type="button" class="btn text-start text-capitalize">
                                             {{ users.user_type ? users.user_type : 'Unassigned' }}
                                         </button>
-                                        <button v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'" type="button" class="btn dropdown-toggle dropdown-toggle-split"
+                                        <button
+                                            v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'"
+                                            type="button" class="btn dropdown-toggle dropdown-toggle-split"
                                             data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                                             <span class="visually-hidden">Toggle Dropdown</span>
                                         </button>
-                                        <ul v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'" class="dropdown-menu">
+                                        <ul v-if="users.user_type !== 'super' && page.props.user.user_type !== 'admin'"
+                                            class="dropdown-menu">
                                             <li class="dropdown-item disabled">Select a user type</li>
                                             <li class="btn dropdown-item"
                                                 @click="showInput('technician'), updateData('technician', users.id, 'user_type', false, false)">
@@ -435,6 +477,85 @@ const props = defineProps({
     time: Object,
     complexity: Object,
 })
+
+
+let isEditable = ref(false);
+
+const handleEdit = () => {
+    if (!isEditable.value) {
+        isEditable.value = true;
+        technicianCTAs.value = true;
+    } else {
+        isEditable.value = false;
+        if (technicianCTAs.value) {
+            technicianCTAs.value = false;
+        }
+    }
+}
+
+let technicianCTAs = ref(false);
+
+const toggleTechnicianCTAs = () => {
+    if (technicianCTAs.value) {
+        technicianCTAs.value = false;
+    } else {
+        technicianCTAs.value = true;
+    }
+    console.log(technicianCTAs.value)
+};
+
+
+const addDropdown = (user) => {
+    user.push({
+        department_id: null,
+        technician: [],
+    })
+    console.log(user.value)
+}
+
+const removeDropdown = async (user, assignedIndex, techId, depId) => {
+    console.log(user)
+    user.splice(depId, 1)
+    removeData(depId, techId)
+}
+
+const removeData = async (data, id) => {
+    try {
+        const form = useForm({
+            department_id: data,
+            technician: id,
+        })
+        await form.delete(route('admin.users.remove.department'))
+    } catch (error) {
+        console.error('Error removing data:', error)
+    }
+}
+const replaceTechnician = async (id, technician, old, assignId) => {
+    try {
+        const form = useForm({
+            department_id: id,
+            technician: technician,
+            old: old,
+            assignId: assignId,
+        })
+        await form.put(route('admin.users.replace.department'))
+    } catch (error) {
+        console.error('Error replacing data:', error);
+    }
+}
+
+const assignDepartment = async (user, assignedIndex, departmentId, technician) => {
+    if (user.technician.departments[assignedIndex].departments && user.technician.departments[assignedIndex].departments.length > 0) {
+        console.log('if', user.technician.departments[assignedIndex].departments[0].id)
+        const old = user.technician.departments[assignedIndex].departments[0].id
+        const assignId = user.technician.departments[assignedIndex].id
+        await replaceTechnician(departmentId, technician, old, assignId)
+    } else {
+        console.log('else')
+        await showInput(departmentId)
+        await updateData(departmentId, technician, 'department_id', false, true)
+    }
+};
 
 let selectedInput = ref(null);
 let editData = reactive({});
@@ -530,10 +651,11 @@ const updateData = async (data, id, updateField, isEmployee, isTechnician) => {
     width: 70%;
 }
 
-@media (max-width: 768px){
+@media (max-width: 768px) {
+
     .doughnut,
     .bar {
-        width: 100%; 
+        width: 100%;
     }
 }
 </style>

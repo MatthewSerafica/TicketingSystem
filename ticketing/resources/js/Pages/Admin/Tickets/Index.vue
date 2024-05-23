@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header class="sticky-top" ></Header>
+    <Header class="sticky-top"></Header>
     <div class="position-absolute end-0 me-3" style="z-index: 100; margin-top: 5rem;">
       <Toast
         x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
@@ -16,7 +16,7 @@
       </Toast>
     </div>
     <div class="container">
-      
+
       <!--Toast Render-->
       <!--Main Content-->
       <div class="main-content d-flex flex-column gap-2 justify-content-center">
@@ -46,7 +46,7 @@
             <div class="input-group d-flex justify-content-center w-50 ">
               <span class="input-group-text" id="searchIcon"><i class="bi bi-search"></i></span>
               <input type="text" class="form-control py-2" id="search" name="search" v-model="search"
-              placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
+                placeholder="Search Tickets..." aria-label="searchIcon" aria-describedby="searchIcon" />
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@
         <div v-if="tickets.data.length"
           class="d-flex flex-column flex-md-row align-items-md-center align-items-start gap-2 justify-content-between mt-2 mb-2 px-3 pagination">
           <div class="d-flex flex-column flex-md-row gap-2">
-          <!-- RR, RS, MS, SR box -->
+            <!-- RR, RS, MS, SR box -->
             <div class="d-flex flex-grow-1 gap-2 align-items-center">
               <div class="d-flex gap-2 border px-3 rounded custom-rounded-table">
                 <h6 class="fw-bold text-secondary pt-3">RS-{{ rs ? rs.rs_no : 0 }}</h6>
@@ -64,12 +64,13 @@
                 <h6 class="fw-bold text-secondary pt-3">SR-{{ sr ? sr.sr_no : 0 }}</h6>
               </div>
             </div>
-    
+
             <!-- Sort and Quick Edit buttons -->
             <div class="d-flex flex-column align-items-center flex-md-row gap-2">
               <div class="d-flex flex-grow-1 gap-2 w-100 align-items-center">
                 <button class="btn btn-primary" @click="handleSort('ticket_number')">
-                  <i :class="{ 'bi bi-sort-up': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-sort-down': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-sort-down text-muted': sortColumn !== 'ticket_number' }"></i>
+                  <i
+                    :class="{ 'bi bi-sort-up': sortColumn === 'ticket_number' && sortDirection === 'desc', 'bi bi-sort-down': sortColumn === 'ticket_number' && sortDirection === 'asc', 'bi bi-sort-down text-muted': sortColumn !== 'ticket_number' }"></i>
                 </button>
                 <button v-if="!isEditable" class="btn btn-outline-primary" @click="handleEdit">
                   <i class="bi bi-pencil-square"></i> Quick Edit
@@ -80,9 +81,9 @@
               </div>
             </div>
           </div>
-            <div class="d-flex flex-grow-1 justify-content-md-end justify-content-start">
-              <Pagination :links="tickets.links" :key="'tickets'" />
-            </div>
+          <div class="d-flex flex-grow-1 justify-content-md-end justify-content-start">
+            <Pagination :links="tickets.links" :key="'tickets'" />
+          </div>
         </div>
 
         <!--Data Table-->
@@ -313,7 +314,10 @@
                                     <div class="d-flex justify-content-between">
                                       <div>
                                         <span class="fw-semibold">{{ technician.user.name }}</span>
-                                        <br> <small>{{ technician.assigned_department }}</small>
+                                        <br>
+                                        <small v-for="department in technician.departments">
+                                          <span v-for="dep in department.departments">{{ dep.department }} | </span>
+                                        </small>
                                       </div>
                                       <span>{{ technician.tickets_assigned }}</span>
                                     </div>
@@ -333,7 +337,10 @@
                                     <div class="d-flex justify-content-between">
                                       <div>
                                         <span class="fw-semibold">{{ technician.user.name }}</span>
-                                        <br> <small>{{ technician.assigned_department }}</small>
+                                        <br>
+                                        <small v-for="department in technician.departments">
+                                          <span v-for="dep in department.departments">{{ dep.department }} | </span>
+                                        </small>
                                       </div>
                                       <span>{{ technician.tickets_assigned }}</span>
                                     </div>
@@ -438,12 +445,12 @@
             </table>
           </div>
         </div>
-        
+
         <div v-else class="mt-2 d-flex align-items-center justify-content-center">
-          <EmptyCard :title="'No tickets yet...'"  style="height:20rem;">
-        </EmptyCard>
+          <EmptyCard :title="'No tickets yet...'" style="height:20rem;">
+          </EmptyCard>
         </div>
-        
+
       </div>
     </div>
   </div>
@@ -943,5 +950,4 @@ const validateNumericInput = (inputValue, propName) => {
   position: relative;
   cursor: default;
 }
-
 </style>
