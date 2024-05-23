@@ -580,7 +580,7 @@ const handleFileChange = async (event) => {
 
     .doughnut,
     .bar {
-        width: 100%;
+        width: 90%;
     }
 
 }
