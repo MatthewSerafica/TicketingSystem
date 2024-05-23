@@ -30,16 +30,17 @@
         </div>
         <div class="d-flex flex-column gap-4 justify-content-center align-items-center mt-3 mb-3 main-content">
             <div class="d-flex flex-column flex-md-row gap-5 justify-content-between align-items-center">
-                <div class="card shadow p-2 user-container" >
+                <div class="card shadow p-2 user-container">
                     <div class="card-body d-flex flex-column flex-md-row gap-5 align-items-center">
                         <div class="d-flex flex-column justify-content-center align-items-center mb-3">
                             <div class="mb-2 text-center">
                                 <!-- AVATAR -->
                                 <input @change="handleFileChange" ref="fileInput" type="file" hidden>
-                                <img v-if="profilePictureUrl || users.avatar !== 'http://127.0.0.1:8000/storage'" @click="openFileInput" :src="profilePictureUrl ?? users.avatar" alt="User profile picture"
-                                    class="avatar rounded-circle shadow">
-                                <EmptyProfile v-else @click="openFileInput"
-                                    class="avatar rounded-circle shadow"></EmptyProfile>
+                                <img v-if="profilePictureUrl || users.avatar !== 'http://127.0.0.1:8000/storage'"
+                                    @click="openFileInput" :src="profilePictureUrl ?? users.avatar"
+                                    alt="User profile picture" class="avatar rounded-circle shadow">
+                                <EmptyProfile v-else @click="openFileInput" class="avatar rounded-circle shadow">
+                                </EmptyProfile>
                             </div>
                             <div>
                                 <span v-if="!selectedInput || selectedInput !== users.name"
@@ -102,35 +103,76 @@
                                 </div>
                                 <div class="d-flex flex-column gap-3">
                                     <div>
-                                        <div class="card-subtitle fw-medium fs-5">
-                                            Assigned Department
+                                        <div class="card-subtitle fw-medium fs-5 d-flex flex-row gap-2">
+                                            <span>Assigned Department</span>
+                                            <div class="d-flex flex-grow-1 gap-2 w-100 align-items-center">
+                                                <button v-if="!isEditable" class="btn btn-outline-primary"
+                                                    @click="handleEdit">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </button>
+                                                <button v-if="isEditable" class="btn btn-outline-primary"
+                                                    @click="handleEdit">
+                                                    <i class="bi bi-x-lg"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn text-start">
-                                                {{ users.technician.assigned_department ?
-                    users.technician.assigned_department : 'Unassigned' }}
+                                        <div class="d-flex flex-column justify-content-center align-items-start">
+                                            <div v-for="(assignedDep, index) in users.technician.departments"
+                                                :key="index">
+                                                <div>
+                                                    <div v-if="!isEditable">
+                                                        <div v-for="dep in assignedDep.departments"
+                                                            class="d-flex flex-row justify-content-center align-items-center">
+                                                            {{ dep.department }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="btn-group position-static" v-if="isEditable">
+                                                        <button type="button"
+                                                            class="btn dropdown-toggle dropdown-toggle-split"
+                                                            data-bs-toggle="dropdown" aria-expanded="false"
+                                                            data-bs-reference="parent">
+                                                            <span class="visually-hidden">Toggle Dropdown</span>
+                                                        </button>
+                                                        <div v-for="dep in assignedDep.departments"
+                                                            class="d-flex flex-row justify-content-center align-items-center">
+                                                            <button type="button" class="btn text-start tech-btn"
+                                                                @click="toggleTechnicianCTAs">
+                                                                {{ dep ? dep.department : 'N/A' }}
+                                                            </button>
+                                                            <button v-if="technicianCTAs"
+                                                                class="btn align-items-center justify-content-center d-flex text-danger fs-5"
+                                                                style="height:1.5em;"
+                                                                @click="removeDropdown(users.technician.departments, index, users.technician.technician_id, dep.id)"><i
+                                                                    class="bi bi-dash-circle-fill"></i>
+                                                            </button>
+                                                        </div>
+                                                        <ul class="dropdown-menu"
+                                                            style="max-height: 300px; overflow-y: auto; width: 14rem;">
+                                                            <!--All-->
+                                                            <li class="dropdown-item disabled">Select a department</li>
+                                                            <li v-for="department in departments"
+                                                                class="btn dropdown-item"
+                                                                @click="assignDepartment(users, index, department.id, users.technician.technician_id)">
+                                                                {{ department.department }}
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button v-if="technicianCTAs && isEditable"
+                                                class="btn align-items-center justify-content-center d-flex text-primary fs-5"
+                                                style="height:1.5em;"
+                                                @click="addDropdown(users.technician.departments)">
+                                                <i class="bi bi-plus-circle-fill"></i>
                                             </button>
-                                            <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
-                                                data-bs-toggle="dropdown" aria-expanded="false"
-                                                data-bs-reference="parent">
-                                                <span class="visually-hidden">Toggle Dropdown</span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li class="dropdown-item disabled">Select a department</li>
-                                                <li v-for="department in departments" class="btn dropdown-item"
-                                                    @click="showInput(department.department), updateData(department.department, users.technician.technician_id, 'assigned_department', true), console.log('Dropdown item clicked:', department.department)">
-                                                    {{ department.department }}
-                                                </li>
-                                            </ul>
                                         </div>
                                     </div>
-    
                                 </div>
                             </div>
                         </div>
                     </div>
-                    </div>
-                
+                </div>
+
                 <div class="gap-3 data-container">
                     <div class="d-flex flex-column flex-md-row gap-3 mb-2">
                         <div class="assigned-total card border-3 border-primary p-2 shadow"
@@ -174,7 +216,7 @@
                                             <span class="fw-normal text-secondary fs-6">Simple</span>
                                         </div>
                                         <div class="fw-semibold fs-4">{{ complexity ? complexity.complex : '0' }}
-                                            
+
                                             <span class="fw-normal text-secondary fs-6">Complex</span>
                                         </div>
                                     </div>
@@ -191,7 +233,7 @@
                                         Assigned (Today)
                                     </div>
                                     <div class="fw-semibold fs-2 ">{{ assigned_today ? assigned_today : '0' }}
-                                        
+
                                         <span class="fw-normal text-secondary fs-6">assigned</span>
                                     </div>
                                 </div>
@@ -205,7 +247,7 @@
                                         Resolved (Today)
                                     </div>
                                     <div class="fw-semibold fs-2">{{ resolved_today ? resolved_today : '0' }}
-                                        
+
                                         <span class="fw-normal text-secondary fs-6">resolved</span>
                                     </div>
                                 </div>
@@ -219,37 +261,37 @@
                                         Average Resolution Time
                                     </div>
                                     <div class="fw-semibold fs-3">{{ time ? time : '0' }}
-                                        
+
                                         <span class="fw-normal text-secondary fs-6">Hour(s)</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    </div>
-                    
-                    
                 </div>
-                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-4 statistics" >
-                    <div class="card text-left border-0 shadow" >
-                        <h5 class="card-header text-secondary">
-                            Tickets by Services
-                        </h5>
-                        <div class="card-body">
-                            <Doughnut :service="service" class="doughnut"></Doughnut>
-                        </div>
-                    </div>
-                    <div class="card text-left border-0 shadow" >
-                        <h5 class="card-header text-secondary">
-                            Tickets for this Year
-                        </h5>
-                        <div class="card-body">
-                            <Bar :yearly="yearly" class="bar"></Bar>
-                        </div>
+
+
+            </div>
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-4 statistics">
+                <div class="card text-left border-0 shadow">
+                    <h5 class="card-header text-secondary">
+                        Tickets by Services
+                    </h5>
+                    <div class="card-body">
+                        <Doughnut :service="service" class="doughnut"></Doughnut>
                     </div>
                 </div>
-                
-            
+                <div class="card text-left border-0 shadow">
+                    <h5 class="card-header text-secondary">
+                        Tickets for this Year
+                    </h5>
+                    <div class="card-body">
+                        <Bar :yearly="yearly" class="bar"></Bar>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </div>
 </template>
@@ -294,6 +336,84 @@ const props = defineProps({
     time: Object,
     complexity: Object,
 })
+
+let isEditable = ref(false);
+
+const handleEdit = () => {
+    if (!isEditable.value) {
+        isEditable.value = true;
+        technicianCTAs.value = true;
+    } else {
+        isEditable.value = false;
+        if (technicianCTAs.value) {
+            technicianCTAs.value = false;
+        }
+    }
+}
+
+let technicianCTAs = ref(false);
+
+const toggleTechnicianCTAs = () => {
+    if (technicianCTAs.value) {
+        technicianCTAs.value = false;
+    } else {
+        technicianCTAs.value = true;
+    }
+    console.log(technicianCTAs.value)
+};
+
+
+const addDropdown = (user) => {
+    user.push({
+        department_id: null,
+        technician: [],
+    })
+    console.log(user.value)
+}
+
+const removeDropdown = async (user, assignedIndex, techId, depId) => {
+    console.log(user)
+    user.splice(depId, 1)
+    removeData(depId, techId)
+}
+
+const removeData = async (data, id) => {
+    try {
+        const form = useForm({
+            department_id: data,
+            technician: id,
+        })
+        await form.delete(route('technician.profile.remove.department'))
+    } catch (error) {
+        console.error('Error removing data:', error)
+    }
+}
+const replaceTechnician = async (id, technician, old, assignId) => {
+    try {
+        const form = useForm({
+            department_id: id,
+            technician: technician,
+            old: old,
+            assignId: assignId,
+        })
+        await form.put(route('technician.profile.replace.department'))
+    } catch (error) {
+        console.error('Error replacing data:', error);
+    }
+}
+
+const assignDepartment = async (user, assignedIndex, departmentId, technician) => {
+    if (user.technician.departments[assignedIndex].departments && user.technician.departments[assignedIndex].departments.length > 0) {
+        console.log('if', user.technician.departments[assignedIndex].departments[0].id)
+        const old = user.technician.departments[assignedIndex].departments[0].id
+        const assignId = user.technician.departments[assignedIndex].id
+        await replaceTechnician(departmentId, technician, old, assignId)
+    } else {
+        console.log('else')
+        await showInput(departmentId)
+        await updateData(departmentId, technician, 'department_id', true)
+    }
+};
 
 let selectedInput = ref(null);
 let editData = reactive({});
@@ -378,9 +498,6 @@ const handleFileChange = async (event) => {
 </script>
 
 <style scoped>
-
-
-
 .dropdown-menu {
     display: none;
     opacity: 0;
@@ -436,6 +553,7 @@ const handleFileChange = async (event) => {
         opacity: 1;
     }
 }
+
 .statistics {
     display: flex;
     flex-direction: row;
@@ -450,22 +568,20 @@ const handleFileChange = async (event) => {
     width: 50rem;
 }
 
-.assigned-total, 
+.assigned-total,
 .resolved-total,
 .assigned-today,
-.resolved-today{
+.resolved-today {
     width: 13rem;
 }
 
 
-@media (max-width: 768px){
-    
+@media (max-width: 768px) {
+
     .doughnut,
     .bar {
-        width: 100%; 
+        width: 100%;
     }
 
 }
-
-
 </style>

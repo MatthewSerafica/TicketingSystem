@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssignedDepartment;
 use App\Models\Department;
+use App\Models\Log;
 use App\Models\ServiceReport;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -14,7 +16,9 @@ use App\Models\Technician;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 class TechnicianDashboardController extends Controller
 {
@@ -115,7 +119,7 @@ class TechnicianDashboardController extends Controller
     public function profile()
     {
         $auth = Auth::user();
-        $user = User::where('id', $auth->id)->with('technician')->firstOrFail();
+        $user = User::where('id', $auth->id)->with('technician.departments.departments')->firstOrFail();
         $departments = Department::all();
         $yearly = $this->getYearlyData($user);
         $service = $this->getType($user);
@@ -303,12 +307,98 @@ class TechnicianDashboardController extends Controller
             $field => 'required',
         ]);
 
-        $technician = Technician::where('technician_id', $id)->first();
-        $old = $technician->$field;
-        $technician->$field = $request->$field;
-        $technician->save();
-        $input = ucfirst($field);
+        if ($field !== 'department_id') {
+            $technician = Technician::where('technician_id', $id)->first();
+            $old = $technician->$field;
+            $technician->$field = $request->$field;
+            $technician->save();
+            $input = ucfirst($field);
+            $action_taken = "Updated profile detail from " . $old . " to " .  $request->$field;
+        } else {
+            $assign = [
+                'department_id' => $request->$field,
+                'technician' => $id,
+            ];
+            $action_taken = "Updated department assignment";
+            AssignedDepartment::create($assign);
+            $input = ucfirst($field);
+        }
 
-        return redirect()->back()->with('success', $input . ' Update!')->with('message', $old . ' is updated to ' . $request->$field);
+        $auth = Auth::user();
+        $log_data = [
+            'name' => $auth->name,
+            'user_type' => $auth->user_type,
+            'actions_taken' => $action_taken,
+        ];
+        Log::create($log_data);
+
+        return redirect()->back()->with('success', $input . ' Update!')->with('message', $action_taken);
+    }
+
+    public function remove(Request $request)
+    {
+        $request->validate([
+            'department_id' => 'required',
+            'technician' => 'required',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $assigned = AssignedDepartment::where(['department_id' => $request->department_id, 'technician' => $request->technician])->first();
+
+            if ($assigned) {
+                $assigned->delete();
+
+                $auth = Auth::user();
+                $action_taken = "Removed a department from  technician";
+                $log_data = [
+                    'name' => $auth->name,
+                    'user_type' => $auth->user_type,
+                    'actions_taken' => $action_taken,
+                ];
+                Log::create($log_data);
+
+                DB::commit();
+                return redirect()->back()->with('success', 'Department removed!')->with('message', 'Department successfully removed from technician');
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'An error occurred!')->with('message', $e->getMessage());
+        }
+    }
+
+    public function replaceDepartment(Request $request)
+    {
+        $request->validate([
+            'department_id' => 'required',
+            'technician' => 'required',
+            'old' => 'required',
+            'assignId' => 'required',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $assigned = AssignedDepartment::where(['department_id' => $request->old, 'technician' => $request->technician])->firstOrFail();
+
+            if ($assigned) {
+                $assigned->department_id = $request->department_id;
+                $assigned->save();
+
+                $auth = Auth::user();
+                $action_taken = "Replaced a department for technician";
+                $log_data = [
+                    'name' => $auth->name,
+                    'user_type' => $auth->user_type,
+                    'actions_taken' => $action_taken,
+                ];
+                Log::create($log_data);
+
+                DB::commit();
+                return redirect()->back()->with('success', 'Department Updated!')->with('message', 'Department has been replaced!');
+            }
+        } catch (Throwable $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'An error occurred!')->with('message', $e->getMessage());
+        }
     }
 }

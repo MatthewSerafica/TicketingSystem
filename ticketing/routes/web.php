@@ -161,12 +161,15 @@ Route::middleware(['web'])->group(function () {
     Route::middleware(['auth', 'technician'])->group(function () {
         Route::get('/technician', [TechnicianDashboardController::class, 'index'])->name('technician');
         Route::put('/technician/update/status/{is_working}', [TechnicianDashboardController::class, 'updateStatus'])->name('technician.update.status');
+
         Route::put('/technician/update/{user_id}/{field}', [TechnicianDashboardController::class, 'update'])->name('technician.update');
         Route::put('/technician/tech/update/{user_id}/{field}', [TechnicianDashboardController::class, 'technician'])->name('technician.tech.update');
         Route::get('/technician/change', [TechnicianDashboardController::class, 'password'])->name('technician.change');
         Route::post('/technician/change-password/{user_id}', [TechnicianDashboardController::class, 'changePassword'])->name('technician.change-password');
         Route::get('/technician/profile', [TechnicianDashboardController::class, 'profile'])->name('technician.profile');
         Route::post('/technician/profile/{user_id}/avatar', [TechnicianDashboardController::class, 'avatar'])->name('technician.profile.avatar');
+        Route::put('/technician/profile/replace/department', [TechnicianDashboardController::class, 'replaceDepartment'])->name('technician.profile.replace.department');
+        Route::delete('/technician/profile/remove/department', [TechnicianDashboardController::class, 'remove'])->name('technician.profile.remove.department');
 
         Route::get('/technician/tickets', [TechnicianTicketController::class, 'index'])->name('technician.tickets');
         Route::get('/technician/tickets/create', [TechnicianTicketController::class, 'create'])->name('technician.tickets.create');
