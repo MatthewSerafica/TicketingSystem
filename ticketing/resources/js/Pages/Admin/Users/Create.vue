@@ -14,8 +14,8 @@
                 <Toast
                     x-data="{ shown: false, timeout: null, resetTimeout: function() { clearTimeout(this.timeout); this.timeout = setTimeout(() => { this.shown = false; $dispatch('close'); }, 5000); } }"
                     x-init="resetTimeout; shown = true;" x-show.transition.opacity.out.duration.5000ms="shown"
-                    v-if="showErrorToast" :error="page.props.flash.error" :error_message="page.props.flash.error_message"
-                    @close="handleClose">
+                    v-if="showErrorToast" :error="page.props.flash.error"
+                    :error_message="page.props.flash.error_message" @close="handleClose">
                 </Toast>
             </div>
             <form @submit.prevent="create">
@@ -110,19 +110,64 @@
                         </div>
                     </div>
 
-                    
-                    <div v-if="form.user_type === 'technician'" class="row mb-3 justify-content-center align-items-center">
-                        <div class="col-md-6">
-                                <label for="assigned" class="fw-semibold">Assign a Department</label>
-                                <select id="assigned" class="form-select h-100 rounded border-secondary-subtle"
-                                    placeholder="Select Department..." v-model="form.assigned">
-                                    <option disabled>Select Department</option>
-                                    <option v-for="department in departments" :value="department.department">
-                                        {{ department.department }}
-                                    </option>
-                                </select>
+                    <div v-if="form.user_type === 'technician'"
+                        class="row mb-3 justify-content-center align-items-center">
+                        <div class="col-md-6 justify-content-center align-items-center d-flex flex-column gap-3">
+                            <label for="assigned" class="fw-semibold">Assign a Department</label>
+                            <div class="d-flex flex-column justify-content-center align-items-center gap-2 w-100">
+                                <div v-for="(dropdown, index) in departmentData" :key="index">
+                                    <div class="flex-grow-1 w-100 d-flex flex-row gap-2">
+                                        <div class="btn-group">
+                                            <button type="button"
+                                                class="btn btn-outline-secondary text-start text-secondary-emphasis w-100"
+                                                aria-expanded="false">
+                                                {{ dropdown.department ? dropdown.department
+                        : 'Assign a department...' }}
+                                            </button>
+                                            <button type="button"
+                                                class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                                                data-bs-toggle="dropdown" aria-expanded="false"
+                                                data-bs-reference="parent">
+                                                <span class="visually-hidden">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+                                                <div>
+                                                    <h6 class="dropdown-header">All</h6>
+                                                    <li v-for="department in departments" class="btn dropdown-item"
+                                                        @click="selectDepartment(department, index)">
+                                                        <div class="d-flex justify-content-between">
+                                                            <div>
+                                                                <span class="fw-semibold">
+                                                                    {{ department.department }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li v-if="!departments || departments.length === 0">
+                                                        No departments available</li>
+                                                </div>
+                                            </ul>
+                                        </div>
+                                        <button type="button"
+                                            class="btn border-0 rounded-pill d-flex justify-content-center align-items-center fs-5 text-danger"
+                                            @click="removeDropdown(index)">
+                                            <i class="bi bi-dash-circle-fill"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div v-if="show">
+                                    <button type="button" as="button"
+                                        class="btn align-items-center justify-content-center d-flex text-primary fs-5 gap-2"
+                                        style="height:1.5em;" @click="addDropdown">
+                                        <i class="bi bi-plus-circle-fill"></i>
+                                        <span v-if="showLabel">Assign Department</span>
+                                    </button>
+                                </div>
+                                <span v-if="form.errors.departments" class="error-message">
+                                {{ form.errors.departments }}</span>
                             </div>
                         </div>
+                    </div>
                 </div>
 
                 <div class="container mt-3">
@@ -174,15 +219,55 @@ const props = defineProps({
     offices: Object,
 })
 
+let show = ref(true);
+
+let departmentData = ref([]);
+
+const addDropdown = () => {
+    departmentData.value.push({
+        department_id: null,
+        department: ref(''),
+    })
+}
+
+const removeDropdown = (index) => {
+    const removedDepartmentId = departmentData.value[index].department_id;
+    departmentData.value.splice(index, 1);
+
+    const departmentIndex = form.departments.indexOf(removedDepartmentId);
+    if (departmentIndex !== -1) {
+        form.techdepartmentsnicians.splice(departmentIndex, 1);
+    }
+}
+
+const selectDepartment = (department, index) => {
+    if (form.departments.includes(department.id)) {
+        form.errors.departments = 'Technician is already selected.';
+        return;
+    }
+
+    if (departmentData.value.some(item => item.department_id === department.id)) {
+        form.errors.technician = 'Technician is already selected.';
+        return;
+    }
+
+    departmentData.value[index].department = department.department;
+    departmentData.value[index].department_id = department.id;
+
+    form.departments.push(department.id);
+
+    form.errors.departments = null;
+};
+
 const form = useForm({
     user_type: null,
     name: null,
     email: null,
     password: null,
     conf: null,
+    departments: [],
     department: null,
     office: null,
-    assigned: null,
 })
 
 const create = async () => {
@@ -208,5 +293,3 @@ const create = async () => {
     }
 };
 </script>
-
-

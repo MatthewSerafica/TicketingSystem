@@ -83,7 +83,6 @@ class AdminUsersController extends Controller
             'password' => 'required',
             'department' => 'nullable',
             'office' => 'nullable',
-            'assigned' => 'nullable',
         ]);
 
         DB::beginTransaction();
@@ -102,10 +101,16 @@ class AdminUsersController extends Controller
                     'office' => $request->office,
                 ]);
             } else {
-                Technician::create([
+                $technician = Technician::create([
                     'user_id' => $user->id,
-                    'assigned_department' => $request->assigned
                 ]);
+                $assigned_departments = $request->departments;
+                foreach ($assigned_departments as $departments) {
+                    AssignedDepartment::create([
+                        'department_id' => $departments,
+                        'technician' => $technician->technician_id,
+                    ]);
+                }
             }
 
             $auth = Auth::user();
@@ -509,7 +514,7 @@ class AdminUsersController extends Controller
             return redirect()->back()->with('error', 'An error occurred!')->with('message', $e->getMessage());
         }
     }
-    
+
     public function replaceDepartment(Request $request)
     {
         $request->validate([
@@ -526,7 +531,7 @@ class AdminUsersController extends Controller
             if ($assigned) {
                 $assigned->department_id = $request->department_id;
                 $assigned->save();
-    
+
                 $auth = Auth::user();
                 $action_taken = "Replaced a department for technician";
                 $log_data = [
@@ -535,7 +540,7 @@ class AdminUsersController extends Controller
                     'actions_taken' => $action_taken,
                 ];
                 Log::create($log_data);
-    
+
                 DB::commit();
                 return redirect()->back()->with('success', 'Department Updated!')->with('message', 'Department has been replaced!');
             }
