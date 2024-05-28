@@ -19,62 +19,12 @@ class DatabaseSeeder extends Seeder
                 'password' => '123456',
                 'user_type' => 'super',
                 ],
-                    
             ];
 
         foreach ($users as $user) {
             \App\Models\User::factory()->create($user);
         }
 
-        /* $employees = [
-            [
-            'user_id' => '2',
-            'department' => 'SEA',
-            'office' => 'Dental Clinic',
-            ],
-            [
-            'user_id' => '5',
-            'department' => 'SAMCIS',
-            'office' => 'Guidance Center'
-            ],
-                
-        ];
-
-        foreach ($employees as $employee) {
-            \App\Models\Employee::factory()->create($employee);
-        } */
-
-            /* $technicians = [
-                [
-                'user_id' => '3'
-                ],
-                [
-                'user_id' => '4',
-                ],
-                    
-            ];
-
-        foreach ($technicians as $technician) {
-            \App\Models\Technician::factory()->create($technician);
-        } */
-
-            
-            /* $tickets = [
-                
-                    
-            ];
-        foreach ($tickets as $ticket) {
-            \App\Models\Ticket::factory()->create($ticket);
-        } */
-
-        /* $service_reports = [
-            [
-                
-            ],
-        ];
-        foreach ($service_reports as $service_reports) {
-            \App\Models\ServiceReport::factory()->create($service_reports);
-        } */
 
         $departments =[
             [
@@ -114,8 +64,8 @@ class DatabaseSeeder extends Seeder
                 'department' => 'SAS'
             ],
         ];
-        foreach ($departments as $departments) {
-            \App\Models\Department::factory()->create($departments);
+        foreach ($departments as $department) {
+            \App\Models\Department::factory()->create($department);
         }
 
         $offices =[
@@ -168,8 +118,8 @@ class DatabaseSeeder extends Seeder
                 'office' => 'SLU Sacred Heart Medical Center'
             ],
         ];
-        foreach ($offices as $offices) {
-            \App\Models\Office::factory()->create($offices);
+        foreach ($offices as $office) {
+            \App\Models\Office::factory()->create($office);
         }
 
         $services = [
@@ -187,11 +137,11 @@ class DatabaseSeeder extends Seeder
             ],
                 
         ];
-        foreach ($services as $services) {
-            \App\Models\Service::factory()->create($services);
+        foreach ($services as $service) {
+            \App\Models\Service::factory()->create($service);
         }
 
-        $problem = [
+        $problems = [
             [
             'problem' => 'No Internet Connection',
             ],
@@ -206,7 +156,7 @@ class DatabaseSeeder extends Seeder
             ],
                 
         ];
-        foreach ($problem as $problem) {
+        foreach ($problems as $problem) {
             \App\Models\Problem::factory()->create($problem);
         }
 
